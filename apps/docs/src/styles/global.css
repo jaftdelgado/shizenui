@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+@import "@shizen-ui/styles";
+@import "./typography.css";

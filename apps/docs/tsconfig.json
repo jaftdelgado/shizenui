@@ -4,6 +4,7 @@
     ".astro/types.d.ts",
     "src/**/*.ts",
     "src/**/*.astro",
+    "src/**/*.mdx",
     "src/components/svelte/**/*.svelte",
     "src/examples/svelte/**/*.svelte"
   ],

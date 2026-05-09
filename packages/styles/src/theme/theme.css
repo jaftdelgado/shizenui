@@ -45,6 +45,8 @@
   --color-danger: var(--danger);
   --color-danger-foreground: var(--danger-foreground);
 
+  --color-control: var(--control);
+
   /* Calculated Variables */
 
   /* Accent state colors */
