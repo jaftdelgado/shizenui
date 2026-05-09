@@ -1,0 +1,30 @@
+{
+  "name": "@shizen-ui/styles",
+  "version": "0.0.1",
+  "description": "Core styles, Tailwind v4 and variants config for shizen-ui",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./styles": "./src/index.css",
+    "./variants": "./src/variants/index.ts",
+    "./components/*": "./src/components/*.css",
+    "./theme/*": "./src/theme/*.css"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.0.0",
+    "tailwind-variants": "^0.3.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.0.0"
+  }
+}
