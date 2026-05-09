@@ -1,0 +1,95 @@
+@theme inline {
+  /* Spacing tokens */
+  --spacing-control-sm: calc(var(--spacing) * 8); /* 2rem (32px) */
+  --spacing-control-md: calc(var(--spacing) * 9); /* 2.25rem (36px) */
+  --spacing-control-lg: calc(var(--spacing) * 10); /* 2.5rem (40px) */
+
+  /* Fields tokens */
+  --spacing-field-sm: calc(var(--spacing) * 8); /* 2rem (32px) */
+  --spacing-field-md: calc(var(--spacing) * 9); /* 2.25rem (36px) */
+  --spacing-field-lg: calc(var(--spacing) * 10); /* 2.5rem (40px) */
+
+  --padding-field-sm: calc(var(--padding) * 3); /* 0.75rem (12px) */
+  --padding-field-md: calc(var(--padding) * 3); /* 0.75rem (12px) */
+  --padding-field-lg: calc(var(--padding) * 3); /* 0.75rem (12px) */
+
+  /* Radius tokens */
+  --radius-control: calc(var(--radius) * 16); /* rounded-full */
+  --radius-field: calc(var(--radius) * 3); /* 0.75rem (12px) */
+  --radius-surface: calc(var(--radius) * 6); /* 1.5rem (24px) */
+  --radius-card: calc(var(--radius) * 8); /* 1.5rem (24px) */
+
+  /* Base Colors */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-overlay: var(--overlay);
+  --color-separator: var(--separator);
+  --color-focus: var(--focus);
+
+  /* Text Colors */
+  --color-primary-text: var(--primary-text);
+  --color-secondary-text: var(--secondary-text);
+  --color-tertiary-text: var(--tertiary-text);
+  --color-control-text: var(--control-text);
+  --color-inverted-text: var(--inverted-text);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+
+  /* Calculated Variables */
+
+  /* Accent state colors */
+  --color-accent-hover: color-mix(
+    in oklab,
+    var(--color-accent) 96%,
+    var(--color-accent-foreground) 4%
+  );
+  --color-accent-pressed: color-mix(
+    in oklab,
+    var(--color-accent) 90%,
+    var(--color-accent-foreground) 10%
+  );
+
+  /* Control (button, toggle, switch, etc) state colors */
+  --color-control-hover: color-mix(
+    in oklab,
+    var(--color-control) 94%,
+    var(--color-control-foreground) 6%
+  );
+  --color-control-pressed: color-mix(
+    in oklab,
+    var(--color-control) 90%,
+    var(--color-control-foreground) 10%
+  );
+
+  /* Form fields (input, select, checkbox, etc.) state colors */
+  --color-field-hover: color-mix(
+    in oklab,
+    var(--color-field) 98%,
+    var(--color-field-foreground) 2%
+  );
+  --color-field-secondary-hover: color-mix(
+    in oklab,
+    var(--color-field-secondary) 98%,
+    var(--color-field-foreground) 2%
+  );
+
+  /* Ghost (for transparent-bg elements) state colors */
+  --color-ghost-hover: color-mix(in oklab, var(--color-control-foreground) 6%, transparent);
+  --color-ghost-pressed: color-mix(in oklab, var(--color-control-foreground) 10%, transparent);
+
+  /* Soft Colors */
+  --color-accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
+  --color-succes-soft: color-mix(in oklab, var(--success) 15%, transparent);
+  --color-warning-soft: color-mix(in oklab, var(--warning) 15%, transparent);
+  --color-danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
+}

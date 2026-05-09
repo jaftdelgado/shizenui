@@ -1,0 +1,50 @@
+/* === Focus Ring === */
+@utility focus-ring {
+  @apply ring-3 ring-focus/30 ring-offset-focus outline-none ring-offset-1;
+}
+
+@utility focus-field-ring {
+  @apply ring-focus outline-none ring-2;
+}
+
+@utility invalid-field-ring {
+  @apply ring-danger outline-none ring-2 ring-offset-0;
+}
+
+/* Statuses utilities*/
+@utility status-disabled {
+  opacity: var(--disabled-opacity);
+  cursor: var(--cursor-disabled);
+}
+
+@utility status-focused {
+  @apply focus-ring;
+}
+
+@utility status-focused-field {
+  @apply focus-field-ring;
+}
+
+@utility status-invalid-field {
+  @apply invalid-field-ring;
+}
+
+@utility scrollbar-overlay {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar-thumb);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}
