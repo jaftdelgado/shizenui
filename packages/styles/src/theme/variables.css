@@ -1,0 +1,85 @@
+@layer base {
+  :root,
+  .light,
+  .default,
+  [data-theme="light"],
+  [data-theme="default"] {
+    /* Dimensions scale */
+    --spacing: 0.25rem;
+    --radius: 0.25rem;
+    --padding: 0.25rem;
+
+    /* Cursor variables */
+    --cursor-interactive: pointer;
+    --cursor-disabled: not-allowed;
+    --cursor-navigation: pointer;
+
+    --disabled-opacity: 0.3;
+
+    /* Ring offset - Used for focus ring */
+    --ring-offset-width: 2px;
+
+    /* Primitive Colors (Do not change between light and dark) */
+    --white: #ffffff;
+    --black: #000000;
+    --snow: #fcfcfc;
+    --eclipse: #18181b;
+
+    /* Base Colors */
+    --background: #f2f2f6;
+    --surface: var(--white);
+    --overlay: var(--white);
+    --separator: #e2e2e3;
+    --focus: var(--accent);
+
+    /* Text Colors */
+    --primary-text: var(--eclipse);
+    --secondary-text: #5b616d;
+    --tertiary-text: #a3a7af;
+    --control-text: #2e3137;
+    --inverted-text: var(--snow);
+
+    --accent: #007aff;
+    --accent-foreground: var(--snow);
+
+    /* Status Colors */
+    --success: #22c55e;
+    --success-foreground: var(--snow);
+
+    --warning: #f5a524;
+    --warning-foreground: var(--snow);
+
+    --danger: #ff3b30;
+    --danger-foreground: var(--snow);
+
+    /* Control Colors */
+    --control: #e9e9ea;
+    --control-foreground: var(--control-text);
+
+    /* Form Fields */
+    --field: var(--surface);
+    --field-foreground: var(--primary-text);
+    --field-placeholder: var(--tertiary-text);
+    --field-secondary: var(--control);
+  }
+
+  .dark,
+  [data-theme="dark"] {
+    /* Base Colors */
+    --background: #0a0a0a;
+    --surface: #1c1c1e;
+    --overlay: var(--surface);
+    --separator: #151515;
+
+    /* Text Colors */
+    --primary-text: var(--snow);
+    --secondary-text: #838383;
+    --tertiary-text: #5c5c5c;
+    --control-text: #e8e8e8;
+    --inverted-text: var(--eclipse);
+
+    --accent: #155dce;
+
+    --control: #242424;
+  }
+}
