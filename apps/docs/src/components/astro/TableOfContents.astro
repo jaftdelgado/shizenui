@@ -1,0 +1,63 @@
+---
+import type { MarkdownHeading } from "astro";
+import Menu02 from "@assets/svg/astro/Menu02.astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  tocHeadings.length > 0 && (
+    <aside class="docs-toc">
+      <div class="toc-inner">
+        <slot name="toc-header">
+          <p class="toc-label">
+            <Menu02 />
+            On this page
+          </p>
+        </slot>
+        <nav>
+          <ul>
+            {tocHeadings.map((heading) => (
+              <li class={`toc-h${heading.depth}`}>
+                <a href={`#${heading.slug}`} class="toc-link" data-heading={heading.slug}>
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </aside>
+  )
+}
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
+  const headings = Array.from(
+    document.querySelectorAll<HTMLElement>(".docs-body h2, .docs-body h3")
+  );
+
+  if (links.length && headings.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("id");
+            links.forEach((l) => l.classList.remove("active"));
+            document
+              .querySelector<HTMLAnchorElement>(`.toc-link[href="#${id}"]`)
+              ?.classList.add("active");
+          }
+        }
+      },
+      { rootMargin: "-20% 0px -70% 0px" }
+    );
+    headings.forEach((h) => observer.observe(h));
+  }
+</script>

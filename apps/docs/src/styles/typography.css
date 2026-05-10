@@ -1,0 +1,55 @@
+@layer base {
+  .prose-content {
+    & h1:not([data-example-container] *):not([class*="text--"]) {
+      @apply text-primary-text mb-4 text-3xl font-semibold tracking-tighter;
+    }
+
+    & h2:not([data-example-container] *):not([class*="text--"]) {
+      @apply text-primary-text mt-16 text-xl font-medium tracking-tight;
+    }
+    & h2:first-of-type:not([data-example-container] *):not([class*="text--"]) {
+      @apply mt-0;
+    }
+
+    & h3:not([data-example-container] *):not([class*="text--"]) {
+      @apply text-primary-text mb-2 mt-10 text-lg font-medium tracking-tight;
+    }
+
+    & p:not([data-example-container] *):not([class*="text--"]) {
+      @apply text-secondary-text text-base leading-relaxed;
+    }
+
+    & code:not(pre code):not([data-example-container] *) {
+      @apply bg-control text-secondary-text rounded-md px-1.5 py-0.5 font-mono text-sm;
+    }
+
+    & ul:not([data-example-container] *),
+    & ol:not([data-example-container] *) {
+      @apply mb-5 ml-6 space-y-2 text-zinc-400;
+    }
+
+    & ul:not([data-example-container] *) {
+      @apply list-disc;
+    }
+
+    & li:not([data-example-container] *) strong {
+      @apply text-zinc-200;
+    }
+  }
+}
+
+@layer components {
+  [class*="text--"] {
+    margin: 0;
+  }
+
+  [data-example-container] {
+    font-size: revert;
+    color: revert;
+    line-height: revert;
+    font-weight: revert;
+    letter-spacing: revert;
+    list-style: revert;
+    margin: revert;
+  }
+}

@@ -1,0 +1,54 @@
+---
+import CodeBlock from "./CodeBlock.astro";
+
+interface Props {
+  src?: string;
+  lang?: string;
+  theme?: string;
+  showLineNumbers?: boolean;
+}
+
+const { src, lang = "svelte", theme, showLineNumbers = true } = Astro.props;
+
+const examples = import.meta.glob<string>("/src/examples/**/*.svelte", {
+  query: "?raw",
+  import: "default",
+  eager: true
+});
+
+let code = "";
+
+if (src) {
+  const fullPath = `/src/examples/${src}`;
+
+  const loadCode = examples[fullPath];
+
+  if (loadCode) {
+    code = loadCode.trim();
+  }
+}
+---
+
+<section
+  class="border-separator my-8 overflow-hidden rounded-3xl border bg-transparent"
+  aria-label="Component Example"
+  data-example-container
+>
+  <div class="flex min-h-96 items-center justify-center p-8">
+    <slot />
+  </div>
+
+  {
+    code && (
+      <div class="border-separator border-t" aria-label="Component Example Code">
+        <CodeBlock
+          code={code}
+          lang={lang}
+          theme={theme}
+          showLineNumbers={showLineNumbers}
+          isContained
+        />
+      </div>
+    )
+  }
+</section>

@@ -13,9 +13,13 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^5.0.4",
     "@shizen-ui/styles": "workspace:*",
     "@shizen-ui/svelte": "workspace:*",
-    "astro": "^6.3.1"
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.3.1",
+    "tailwindcss": "^4.3.0",
+    "shiki": "^3.22.0"
   },
   "devDependencies": {
     "@astrojs/svelte": "^8.1.0",

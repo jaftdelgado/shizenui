@@ -1,11 +1,21 @@
 {
   "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "paths": {
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@examples/*": ["./src/examples/*"],
+      "@layouts/*": ["./src/layouts/*"]
+    }
+  },
   "include": [
     ".astro/types.d.ts",
     "src/**/*.ts",
     "src/**/*.astro",
+    "src/**/*.mdx",
     "src/components/svelte/**/*.svelte",
-    "src/examples/svelte/**/*.svelte"
+    "src/examples/svelte/**/*.svelte",
+    "src/examples/svelte/switch/SwitchAnatomy.md"
   ],
   "exclude": ["dist", "node_modules"]
 }

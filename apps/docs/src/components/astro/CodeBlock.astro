@@ -1,0 +1,52 @@
+---
+import { codeToHtml } from "shiki";
+
+interface Props {
+  code: string;
+  lang?: string;
+  theme?: string;
+  showLineNumbers?: boolean;
+  isContained?: boolean;
+  collapsible?: boolean;
+}
+
+const {
+  code = "",
+  lang = "tsx",
+  theme = "github-light",
+  showLineNumbers = true,
+  isContained = false,
+  collapsible = true
+} = Astro.props;
+
+const cleanedCode = code.trim();
+
+const highlightedCode = await codeToHtml(cleanedCode, {
+  lang,
+  theme,
+  structure: "classic"
+});
+
+const instanceId = crypto.randomUUID();
+---
+
+<div
+  class:list={[
+    "bg-component code-block-root",
+    {
+      "shadow-border my-8 rounded-2xl": !isContained,
+      "rounded-none border-none shadow-none": isContained
+    }
+  ]}
+  data-code-block={instanceId}
+  data-collapsed={collapsible ? "true" : undefined}
+>
+  <div
+    class:list={["shiki-container overflow-x-auto", { "line-numbers": showLineNumbers }]}
+    data-code-content={instanceId}
+  >
+    <Fragment set:html={highlightedCode} />
+  </div>
+
+  {collapsible && <div class="code-block-footer" />}
+</div>

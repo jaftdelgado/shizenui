@@ -1,0 +1,75 @@
+---
+import "../styles/global.css";
+import TableOfContents from "@components/astro/TableOfContents.astro";
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  headings?: MarkdownHeading[];
+  preview?: string;
+}
+
+const rawProps = Astro.props;
+const frontmatter = (rawProps as any).frontmatter ?? rawProps;
+
+const title = frontmatter.title;
+const description = frontmatter.description;
+const preview = frontmatter.preview;
+const headings: MarkdownHeading[] = rawProps.headings ?? [];
+
+const previewModules = import.meta.glob("../previews/*.astro", {
+  eager: true
+}) as Record<string, { default?: unknown }>;
+
+const previewPath = preview ? `../previews/${preview}.astro` : undefined;
+const PreviewComponent: any = previewPath ? previewModules[previewPath]?.default : undefined;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — Docs</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <slot name="sidebar" />
+      </aside>
+
+      <div class="docs-main">
+        <div class="docs-titlebar">
+          <div>
+            <h1>{title}</h1>
+            {description && <p>{description}</p>}
+          </div>
+          <div class="titlebar-actions">
+            <slot name="actions" />
+          </div>
+        </div>
+
+        {
+          PreviewComponent && (
+            <div class="docs-preview">
+              <PreviewComponent />
+            </div>
+          )
+        }
+
+        <div class="docs-content-grid">
+          <article class="docs-body prose-content">
+            <slot />
+          </article>
+
+          <TableOfContents headings={headings} />
+
+          <div class="docs-footer">
+            <slot name="footer" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

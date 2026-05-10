@@ -1,0 +1,13 @@
+---
+interface Props {
+  component?: any;
+}
+
+const { component: Component } = Astro.props;
+---
+
+<div class="component-preview">
+  <div class="preview-inner">
+    {Component ? <Component client:load /> : <slot />}
+  </div>
+</div>

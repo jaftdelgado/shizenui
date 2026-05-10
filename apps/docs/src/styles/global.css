@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@import "@shizen-ui/styles";
+@import "./theme.css";
+@import "./typography.css";
+@import "./docs-layout.css";
+@import "./code-block.css";
+
+@font-face {
+  font-family: "Geist";
+  src: url("../assets/fonts/Geist.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../assets/fonts/GeistMono.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-background font-sans antialiased;
+  }
+}
