@@ -1,0 +1,39 @@
+@layer components {
+  .docs-toc {
+    @apply text-secondary-text self-start text-sm;
+    width: var(--docs-toc-w);
+    position: sticky;
+    top: var(--docs-toc-top);
+  }
+
+  .toc-label {
+    @apply text-control-text mb-3 flex items-center gap-2 font-medium;
+  }
+
+  .toc-h3 {
+    @apply px-3;
+  }
+
+  .toc-link {
+    @apply block w-full py-1 leading-normal transition-colors;
+  }
+
+  .toc-link.active {
+    @apply text-accent font-medium;
+  }
+
+  /* Component preview styles */
+  .component-preview {
+    @apply shadow-border overflow-hidden rounded-3xl;
+  }
+
+  .preview-inner {
+    @apply flex min-h-96 items-center justify-center p-8;
+  }
+
+  @media (max-width: 768px) {
+    .docs-toc {
+      display: none;
+    }
+  }
+}

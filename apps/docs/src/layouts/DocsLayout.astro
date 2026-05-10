@@ -1,16 +1,29 @@
 ---
 import "../styles/global.css";
+import TableOfContents from "../components/astro/TableOfContents.astro";
 import type { MarkdownHeading } from "astro";
 
 interface Props {
   title: string;
   description?: string;
   headings?: MarkdownHeading[];
+  preview?: string;
 }
 
-const { title, description, headings = [] } = Astro.props;
+const rawProps = Astro.props;
+const frontmatter = (rawProps as any).frontmatter ?? rawProps;
 
-const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const title = frontmatter.title;
+const description = frontmatter.description;
+const preview = frontmatter.preview;
+const headings: MarkdownHeading[] = rawProps.headings ?? [];
+
+const previewModules = import.meta.glob("../previews/*.astro", {
+  eager: true
+}) as Record<string, { default?: unknown }>;
+
+const previewPath = preview ? `../previews/${preview}.astro` : undefined;
+const PreviewComponent: any = previewPath ? previewModules[previewPath]?.default : undefined;
 ---
 
 <html lang="en">
@@ -21,16 +34,12 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     <slot name="head" />
   </head>
   <body>
-    <!-- ── Root: sidebar | main ── -->
     <div class="docs-layout">
-      <!-- SIDEBAR -->
       <aside class="docs-sidebar">
         <slot name="sidebar" />
       </aside>
 
-      <!-- MAIN -->
       <div class="docs-main">
-        <!-- Title bar -->
         <div class="docs-titlebar">
           <div>
             <h1>{title}</h1>
@@ -41,49 +50,45 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
           </div>
         </div>
 
-        <!-- body | toc -->
+        {
+          PreviewComponent && (
+            <div class="docs-preview">
+              <PreviewComponent />
+            </div>
+          )
+        }
+
         <div class="docs-content-grid">
           <article class="docs-body prose-content">
             <slot />
           </article>
 
-          {
-            tocHeadings.length > 0 && (
-              <aside class="docs-toc">
-                <div class="toc-inner">
-                  <slot name="toc-header">
-                    <p>On this page</p>
-                  </slot>
-                  <nav>
-                    <ul>
-                      {tocHeadings.map((heading) => (
-                        <li class={`toc-h${heading.depth}`}>
-                          <a href={`#${heading.slug}`} class="toc-link" data-heading={heading.slug}>
-                            {heading.text}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </nav>
-                </div>
-              </aside>
-            )
-          }
+          <TableOfContents headings={headings} />
+
+          <div class="docs-footer">
+            <slot name="footer" />
+          </div>
         </div>
       </div>
     </div>
   </body>
 </html>
 
-<style>
-  /* ── Layout shell: sidebar | main ── */
+<style is:global>
+  :root {
+    --docs-sidebar-w: 260px;
+    --docs-body-w: 640px;
+    --docs-toc-w: 200px;
+    --docs-gap: 48px;
+    --docs-toc-top: 32px;
+  }
+
   .docs-layout {
     display: grid;
-    grid-template-columns: var(--docs-sidebar-w, 260px) 1fr;
+    grid-template-columns: var(--docs-sidebar-w) 1fr;
     min-height: 100vh;
   }
 
-  /* ── Sidebar: sticky, full height ── */
   .docs-sidebar {
     position: sticky;
     top: 0;
@@ -91,14 +96,20 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     overflow-y: auto;
   }
 
-  /* ── Main: column flex ── */
   .docs-main {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 24px;
     min-height: 100vh;
   }
 
-  /* ── Titlebar: full width of main ── */
+  .docs-titlebar,
+  .docs-preview,
+  .docs-content-grid {
+    width: calc(var(--docs-body-w) + var(--docs-gap) + var(--docs-toc-w));
+  }
+
   .docs-titlebar {
     display: flex;
     align-items: center;
@@ -114,43 +125,31 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     flex-shrink: 0;
   }
 
-  /* ── Content grid: body | toc ── */
   .docs-content-grid {
     display: grid;
-    grid-template-columns: 1fr var(--docs-toc-w, 220px);
-    flex: 1;
+    grid-template-columns: var(--docs-body-w) var(--docs-toc-w);
+    grid-template-rows: auto 1fr auto;
+    column-gap: var(--docs-gap);
     align-items: start;
   }
 
-  /* ── Body ── */
   .docs-body {
+    grid-column: 1;
+    grid-row: 2;
     min-width: 0;
+    width: 100%;
   }
 
-  :global(.full-bleed) {
-    width: calc(100% + var(--docs-body-pr, 32px));
-    margin-right: calc(-1 * var(--docs-body-pr, 32px));
+  .docs-footer {
+    grid-column: 1 / -1;
+    grid-row: 3;
   }
 
-  /* ── TOC: sticky al scrollear ── */
   .docs-toc {
-    position: relative;
+    grid-column: 2;
+    grid-row: 2;
   }
 
-  .toc-inner {
-    position: sticky;
-    top: var(--docs-toc-top, 32px);
-  }
-
-  .toc-h3 {
-    padding-left: 12px;
-  }
-
-  .toc-link.active {
-    font-weight: 500;
-  }
-
-  /* ── Mobile: ocultar sidebar y TOC ── */
   @media (max-width: 768px) {
     .docs-layout {
       grid-template-columns: 1fr;
@@ -158,42 +157,19 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     .docs-sidebar {
       display: none;
     }
+    .docs-main {
+      align-items: stretch;
+    }
+    .docs-titlebar,
+    .docs-preview,
+    .docs-content-grid {
+      width: 100%;
+    }
     .docs-content-grid {
       grid-template-columns: 1fr;
     }
-    .docs-toc {
-      display: none;
-    }
-    :global(.full-bleed) {
-      width: 100%;
-      margin-right: 0;
+    .docs-footer {
+      grid-column: 1;
     }
   }
 </style>
-
-<script>
-  // Marca el toc-link activo según el heading visible
-  const links = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
-  const headings = Array.from(
-    document.querySelectorAll<HTMLElement>(".docs-body h2, .docs-body h3")
-  );
-
-  if (links.length && headings.length) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const id = entry.target.getAttribute("id");
-            links.forEach((l) => l.classList.remove("active"));
-            document
-              .querySelector<HTMLAnchorElement>(`.toc-link[href="#${id}"]`)
-              ?.classList.add("active");
-          }
-        }
-      },
-      { rootMargin: "-20% 0px -70% 0px" }
-    );
-
-    headings.forEach((h) => observer.observe(h));
-  }
-</script>

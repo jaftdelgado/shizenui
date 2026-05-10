@@ -1,4 +1,28 @@
 @import "tailwindcss";
 
 @import "@shizen-ui/styles";
+@import "./theme.css";
 @import "./typography.css";
+@import "./docs-layout.css";
+
+@font-face {
+  font-family: "Geist";
+  src: url("../assets/fonts/Geist.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+}
