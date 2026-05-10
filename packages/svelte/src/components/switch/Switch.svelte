@@ -2,7 +2,7 @@
   import { cn } from "../../lib/utils";
   import { switchStyles } from "@shizen-ui/styles";
   import { type SwitchProps, SwitchState, createSwitchHandlers } from "./_internal/index.js";
-  import { createFocusVisible } from "../../shared/focus-visible.svelte.js";
+  import { createFocusVisible } from "../../lib/runes/focus-visible.svelte.js";
 
   let {
     class: className,
@@ -30,7 +30,9 @@
   const handlers = createSwitchHandlers(
     state,
     () => checked,
-    (val) => { checked = val; },
+    (val) => {
+      checked = val;
+    },
     (val) => onCheckedChange?.(val)
   );
 
@@ -38,7 +40,7 @@
 
   const styles = $derived(switchStyles({ size: state.finalSize }));
 
-  function handleClick(e: MouseEvent) {
+  function handleClick(e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
     handlers.handleContainerClick(e);
     onclick?.(e);
   }

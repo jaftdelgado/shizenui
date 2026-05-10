@@ -3,7 +3,9 @@ import { defineConfig } from "astro/config";
 import { fileURLToPath } from "node:url";
 
 import svelte from "@astrojs/svelte";
+
 import mdx from "@astrojs/mdx";
+
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
@@ -19,9 +21,6 @@ export default defineConfig({
         "@layouts": fileURLToPath(new URL("./src/layouts", import.meta.url))
       }
     },
-    plugins: [tailwindcss()],
-    ssr: {
-      noExternal: ["@shizen-ui/styles", "@shizen-ui/svelte"]
-    }
+    plugins: [tailwindcss()]
   }
 });
