@@ -19,7 +19,9 @@ export function createSwitchHandlers(
     if (e.type === "keyup") handleChange();
   }
 
-  function handleContainerClick(e: MouseEvent): void {
+  function handleContainerClick(
+    e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }
+  ): void {
     if (state.finalDisabled) return;
 
     const target = e.target as HTMLElement;

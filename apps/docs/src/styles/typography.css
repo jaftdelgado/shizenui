@@ -12,7 +12,7 @@
     }
 
     & h3:not([data-example-container] *):not([class*="text--"]) {
-      @apply text-primary-text mb-2 mt-10 text-lg font-medium tracking-tight;
+      @apply text-primary-text mt-10 mb-2 text-lg font-medium tracking-tight;
     }
 
     & p:not([data-example-container] *):not([class*="text--"]) {

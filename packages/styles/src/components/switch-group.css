@@ -1,0 +1,17 @@
+@layer components {
+  .switch-group {
+    @apply flex w-fit flex-col;
+  }
+
+  .switch-group__items {
+    @apply mt-4 flex;
+  }
+
+  .switch-group__items--vertical {
+    @apply flex-col gap-4;
+  }
+
+  .switch-group__items--horizontal {
+    @apply flex-row flex-wrap gap-6;
+  }
+}

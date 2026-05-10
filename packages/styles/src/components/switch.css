@@ -1,6 +1,6 @@
 @layer components {
   .switch {
-    @apply inline-flex select-none items-center gap-3 outline-none transition-opacity duration-200;
+    @apply inline-flex items-center gap-3 transition-opacity duration-200 outline-none select-none;
 
     /* Base tokens */
     --switch-bg: var(--color-control);

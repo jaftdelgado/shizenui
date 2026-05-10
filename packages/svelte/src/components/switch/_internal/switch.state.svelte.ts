@@ -1,6 +1,7 @@
-import { setSwitchContext, useSwitchGroupContext } from "../../../contexts/internal/index.js";
-import { setFieldStateContext, useFieldStateContext } from "../../../contexts/index.js";
-import type { SwitchSize } from "./switch.context.svelte.js";
+import { setSwitchContext } from "./switch.context.js";
+import { useSwitchGroupContext } from "../../switch-group/_internal/switch-group.context.js";
+import { setFieldStateContext, useFieldStateContext } from "../../../lib/index.js";
+import type { SwitchSize } from "./switch.context.js";
 
 export class SwitchState {
   #disabled: () => boolean;

@@ -46,7 +46,7 @@
 }
 
 .shiki-container pre {
-  @apply bg-transparent! m-0 block p-0 text-sm;
+  @apply m-0 block bg-transparent! p-0 text-sm;
   line-height: 1.6;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .line-numbers .line::before {
-  @apply inline-block w-12 select-none pr-4 text-right text-sm;
+  @apply inline-block w-12 pr-4 text-right text-sm select-none;
   content: counter(step);
   counter-increment: step;
   color: var(--color-secondary-text);
@@ -76,7 +76,7 @@
 
 /* CodeImport — single-line variant */
 .code-import-content pre {
-  @apply bg-transparent! m-0 block p-0 text-sm;
+  @apply m-0 block bg-transparent! p-0 text-sm;
   line-height: 1.6;
 }
 

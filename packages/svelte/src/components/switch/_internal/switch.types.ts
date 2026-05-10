@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
-import type { SwitchSize } from "./switch.context.svelte.js";
+import type { SwitchSize } from "./switch.context.js";
 
 export interface SwitchProps extends Omit<HTMLAttributes<HTMLDivElement>, "checked"> {
   value?: string;
@@ -11,4 +11,5 @@ export interface SwitchProps extends Omit<HTMLAttributes<HTMLDivElement>, "check
   name?: string;
   id?: string;
   size?: SwitchSize;
+  onCheckedChange?: (checked: boolean) => void;
 }
