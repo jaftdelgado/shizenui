@@ -1,0 +1,89 @@
+.code-block-root[data-collapsed="true"] [data-code-content] {
+  max-height: 8rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0;
+  -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+}
+
+.code-block-root[data-collapsed="false"] [data-code-content] {
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 1rem;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.code-block-root:not([data-collapsed]) [data-code-content] {
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.code-block-footer {
+  @apply flex w-full justify-center py-3;
+}
+
+.code-block-root[data-collapsed="true"] .code-block-footer {
+  @apply relative z-10 -mt-8;
+}
+
+.code-block-root[data-collapsed="false"] .code-block-footer {
+  @apply relative z-10 -mt-12;
+}
+
+.shiki-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.shiki-container::-webkit-scrollbar {
+  display: none;
+}
+
+.shiki-container pre {
+  @apply bg-transparent! m-0 block p-0 text-sm;
+  line-height: 1.6;
+}
+
+.shiki-container code {
+  @apply block w-fit min-w-full py-4;
+  counter-reset: step;
+}
+
+.line {
+  @apply box-border inline-block w-full px-6;
+}
+
+.line span {
+  line-height: inherit;
+}
+
+.line-numbers .line {
+  @apply pl-1;
+}
+
+.line-numbers .line::before {
+  @apply inline-block w-12 select-none pr-4 text-right text-sm;
+  content: counter(step);
+  counter-increment: step;
+  color: var(--color-secondary-text);
+}
+
+/* CodeImport — single-line variant */
+.code-import-content pre {
+  @apply bg-transparent! m-0 block p-0 text-sm;
+  line-height: 1.6;
+}
+
+.code-import-content code {
+  @apply block w-fit min-w-full px-6 py-3;
+}
+
+.code-import-content .line {
+  @apply inline-block w-full px-0;
+}

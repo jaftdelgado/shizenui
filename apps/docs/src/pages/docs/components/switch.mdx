@@ -1,16 +1,22 @@
 ---
-layout: ../../../layouts/DocsLayout.astro
+layout: "@layouts/DocsLayout.astro"
 title: Switch
-description: Un toggle accesible y personalizable
+description: Toggles a boolean state on or off, ideal for settings and preferences.
 preview: SwitchPreview
 ---
 
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+
+import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.md?raw";
+
 ## Import
+
+<CodeImport code={`import { Switch, SwitchGroup } from "@shizen-ui/svelte";`} />
 
 ## Anatomy
 
+<CodeBlock code={SwitchAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
+
 ## Examples
-
-### Disabled state
-
-### Invalid state

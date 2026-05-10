@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro";
+import Menu02 from "@assets/svg/astro/Menu02.astro";
 
 interface Props {
   headings: MarkdownHeading[];
@@ -16,22 +17,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
       <div class="toc-inner">
         <slot name="toc-header">
           <p class="toc-label">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              color="currentColor"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M4 5L16 5" />
-              <path d="M4 12L20 12" />
-              <path d="M4 19L12 19" />
-            </svg>
+            <Menu02 />
             On this page
           </p>
         </slot>

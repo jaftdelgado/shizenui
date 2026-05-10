@@ -7,6 +7,9 @@
     & h2:not([data-example-container] *):not([class*="text--"]) {
       @apply text-primary-text mt-16 text-xl font-medium tracking-tight;
     }
+    & h2:first-of-type:not([data-example-container] *):not([class*="text--"]) {
+      @apply mt-0;
+    }
 
     & h3:not([data-example-container] *):not([class*="text--"]) {
       @apply text-primary-text mb-2 mt-10 text-lg font-medium tracking-tight;

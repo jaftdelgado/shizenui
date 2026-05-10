@@ -18,7 +18,8 @@
     "@shizen-ui/svelte": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.1",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "shiki": "^3.22.0"
   },
   "devDependencies": {
     "@astrojs/svelte": "^8.1.0",
