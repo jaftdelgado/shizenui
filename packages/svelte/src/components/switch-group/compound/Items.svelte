@@ -3,7 +3,7 @@
   import { cn } from "../../../lib/utils";
   import type { HTMLAttributes } from "svelte/elements";
   import { switchGroupStyles } from "@shizen-ui/styles";
-  import { useSwitchGroupContext } from "../_internal/index.js";
+  import { useSwitchGroupContext } from "../../../contexts/internal/index.js";
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     children: Snippet;

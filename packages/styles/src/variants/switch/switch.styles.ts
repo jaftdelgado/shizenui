@@ -3,10 +3,8 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const switchStyles = tv({
   slots: {
     base: "switch",
-    input: "switch__input",
     control: "switch__control",
     thumb: "switch__thumb",
-    thumbContent: "switch__thumb-content",
     content: "switch__content"
   },
   variants: {

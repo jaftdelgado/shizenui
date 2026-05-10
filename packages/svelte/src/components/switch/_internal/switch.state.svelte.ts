@@ -1,11 +1,10 @@
-import { setSwitchContext } from "./switch.context.js";
-import { useSwitchGroupContext } from "../../switch-group/_internal/switch-group.context.js";
-import { setFieldStateContext, useFieldStateContext } from "../../../lib/index.js";
-import type { SwitchSize } from "./switch.types.js";
+import { setSwitchContext, useSwitchGroupContext } from "../../../contexts/internal/index.js";
+import { setFieldStateContext, useFieldStateContext } from "../../../contexts/index.js";
+import type { SwitchSize } from "./switch.context.svelte.js";
 
 export class SwitchState {
-  #disabled: () => boolean | undefined;
-  #invalid: () => boolean | undefined;
+  #disabled: () => boolean;
+  #invalid: () => boolean;
   #size: () => SwitchSize;
   #id: () => string;
 
@@ -13,23 +12,19 @@ export class SwitchState {
   #groupCtx = useSwitchGroupContext();
 
   get finalDisabled(): boolean {
-    const local = this.#disabled();
-    if (local !== undefined) return local;
     return this.#groupCtx.exists
       ? this.#groupCtx.disabled
       : this.#parentFieldContext.exists
         ? this.#parentFieldContext.disabled
-        : false;
+        : this.#disabled();
   }
 
   get finalInvalid(): boolean {
-    const local = this.#invalid();
-    if (local !== undefined) return local;
     return this.#groupCtx.exists
       ? this.#groupCtx.invalid
       : this.#parentFieldContext.exists
         ? this.#parentFieldContext.invalid
-        : false;
+        : this.#invalid();
   }
 
   get finalSize(): SwitchSize {
@@ -37,8 +32,8 @@ export class SwitchState {
   }
 
   constructor(props: {
-    disabled: () => boolean | undefined;
-    invalid: () => boolean | undefined;
+    disabled: () => boolean;
+    invalid: () => boolean;
     size: () => SwitchSize;
     id: () => string;
     checked: () => boolean;

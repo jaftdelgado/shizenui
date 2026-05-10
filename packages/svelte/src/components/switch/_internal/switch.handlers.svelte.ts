@@ -4,38 +4,32 @@ export function createSwitchHandlers(
   state: SwitchState,
   getChecked: () => boolean,
   setChecked: (value: boolean) => void,
-  onCheckedChange?: (value: boolean) => void,
-  getInputRef?: () => HTMLInputElement | null
+  onCheckedChange?: (value: boolean) => void
 ) {
-  function toggle(): void {
+  function handleChange(): void {
     if (state.finalDisabled) return;
     const next = !getChecked();
     setChecked(next);
     onCheckedChange?.(next);
   }
 
-  // Called from native input onchange — intentionally uses toggle()
-  // because Svelte controls checked state, not the native input.
-  function handleChange(): void {
-    toggle();
-  }
-
   function handleKey(e: KeyboardEvent): void {
     if (e.key !== " " && e.key !== "Enter") return;
     e.preventDefault();
-    if (e.type === "keyup") toggle();
+    if (e.type === "keyup") handleChange();
   }
 
-  function handleContainerClick(
-    e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }
-  ): void {
+  function handleContainerClick(e: MouseEvent): void {
     if (state.finalDisabled) return;
 
     const target = e.target as HTMLElement;
     if (target.tagName === "INPUT" || target.closest("label")) return;
 
-    toggle();
-    getInputRef?.()?.focus();
+    handleChange();
+
+    const container = e.currentTarget as HTMLDivElement;
+    const input = container.querySelector<HTMLInputElement>('input[type="checkbox"]');
+    input?.focus();
   }
 
   return { handleChange, handleKey, handleContainerClick };
