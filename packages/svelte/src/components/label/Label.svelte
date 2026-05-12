@@ -36,9 +36,9 @@
 <label
   for={finalFor}
   class={cn(base({ invalid: finalInvalid }), className)}
-  data-invalid={finalInvalid ? "" : undefined}
-  data-disabled={finalDisabled ? "" : undefined}
-  data-required={finalRequired ? "" : undefined}
+  data-invalid={finalInvalid}
+  data-disabled={finalDisabled}
+  data-required={finalRequired}
   {...rest}
 >
   {@render children()}

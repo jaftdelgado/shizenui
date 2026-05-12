@@ -1,7 +1,8 @@
 <script lang="ts">
   import { cn } from "../../lib/utils";
   import { switchStyles } from "@shizen-ui/styles";
-  import { type SwitchProps, SwitchState, createSwitchHandlers } from "./_internal/index.js";
+  import type { SwitchProps } from "./_internal/index.js";
+  import { SwitchState, createSwitchHandlers } from "./_internal/index.js";
   import { createFocusVisible } from "../../lib/runes/focus-visible.svelte.js";
 
   let {

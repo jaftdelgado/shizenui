@@ -1,3 +1,5 @@
 /* Components styles */
+@import "./description.css";
+@import "./label.css";
 @import "./switch-group.css";
 @import "./switch.css";
