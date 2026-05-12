@@ -7,7 +7,8 @@
     ".": {
       "types": "./src/index.ts",
       "import": "./src/index.ts",
-      "style": "./src/index.css"
+      "style": "./index.css",
+      "default": "./index.css"
     },
     "./styles": "./src/index.css",
     "./variants": "./src/variants/index.ts",

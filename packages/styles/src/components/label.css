@@ -1,0 +1,14 @@
+@layer components {
+  .label {
+    @apply inline-flex items-center transition-colors duration-200;
+    @apply text-primary-text text-sm font-medium;
+  }
+
+  .label--invalid {
+    @apply text-danger;
+  }
+
+  .label__required-indicator {
+    @apply text-danger select-none;
+  }
+}
