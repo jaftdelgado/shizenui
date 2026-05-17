@@ -10,7 +10,7 @@
     --padding: 0.25rem;
 
     /* Cursor variables */
-    --cursor-interactive: pointer;
+    --cursor-interactive: default;
     --cursor-disabled: not-allowed;
     --cursor-navigation: pointer;
 

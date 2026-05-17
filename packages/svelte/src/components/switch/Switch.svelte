@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { cn } from "../../lib/utils";
+  import { cn, createId } from "../../lib/utils/index.js";
   import { switchStyles } from "@shizen-ui/styles";
   import type { SwitchProps } from "./_internal/index.js";
   import { SwitchState, createSwitchHandlers } from "./_internal/index.js";
-  import { createFocusVisible } from "../../lib/runes/focus-visible.svelte.js";
+  import { createFocusVisible, warnIf } from "../../lib/runes/index.js";
+
+  const uid = $props.id();
 
   let {
     class: className,
@@ -11,7 +13,7 @@
     invalid = false,
     name,
     value,
-    id = crypto.randomUUID(),
+    id = createId("switch", uid),
     checked = $bindable(false),
     size = "md",
     onCheckedChange,
@@ -19,6 +21,12 @@
     children,
     ...rest
   }: SwitchProps = $props();
+
+  warnIf(
+    () => !children,
+    "Switch",
+    "No children provided. Add at least <Switch.Control /> as a child."
+  );
 
   const state = new SwitchState({
     disabled: () => disabled,
@@ -80,5 +88,5 @@
     onblur={focus.onBlur}
     {...rest}
   />
-  {@render children()}
+  {@render children?.()}
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { descriptionStyles } from "@shizen-ui/styles";
-  import { cn } from "../../lib/utils";
+  import { cn, createId } from "../../lib/utils/index.js";
   import { useFieldStateContext } from "../../lib/index.js";
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
@@ -11,6 +11,8 @@
     id?: string;
   }
 
+  const uid = $props.id();
+
   let { children, class: className, disabled = false, id: propId, ...rest }: Props = $props();
 
   const fieldContext = useFieldStateContext();
@@ -19,7 +21,9 @@
   const finalDisabled = $derived(fieldContext.exists ? fieldContext.disabled : disabled);
   const finalId = $derived(
     propId ??
-      (fieldContext.exists && fieldContext.id ? `${fieldContext.id}-description` : undefined)
+      (fieldContext.exists && fieldContext.id
+        ? `${fieldContext.id}-description`
+        : createId("description", uid))
   );
 
   const shouldShow = $derived(
@@ -32,8 +36,8 @@
     id={finalId}
     class={cn(descriptionStyles(), className)}
     data-slot="description"
-    data-disabled={finalDisabled}
-    data-invalid={finalInvalid}
+    data-disabled={finalDisabled ? "" : undefined}
+    data-invalid={finalInvalid ? "" : undefined}
     {...rest}
   >
     {@render children()}

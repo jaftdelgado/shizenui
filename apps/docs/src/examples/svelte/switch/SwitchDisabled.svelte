@@ -3,19 +3,19 @@
 </script>
 
 <div class="flex flex-col gap-4">
-  <Switch>
+  <Switch disabled={true}>
     <Switch.Control />
     <Switch.Content>
-      <Label>Weekly digest</Label>
-      <Description>A Monday summary of all workspace activity.</Description>
+      <Label>Developer Mode</Label>
+      <Description>Locked by administrator.</Description>
     </Switch.Content>
   </Switch>
 
-  <Switch checked={true}>
+  <Switch disabled={true} checked={true}>
     <Switch.Control />
     <Switch.Content>
-      <Label>Mentions & comments</Label>
-      <Description>Get notified when someone mentions you or replies.</Description>
+      <Label>Two-Factor Authentication</Label>
+      <Description>Required by security policy.</Description>
     </Switch.Content>
   </Switch>
 </div>
