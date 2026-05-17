@@ -14,9 +14,9 @@
 
 <div
   class={cn(styles.thumb(), className)}
-  data-checked={ctx.checked}
-  data-disabled={ctx.disabled}
-  data-invalid={ctx.invalid}
+  data-checked={ctx.checked ? "" : undefined}
+  data-disabled={ctx.disabled ? "" : undefined}
+  data-invalid={ctx.invalid ? "" : undefined}
 >
   {#if children}
     <div class="switch__thumb-content">

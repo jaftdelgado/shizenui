@@ -1,6 +1,6 @@
 @layer components {
   .switch {
-    @apply inline-flex items-center gap-3 transition-opacity duration-200 outline-none select-none;
+    @apply inline-flex items-center gap-3 outline-none select-none;
 
     /* Base tokens */
     --switch-bg: var(--color-control);
@@ -20,6 +20,9 @@
     --switch-thumb-translate: calc(
       var(--switch-width) - var(--switch-thumb-width) - var(--switch-padding) * 2
     );
+
+    transition: opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
 
     &[data-disabled] {
       @apply status-disabled;
@@ -43,7 +46,6 @@
 
       &[data-checked] {
         & .switch__control {
-          @apply status-invalid-field ring-1;
           background-color: var(--color-danger);
         }
       }
@@ -71,9 +73,11 @@
     height: var(--switch-height);
     width: var(--switch-width);
     background-color: var(--switch-bg);
+
     transition:
       background-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
       box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
 
     &:hover:not([data-disabled]) {
       background-color: var(--switch-bg-hover);
@@ -97,9 +101,11 @@
     box-shadow: var(--switch-thumb-shadow);
     transform: translateX(0);
     transform-origin: center;
+
     transition:
       transform 300ms var(--ease-out-fluid, cubic-bezier(0.3, 1, 0.3, 1)),
       background-color 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply transform-gpu motion-reduce:transition-none;
 
     .switch[data-checked] & {
       transform: translateX(var(--switch-thumb-translate));
