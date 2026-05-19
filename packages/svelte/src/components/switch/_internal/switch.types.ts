@@ -1,6 +1,7 @@
 import type { HTMLInputAttributes, HTMLAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
-import type { SwitchSize } from "./switch.context.js";
+
+export type SwitchSize = "sm" | "md" | "lg";
 
 type SwitchBaseProps = Omit<
   HTMLInputAttributes,

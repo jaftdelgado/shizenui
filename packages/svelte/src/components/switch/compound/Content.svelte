@@ -1,9 +1,11 @@
 <script lang="ts">
   import { switchStyles } from "@shizen-ui/styles";
-  import { cn } from "../../../lib/utils/cn.js";
+
+  import { cn } from "../../../lib/utils";
+  import { warnIf } from "../../../lib/runes/index.js";
+
   import type { SwitchContentProps } from "../_internal/index.js";
   import { useSwitchContext } from "../_internal/index.js";
-  import { warnIf } from "../../../lib/runes/index.js";
 
   let {
     children,
