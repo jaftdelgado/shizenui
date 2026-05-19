@@ -1,0 +1,19 @@
+@layer components {
+  .label {
+    @apply inline-flex items-center;
+    @apply text-primary-text text-sm font-medium;
+
+    cursor: var(--cursor-interactive);
+
+    transition: color 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+  }
+
+  .label--invalid {
+    @apply text-danger;
+  }
+
+  .label__required-indicator {
+    @apply text-danger select-none;
+  }
+}

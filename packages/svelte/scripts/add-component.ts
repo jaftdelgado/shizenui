@@ -5,9 +5,7 @@ import { fileURLToPath } from "node:url";
 const componentName = process.argv[2];
 
 if (!componentName) {
-  console.error(
-    "Please provide a component name (e.g., bun add-component my-button)",
-  );
+  console.error("Please provide a component name (e.g., bun add-component my-button)");
   process.exit(1);
 }
 
@@ -25,15 +23,9 @@ const paths = {
   svelteComponents: path.join(rootDir, "packages/svelte/src/components"),
   svelteIndex: path.join(rootDir, "packages/svelte/src/index.ts"),
   stylesComponents: path.join(rootDir, "packages/styles/src/components"),
-  stylesIndexCss: path.join(
-    rootDir,
-    "packages/styles/src/components/index.css",
-  ),
+  stylesIndexCss: path.join(rootDir, "packages/styles/src/components/index.css"),
   stylesVariants: path.join(rootDir, "packages/styles/src/variants"),
-  stylesVariantsIndex: path.join(
-    rootDir,
-    "packages/styles/src/variants/index.ts",
-  ),
+  stylesVariantsIndex: path.join(rootDir, "packages/styles/src/variants/index.ts")
 };
 
 function ensureDir(dir: string) {
@@ -72,27 +64,21 @@ const svelteTemplate = `<script lang="ts">
 </div>
 `;
 
-fs.writeFileSync(
-  path.join(svelteCompDir, `${pascalName}.svelte`),
-  svelteTemplate,
-);
+fs.writeFileSync(path.join(svelteCompDir, `${pascalName}.svelte`), svelteTemplate);
 fs.writeFileSync(
   path.join(svelteCompDir, "index.ts"),
-  `export { default as ${pascalName} } from "./${pascalName}.svelte";\n`,
+  `export { default as ${pascalName} } from "./${pascalName}.svelte";\n`
 );
 console.log(`Created Svelte component: ${componentName}`);
 
 // 2. Update Svelte entry point
-updateIndexFile(
-  paths.svelteIndex,
-  `export * from "./components/${componentName}/index.ts";`,
-);
+updateIndexFile(paths.svelteIndex, `export * from "./components/${componentName}/index.ts";`);
 
 // 3. Create CSS file
 ensureDir(paths.stylesComponents);
 fs.writeFileSync(
   path.join(paths.stylesComponents, `${componentName}.css`),
-  `.${componentName} {\n  display: block;\n}\n`,
+  `.${componentName} {\n  display: block;\n}\n`
 );
 console.log(`Created CSS: ${componentName}.css`);
 
@@ -124,20 +110,14 @@ export const ${componentName}Styles = tv({
 export type ${pascalName}Variants = VariantProps<typeof ${componentName}Styles>;
 `;
 
-fs.writeFileSync(
-  path.join(variantsDir, `${componentName}.styles.ts`),
-  stylesTemplate,
-);
+fs.writeFileSync(path.join(variantsDir, `${componentName}.styles.ts`), stylesTemplate);
 fs.writeFileSync(
   path.join(variantsDir, "index.ts"),
-  `export * from "./${componentName}.styles";\n`,
+  `export * from "./${componentName}.styles";\n`
 );
 console.log(`Created variants: ${componentName}`);
 
 // 6. Update variants index
-updateIndexFile(
-  paths.stylesVariantsIndex,
-  `export * from "./${componentName}";`,
-);
+updateIndexFile(paths.stylesVariantsIndex, `export * from "./${componentName}";`);
 
 console.log(`\n✓ Component "${componentName}" generated successfully.`);

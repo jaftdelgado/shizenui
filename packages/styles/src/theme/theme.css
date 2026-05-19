@@ -46,14 +46,15 @@
   --color-danger-foreground: var(--danger-foreground);
 
   --color-control: var(--control);
+  --color-control-foreground: var(--control-foreground);
 
   /* Calculated Variables */
 
   /* Accent state colors */
   --color-accent-hover: color-mix(
     in oklab,
-    var(--color-accent) 96%,
-    var(--color-accent-foreground) 4%
+    var(--color-accent) 90%,
+    var(--color-accent-foreground) 10%
   );
   --color-accent-pressed: color-mix(
     in oklab,

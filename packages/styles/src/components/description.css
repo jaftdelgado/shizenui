@@ -1,0 +1,9 @@
+@layer components {
+  .description {
+    @apply text-secondary-text text-xs leading-snug;
+    @apply text-wrap wrap-break-word;
+
+    transition: color 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+  }
+}

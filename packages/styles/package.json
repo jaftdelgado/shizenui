@@ -7,7 +7,8 @@
     ".": {
       "types": "./src/index.ts",
       "import": "./src/index.ts",
-      "style": "./src/index.css"
+      "style": "./index.css",
+      "default": "./index.css"
     },
     "./styles": "./src/index.css",
     "./variants": "./src/variants/index.ts",
@@ -21,8 +22,6 @@
     "access": "public"
   },
   "dependencies": {
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.0.0",
     "tailwind-variants": "^0.3.1"
   },
   "devDependencies": {
