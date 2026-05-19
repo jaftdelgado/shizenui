@@ -1,6 +1,5 @@
 import { getContext, setContext } from "svelte";
-
-export type SwitchSize = "sm" | "md" | "lg";
+import type { SwitchSize } from "./switch.types.js";
 
 export interface SwitchContextValue {
   readonly checked: boolean;

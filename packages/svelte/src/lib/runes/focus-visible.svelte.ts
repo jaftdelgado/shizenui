@@ -74,6 +74,10 @@ function getGlobalState(): GlobalFocusState {
     document.addEventListener("mouseup", onMouseUp);
 
     state.cleanup = () => {
+      if (recentlyVisibleTimeout) {
+        clearTimeout(recentlyVisibleTimeout);
+        recentlyVisibleTimeout = null;
+      }
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("blur", onWindowBlur);
       window.removeEventListener("focus", onWindowFocus);

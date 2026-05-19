@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { cn, createId } from "../../lib/utils/index.js";
   import { switchStyles } from "@shizen-ui/styles";
+
+  import { cn, createId } from "../../lib/utils";
   import type { SwitchProps } from "./_internal/index.js";
   import { SwitchState, createSwitchHandlers } from "./_internal/index.js";
   import { createFocusVisible, warnIf } from "../../lib/runes/index.js";
