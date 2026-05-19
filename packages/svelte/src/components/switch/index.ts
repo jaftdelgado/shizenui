@@ -3,7 +3,12 @@ import Control from "./compound/Control.svelte";
 import Thumb from "./compound/Thumb.svelte";
 import Content from "./compound/Content.svelte";
 
-export type { SwitchProps } from "./_internal/index.js";
+export type {
+  SwitchProps,
+  SwitchControlProps,
+  SwitchThumbProps,
+  SwitchContentProps
+} from "./_internal/index.js";
 
 export const Switch = Object.assign(Root, {
   Control,

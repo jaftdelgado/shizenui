@@ -4,8 +4,8 @@ import { setFieldStateContext, useFieldStateContext } from "../../../lib/index.j
 import type { SwitchSize } from "./switch.context.js";
 
 export class SwitchState {
-  #disabled: () => boolean;
-  #invalid: () => boolean;
+  #disabled: () => boolean | undefined;
+  #invalid: () => boolean | undefined;
   #size: () => SwitchSize;
   #id: () => string;
 
@@ -13,19 +13,23 @@ export class SwitchState {
   #groupCtx = useSwitchGroupContext();
 
   get finalDisabled(): boolean {
+    const local = this.#disabled();
+    if (local !== undefined) return local;
     return this.#groupCtx.exists
       ? this.#groupCtx.disabled
       : this.#parentFieldContext.exists
         ? this.#parentFieldContext.disabled
-        : this.#disabled();
+        : false;
   }
 
   get finalInvalid(): boolean {
+    const local = this.#invalid();
+    if (local !== undefined) return local;
     return this.#groupCtx.exists
       ? this.#groupCtx.invalid
       : this.#parentFieldContext.exists
         ? this.#parentFieldContext.invalid
-        : this.#invalid();
+        : false;
   }
 
   get finalSize(): SwitchSize {
@@ -33,8 +37,8 @@ export class SwitchState {
   }
 
   constructor(props: {
-    disabled: () => boolean;
-    invalid: () => boolean;
+    disabled: () => boolean | undefined;
+    invalid: () => boolean | undefined;
     size: () => SwitchSize;
     id: () => string;
     checked: () => boolean;
