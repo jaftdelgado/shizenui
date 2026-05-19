@@ -63,7 +63,8 @@
   }
 
   .switch,
-  .switch * {
+  .switch__control,
+  .switch__thumb {
     cursor: var(--cursor-interactive);
   }
 

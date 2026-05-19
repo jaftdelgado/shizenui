@@ -1,4 +1,9 @@
-export type { SwitchProps } from "./switch.types.js";
+export type {
+  SwitchProps,
+  SwitchControlProps,
+  SwitchThumbProps,
+  SwitchContentProps
+} from "./switch.types.js";
 
 export { SwitchState } from "./switch.state.svelte.js";
 

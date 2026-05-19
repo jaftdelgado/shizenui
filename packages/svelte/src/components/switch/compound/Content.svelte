@@ -1,10 +1,28 @@
 <script lang="ts">
-  import { type Snippet } from "svelte";
+  import { switchStyles } from "@shizen-ui/styles";
   import { cn } from "../../../lib/utils/cn.js";
+  import type { SwitchContentProps } from "../_internal/index.js";
+  import { useSwitchContext } from "../_internal/index.js";
+  import { warnIf } from "../../../lib/runes/index.js";
 
-  let { children, class: className }: { children: Snippet; class?: string } = $props();
+  let {
+    children,
+    class: className,
+    ref = $bindable(null),
+    ...rest
+  }: SwitchContentProps & { ref?: HTMLDivElement | null } = $props();
+
+  const ctx = useSwitchContext();
+  const styles = switchStyles();
+
+  warnIf(() => !ctx.exists, "Switch.Content", "Must be used inside a <Switch> component.");
 </script>
 
-<div class={cn("switch__content", className)}>
+<div
+  bind:this={ref}
+  class={cn(styles.content(), className)}
+  {...rest}
+  id={ctx.exists ? `${ctx.id}-label` : undefined}
+>
   {@render children()}
 </div>

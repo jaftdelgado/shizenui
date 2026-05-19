@@ -10,10 +10,6 @@
       "svelte": "./src/index.ts",
       "import": "./src/index.ts"
     },
-    "./components/*": {
-      "svelte": "./src/components/*.svelte",
-      "types": "./src/components/*.svelte"
-    },
     "./contexts/*": {
       "types": "./src/contexts/*.ts",
       "import": "./src/contexts/*.ts"
