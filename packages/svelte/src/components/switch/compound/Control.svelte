@@ -1,8 +1,8 @@
 <script lang="ts">
   import { switchStyles } from "@shizen-ui/styles";
 
-  import { cn } from "../../../lib/utils";
-  import { warnIf } from "../../../lib/runes/index.js";
+  import { cn, presence } from "../../../lib/utils";
+  import { assertContext } from "../../../lib/runes/index.js";
 
   import Thumb from "./Thumb.svelte";
   import { useSwitchContext } from "../_internal/index.js";
@@ -16,22 +16,30 @@
   }: SwitchControlProps & { ref?: HTMLDivElement | null } = $props();
 
   const ctx = useSwitchContext();
-  const styles = $derived(switchStyles());
+  const styles = switchStyles();
 
-  warnIf(() => !ctx.exists, "Switch.Control", "Must be used inside a <Switch> component.");
+  const { shouldRender } = assertContext(
+    () => !ctx.exists,
+    "Switch.Control",
+    "Must be used inside a <Switch> component."
+  );
 </script>
 
-<div
-  bind:this={ref}
-  class={cn(styles.control(), className)}
-  data-checked={ctx.checked ? "" : undefined}
-  data-disabled={ctx.disabled ? "" : undefined}
-  data-invalid={ctx.invalid ? "" : undefined}
-  {...rest}
->
-  {#if children}
-    {@render children()}
-  {:else}
-    <Thumb />
-  {/if}
-</div>
+{#if shouldRender}
+  <div
+    bind:this={ref}
+    class={cn(styles.control(), className)}
+    data-checked={presence(ctx.checked)}
+    data-disabled={presence(ctx.disabled)}
+    data-invalid={presence(ctx.invalid)}
+    {...rest}
+  >
+    <!-- Default Thumb rendering is intentional.
+    Use <Switch.Thumb> explicitly only for custom thumb content. -->
+    {#if children}
+      {@render children()}
+    {:else}
+      <Thumb />
+    {/if}
+  </div>
+{/if}

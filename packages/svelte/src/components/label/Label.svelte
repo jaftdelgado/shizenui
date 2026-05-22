@@ -24,6 +24,7 @@
   }: Props = $props();
 
   const fieldContext = useFieldStateContext();
+  fieldContext.registerLabel?.();
 
   const finalInvalid = $derived(fieldContext.exists ? fieldContext.invalid : invalid);
   const finalDisabled = $derived(fieldContext.exists ? fieldContext.disabled : disabled);
@@ -35,6 +36,7 @@
 
 <label
   for={finalFor}
+  id={fieldContext.exists ? `${fieldContext.id}-label` : undefined}
   class={cn(base({ invalid: finalInvalid }), className)}
   data-invalid={finalInvalid ? "" : undefined}
   data-disabled={finalDisabled ? "" : undefined}

@@ -16,6 +16,7 @@
   let { children, class: className, disabled = false, id: propId, ...rest }: Props = $props();
 
   const fieldContext = useFieldStateContext();
+  fieldContext.registerDescription?.();
 
   const finalInvalid = $derived(fieldContext.exists ? fieldContext.invalid : false);
   const finalDisabled = $derived(fieldContext.exists ? fieldContext.disabled : disabled);

@@ -1,23 +1,19 @@
 import type { SwitchState } from "./switch.state.svelte.js";
 
-export function createSwitchHandlers(
-  state: SwitchState,
-  getChecked: () => boolean,
-  setChecked: (value: boolean) => void,
-  onCheckedChange?: (value: boolean) => void,
-  getInputRef?: () => HTMLInputElement | null
-) {
+export function createSwitchHandlers(options: {
+  state: SwitchState;
+  getChecked: () => boolean;
+  setChecked: (value: boolean) => void;
+  onCheckedChange?: (value: boolean) => void;
+  getInputRef?: () => HTMLInputElement | null;
+}) {
+  const { state, getChecked, setChecked, onCheckedChange, getInputRef } = options;
+
   function toggle(): void {
     if (state.finalDisabled) return;
     const next = !getChecked();
     setChecked(next);
     onCheckedChange?.(next);
-  }
-
-  // Called from native input onchange — intentionally uses toggle()
-  // because Svelte controls checked state, not the native input.
-  function handleChange(): void {
-    toggle();
   }
 
   function handleKey(e: KeyboardEvent): void {
@@ -38,7 +34,7 @@ export function createSwitchHandlers(
     getInputRef?.()?.focus();
   }
 
-  return { handleChange, handleKey, handleContainerClick };
+  return { handleToggle: toggle, handleKey, handleContainerClick };
 }
 
 export type SwitchHandlers = ReturnType<typeof createSwitchHandlers>;

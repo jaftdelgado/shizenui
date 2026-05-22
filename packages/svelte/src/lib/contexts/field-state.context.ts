@@ -6,6 +6,8 @@ export interface FieldStateContextValue {
   readonly required: boolean;
   readonly keepDescription?: boolean;
   readonly id: string;
+  registerLabel?: () => void;
+  registerDescription?: () => void;
 }
 
 export interface FieldStateContextResult {
@@ -15,6 +17,8 @@ export interface FieldStateContextResult {
   readonly keepDescription: boolean;
   readonly id: string;
   readonly exists: boolean;
+  registerLabel?: () => void;
+  registerDescription?: () => void;
 }
 
 const FIELD_STATE_CONTEXT_KEY = Symbol("shizen:field-state");
@@ -45,7 +49,9 @@ export function useFieldStateContext(): FieldStateContextResult {
       },
       get exists() {
         return false;
-      }
+      },
+      registerLabel() {},
+      registerDescription() {}
     } satisfies FieldStateContextResult;
   }
 
@@ -67,6 +73,12 @@ export function useFieldStateContext(): FieldStateContextResult {
     },
     get exists() {
       return true;
+    },
+    registerLabel() {
+      return context.registerLabel?.();
+    },
+    registerDescription() {
+      return context.registerDescription?.();
     }
   } satisfies FieldStateContextResult;
 }

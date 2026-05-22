@@ -7,7 +7,8 @@ export type {
   SwitchProps,
   SwitchControlProps,
   SwitchThumbProps,
-  SwitchContentProps
+  SwitchContentProps,
+  SwitchRenderState
 } from "./_internal/index.js";
 
 export const Switch = Object.assign(Root, {

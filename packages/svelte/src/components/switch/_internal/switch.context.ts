@@ -7,6 +7,12 @@ export interface SwitchContextValue {
   readonly invalid: boolean;
   readonly id: string;
   readonly size: SwitchSize;
+  readonly hasContent: boolean;
+  readonly hasLabel: boolean;
+  readonly hasDescription: boolean;
+  registerContent: () => void;
+  registerLabel: () => void;
+  registerDescription: () => void;
 }
 
 export interface SwitchContextResult {
@@ -15,6 +21,12 @@ export interface SwitchContextResult {
   readonly invalid: boolean;
   readonly id: string;
   readonly size: SwitchSize;
+  readonly hasContent: boolean;
+  readonly hasLabel: boolean;
+  readonly hasDescription: boolean;
+  registerContent: () => void;
+  registerLabel: () => void;
+  registerDescription: () => void;
   readonly exists: boolean;
 }
 
@@ -44,6 +56,18 @@ export function useSwitchContext(): SwitchContextResult {
       get size() {
         return "md" as SwitchSize;
       },
+      get hasContent() {
+        return false;
+      },
+      get hasLabel() {
+        return false;
+      },
+      get hasDescription() {
+        return false;
+      },
+      registerContent() {},
+      registerLabel() {},
+      registerDescription() {},
       get exists() {
         return false;
       }
@@ -65,6 +89,24 @@ export function useSwitchContext(): SwitchContextResult {
     },
     get size() {
       return context.size;
+    },
+    get hasContent() {
+      return context.hasContent;
+    },
+    get hasLabel() {
+      return context.hasLabel;
+    },
+    get hasDescription() {
+      return context.hasDescription;
+    },
+    registerContent() {
+      return context.registerContent();
+    },
+    registerLabel() {
+      return context.registerLabel();
+    },
+    registerDescription() {
+      return context.registerDescription();
     },
     get exists() {
       return true;
