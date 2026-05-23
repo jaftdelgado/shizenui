@@ -12,6 +12,7 @@ import ComponentExample from "@components/astro/ComponentExample.astro";
 
 import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.md?raw";
 
+import SwitchTests from "@examples/svelte/switch/SwitchTests.svelte";
 import SwitchDisabled from "@examples/svelte/switch/SwitchDisabled.svelte";
 import SwitchControlled from "@examples/svelte/switch/SwitchControlled.svelte";
 import SwitchSizes from "@examples/svelte/switch/SwitchSizes.svelte";
@@ -30,6 +31,12 @@ import SwitchGroupDisabled from "@examples/svelte/switch/SwitchGroupDisabled.sve
 <CodeBlock code={SwitchAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
 
 ## Examples
+
+### Switch Tests
+
+<ComponentExample src="svelte/switch/SwitchTests.svelte">
+  <SwitchTests client:load />
+</ComponentExample>
 
 ### Disabled State
 

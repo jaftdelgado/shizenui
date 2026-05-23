@@ -1,5 +1,5 @@
 import { setSwitchContext } from "./switch.context.js";
-import { setFieldStateContext } from "../../../lib/index.js";
+import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
 import { SwitchState } from "./switch.state.svelte.js";
 
 export function setupSwitchContexts(
@@ -7,8 +7,8 @@ export function setupSwitchContexts(
   props: { checked: () => boolean; id: () => string }
 ): void {
   let hasContent = $state(false);
-  let hasLabel = $state(false);
-  let hasDescription = $state(false);
+  let labelId = $state<string | undefined>(undefined);
+  let descriptionId = $state<string | undefined>(undefined);
 
   setSwitchContext({
     get checked() {
@@ -30,19 +30,25 @@ export function setupSwitchContexts(
       return hasContent;
     },
     get hasLabel() {
-      return hasLabel;
+      return labelId !== undefined;
     },
     get hasDescription() {
-      return hasDescription;
+      return descriptionId !== undefined;
+    },
+    get labelId() {
+      return labelId;
+    },
+    get descriptionId() {
+      return descriptionId;
     },
     registerContent() {
       hasContent = true;
     },
-    registerLabel() {
-      hasLabel = true;
+    registerLabel(id: string) {
+      labelId = id;
     },
-    registerDescription() {
-      hasDescription = true;
+    registerDescription(id: string) {
+      descriptionId = id;
     }
   });
 
@@ -61,12 +67,21 @@ export function setupSwitchContexts(
     },
     get keepDescription() {
       return true;
+    }
+  });
+
+  setContentSlotContext({
+    get labelId() {
+      return labelId;
     },
-    registerLabel() {
-      hasLabel = true;
+    get descriptionId() {
+      return descriptionId;
     },
-    registerDescription() {
-      hasDescription = true;
+    registerLabel(id: string) {
+      labelId = id;
+    },
+    registerDescription(id: string) {
+      descriptionId = id;
     }
   });
 }

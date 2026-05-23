@@ -10,9 +10,11 @@ export interface SwitchContextValue {
   readonly hasContent: boolean;
   readonly hasLabel: boolean;
   readonly hasDescription: boolean;
+  readonly labelId: string | undefined;
+  readonly descriptionId: string | undefined;
   registerContent: () => void;
-  registerLabel: () => void;
-  registerDescription: () => void;
+  registerLabel: (id: string) => void;
+  registerDescription: (id: string) => void;
 }
 
 export interface SwitchContextResult {
@@ -24,9 +26,11 @@ export interface SwitchContextResult {
   readonly hasContent: boolean;
   readonly hasLabel: boolean;
   readonly hasDescription: boolean;
+  readonly labelId: string | undefined;
+  readonly descriptionId: string | undefined;
   registerContent: () => void;
-  registerLabel: () => void;
-  registerDescription: () => void;
+  registerLabel: (id: string) => void;
+  registerDescription: (id: string) => void;
   readonly exists: boolean;
 }
 
@@ -65,9 +69,15 @@ export function useSwitchContext(): SwitchContextResult {
       get hasDescription() {
         return false;
       },
+      get labelId() {
+        return undefined;
+      },
+      get descriptionId() {
+        return undefined;
+      },
       registerContent() {},
-      registerLabel() {},
-      registerDescription() {},
+      registerLabel(_id: string) {},
+      registerDescription(_id: string) {},
       get exists() {
         return false;
       }
@@ -99,14 +109,20 @@ export function useSwitchContext(): SwitchContextResult {
     get hasDescription() {
       return context.hasDescription;
     },
+    get labelId() {
+      return context.labelId;
+    },
+    get descriptionId() {
+      return context.descriptionId;
+    },
     registerContent() {
       return context.registerContent();
     },
-    registerLabel() {
-      return context.registerLabel();
+    registerLabel(id: string) {
+      return context.registerLabel(id);
     },
-    registerDescription() {
-      return context.registerDescription();
+    registerDescription(id: string) {
+      return context.registerDescription(id);
     },
     get exists() {
       return true;

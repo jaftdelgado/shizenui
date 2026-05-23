@@ -29,6 +29,7 @@ export interface SwitchProps extends SwitchBaseProps {
   value?: string;
   id?: string;
   size?: SwitchSize;
+  onKeyDown?: (event: KeyboardEvent) => void;
   onCheckedChange?: (checked: boolean) => void;
   children?: Snippet<[SwitchRenderState]>;
 }

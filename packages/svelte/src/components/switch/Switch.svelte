@@ -22,6 +22,7 @@
     id = createId("switch", uid),
     checked = $bindable(false),
     size = "md",
+    onKeyDown,
     onCheckedChange,
     children,
     ...rest
@@ -60,7 +61,7 @@
       !ctx.hasContent &&
       !rest["aria-label"] &&
       !rest["aria-labelledby"] &&
-      !rest["title"],
+      !rest.title,
     "Switch",
     "No Switch.Content found. Consider adding aria-label for screen reader support."
   );
@@ -109,12 +110,13 @@
     tabindex={!switchState.finalDisabled ? 0 : -1}
     aria-checked={checked}
     aria-invalid={switchState.finalInvalid ? true : undefined}
-    aria-labelledby={ctx.hasContent ? `${id}-label` : undefined}
-    aria-describedby={ctx.hasDescription ? `${id}-description` : undefined}
+    aria-labelledby={ctx.hasLabel ? ctx.labelId : ctx.hasContent ? `${id}-label` : undefined}
+    aria-describedby={ctx.hasDescription ? ctx.descriptionId : undefined}
     onchange={handlers.handleToggle}
     onkeydown={(e) => {
       focus.onKeyDown();
       handlers.handleKey(e);
+      onKeyDown?.(e);
     }}
     onkeyup={handlers.handleKey}
     onfocus={focus.onFocus}
