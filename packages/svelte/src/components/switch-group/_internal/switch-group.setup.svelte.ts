@@ -1,54 +1,26 @@
-import { setSwitchContext } from "./switch.context.js";
+import { setSwitchGroupContext } from "./switch-group.context.js";
 import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
-import { SwitchState } from "./switch.state.svelte.js";
+import { SwitchGroupState } from "./switch-group.state.svelte.js";
 
-export function setupSwitchContexts(
-  state: SwitchState,
-  props: { checked: () => boolean; id: () => string }
-): void {
-  let hasContent = $state(false);
+export function setupSwitchGroupContexts(
+  state: SwitchGroupState,
+  props: { id: () => string }
+): { getLabelId: () => string | undefined; getDescriptionId: () => string | undefined } {
   let labelId = $state<string | undefined>(undefined);
   let descriptionId = $state<string | undefined>(undefined);
 
-  setSwitchContext({
-    get checked() {
-      return props.checked();
-    },
+  setSwitchGroupContext({
     get disabled() {
       return state.finalDisabled;
     },
     get readonly() {
       return state.finalReadonly;
     },
-    get id() {
-      return props.id();
-    },
     get size() {
       return state.finalSize;
     },
-    get hasContent() {
-      return hasContent;
-    },
-    get hasLabel() {
-      return labelId !== undefined;
-    },
-    get hasDescription() {
-      return descriptionId !== undefined;
-    },
-    get labelId() {
-      return labelId;
-    },
-    get descriptionId() {
-      return descriptionId;
-    },
-    registerContent() {
-      hasContent = true;
-    },
-    registerLabel(id: string) {
-      labelId = id;
-    },
-    registerDescription(id: string) {
-      descriptionId = id;
+    get orientation() {
+      return state.finalOrientation;
     }
   });
 
@@ -68,11 +40,8 @@ export function setupSwitchContexts(
     get id() {
       return props.id();
     },
-    get inputId() {
-      return props.id();
-    },
     get keepDescription() {
-      return true;
+      return false;
     }
   });
 
@@ -96,4 +65,9 @@ export function setupSwitchContexts(
       descriptionId = undefined;
     }
   });
+
+  return {
+    getLabelId: () => labelId,
+    getDescriptionId: () => descriptionId
+  };
 }

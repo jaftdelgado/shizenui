@@ -4,7 +4,7 @@ import type { SwitchSize } from "./switch.types.js";
 export interface SwitchContextValue {
   readonly checked: boolean;
   readonly disabled: boolean;
-  readonly invalid: boolean;
+  readonly readonly: boolean;
   readonly id: string;
   readonly size: SwitchSize;
   readonly hasContent: boolean;
@@ -20,7 +20,7 @@ export interface SwitchContextValue {
 export interface SwitchContextResult {
   readonly checked: boolean;
   readonly disabled: boolean;
-  readonly invalid: boolean;
+  readonly readonly: boolean;
   readonly id: string;
   readonly size: SwitchSize;
   readonly hasContent: boolean;
@@ -51,7 +51,7 @@ export function useSwitchContext(): SwitchContextResult {
       get disabled() {
         return false;
       },
-      get invalid() {
+      get readonly() {
         return false;
       },
       get id() {
@@ -91,8 +91,8 @@ export function useSwitchContext(): SwitchContextResult {
     get disabled() {
       return context.disabled;
     },
-    get invalid() {
-      return context.invalid;
+    get readonly() {
+      return context.readonly;
     },
     get id() {
       return context.id;

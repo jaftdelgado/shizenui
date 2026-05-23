@@ -1,6 +1,6 @@
 <script lang="ts">
   import { descriptionStyles } from "@shizen-ui/styles";
-  import { cn, createId } from "../../lib/utils/index.js";
+  import { cn, createId, presence } from "../../lib/utils/index.js";
   import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
   import { warnIf } from "../../lib/runes/index.js";
   import type { HTMLAttributes } from "svelte/elements";
@@ -34,16 +34,17 @@
         : createId("description", uid))
   );
 
-  $effect(() => {
-    if (shouldShow) {
-      slotCtx.registerDescription(finalId);
-    }
-  });
-
   const shouldShow = $derived(
     (!finalInvalid || (fieldContext.exists && fieldContext.keepDescription)) &&
       !(slotCtx.exists && !slotCtx.hasLabel)
   );
+
+  $effect(() => {
+    if (shouldShow) {
+      slotCtx.registerDescription(finalId);
+      return () => slotCtx.unregisterDescription();
+    }
+  });
 </script>
 
 {#if shouldShow}
@@ -51,8 +52,8 @@
     id={finalId}
     class={cn(descriptionStyles(), className)}
     data-slot="description"
-    data-disabled={finalDisabled ? "" : undefined}
-    data-invalid={finalInvalid ? "" : undefined}
+    data-disabled={presence(finalDisabled)}
+    data-invalid={presence(finalInvalid)}
     {...rest}
   >
     {@render children()}

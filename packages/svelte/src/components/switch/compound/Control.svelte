@@ -31,7 +31,7 @@
     class={cn(styles.control(), className)}
     data-checked={presence(ctx.checked)}
     data-disabled={presence(ctx.disabled)}
-    data-invalid={presence(ctx.invalid)}
+    data-readonly={presence(ctx.readonly)}
     {...rest}
   >
     <!-- Default Thumb rendering is intentional.

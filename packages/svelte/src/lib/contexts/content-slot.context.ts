@@ -3,6 +3,8 @@ import { getContext, setContext } from "svelte";
 export interface ContentSlotContextValue {
   registerLabel: (id: string) => void;
   registerDescription: (id: string) => void;
+  unregisterLabel: () => void;
+  unregisterDescription: () => void;
   readonly labelId: string | undefined;
   readonly descriptionId: string | undefined;
 }
@@ -15,6 +17,8 @@ export interface ContentSlotContextResult {
   readonly exists: boolean;
   registerLabel: (id: string) => void;
   registerDescription: (id: string) => void;
+  unregisterLabel: () => void;
+  unregisterDescription: () => void;
 }
 
 const CONTENT_SLOT_CONTEXT_KEY = Symbol("shizen:content-slot");
@@ -46,7 +50,9 @@ export function useContentSlotContext(): ContentSlotContextResult {
         return false;
       },
       registerLabel(_id: string) {},
-      registerDescription(_id: string) {}
+      registerDescription(_id: string) {},
+      unregisterLabel() {},
+      unregisterDescription() {}
     } satisfies ContentSlotContextResult;
   }
 
@@ -71,6 +77,12 @@ export function useContentSlotContext(): ContentSlotContextResult {
     },
     registerDescription(id: string) {
       return context.registerDescription(id);
+    },
+    unregisterLabel() {
+      return context.unregisterLabel();
+    },
+    unregisterDescription() {
+      return context.unregisterDescription();
     }
   } satisfies ContentSlotContextResult;
 }

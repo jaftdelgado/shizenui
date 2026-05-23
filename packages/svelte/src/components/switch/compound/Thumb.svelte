@@ -30,7 +30,7 @@
     class={cn(styles.thumb(), className)}
     data-checked={presence(ctx.checked)}
     data-disabled={presence(ctx.disabled)}
-    data-invalid={presence(ctx.invalid)}
+    data-readonly={presence(ctx.readonly)}
     {...rest}
   >
     {#if children}

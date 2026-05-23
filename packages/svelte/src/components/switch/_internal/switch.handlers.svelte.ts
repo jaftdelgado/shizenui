@@ -10,6 +10,11 @@ export function createSwitchHandlers(options: {
   const { state, getChecked, setChecked, onCheckedChange, getInputRef } = options;
 
   function toggle(): void {
+    if (state.finalReadonly) {
+      const inputEl = getInputRef?.();
+      if (inputEl) inputEl.checked = getChecked();
+      return;
+    }
     if (state.finalDisabled) return;
     const next = !getChecked();
     setChecked(next);
@@ -25,7 +30,7 @@ export function createSwitchHandlers(options: {
   function handleContainerClick(
     e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }
   ): void {
-    if (state.finalDisabled) return;
+    if (state.finalDisabled || state.finalReadonly) return;
 
     const target = e.target as HTMLElement;
     if (target.tagName === "INPUT" || target.closest("label")) return;

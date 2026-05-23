@@ -25,11 +25,10 @@ type SwitchBaseProps = Omit<
 export interface SwitchProps extends SwitchBaseProps {
   checked?: boolean;
   disabled?: boolean;
-  invalid?: boolean;
+  readonly?: boolean;
   value?: string;
   id?: string;
   size?: SwitchSize;
-  onKeyDown?: (event: KeyboardEvent) => void;
   onCheckedChange?: (checked: boolean) => void;
   children?: Snippet<[SwitchRenderState]>;
 }
@@ -37,7 +36,7 @@ export interface SwitchProps extends SwitchBaseProps {
 export interface SwitchRenderState {
   isChecked: boolean;
   isDisabled: boolean;
-  isInvalid: boolean;
+  isReadonly: boolean;
   isFocusVisible: boolean;
 }
 

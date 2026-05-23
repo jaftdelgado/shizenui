@@ -33,22 +33,17 @@
       }
     }
 
+    &[data-readonly] {
+      &,
+      & * {
+        cursor: default;
+      }
+    }
+
     &[data-checked] {
       --switch-bg: var(--color-accent);
       --switch-bg-hover: var(--color-accent-hover);
       --switch-thumb-bg: var(--color-accent-foreground);
-    }
-
-    &[data-invalid] {
-      & .switch__control {
-        @apply status-invalid-field ring-1;
-      }
-
-      &[data-checked] {
-        & .switch__control {
-          background-color: var(--color-danger);
-        }
-      }
     }
 
     &.switch--sm {
@@ -80,7 +75,7 @@
       box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
 
-    &:hover:not([data-disabled]) {
+    &:hover:not([data-disabled]):not([data-readonly]) {
       background-color: var(--switch-bg-hover);
     }
 

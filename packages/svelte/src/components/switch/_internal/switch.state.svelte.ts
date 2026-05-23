@@ -8,7 +8,7 @@ import type { SwitchSize } from "./switch.types.js";
 
 export class SwitchState {
   #disabled: () => boolean | undefined;
-  #invalid: () => boolean | undefined;
+  #readonly: () => boolean | undefined;
   #size: () => SwitchSize;
 
   #parentFieldContext: FieldStateContextResult;
@@ -24,13 +24,13 @@ export class SwitchState {
         : false;
   }
 
-  get finalInvalid(): boolean {
-    const local = this.#invalid();
+  get finalReadonly(): boolean {
+    const local = this.#readonly();
     if (local !== undefined) return local;
     return this.#groupCtx.exists
-      ? this.#groupCtx.invalid
+      ? this.#groupCtx.readonly
       : this.#parentFieldContext.exists
-        ? this.#parentFieldContext.invalid
+        ? this.#parentFieldContext.readonly
         : false;
   }
 
@@ -40,13 +40,13 @@ export class SwitchState {
 
   constructor(props: {
     disabled: () => boolean | undefined;
-    invalid: () => boolean | undefined;
+    readonly: () => boolean | undefined;
     size: () => SwitchSize;
     groupContext?: SwitchGroupContextResult;
     fieldContext?: FieldStateContextResult;
   }) {
     this.#disabled = props.disabled;
-    this.#invalid = props.invalid;
+    this.#readonly = props.readonly;
     this.#size = props.size;
     this.#groupCtx = props.groupContext ?? useSwitchGroupContext();
     this.#parentFieldContext = props.fieldContext ?? useFieldStateContext();

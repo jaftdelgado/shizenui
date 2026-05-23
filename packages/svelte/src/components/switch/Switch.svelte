@@ -16,13 +16,12 @@
   let {
     class: className,
     disabled = undefined,
-    invalid = undefined,
+    readonly = undefined,
     name,
     value,
     id = createId("switch", uid),
     checked = $bindable(false),
     size = "md",
-    onKeyDown,
     onCheckedChange,
     children,
     ...rest
@@ -44,7 +43,7 @@
 
   const switchState = new SwitchState({
     disabled: () => disabled,
-    invalid: () => invalid,
+    readonly: () => readonly,
     size: () => size
   });
 
@@ -66,12 +65,6 @@
     "No Switch.Content found. Consider adding aria-label for screen reader support."
   );
 
-  warnIf(
-    () => ctx.hasDescription && !ctx.hasLabel,
-    "Switch",
-    "A <Description> was found inside <Switch.Content> without a <Label>. The description text will be announced twice by screen readers. Add a <Label> to fix this."
-  );
-
   const handlers = createSwitchHandlers({
     state: switchState,
     getChecked: () => checked,
@@ -91,7 +84,7 @@
   role="none"
   class={cn(styles.base(), className)}
   data-disabled={presence(switchState.finalDisabled)}
-  data-invalid={presence(switchState.finalInvalid)}
+  data-readonly={presence(switchState.finalReadonly)}
   data-checked={presence(checked)}
   data-focus-visible={presence(focus.isFocusVisible)}
   onmousedown={focus.onMouseDown}
@@ -109,14 +102,13 @@
     class={styles.input()}
     tabindex={!switchState.finalDisabled ? 0 : -1}
     aria-checked={checked}
-    aria-invalid={switchState.finalInvalid ? true : undefined}
+    aria-readonly={switchState.finalReadonly ? true : undefined}
     aria-labelledby={ctx.hasLabel ? ctx.labelId : ctx.hasContent ? `${id}-label` : undefined}
     aria-describedby={ctx.hasDescription ? ctx.descriptionId : undefined}
     onchange={handlers.handleToggle}
     onkeydown={(e) => {
       focus.onKeyDown();
       handlers.handleKey(e);
-      onKeyDown?.(e);
     }}
     onkeyup={handlers.handleKey}
     onfocus={focus.onFocus}
@@ -126,7 +118,7 @@
   {@render children?.({
     isChecked: checked,
     isDisabled: switchState.finalDisabled,
-    isInvalid: switchState.finalInvalid,
+    isReadonly: switchState.finalReadonly,
     isFocusVisible: focus.isFocusVisible
   })}
 </div>
