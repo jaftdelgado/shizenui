@@ -58,11 +58,11 @@ export function setupSwitchGroupContexts(
     registerDescription(id: string) {
       descriptionId = id;
     },
-    unregisterLabel() {
-      labelId = undefined;
+    unregisterLabel(id: string) {
+      if (labelId === id) labelId = undefined;
     },
-    unregisterDescription() {
-      descriptionId = undefined;
+    unregisterDescription(id: string) {
+      if (descriptionId === id) descriptionId = undefined;
     }
   });
 

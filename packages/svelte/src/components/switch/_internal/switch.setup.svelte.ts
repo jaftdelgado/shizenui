@@ -6,7 +6,7 @@ export function setupSwitchContexts(
   state: SwitchState,
   props: { checked: () => boolean; id: () => string }
 ): void {
-  let hasContent = $state(false);
+  let contentIds = $state(new Set<string>());
   let labelId = $state<string | undefined>(undefined);
   let descriptionId = $state<string | undefined>(undefined);
 
@@ -27,7 +27,7 @@ export function setupSwitchContexts(
       return state.finalSize;
     },
     get hasContent() {
-      return hasContent;
+      return contentIds.size > 0;
     },
     get hasLabel() {
       return labelId !== undefined;
@@ -41,14 +41,17 @@ export function setupSwitchContexts(
     get descriptionId() {
       return descriptionId;
     },
-    registerContent() {
-      hasContent = true;
+    registerContent(id: string) {
+      if (contentIds.has(id)) return;
+      const next = new Set(contentIds);
+      next.add(id);
+      contentIds = next;
     },
-    registerLabel(id: string) {
-      labelId = id;
-    },
-    registerDescription(id: string) {
-      descriptionId = id;
+    unregisterContent(id: string) {
+      if (!contentIds.has(id)) return;
+      const next = new Set(contentIds);
+      next.delete(id);
+      contentIds = next;
     }
   });
 
@@ -89,11 +92,11 @@ export function setupSwitchContexts(
     registerDescription(id: string) {
       descriptionId = id;
     },
-    unregisterLabel() {
-      labelId = undefined;
+    unregisterLabel(id: string) {
+      if (labelId === id) labelId = undefined;
     },
-    unregisterDescription() {
-      descriptionId = undefined;
+    unregisterDescription(id: string) {
+      if (descriptionId === id) descriptionId = undefined;
     }
   });
 }

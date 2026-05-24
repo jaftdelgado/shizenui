@@ -1,7 +1,7 @@
 <script lang="ts">
   import { switchStyles } from "@shizen-ui/styles";
 
-  import { cn } from "../../../lib/utils";
+  import { cn, createId } from "../../../lib/utils";
   import { assertContext } from "../../../lib/runes/index.js";
 
   import type { SwitchContentProps } from "../_internal/index.js";
@@ -14,9 +14,15 @@
     ...rest
   }: SwitchContentProps & { ref?: HTMLDivElement | null } = $props();
 
+  const uid = $props.id();
   const ctx = useSwitchContext();
-  ctx.registerContent();
   const styles = switchStyles();
+  const contentId = createId("switch-content", uid);
+  ctx.registerContent(contentId);
+
+  $effect(() => {
+    return () => ctx.unregisterContent(contentId);
+  });
 
   const { shouldRender } = assertContext(
     () => !ctx.exists,

@@ -1,66 +1,49 @@
 <script lang="ts">
-  import { Switch, SwitchGroup, Label, Description } from "@shizen-ui/svelte";
+  import { Switch, Label, Description } from "@shizen-ui/svelte";
 
   // ================================================================
-  // Estado compartido para los patrones
+  // Estado compartido
   // ================================================================
-  let v1 = $state(false);
+  let checked1 = $state(false);
+  let checked2 = $state(false);
+  let checked3 = $state(false);
 
-  let notifications = $state({
-    email: false,
-    sms: true,
-    push: true
-  });
-
-  let privacy = $state({
-    analytics: true,
-    marketing: false,
-    thirdParty: false
-  });
-
-  let readonly = $state({
-    api: true,
-    audit: true,
-    compliance: false
-  });
+  let showLabel = $state(true);
+  let showDescription = $state(true);
+  let showContent = $state(true);
 </script>
 
 <div class="flex flex-col gap-12 p-8">
   <!-- ================================================================ -->
-  <!-- PATRÓN 1 — SwitchGroup básico con Label y Description del grupo  -->
-  <!-- Esperado: role="group" con aria-labelledby y aria-describedby    -->
-  <!-- Narrador: "Notification Channels, grupo,                         -->
-  <!--            Choose how you want to be notified."                  -->
-  <!-- Switches individuales anuncian su propio label y descripción     -->
+  <!-- CASO 3 — Switch.Content montado/desmontado condicionalmente      -->
+  <!-- Verificar:                                                        -->
+  <!--   - Con Content: aria-labelledby presente                       -->
+  <!--   - Sin Content: aria-labelledby ausente, warning en consola    -->
+  <!--   - Al remontar Content: aria-labelledby vuelve a aparecer      -->
+  <!--   - hasContent vuelve a false cuando Content desmonta            -->
   <!-- ================================================================ -->
-  <section>
-    <p class="mb-2 font-mono text-sm text-gray-500">Patrón 1 — Label + Description del grupo</p>
-    <SwitchGroup>
-      <Label>Notification Channels</Label>
-      <Description>Choose how you want to be notified.</Description>
-      <SwitchGroup.Items>
-        <Switch bind:checked={notifications.email}>
-          <Switch.Control />
-          <Switch.Content>
-            <Label>Email</Label>
-            <Description>Receive updates via email.</Description>
-          </Switch.Content>
-        </Switch>
-        <Switch bind:checked={notifications.sms}>
-          <Switch.Control />
-          <Switch.Content>
-            <Label>SMS</Label>
-            <Description>Get alerts as text messages.</Description>
-          </Switch.Content>
-        </Switch>
-        <Switch bind:checked={notifications.push}>
-          <Switch.Control />
-          <Switch.Content>
-            <Label>Push</Label>
-            <Description>Enable browser notifications.</Description>
-          </Switch.Content>
-        </Switch>
-      </SwitchGroup.Items>
-    </SwitchGroup>
+  <section class="flex flex-col gap-4">
+    <p class="font-mono text-sm text-gray-500">Caso 3 — Switch.Content condicional</p>
+
+    <label class="flex items-center gap-2 text-sm">
+      <input type="checkbox" bind:checked={showContent} />
+      Mostrar Switch.Content
+    </label>
+
+    <Switch bind:checked={checked3}>
+      <Switch.Control />
+      {#if showContent}
+        <Switch.Content>
+          <Description>Receive alerts directly in your browser.</Description>
+          <Label>Push notifications</Label>
+        </Switch.Content>
+      {/if}
+    </Switch>
+
+    <p class="font-mono text-xs text-gray-400">
+      Esperado con Content: aria-labelledby y aria-describedby presentes<br />
+      Esperado sin Content: ambos ausentes, warning "No Switch.Content found"<br />
+      Al remontar: aria attrs vuelven a aparecer correctamente
+    </p>
   </section>
 </div>

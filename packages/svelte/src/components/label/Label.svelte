@@ -31,12 +31,12 @@
   const finalRequired = $derived(fieldContext.exists ? fieldContext.required : required);
   const finalFor = $derived(htmlFor ?? (fieldContext.exists ? fieldContext.inputId : undefined));
   const labelId = fieldContext.exists ? `${fieldContext.id}-label` : undefined;
+  if (labelId) slotCtx.registerLabel(labelId);
 
   $effect(() => {
-    if (labelId) {
-      slotCtx.registerLabel(labelId);
-      return () => slotCtx.unregisterLabel();
-    }
+    return () => {
+      if (labelId) slotCtx.unregisterLabel(labelId);
+    };
   });
 
   const { base, requiredIndicator } = labelStyles();

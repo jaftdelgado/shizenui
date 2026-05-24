@@ -42,7 +42,7 @@
   $effect(() => {
     if (shouldShow) {
       slotCtx.registerDescription(finalId);
-      return () => slotCtx.unregisterDescription();
+      return () => slotCtx.unregisterDescription(finalId);
     }
   });
 </script>
