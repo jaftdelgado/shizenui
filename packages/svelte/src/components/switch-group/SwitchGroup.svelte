@@ -7,7 +7,6 @@
     SwitchGroupState,
     setupSwitchGroupContexts
   } from "./_internal/index.js";
-  import { warnIf } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -21,12 +20,6 @@
     id = createId("switch-group", uid),
     ...rest
   }: SwitchGroupProps = $props();
-
-  warnIf(
-    () => !children,
-    "SwitchGroup",
-    "No children provided. Add <SwitchGroup.Items> as a child."
-  );
 
   const switchGroupState = new SwitchGroupState({
     disabled: () => disabled,

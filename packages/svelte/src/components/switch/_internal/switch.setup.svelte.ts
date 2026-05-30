@@ -42,18 +42,6 @@ export function setupSwitchContexts(
       const next = new Set(contentIds);
       next.delete(id);
       contentIds = next;
-    },
-    registerDescription(id: string) {
-      if (descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.add(id);
-      descriptionIds = next;
-    },
-    unregisterDescription(id: string) {
-      if (!descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.delete(id);
-      descriptionIds = next;
     }
   });
 
@@ -88,11 +76,17 @@ export function setupSwitchContexts(
   });
 
   setContentSlotContext({
-    get labelId() {
-      return `${props.id()}-label`;
+    registerDescription(id: string) {
+      if (descriptionIds.has(id)) return;
+      const next = new Set(descriptionIds);
+      next.add(id);
+      descriptionIds = next;
     },
-    get descriptionId() {
-      return `${props.id()}-description`;
+    unregisterDescription(id: string) {
+      if (!descriptionIds.has(id)) return;
+      const next = new Set(descriptionIds);
+      next.delete(id);
+      descriptionIds = next;
     }
   });
 }

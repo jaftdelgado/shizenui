@@ -30,7 +30,7 @@
   const finalRequired = $derived(fieldContext.exists ? fieldContext.required : required);
   const finalFor = $derived(htmlFor ?? (fieldContext.exists ? fieldContext.inputId : undefined));
   const labelId = $derived(
-    fieldContext.exists ? `${fieldContext.id}-label` : undefined
+    fieldContext.exists ? fieldContext.labelId : undefined
   );
 
   const { base, requiredIndicator } = labelStyles();

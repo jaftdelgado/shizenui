@@ -1,5 +1,5 @@
 import { setSwitchGroupContext } from "./switch-group.context.js";
-import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
+import { setFieldStateContext } from "../../../lib/index.js";
 import { SwitchGroupState } from "./switch-group.state.svelte.js";
 
 export function setupSwitchGroupContexts(
@@ -47,16 +47,6 @@ export function setupSwitchGroupContexts(
       return false;
     }
   });
-
-  setContentSlotContext({
-    get labelId() {
-      return `${props.id()}-label`;
-    },
-    get descriptionId() {
-      return `${props.id()}-description`;
-    }
-  });
-
   return {
     getLabelId: () => `${props.id()}-label`,
     getDescriptionId: () => `${props.id()}-description`

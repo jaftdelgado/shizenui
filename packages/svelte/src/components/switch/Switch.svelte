@@ -55,14 +55,9 @@
   const ctx = useSwitchContext();
 
   warnIf(
-    () =>
-      !!children &&
-      !ctx.hasContent &&
-      !rest["aria-label"] &&
-      !rest["aria-labelledby"] &&
-      !rest.title,
+    () => !!children && !ctx.hasContent && !rest["aria-label"],
     "Switch",
-    "No Switch.Content found. Add <Switch.Content> with a <Label> inside for proper accessibility."
+    "No Switch.Content found. Add <Switch.Content> with a <Label> inside, or pass aria-label directly."
   );
 
   const handlers = createSwitchHandlers({

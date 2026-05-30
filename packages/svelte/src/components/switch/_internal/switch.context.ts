@@ -11,8 +11,6 @@ export interface SwitchContextValue {
   readonly hasDescription: boolean;
   registerContent: (id: string) => void;
   unregisterContent: (id: string) => void;
-  registerDescription: (id: string) => void;
-  unregisterDescription: (id: string) => void;
 }
 
 export interface SwitchContextResult {
@@ -25,8 +23,6 @@ export interface SwitchContextResult {
   readonly hasDescription: boolean;
   registerContent: (id: string) => void;
   unregisterContent: (id: string) => void;
-  registerDescription: (id: string) => void;
-  unregisterDescription: (id: string) => void;
   readonly exists: boolean;
 }
 
@@ -64,8 +60,6 @@ export function useSwitchContext(): SwitchContextResult {
       },
       registerContent(_id: string) {},
       unregisterContent(_id: string) {},
-      registerDescription(_id: string) {},
-      unregisterDescription(_id: string) {},
       get exists() {
         return false;
       }
@@ -99,12 +93,6 @@ export function useSwitchContext(): SwitchContextResult {
     },
     unregisterContent(id: string) {
       return context.unregisterContent(id);
-    },
-    registerDescription(id: string) {
-      return context.registerDescription(id);
-    },
-    unregisterDescription(id: string) {
-      return context.unregisterDescription(id);
     },
     get exists() {
       return true;

@@ -6,7 +6,6 @@ export {
   type FieldStateContextResult
 } from "./contexts/field-state.context.js";
 
-// Content Slot Context
 export {
   setContentSlotContext,
   useContentSlotContext,

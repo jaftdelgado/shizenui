@@ -1,16 +1,14 @@
 import { getContext, setContext } from "svelte";
 
 export interface ContentSlotContextValue {
-  readonly labelId: string | undefined;
-  readonly descriptionId: string | undefined;
+  registerDescription: (id: string) => void;
+  unregisterDescription: (id: string) => void;
 }
 
 export interface ContentSlotContextResult {
-  readonly labelId: string | undefined;
-  readonly descriptionId: string | undefined;
-  readonly hasLabel: boolean;
-  readonly hasDescription: boolean;
   readonly exists: boolean;
+  registerDescription: (id: string) => void;
+  unregisterDescription: (id: string) => void;
 }
 
 const CONTENT_SLOT_CONTEXT_KEY = Symbol("shizen:content-slot");
@@ -26,19 +24,15 @@ export function useContentSlotContext(): ContentSlotContextResult {
 
   if (!context) {
     return {
-      get labelId() { return undefined; },
-      get descriptionId() { return undefined; },
-      get hasLabel() { return false; },
-      get hasDescription() { return false; },
-      get exists() { return false; }
+      get exists() { return false; },
+      registerDescription(_id: string) {},
+      unregisterDescription(_id: string) {}
     } satisfies ContentSlotContextResult;
   }
 
   return {
-    get labelId() { return context.labelId; },
-    get descriptionId() { return context.descriptionId; },
-    get hasLabel() { return context.labelId !== undefined; },
-    get hasDescription() { return context.descriptionId !== undefined; },
-    get exists() { return true; }
+    get exists() { return true; },
+    registerDescription(id: string) { return context.registerDescription(id); },
+    unregisterDescription(id: string) { return context.unregisterDescription(id); }
   } satisfies ContentSlotContextResult;
 }
