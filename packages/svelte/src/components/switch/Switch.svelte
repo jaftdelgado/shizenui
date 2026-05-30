@@ -62,7 +62,7 @@
       !rest["aria-labelledby"] &&
       !rest.title,
     "Switch",
-    "No Switch.Content found. Consider adding aria-label for screen reader support."
+    "No Switch.Content found. Add <Switch.Content> with a <Label> inside for proper accessibility."
   );
 
   const handlers = createSwitchHandlers({
@@ -103,8 +103,8 @@
     tabindex={!switchState.finalDisabled ? 0 : -1}
     aria-checked={checked}
     aria-readonly={switchState.finalReadonly ? true : undefined}
-    aria-labelledby={ctx.hasLabel ? ctx.labelId : ctx.hasContent ? `${id}-label` : undefined}
-    aria-describedby={ctx.hasDescription ? ctx.descriptionId : undefined}
+    aria-labelledby={ctx.hasContent ? `${id}-label` : undefined}
+    aria-describedby={ctx.hasDescription ? `${id}-description` : undefined}
     onchange={handlers.handleToggle}
     onkeydown={(e) => {
       focus.onKeyDown();

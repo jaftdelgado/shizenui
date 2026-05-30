@@ -8,12 +8,11 @@ export interface SwitchContextValue {
   readonly id: string;
   readonly size: SwitchSize;
   readonly hasContent: boolean;
-  readonly hasLabel: boolean;
   readonly hasDescription: boolean;
-  readonly labelId: string | undefined;
-  readonly descriptionId: string | undefined;
   registerContent: (id: string) => void;
   unregisterContent: (id: string) => void;
+  registerDescription: (id: string) => void;
+  unregisterDescription: (id: string) => void;
 }
 
 export interface SwitchContextResult {
@@ -23,12 +22,11 @@ export interface SwitchContextResult {
   readonly id: string;
   readonly size: SwitchSize;
   readonly hasContent: boolean;
-  readonly hasLabel: boolean;
   readonly hasDescription: boolean;
-  readonly labelId: string | undefined;
-  readonly descriptionId: string | undefined;
   registerContent: (id: string) => void;
   unregisterContent: (id: string) => void;
+  registerDescription: (id: string) => void;
+  unregisterDescription: (id: string) => void;
   readonly exists: boolean;
 }
 
@@ -61,20 +59,13 @@ export function useSwitchContext(): SwitchContextResult {
       get hasContent() {
         return false;
       },
-      get hasLabel() {
-        return false;
-      },
       get hasDescription() {
         return false;
       },
-      get labelId() {
-        return undefined;
-      },
-      get descriptionId() {
-        return undefined;
-      },
       registerContent(_id: string) {},
       unregisterContent(_id: string) {},
+      registerDescription(_id: string) {},
+      unregisterDescription(_id: string) {},
       get exists() {
         return false;
       }
@@ -100,23 +91,20 @@ export function useSwitchContext(): SwitchContextResult {
     get hasContent() {
       return context.hasContent;
     },
-    get hasLabel() {
-      return context.hasLabel;
-    },
     get hasDescription() {
       return context.hasDescription;
-    },
-    get labelId() {
-      return context.labelId;
-    },
-    get descriptionId() {
-      return context.descriptionId;
     },
     registerContent(id: string) {
       return context.registerContent(id);
     },
     unregisterContent(id: string) {
       return context.unregisterContent(id);
+    },
+    registerDescription(id: string) {
+      return context.registerDescription(id);
+    },
+    unregisterDescription(id: string) {
+      return context.unregisterDescription(id);
     },
     get exists() {
       return true;

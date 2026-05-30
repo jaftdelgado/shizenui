@@ -8,6 +8,8 @@ export interface FieldStateContextValue {
   readonly keepDescription?: boolean;
   readonly id: string;
   readonly inputId?: string;
+  readonly labelId: string | undefined;
+  readonly descriptionId: string | undefined;
 }
 
 export interface FieldStateContextResult {
@@ -18,6 +20,8 @@ export interface FieldStateContextResult {
   readonly keepDescription: boolean;
   readonly id: string;
   readonly inputId: string | undefined;
+  readonly labelId: string | undefined;
+  readonly descriptionId: string | undefined;
   readonly exists: boolean;
 }
 
@@ -53,6 +57,12 @@ export function useFieldStateContext(): FieldStateContextResult {
       get inputId() {
         return undefined;
       },
+      get labelId() {
+        return undefined;
+      },
+      get descriptionId() {
+        return undefined;
+      },
       get exists() {
         return false;
       }
@@ -80,6 +90,12 @@ export function useFieldStateContext(): FieldStateContextResult {
     },
     get inputId() {
       return context.inputId;
+    },
+    get labelId() {
+      return context.labelId;
+    },
+    get descriptionId() {
+      return context.descriptionId;
     },
     get exists() {
       return true;

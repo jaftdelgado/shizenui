@@ -32,12 +32,7 @@
 </script>
 
 {#if shouldRender}
-  <div
-    bind:this={ref}
-    class={cn(styles.content(), className)}
-    {...rest}
-    id={ctx.exists && !ctx.hasLabel ? `${ctx.id}-label` : undefined}
-  >
+  <div bind:this={ref} class={cn(styles.content(), className)} {...rest}>
     {@render children()}
   </div>
 {/if}

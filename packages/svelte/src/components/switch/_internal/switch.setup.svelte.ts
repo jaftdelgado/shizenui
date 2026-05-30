@@ -7,8 +7,7 @@ export function setupSwitchContexts(
   props: { checked: () => boolean; id: () => string }
 ): void {
   let contentIds = $state(new Set<string>());
-  let labelId = $state<string | undefined>(undefined);
-  let descriptionId = $state<string | undefined>(undefined);
+  let descriptionIds = $state(new Set<string>());
 
   setSwitchContext({
     get checked() {
@@ -29,17 +28,8 @@ export function setupSwitchContexts(
     get hasContent() {
       return contentIds.size > 0;
     },
-    get hasLabel() {
-      return labelId !== undefined;
-    },
     get hasDescription() {
-      return descriptionId !== undefined;
-    },
-    get labelId() {
-      return labelId;
-    },
-    get descriptionId() {
-      return descriptionId;
+      return descriptionIds.size > 0;
     },
     registerContent(id: string) {
       if (contentIds.has(id)) return;
@@ -52,6 +42,18 @@ export function setupSwitchContexts(
       const next = new Set(contentIds);
       next.delete(id);
       contentIds = next;
+    },
+    registerDescription(id: string) {
+      if (descriptionIds.has(id)) return;
+      const next = new Set(descriptionIds);
+      next.add(id);
+      descriptionIds = next;
+    },
+    unregisterDescription(id: string) {
+      if (!descriptionIds.has(id)) return;
+      const next = new Set(descriptionIds);
+      next.delete(id);
+      descriptionIds = next;
     }
   });
 
@@ -74,6 +76,12 @@ export function setupSwitchContexts(
     get inputId() {
       return props.id();
     },
+    get labelId() {
+      return `${props.id()}-label`;
+    },
+    get descriptionId() {
+      return `${props.id()}-description`;
+    },
     get keepDescription() {
       return true;
     }
@@ -81,22 +89,10 @@ export function setupSwitchContexts(
 
   setContentSlotContext({
     get labelId() {
-      return labelId;
+      return `${props.id()}-label`;
     },
     get descriptionId() {
-      return descriptionId;
-    },
-    registerLabel(id: string) {
-      labelId = id;
-    },
-    registerDescription(id: string) {
-      descriptionId = id;
-    },
-    unregisterLabel(id: string) {
-      if (labelId === id) labelId = undefined;
-    },
-    unregisterDescription(id: string) {
-      if (descriptionId === id) descriptionId = undefined;
+      return `${props.id()}-description`;
     }
   });
 }

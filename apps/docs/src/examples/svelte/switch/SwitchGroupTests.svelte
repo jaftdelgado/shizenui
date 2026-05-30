@@ -34,6 +34,16 @@
       <Switch.Control />
       {#if showContent}
         <Switch.Content>
+          Push notifications
+          <Description>Receive alerts directly in your browser.</Description>
+        </Switch.Content>
+      {/if}
+    </Switch>
+
+    <Switch bind:checked={checked2}>
+      <Switch.Control />
+      {#if showContent}
+        <Switch.Content>
           <Description>Receive alerts directly in your browser.</Description>
           <Label>Push notifications</Label>
         </Switch.Content>

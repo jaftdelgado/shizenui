@@ -6,9 +6,6 @@ export function setupSwitchGroupContexts(
   state: SwitchGroupState,
   props: { id: () => string }
 ): { getLabelId: () => string | undefined; getDescriptionId: () => string | undefined } {
-  let labelId = $state<string | undefined>(undefined);
-  let descriptionId = $state<string | undefined>(undefined);
-
   setSwitchGroupContext({
     get disabled() {
       return state.finalDisabled;
@@ -40,6 +37,12 @@ export function setupSwitchGroupContexts(
     get id() {
       return props.id();
     },
+    get labelId() {
+      return `${props.id()}-label`;
+    },
+    get descriptionId() {
+      return `${props.id()}-description`;
+    },
     get keepDescription() {
       return false;
     }
@@ -47,27 +50,15 @@ export function setupSwitchGroupContexts(
 
   setContentSlotContext({
     get labelId() {
-      return labelId;
+      return `${props.id()}-label`;
     },
     get descriptionId() {
-      return descriptionId;
-    },
-    registerLabel(id: string) {
-      labelId = id;
-    },
-    registerDescription(id: string) {
-      descriptionId = id;
-    },
-    unregisterLabel(id: string) {
-      if (labelId === id) labelId = undefined;
-    },
-    unregisterDescription(id: string) {
-      if (descriptionId === id) descriptionId = undefined;
+      return `${props.id()}-description`;
     }
   });
 
   return {
-    getLabelId: () => labelId,
-    getDescriptionId: () => descriptionId
+    getLabelId: () => `${props.id()}-label`,
+    getDescriptionId: () => `${props.id()}-description`
   };
 }

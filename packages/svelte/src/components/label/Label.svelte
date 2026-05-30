@@ -1,7 +1,7 @@
 <script lang="ts">
   import { labelStyles } from "@shizen-ui/styles";
   import { cn, presence } from "../../lib/utils";
-  import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
+  import { useFieldStateContext } from "../../lib/index.js";
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
@@ -24,20 +24,14 @@
   }: Props = $props();
 
   const fieldContext = useFieldStateContext();
-  const slotCtx = useContentSlotContext();
 
   const finalInvalid = $derived(fieldContext.exists ? fieldContext.invalid : invalid);
   const finalDisabled = $derived(fieldContext.exists ? fieldContext.disabled : disabled);
   const finalRequired = $derived(fieldContext.exists ? fieldContext.required : required);
   const finalFor = $derived(htmlFor ?? (fieldContext.exists ? fieldContext.inputId : undefined));
-  const labelId = fieldContext.exists ? `${fieldContext.id}-label` : undefined;
-  if (labelId) slotCtx.registerLabel(labelId);
-
-  $effect(() => {
-    return () => {
-      if (labelId) slotCtx.unregisterLabel(labelId);
-    };
-  });
+  const labelId = $derived(
+    fieldContext.exists ? `${fieldContext.id}-label` : undefined
+  );
 
   const { base, requiredIndicator } = labelStyles();
 </script>
