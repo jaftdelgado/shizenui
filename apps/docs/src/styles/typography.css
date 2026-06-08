@@ -15,6 +15,10 @@
       @apply text-primary-text mt-10 mb-2 text-lg font-medium tracking-tight;
     }
 
+    & h4:not([data-example-container] *):not([class*="text--"]) {
+      @apply text-primary-text mt-10 mb-2 text-lg font-medium tracking-tight;
+    }
+
     & p:not([data-example-container] *):not([class*="text--"]) {
       @apply text-secondary-text text-base leading-relaxed;
     }

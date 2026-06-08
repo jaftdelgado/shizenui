@@ -1,16 +1,18 @@
-import { setSwitchContext } from "./switch.context.js";
 import { useSwitchGroupContext } from "../../switch-group/_internal/switch-group.context.js";
-import { setFieldStateContext, useFieldStateContext } from "../../../lib/index.js";
+import type { SwitchGroupContextResult } from "../../switch-group/_internal/switch-group.context.js";
+import {
+  useFieldStateContext,
+  type FieldStateContextResult
+} from "../../../lib/index.js";
 import type { SwitchSize } from "./switch.types.js";
 
 export class SwitchState {
   #disabled: () => boolean | undefined;
-  #invalid: () => boolean | undefined;
+  #readonly: () => boolean | undefined;
   #size: () => SwitchSize;
-  #id: () => string;
 
-  #parentFieldContext = useFieldStateContext();
-  #groupCtx = useSwitchGroupContext();
+  #parentFieldContext: FieldStateContextResult;
+  #groupCtx: SwitchGroupContextResult;
 
   get finalDisabled(): boolean {
     const local = this.#disabled();
@@ -22,13 +24,13 @@ export class SwitchState {
         : false;
   }
 
-  get finalInvalid(): boolean {
-    const local = this.#invalid();
+  get finalReadonly(): boolean {
+    const local = this.#readonly();
     if (local !== undefined) return local;
     return this.#groupCtx.exists
-      ? this.#groupCtx.invalid
+      ? this.#groupCtx.readonly
       : this.#parentFieldContext.exists
-        ? this.#parentFieldContext.invalid
+        ? this.#parentFieldContext.readonly
         : false;
   }
 
@@ -38,52 +40,15 @@ export class SwitchState {
 
   constructor(props: {
     disabled: () => boolean | undefined;
-    invalid: () => boolean | undefined;
+    readonly: () => boolean | undefined;
     size: () => SwitchSize;
-    id: () => string;
-    checked: () => boolean;
+    groupContext?: SwitchGroupContextResult;
+    fieldContext?: FieldStateContextResult;
   }) {
     this.#disabled = props.disabled;
-    this.#invalid = props.invalid;
+    this.#readonly = props.readonly;
     this.#size = props.size;
-    this.#id = props.id;
-
-    const self = this;
-
-    setSwitchContext({
-      get checked() {
-        return props.checked();
-      },
-      get disabled() {
-        return self.finalDisabled;
-      },
-      get invalid() {
-        return self.finalInvalid;
-      },
-      get id() {
-        return self.#id();
-      },
-      get size() {
-        return self.finalSize;
-      }
-    });
-
-    setFieldStateContext({
-      get invalid() {
-        return self.finalInvalid;
-      },
-      get disabled() {
-        return self.finalDisabled;
-      },
-      get required() {
-        return false;
-      },
-      get id() {
-        return self.#id();
-      },
-      get keepDescription() {
-        return true;
-      }
-    });
+    this.#groupCtx = props.groupContext ?? useSwitchGroupContext();
+    this.#parentFieldContext = props.fieldContext ?? useFieldStateContext();
   }
 }

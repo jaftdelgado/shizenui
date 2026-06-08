@@ -5,14 +5,14 @@ export type SwitchGroupOrientation = "horizontal" | "vertical";
 
 export interface SwitchGroupContextValue {
   readonly disabled: boolean;
-  readonly invalid: boolean;
+  readonly readonly: boolean;
   readonly size: SwitchSize;
   readonly orientation: SwitchGroupOrientation;
 }
 
 export interface SwitchGroupContextResult {
   readonly disabled: boolean;
-  readonly invalid: boolean;
+  readonly readonly: boolean;
   readonly size: SwitchSize;
   readonly orientation: SwitchGroupOrientation;
   readonly exists: boolean;
@@ -32,7 +32,7 @@ export function useSwitchGroupContext(): SwitchGroupContextResult {
       get disabled() {
         return false;
       },
-      get invalid() {
+      get readonly() {
         return false;
       },
       get size() {
@@ -51,8 +51,8 @@ export function useSwitchGroupContext(): SwitchGroupContextResult {
     get disabled() {
       return context.disabled;
     },
-    get invalid() {
-      return context.invalid;
+    get readonly() {
+      return context.readonly;
     },
     get size() {
       return context.size;

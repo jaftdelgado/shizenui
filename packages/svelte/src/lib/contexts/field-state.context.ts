@@ -3,17 +3,25 @@ import { getContext, setContext } from "svelte";
 export interface FieldStateContextValue {
   readonly invalid: boolean;
   readonly disabled: boolean;
+  readonly readonly: boolean;
   readonly required: boolean;
   readonly keepDescription?: boolean;
   readonly id: string;
+  readonly inputId?: string;
+  readonly labelId: string | undefined;
+  readonly descriptionId: string | undefined;
 }
 
 export interface FieldStateContextResult {
   readonly invalid: boolean;
   readonly disabled: boolean;
+  readonly readonly: boolean;
   readonly required: boolean;
   readonly keepDescription: boolean;
   readonly id: string;
+  readonly inputId: string | undefined;
+  readonly labelId: string | undefined;
+  readonly descriptionId: string | undefined;
   readonly exists: boolean;
 }
 
@@ -34,6 +42,9 @@ export function useFieldStateContext(): FieldStateContextResult {
       get disabled() {
         return false;
       },
+      get readonly() {
+        return false;
+      },
       get required() {
         return false;
       },
@@ -42,6 +53,15 @@ export function useFieldStateContext(): FieldStateContextResult {
       },
       get id() {
         return "";
+      },
+      get inputId() {
+        return undefined;
+      },
+      get labelId() {
+        return undefined;
+      },
+      get descriptionId() {
+        return undefined;
       },
       get exists() {
         return false;
@@ -56,6 +76,9 @@ export function useFieldStateContext(): FieldStateContextResult {
     get disabled() {
       return context.disabled;
     },
+    get readonly() {
+      return context.readonly;
+    },
     get required() {
       return context.required;
     },
@@ -64,6 +87,15 @@ export function useFieldStateContext(): FieldStateContextResult {
     },
     get id() {
       return context.id;
+    },
+    get inputId() {
+      return context.inputId;
+    },
+    get labelId() {
+      return context.labelId;
+    },
+    get descriptionId() {
+      return context.descriptionId;
     },
     get exists() {
       return true;

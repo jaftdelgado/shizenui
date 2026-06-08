@@ -1,0 +1,22 @@
+@layer components {
+  .switch {
+    --switch-bg: var(--color-neutral-200);
+    --switch-bg-hover: var(--color-neutral-300);
+    --switch-thumb-bg: var(--color-white);
+    @apply gap-2;
+  }
+
+  .switch[data-checked] {
+    --switch-bg: var(--color-violet-600);
+    --switch-bg-hover: var(--color-violet-700);
+    --switch-thumb-bg: var(--color-white);
+  }
+
+  .switch__control {
+    @apply rounded-sm shadow-none ring-1 ring-black/10;
+  }
+
+  .switch__thumb {
+    @apply rounded-sm shadow-md;
+  }
+}

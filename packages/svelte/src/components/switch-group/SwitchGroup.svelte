@@ -1,76 +1,46 @@
 <script lang="ts">
-  import { type Snippet } from "svelte";
-  import { cn } from "../../lib/utils";
-  import { switchGroupStyles, type SwitchGroupVariants } from "@shizen-ui/styles";
-  import { setSwitchGroupContext, type SwitchGroupOrientation } from "./_internal/index.js";
-  import { setFieldStateContext } from "../../lib/index.js";
-  import type { SwitchSize } from "../switch/_internal";
+  import { switchGroupStyles } from "@shizen-ui/styles";
 
-  interface Props extends SwitchGroupVariants {
-    children: Snippet;
-    class?: string;
-    invalid?: boolean;
-    disabled?: boolean;
-    required?: boolean;
-    id?: string;
-    size?: SwitchSize;
-    orientation?: SwitchGroupOrientation;
-  }
+  import { cn, createId, presence } from "../../lib/utils";
+  import type { SwitchGroupProps } from "./_internal/index.js";
+  import { SwitchGroupState, setupSwitchGroupContexts } from "./_internal/index.js";
+
+  const uid = $props.id();
 
   let {
     children,
     class: className,
-    invalid = false,
-    disabled = false,
-    required = false,
+    disabled = undefined,
+    readonly = undefined,
     size = "md",
     orientation = "vertical",
-    id = crypto.randomUUID(),
+    id = createId("switch-group", uid),
     ...rest
-  }: Props = $props();
+  }: SwitchGroupProps = $props();
 
-  setFieldStateContext({
-    get invalid() {
-      return invalid;
-    },
-    get disabled() {
-      return disabled;
-    },
-    get required() {
-      return required;
-    },
-    get id() {
-      return id;
-    },
-    get keepDescription() {
-      return false;
-    }
+  const switchGroupState = new SwitchGroupState({
+    disabled: () => disabled,
+    readonly: () => readonly,
+    size: () => size,
+    orientation: () => orientation
   });
 
-  setSwitchGroupContext({
-    get disabled() {
-      return disabled;
-    },
-    get invalid() {
-      return invalid;
-    },
-    get size() {
-      return size;
-    },
-    get orientation() {
-      return orientation;
-    }
+  const { getLabelId, getDescriptionId } = setupSwitchGroupContexts(switchGroupState, {
+    id: () => id
   });
 
-  const styles = $derived(switchGroupStyles({ orientation }));
+  const styles = $derived(switchGroupStyles({ orientation: switchGroupState.finalOrientation }));
 </script>
 
 <div
+  role="group"
   {id}
   class={cn(styles.base(), className)}
-  data-invalid={invalid}
-  data-disabled={disabled}
-  data-orientation={orientation}
+  aria-labelledby={getLabelId()}
+  aria-describedby={getDescriptionId()}
+  data-disabled={presence(switchGroupState.finalDisabled)}
+  data-readonly={presence(switchGroupState.finalReadonly)}
+  data-orientation={switchGroupState.finalOrientation}
   {...rest}
 >
   {@render children()}

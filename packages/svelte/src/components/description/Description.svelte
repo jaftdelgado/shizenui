@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { untrack } from "svelte";
   import { descriptionStyles } from "@shizen-ui/styles";
-  import { cn, createId } from "../../lib/utils/index.js";
-  import { useFieldStateContext } from "../../lib/index.js";
+  import { cn, createId, presence } from "../../lib/utils/index.js";
+  import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
@@ -16,19 +17,28 @@
   let { children, class: className, disabled = false, id: propId, ...rest }: Props = $props();
 
   const fieldContext = useFieldStateContext();
+  const slotCtx = useContentSlotContext();
 
   const finalInvalid = $derived(fieldContext.exists ? fieldContext.invalid : false);
   const finalDisabled = $derived(fieldContext.exists ? fieldContext.disabled : disabled);
-  const finalId = $derived(
-    propId ??
-      (fieldContext.exists && fieldContext.id
-        ? `${fieldContext.id}-description`
-        : createId("description", uid))
-  );
+
+  const registrationId = fieldContext.descriptionId ?? createId("description", uid);
+  const resolvedPropId = untrack(() => propId);
+  const finalId = slotCtx.exists ? registrationId : (resolvedPropId ?? registrationId);
 
   const shouldShow = $derived(
     !finalInvalid || (fieldContext.exists && fieldContext.keepDescription)
   );
+
+  if (slotCtx.exists) {
+    slotCtx.registerDescription(registrationId);
+  }
+
+  $effect(() => {
+    return () => {
+      if (slotCtx.exists) slotCtx.unregisterDescription(registrationId);
+    };
+  });
 </script>
 
 {#if shouldShow}
@@ -36,8 +46,8 @@
     id={finalId}
     class={cn(descriptionStyles(), className)}
     data-slot="description"
-    data-disabled={finalDisabled ? "" : undefined}
-    data-invalid={finalInvalid ? "" : undefined}
+    data-disabled={presence(finalDisabled)}
+    data-invalid={presence(finalInvalid)}
     {...rest}
   >
     {@render children()}

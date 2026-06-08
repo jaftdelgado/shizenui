@@ -13,28 +13,33 @@ type SwitchBaseProps = Omit<
   | "onclick"
   | "disabled"
   | "value"
+  | "name"
   | "id"
   | "onchange"
   | "onkeydown"
   | "onkeyup"
   | "onfocus"
   | "onblur"
+  | "children"
 >;
 
 export interface SwitchProps extends SwitchBaseProps {
   checked?: boolean;
   disabled?: boolean;
-  invalid?: boolean;
+  readonly?: boolean;
+  name?: string;
   value?: string;
   id?: string;
   size?: SwitchSize;
   onCheckedChange?: (checked: boolean) => void;
-  onclick?: (e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) => void;
-  onFocus?: (e: FocusEvent) => void;
-  onBlur?: (e: FocusEvent) => void;
-  onKeyDown?: (e: KeyboardEvent) => void;
-  onKeyUp?: (e: KeyboardEvent) => void;
-  children?: Snippet;
+  children?: Snippet<[SwitchRenderState]>;
+}
+
+export interface SwitchRenderState {
+  isChecked: boolean;
+  isDisabled: boolean;
+  isReadonly: boolean;
+  isFocusVisible: boolean;
 }
 
 export interface SwitchControlProps extends HTMLAttributes<HTMLDivElement> {

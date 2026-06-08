@@ -4,17 +4,25 @@ import type { SwitchSize } from "./switch.types.js";
 export interface SwitchContextValue {
   readonly checked: boolean;
   readonly disabled: boolean;
-  readonly invalid: boolean;
+  readonly readonly: boolean;
   readonly id: string;
   readonly size: SwitchSize;
+  readonly hasContent: boolean;
+  readonly hasDescription: boolean;
+  registerContent: (id: string) => void;
+  unregisterContent: (id: string) => void;
 }
 
 export interface SwitchContextResult {
   readonly checked: boolean;
   readonly disabled: boolean;
-  readonly invalid: boolean;
+  readonly readonly: boolean;
   readonly id: string;
   readonly size: SwitchSize;
+  readonly hasContent: boolean;
+  readonly hasDescription: boolean;
+  registerContent: (id: string) => void;
+  unregisterContent: (id: string) => void;
   readonly exists: boolean;
 }
 
@@ -35,7 +43,7 @@ export function useSwitchContext(): SwitchContextResult {
       get disabled() {
         return false;
       },
-      get invalid() {
+      get readonly() {
         return false;
       },
       get id() {
@@ -44,6 +52,14 @@ export function useSwitchContext(): SwitchContextResult {
       get size() {
         return "md" as SwitchSize;
       },
+      get hasContent() {
+        return false;
+      },
+      get hasDescription() {
+        return false;
+      },
+      registerContent(_id: string) {},
+      unregisterContent(_id: string) {},
       get exists() {
         return false;
       }
@@ -57,14 +73,26 @@ export function useSwitchContext(): SwitchContextResult {
     get disabled() {
       return context.disabled;
     },
-    get invalid() {
-      return context.invalid;
+    get readonly() {
+      return context.readonly;
     },
     get id() {
       return context.id;
     },
     get size() {
       return context.size;
+    },
+    get hasContent() {
+      return context.hasContent;
+    },
+    get hasDescription() {
+      return context.hasDescription;
+    },
+    registerContent(id: string) {
+      return context.registerContent(id);
+    },
+    unregisterContent(id: string) {
+      return context.unregisterContent(id);
     },
     get exists() {
       return true;

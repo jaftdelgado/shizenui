@@ -1,9 +1,14 @@
 <script lang="ts">
   import { switchStyles } from "@shizen-ui/styles";
 
-  import { cn, createId } from "../../lib/utils";
+  import { cn, createId, presence } from "../../lib/utils";
   import type { SwitchProps } from "./_internal/index.js";
-  import { SwitchState, createSwitchHandlers } from "./_internal/index.js";
+  import {
+    SwitchState,
+    createSwitchHandlers,
+    setupSwitchContexts,
+    useSwitchContext
+  } from "./_internal/index.js";
   import { createFocusVisible, warnIf } from "../../lib/runes/index.js";
 
   const uid = $props.id();
@@ -11,18 +16,13 @@
   let {
     class: className,
     disabled = undefined,
-    invalid = undefined,
+    readonly = undefined,
     name,
     value,
     id = createId("switch", uid),
     checked = $bindable(false),
     size = "md",
     onCheckedChange,
-    onclick,
-    onFocus,
-    onBlur,
-    onKeyDown,
-    onKeyUp,
     children,
     ...rest
   }: SwitchProps = $props();
@@ -33,66 +33,57 @@
     "No children provided. Add at least <Switch.Control /> as a child."
   );
 
+  warnIf(
+    () => !!value && !name,
+    "Switch",
+    "A 'value' prop was provided without a 'name' prop. The switch won't be included in form submissions."
+  );
+
   let inputEl = $state<HTMLInputElement | null>(null);
 
   const switchState = new SwitchState({
     disabled: () => disabled,
-    invalid: () => invalid,
-    size: () => size,
-    id: () => id,
-    checked: () => checked
+    readonly: () => readonly,
+    size: () => size
   });
 
-  const handlers = createSwitchHandlers(
-    switchState,
-    () => checked,
-    (val) => {
+  setupSwitchContexts(switchState, {
+    checked: () => checked,
+    id: () => id
+  });
+
+  const ctx = useSwitchContext();
+
+  warnIf(
+    () => !!children && !ctx.hasContent && !rest["aria-label"],
+    "Switch",
+    "No Switch.Content found. Add <Switch.Content> with a <Label> inside, or pass aria-label directly."
+  );
+
+  const handlers = createSwitchHandlers({
+    state: switchState,
+    getChecked: () => checked,
+    setChecked: (val) => {
       checked = val;
     },
-    (val) => onCheckedChange?.(val),
-    () => inputEl
-  );
+    onCheckedChange: (val) => onCheckedChange?.(val),
+    getInputRef: () => inputEl
+  });
 
   const focus = createFocusVisible();
 
   const styles = $derived(switchStyles({ size: switchState.finalSize }));
-
-  function handleClick(e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
-    handlers.handleContainerClick(e);
-    onclick?.(e);
-  }
-
-  function handleKeyDown(e: KeyboardEvent) {
-    focus.onKeyDown();
-    handlers.handleKey(e);
-    onKeyDown?.(e);
-  }
-
-  function handleKeyUp(e: KeyboardEvent) {
-    handlers.handleKey(e);
-    onKeyUp?.(e);
-  }
-
-  function handleFocus(e: FocusEvent) {
-    focus.onFocus();
-    onFocus?.(e);
-  }
-
-  function handleBlur(e: FocusEvent) {
-    focus.onBlur();
-    onBlur?.(e);
-  }
 </script>
 
 <div
   role="none"
   class={cn(styles.base(), className)}
-  data-disabled={switchState.finalDisabled ? "" : undefined}
-  data-invalid={switchState.finalInvalid ? "" : undefined}
-  data-checked={checked ? "" : undefined}
-  data-focus-visible={focus.isFocusVisible ? "" : undefined}
+  data-disabled={presence(switchState.finalDisabled)}
+  data-readonly={presence(switchState.finalReadonly)}
+  data-checked={presence(checked)}
+  data-focus-visible={presence(focus.isFocusVisible)}
   onmousedown={focus.onMouseDown}
-  onclick={handleClick}
+  onclick={handlers.handleContainerClick}
 >
   <input
     bind:this={inputEl}
@@ -106,15 +97,23 @@
     class={styles.input()}
     tabindex={!switchState.finalDisabled ? 0 : -1}
     aria-checked={checked}
-    aria-invalid={switchState.finalInvalid ? true : undefined}
-    aria-labelledby={`${id}-label`}
-    aria-describedby={`${id}-description`}
-    onchange={handlers.handleChange}
-    onkeydown={handleKeyDown}
-    onkeyup={handleKeyUp}
-    onfocus={handleFocus}
-    onblur={handleBlur}
+    aria-readonly={switchState.finalReadonly ? true : undefined}
+    aria-labelledby={ctx.hasContent ? `${id}-label` : undefined}
+    aria-describedby={ctx.hasDescription ? `${id}-description` : undefined}
+    onchange={handlers.handleToggle}
+    onkeydown={(e) => {
+      focus.onKeyDown();
+      handlers.handleKey(e);
+    }}
+    onkeyup={handlers.handleKey}
+    onfocus={focus.onFocus}
+    onblur={focus.onBlur}
     {...rest}
   />
-  {@render children?.()}
+  {@render children?.({
+    isChecked: checked,
+    isDisabled: switchState.finalDisabled,
+    isReadonly: switchState.finalReadonly,
+    isFocusVisible: focus.isFocusVisible
+  })}
 </div>

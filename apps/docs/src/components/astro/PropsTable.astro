@@ -1,0 +1,72 @@
+---
+interface Prop {
+  name: string;
+  type?: string;
+  default?: string;
+  description?: string;
+}
+
+interface Props {
+  props: Prop[];
+  showHeader?: boolean;
+}
+
+const { props, showHeader = false } = Astro.props;
+
+const hasType = props.some((p) => p.type !== undefined);
+const hasDefault = props.some((p) => p.default !== undefined);
+const hasDescription = props.some((p) => p.description !== undefined);
+---
+
+<div class="my-8 w-full overflow-x-auto">
+  <table class="w-full">
+    {
+      showHeader && (
+        <thead>
+          <tr class="border-tertiary-text/30 h-14 border-t tracking-tight">
+            <th class="text-foreground/50 w-1/3 pr-8 text-left text-sm font-medium">Prop</th>
+            {hasType && (
+              <th class="text-foreground/50 w-1/3 pr-8 text-left text-sm font-medium">Type</th>
+            )}
+            {hasDefault && (
+              <th class="text-foreground/50 w-1/3 pr-8 text-left text-sm font-medium">Default</th>
+            )}
+            {hasDescription && (
+              <th class="text-foreground/50 text-left text-sm font-medium">Description</th>
+            )}
+          </tr>
+        </thead>
+      )
+    }
+    <tbody>
+      {
+        props.map((prop) => (
+          <tr class="border-tertiary-text/30 h-14 border-t tracking-tight last:border-b">
+            <td class="w-1/3 pr-8 text-sm">
+              <code>{prop.name}</code>
+            </td>
+            {hasType && (
+              <td class="w-1/3 pr-8 text-sm">
+                {prop.type ? <code>{prop.type}</code> : <span class="text-foreground/30">—</span>}
+              </td>
+            )}
+            {hasDefault && (
+              <td class="w-1/3 pr-8 text-sm">
+                {prop.default ? (
+                  <code>{prop.default}</code>
+                ) : (
+                  <span class="text-foreground/30">—</span>
+                )}
+              </td>
+            )}
+            {hasDescription && (
+              <td class="text-primary-text text-sm">
+                {prop.description ?? <span class="text-foreground/30">—</span>}
+              </td>
+            )}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
