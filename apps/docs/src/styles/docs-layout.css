@@ -1,7 +1,7 @@
 :root {
   --docs-sidebar-w: 260px;
   --docs-body-w: 640px;
-  --docs-toc-w: 170px;
+  --docs-toc-w: 190px;
   --docs-gap: 98px;
   --docs-toc-top: 32px;
 }
@@ -93,6 +93,10 @@
 
   .toc-h3 {
     @apply ml-4;
+  }
+
+  .toc-h4 {
+    @apply ml-8;
   }
 
   .toc-link {

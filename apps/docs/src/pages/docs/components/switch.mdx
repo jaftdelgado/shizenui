@@ -9,10 +9,10 @@ import CodeImport from "@components/astro/CodeImport.astro";
 
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
 
-import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.md?raw";
+import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.svelte?raw";
 
-import SwitchGroupTests from "@examples/svelte/switch/SwitchGroupTests.svelte";
 import SwitchDisabled from "@examples/svelte/switch/SwitchDisabled.svelte";
 import SwitchControlled from "@examples/svelte/switch/SwitchControlled.svelte";
 import SwitchSizes from "@examples/svelte/switch/SwitchSizes.svelte";
@@ -21,6 +21,9 @@ import SwitchContentPosition from "@examples/svelte/switch/SwitchContentPosition
 import SwitchGroupUsage from "@examples/svelte/switch/SwitchGroupUsage.svelte";
 import SwitchGroupOrientation from "@examples/svelte/switch/SwitchGroupOrientation.svelte";
 import SwitchGroupDisabled from "@examples/svelte/switch/SwitchGroupDisabled.svelte";
+
+import SwitchTwStyling from "@examples/svelte/switch/SwitchTwStyling.svelte";
+import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?raw";
 
 ## Import
 
@@ -31,12 +34,6 @@ import SwitchGroupDisabled from "@examples/svelte/switch/SwitchGroupDisabled.sve
 <CodeBlock code={SwitchAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
 
 ## Examples
-
-### Switch Group Tests
-
-<ComponentExample src="svelte/switch/SwitchGroupTests.svelte">
-  <SwitchGroupTests client:load />
-</ComponentExample>
 
 ### Disabled State
 
@@ -85,3 +82,111 @@ import SwitchGroupDisabled from "@examples/svelte/switch/SwitchGroupDisabled.sve
 <ComponentExample src="svelte/switch/SwitchGroupDisabled.svelte">
   <SwitchGroupDisabled client:load />
 </ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to the Switch and SwitchGroup.
+
+<ComponentExample src="svelte/switch/SwitchTwStyling.svelte">
+  <SwitchTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Switch component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={SwitchCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Switch Classes
+
+<PropsTable
+  props={[
+    {
+      name: "switch",
+      description: "Root element. Manages layout, tokens, and interaction states."
+    },
+    { name: "switch__control", description: "The visible track that changes color when toggled." },
+    { name: "switch__thumb", description: "The sliding pill inside the track." },
+    { name: "switch__thumb-content", description: "Centers icon or content inside the thumb." },
+    { name: "switch__input", description: "Visually hidden native input for accessibility." },
+    { name: "switch__content", description: "Stacks label and description next to the control." },
+    { name: "switch--sm", description: "Small size variant. Reduces height and width." },
+    { name: "switch--lg", description: "Large size variant. Increases height and width." }
+  ]}
+/>
+
+#### SwitchGroup Classes
+
+<PropsTable
+  props={[
+    { name: "switch-group", description: "Root wrapper for a group of switches." },
+    {
+      name: "switch-group__items",
+      description: "Container for the switch items. Adds top margin."
+    },
+    {
+      name: "switch-group__items--vertical",
+      description: "Stacks switches in a column with equal gap."
+    },
+    {
+      name: "switch-group__items--horizontal",
+      description: "Lays switches in a row, wrapping when needed."
+    }
+  ]}
+/>
+
+#### Interactive States
+
+<PropsTable
+  props={[
+    {
+      name: "data-checked",
+      description: "Applied when the switch is on. Updates track and thumb colors to accent."
+    },
+    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
+    { name: "data-readonly", description: "Prevents toggling without visual disabled treatment." },
+    {
+      name: "data-focus-visible",
+      description: "Applies a focus ring to the control when navigating with keyboard."
+    }
+  ]}
+/>
+
+## API Reference
+
+### Switch Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "checked", type: "boolean", default: "false" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
+    { name: "value", type: "string", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "onCheckedChange", type: "(checked: boolean) => void", default: "undefined" },
+    { name: "children", type: "Snippet", default: "undefined" }
+  ]}
+/>
+
+### SwitchGroup Props
+
+Groups multiple switches, propagating `disabled`, `readonly`, and `size` to all children via context. Individual switches can override `disabled` and `readonly` locally.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "—" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "id", type: "string", default: "auto-generated" }
+  ]}
+/>

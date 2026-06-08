@@ -13,6 +13,7 @@ type SwitchBaseProps = Omit<
   | "onclick"
   | "disabled"
   | "value"
+  | "name"
   | "id"
   | "onchange"
   | "onkeydown"
@@ -26,6 +27,7 @@ export interface SwitchProps extends SwitchBaseProps {
   checked?: boolean;
   disabled?: boolean;
   readonly?: boolean;
+  name?: string;
   value?: string;
   id?: string;
   size?: SwitchSize;

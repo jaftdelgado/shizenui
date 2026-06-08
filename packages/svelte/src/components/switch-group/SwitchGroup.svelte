@@ -3,18 +3,15 @@
 
   import { cn, createId, presence } from "../../lib/utils";
   import type { SwitchGroupProps } from "./_internal/index.js";
-  import {
-    SwitchGroupState,
-    setupSwitchGroupContexts
-  } from "./_internal/index.js";
+  import { SwitchGroupState, setupSwitchGroupContexts } from "./_internal/index.js";
 
   const uid = $props.id();
 
   let {
     children,
     class: className,
-    disabled = false,
-    readonly = false,
+    disabled = undefined,
+    readonly = undefined,
     size = "md",
     orientation = "vertical",
     id = createId("switch-group", uid),
@@ -28,16 +25,11 @@
     orientation: () => orientation
   });
 
-  const { getLabelId, getDescriptionId } = setupSwitchGroupContexts(
-    switchGroupState,
-    {
-      id: () => id
-    }
-  );
+  const { getLabelId, getDescriptionId } = setupSwitchGroupContexts(switchGroupState, {
+    id: () => id
+  });
 
-  const styles = $derived(
-    switchGroupStyles({ orientation: switchGroupState.finalOrientation })
-  );
+  const styles = $derived(switchGroupStyles({ orientation: switchGroupState.finalOrientation }));
 </script>
 
 <div

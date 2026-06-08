@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from "svelte";
   import { descriptionStyles } from "@shizen-ui/styles";
   import { cn, createId, presence } from "../../lib/utils/index.js";
   import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
@@ -22,7 +23,8 @@
   const finalDisabled = $derived(fieldContext.exists ? fieldContext.disabled : disabled);
 
   const registrationId = fieldContext.descriptionId ?? createId("description", uid);
-  const finalId = slotCtx.exists ? registrationId : (propId ?? registrationId);
+  const resolvedPropId = untrack(() => propId);
+  const finalId = slotCtx.exists ? registrationId : (resolvedPropId ?? registrationId);
 
   const shouldShow = $derived(
     !finalInvalid || (fieldContext.exists && fieldContext.keepDescription)

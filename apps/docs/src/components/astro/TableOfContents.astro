@@ -8,7 +8,7 @@ interface Props {
 
 const { headings } = Astro.props;
 
-const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3 || h.depth === 4);
 ---
 
 {
@@ -40,7 +40,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 <script>
   const links = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
   const headings = Array.from(
-    document.querySelectorAll<HTMLElement>(".docs-body h2, .docs-body h3")
+    document.querySelectorAll<HTMLElement>(".docs-body h2, .docs-body h3, .docs-body h4")
   );
 
   if (links.length && headings.length) {

@@ -2,17 +2,17 @@ import type { SwitchSize } from "../../switch/_internal/index.js";
 import type { SwitchGroupOrientation } from "./switch-group.context.js";
 
 export class SwitchGroupState {
-  #disabled: () => boolean;
-  #readonly: () => boolean;
+  #disabled: () => boolean | undefined;
+  #readonly: () => boolean | undefined;
   #size: () => SwitchSize;
   #orientation: () => SwitchGroupOrientation;
 
   get finalDisabled(): boolean {
-    return this.#disabled();
+    return this.#disabled() ?? false;
   }
 
   get finalReadonly(): boolean {
-    return this.#readonly();
+    return this.#readonly() ?? false;
   }
 
   get finalSize(): SwitchSize {
@@ -24,8 +24,8 @@ export class SwitchGroupState {
   }
 
   constructor(props: {
-    disabled: () => boolean;
-    readonly: () => boolean;
+    disabled: () => boolean | undefined;
+    readonly: () => boolean | undefined;
     size: () => SwitchSize;
     orientation: () => SwitchGroupOrientation;
   }) {

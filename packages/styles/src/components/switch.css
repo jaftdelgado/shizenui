@@ -28,14 +28,16 @@
       @apply status-disabled;
 
       &,
-      & * {
+      & *,
+      & .label {
         cursor: var(--cursor-disabled);
       }
     }
 
     &[data-readonly] {
       &,
-      & * {
+      & *,
+      & .label {
         cursor: default;
       }
     }
@@ -59,7 +61,8 @@
 
   .switch,
   .switch__control,
-  .switch__thumb {
+  .switch__thumb,
+  .switch .label {
     cursor: var(--cursor-interactive);
   }
 
