@@ -1,0 +1,131 @@
+@layer components {
+  .button {
+    @apply rounded-control relative inline-flex items-center justify-center overflow-hidden text-center leading-none font-medium whitespace-nowrap select-none;
+
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--btn-bg);
+    --btn-bg-pressed: var(--btn-bg);
+    --btn-fg: currentColor;
+
+    cursor: var(--cursor-interactive);
+    background-color: var(--btn-bg);
+    color: var(--btn-fg);
+
+    transition:
+      background-color 200ms ease,
+      transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
+
+    &:focus-visible {
+      @apply status-focused;
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      @apply status-disabled;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--btn-bg-hover);
+    }
+
+    &:active:not(:disabled),
+    &[data-pressed="true"]:not(:disabled) {
+      background-color: var(--btn-bg-pressed);
+      transform: scale(0.96);
+      transition:
+        background-color 200ms ease,
+        transform 100ms cubic-bezier(0.4, 0, 1, 1);
+    }
+  }
+
+  .button__content {
+    @apply relative z-10 flex h-full w-full items-center justify-center gap-(--btn-gap);
+  }
+
+  .button__icon {
+    @apply flex shrink-0 items-center justify-center;
+  }
+
+  .button__label {
+    @apply flex items-center;
+  }
+
+  .button--primary {
+    --btn-bg: var(--color-accent);
+    --btn-fg: var(--color-accent-foreground);
+    --btn-bg-hover: var(--color-accent-hover);
+    --btn-bg-pressed: var(--color-accent-pressed);
+  }
+
+  .button--secondary {
+    --btn-bg: var(--color-control);
+    --btn-fg: var(--color-accent);
+    --btn-bg-hover: var(--color-control-hover);
+    --btn-bg-pressed: var(--color-control-pressed);
+  }
+
+  .button--tertiary {
+    --btn-bg: var(--color-control);
+    --btn-fg: var(--color-control-text);
+    --btn-bg-hover: var(--color-control-hover);
+    --btn-bg-pressed: var(--color-control-pressed);
+  }
+
+  .button--danger {
+    --btn-bg: var(--color-danger);
+    --btn-fg: var(--color-danger-foreground);
+    --btn-bg-hover: var(--color-danger-hover);
+    --btn-bg-pressed: var(--color-danger-pressed);
+  }
+
+  .button--ghost {
+    --btn-fg: var(--color-control-text);
+    --btn-bg-hover: var(--color-ghost-hover);
+    --btn-bg-pressed: var(--color-ghost-pressed);
+  }
+
+  .button--outline {
+    @apply shadow-border;
+    --btn-fg: var(--color-control-text);
+    --btn-bg-hover: var(--color-ghost-hover);
+    --btn-bg-pressed: var(--color-ghost-pressed);
+  }
+
+  .button--soft-danger {
+    --btn-bg: var(--color-control);
+    --btn-fg: var(--color-danger);
+    --btn-bg-hover: var(--color-control-hover);
+    --btn-bg-pressed: var(--color-control-pressed);
+  }
+
+  .button--sm {
+    @apply h-control-sm px-3 text-sm;
+    --btn-gap: 0.5rem;
+  }
+
+  .button--md {
+    @apply h-control-md px-4 text-sm;
+    --btn-gap: 0.575rem;
+  }
+
+  .button--lg {
+    @apply h-control-lg px-4 text-base;
+    --btn-gap: 0.65rem;
+  }
+
+  .button--icon-only {
+    @apply size-control-md;
+  }
+
+  .button--icon-only--sm {
+    @apply size-control-sm;
+  }
+
+  .button--icon-only--lg {
+    @apply size-control-lg;
+  }
+}

@@ -90,6 +90,18 @@
   --color-ghost-hover: color-mix(in oklab, var(--color-control-foreground) 6%, transparent);
   --color-ghost-pressed: color-mix(in oklab, var(--color-control-foreground) 10%, transparent);
 
+  --color-danger-hover: color-mix(
+    in oklab,
+    var(--color-danger) 90%,
+    var(--color-danger-foreground) 10%
+  );
+
+  --color-danger-pressed: color-mix(
+    in oklab,
+    var(--color-danger) 90%,
+    var(--color-danger-foreground) 10%
+  );
+
   /* Soft Colors */
   --color-accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
   --color-succes-soft: color-mix(in oklab, var(--success) 15%, transparent);
