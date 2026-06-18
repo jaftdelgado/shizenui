@@ -1,41 +1,48 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const buttonStyles = tv({
-  base: "button",
+  slots: {
+    base: "button",
+    content: "button__content",
+    icon: "button__icon",
+    iconStart: "button__icon button__icon--start",
+    iconEnd: "button__icon button__icon--end",
+    label: "button__label"
+  },
   variants: {
     variant: {
-      primary: "button--primary",
-      secondary: "button--secondary",
-      tertiary: "button--tertiary",
-      danger: "button--danger",
-      ghost: "button--ghost",
-      outline: "button--outline",
-      "soft-danger": "button--soft-danger"
+      primary: { base: "button--primary" },
+      secondary: { base: "button--secondary" },
+      tertiary: { base: "button--tertiary" },
+      danger: { base: "button--danger" },
+      ghost: { base: "button--ghost" },
+      outline: { base: "button--outline" },
+      "soft-danger": { base: "button--soft-danger" }
     },
     size: {
-      sm: "button--sm",
-      md: "button--md",
-      lg: "button--lg"
+      sm: { base: "button--sm" },
+      md: { base: "button--md" },
+      lg: { base: "button--lg" }
     },
     iconOnly: {
-      true: "button--icon-only"
+      true: { base: "button--icon-only" }
     }
   },
   compoundVariants: [
     {
       iconOnly: true,
       size: "sm",
-      class: "button--icon-only--sm"
+      class: { base: "button--icon-only--sm" }
     },
     {
       iconOnly: true,
       size: "md",
-      class: "button--icon-only--md"
+      class: { base: "button--icon-only--md" }
     },
     {
       iconOnly: true,
       size: "lg",
-      class: "button--icon-only--lg"
+      class: { base: "button--icon-only--lg" }
     }
   ],
   defaultVariants: {

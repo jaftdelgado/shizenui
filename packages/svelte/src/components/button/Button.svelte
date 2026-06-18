@@ -51,11 +51,11 @@
   );
 </script>
 
-{#snippet renderIcon(content: IconContent | undefined)}
+{#snippet renderIcon(content: IconContent | undefined, position: "start" | "end")}
   {#if typeof content === "string"}
     <i class={content}></i>
   {:else if content}
-    <span class="button__icon">
+    <span class={position === "start" ? styles.iconStart() : styles.iconEnd()}>
       {@render content()}
     </span>
   {/if}
@@ -66,22 +66,22 @@
   {onclick}
   disabled={state.finalDisabled}
   aria-busy={loading || undefined}
-  class={cn(styles, className)}
+  class={cn(styles.base(), className)}
   {...rest}
 >
-  <span class="button__content">
+  <span class={styles.content()}>
     {#if iconOnly}
-      <span class="button__icon">
+      <span class={styles.icon()}>
         {@render children?.(renderState)}
       </span>
     {:else}
-      {@render renderIcon(startContent)}
+      {@render renderIcon(startContent, "start")}
       {#if children}
-        <span class="button__label">
+        <span class={styles.label()}>
           {@render children(renderState)}
         </span>
       {/if}
-      {@render renderIcon(endContent)}
+      {@render renderIcon(endContent, "end")}
     {/if}
   </span>
 </button>

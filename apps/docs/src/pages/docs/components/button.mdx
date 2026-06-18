@@ -1,7 +1,7 @@
 ---
 layout: "@layouts/DocsLayout.astro"
 title: Button
-description: Toggles a boolean state on or off, ideal for settings and preferences.
+description: Interactive element that lets users take actions with a click.
 preview: SwitchPreview
 ---
 
@@ -13,14 +13,11 @@ import PropsTable from "@components/astro/PropsTable.astro";
 
 import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.svelte?raw";
 
-import ButtonDisabled from "@examples/svelte/button/ButtonDisabled.svelte";
-import SwitchControlled from "@examples/svelte/switch/SwitchControlled.svelte";
 import ButtonVariants from "@examples/svelte/button/ButtonVariants.svelte";
+import ButtonSizes from "@examples/svelte/button/ButtonSizes.svelte";
 import ButtonContent from "@examples/svelte/button/ButtonContent.svelte";
-import SwitchContentPosition from "@examples/svelte/switch/SwitchContentPosition.svelte";
-import SwitchGroupUsage from "@examples/svelte/switch/SwitchGroupUsage.svelte";
-import SwitchGroupOrientation from "@examples/svelte/switch/SwitchGroupOrientation.svelte";
-import SwitchGroupDisabled from "@examples/svelte/switch/SwitchGroupDisabled.svelte";
+import ButtonIconOnly from "@examples/svelte/button/ButtonIconOnly.svelte";
+import ButtonDisabled from "@examples/svelte/button/ButtonDisabled.svelte";
 
 import SwitchTwStyling from "@examples/svelte/switch/SwitchTwStyling.svelte";
 import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?raw";
@@ -31,22 +28,16 @@ import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?r
 
 ## Examples
 
-### Disabled State
-
-<ComponentExample src="svelte/button/ButtonDisabled.svelte">
-  <ButtonDisabled client:load />
-</ComponentExample>
-
-### Controlled
-
-<ComponentExample src="svelte/switch/SwitchControlled.svelte">
-  <SwitchControlled client:load />
-</ComponentExample>
-
 ### Variants
 
 <ComponentExample src="svelte/button/ButtonVariants.svelte">
   <ButtonVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/button/ButtonSizes.svelte">
+  <ButtonSizes client:load />
 </ComponentExample>
 
 ### Start & End Content
@@ -55,28 +46,16 @@ import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?r
   <ButtonContent client:load />
 </ComponentExample>
 
-### Content Position
+### Icon Only
 
-<ComponentExample src="svelte/switch/SwitchContentPosition.svelte">
-  <SwitchContentPosition client:load />
+<ComponentExample src="svelte/button/ButtonIconOnly.svelte">
+  <ButtonIconOnly client:load />
 </ComponentExample>
 
-### Group
+### Disabled State
 
-<ComponentExample src="svelte/switch/SwitchGroupUsage.svelte">
-  <SwitchGroupUsage client:load />
-</ComponentExample>
-
-### Group Orientation
-
-<ComponentExample src="svelte/switch/SwitchGroupOrientation.svelte">
-  <SwitchGroupOrientation client:load />
-</ComponentExample>
-
-### Group Disabled
-
-<ComponentExample src="svelte/switch/SwitchGroupDisabled.svelte">
-  <SwitchGroupDisabled client:load />
+<ComponentExample src="svelte/button/ButtonDisabled.svelte">
+  <ButtonDisabled client:load />
 </ComponentExample>
 
 ## Styling
