@@ -1,0 +1,27 @@
+@layer components {
+  .button {
+    @apply rounded-xl font-semibold tracking-wide shadow-md;
+
+    --btn-bg: var(--color-violet-600);
+    --btn-bg-hover: var(--color-violet-700);
+    --btn-bg-pressed: var(--color-violet-800);
+    --btn-fg: var(--color-white);
+  }
+
+  .button--secondary {
+    --btn-bg: var(--color-violet-50);
+    --btn-bg-hover: var(--color-violet-100);
+    --btn-bg-pressed: var(--color-violet-200);
+    --btn-fg: var(--color-violet-600);
+  }
+
+  .button--danger {
+    --btn-bg: var(--color-red-500);
+    --btn-bg-hover: var(--color-red-600);
+    --btn-bg-pressed: var(--color-red-700);
+  }
+
+  .button__content {
+    @apply gap-2;
+  }
+}

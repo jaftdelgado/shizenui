@@ -2,7 +2,7 @@
 layout: "@layouts/DocsLayout.astro"
 title: Button
 description: Interactive element that lets users take actions with a click.
-preview: SwitchPreview
+preview: ButtonPreview
 ---
 
 import CodeImport from "@components/astro/CodeImport.astro";
@@ -18,9 +18,10 @@ import ButtonSizes from "@examples/svelte/button/ButtonSizes.svelte";
 import ButtonContent from "@examples/svelte/button/ButtonContent.svelte";
 import ButtonIconOnly from "@examples/svelte/button/ButtonIconOnly.svelte";
 import ButtonDisabled from "@examples/svelte/button/ButtonDisabled.svelte";
+import ButtonLoading from "@examples/svelte/button/ButtonLoading.svelte";
 
-import SwitchTwStyling from "@examples/svelte/switch/SwitchTwStyling.svelte";
-import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?raw";
+import ButtonTwStyling from "@examples/svelte/button/ButtonTwStyling.svelte";
+import ButtonCssStylingCode from "@examples/svelte/button/ButtonCssStyling.css?raw";
 
 ## Import
 
@@ -58,58 +59,110 @@ import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?r
   <ButtonDisabled client:load />
 </ComponentExample>
 
+### Loading State
+
+<ComponentExample src="svelte/button/ButtonLoading.svelte">
+  <ButtonLoading client:load />
+</ComponentExample>
+
 ## Styling
 
 ### Tailwind CSS classes
 
-Use the `class` prop to apply Tailwind utility classes directly to the Switch and SwitchGroup.
+Use the `class` prop to apply Tailwind utility classes directly to Button.
 
-<ComponentExample src="svelte/switch/SwitchTwStyling.svelte">
-  <SwitchTwStyling client:load />
+<ComponentExample src="svelte/button/ButtonTwStyling.svelte">
+  <ButtonTwStyling client:load />
 </ComponentExample>
 
 ### Custom CSS
 
-To customize the Switch component classes, you can use the `@layer components` directive.
+To customize the Button component classes, you can use the `@layer components` directive.
 
-<CodeBlock code={SwitchCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+<CodeBlock code={ButtonCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
 
 ### CSS Classes
 
-#### Switch Classes
+#### Base & Size Classes
 
 <PropsTable
   props={[
     {
-      name: "switch",
+      name: "button",
       description: "Root element. Manages layout, tokens, and interaction states."
     },
-    { name: "switch__control", description: "The visible track that changes color when toggled." },
-    { name: "switch__thumb", description: "The sliding pill inside the track." },
-    { name: "switch__thumb-content", description: "Centers icon or content inside the thumb." },
-    { name: "switch__input", description: "Visually hidden native input for accessibility." },
-    { name: "switch__content", description: "Stacks label and description next to the control." },
-    { name: "switch--sm", description: "Small size variant. Reduces height and width." },
-    { name: "switch--lg", description: "Large size variant. Increases height and width." }
+    {
+      name: "button__content",
+      description: "Inner flex container that aligns the icon and label."
+    },
+    {
+      name: "button__icon",
+      description:
+        "Wrapper for any icon inside the button. Prevents shrinking and centers the glyph."
+    },
+    {
+      name: "button__icon--start",
+      description: "Optically aligns a leading icon with the button edge."
+    },
+    {
+      name: "button__icon--end",
+      description: "Optically aligns a trailing icon with the button edge."
+    },
+    {
+      name: "button__label",
+      description: "Wraps the text content and keeps it vertically centered."
+    },
+    {
+      name: "button--sm",
+      description: "Small size variant. Reduces height, padding, and font size."
+    },
+    { name: "button--md", description: "Medium size variant. Default height and padding." },
+    {
+      name: "button--lg",
+      description: "Large size variant. Increases height, padding, and font size."
+    },
+    {
+      name: "button--icon-only",
+      description: "Square medium button for a single icon with no label."
+    },
+    { name: "button--icon-only--sm", description: "Square small button for icon-only use." },
+    { name: "button--icon-only--lg", description: "Square large button for icon-only use." }
   ]}
 />
 
-#### SwitchGroup Classes
+#### Variant Classes
 
 <PropsTable
   props={[
-    { name: "switch-group", description: "Root wrapper for a group of switches." },
     {
-      name: "switch-group__items",
-      description: "Container for the switch items. Adds top margin."
+      name: "button--primary",
+      description: "Accent-filled button. Use for the main call-to-action."
     },
     {
-      name: "switch-group__items--vertical",
-      description: "Stacks switches in a column with equal gap."
+      name: "button--secondary",
+      description:
+        "Subtle background with accent-colored text. Pairs well next to a primary button."
     },
     {
-      name: "switch-group__items--horizontal",
-      description: "Lays switches in a row, wrapping when needed."
+      name: "button--tertiary",
+      description: "Subtle background with standard text color. For low-priority actions."
+    },
+    {
+      name: "button--ghost",
+      description: "No background. Hover and pressed fills appear only on interaction."
+    },
+    {
+      name: "button--outline",
+      description:
+        "Ghost style with an inset border. Useful when a boundary is needed without fill."
+    },
+    {
+      name: "button--danger",
+      description: "Signals a destructive or irreversible action."
+    },
+    {
+      name: "button--soft-danger",
+      description: "A less prominent destructive affordance with standard background."
     }
   ]}
 />
@@ -119,49 +172,45 @@ To customize the Switch component classes, you can use the `@layer components` d
 <PropsTable
   props={[
     {
-      name: "data-checked",
-      description: "Applied when the switch is on. Updates track and thumb colors to accent."
+      name: ":disabled / aria-disabled",
+      description: "Marks the button as non-interactive and communicates it visually."
     },
-    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
-    { name: "data-readonly", description: "Prevents toggling without visual disabled treatment." },
     {
-      name: "data-focus-visible",
-      description: "Applies a focus ring to the control when navigating with keyboard."
+      name: ":focus-visible",
+      description: "Indicates keyboard focus for accessibility."
+    },
+    {
+      name: ":hover",
+      description: "Provides visual feedback when the pointer is over the button."
+    },
+    {
+      name: ":active / data-pressed",
+      description: "Confirms the button is being activated by the user."
     }
   ]}
 />
 
 ## API Reference
 
-### Switch Props
+### Button Props
 
 <PropsTable
   showHeader
   props={[
-    { name: "checked", type: "boolean", default: "false" },
-    { name: "disabled", type: "boolean", default: "undefined" },
-    { name: "readonly", type: "boolean", default: "undefined" },
-    { name: "name", type: "string", default: "undefined" },
-    { name: "value", type: "string", default: "undefined" },
-    { name: "id", type: "string", default: "auto-generated" },
+    {
+      name: "variant",
+      type: '"primary" | "secondary" | "tertiary" | "ghost" | "outline" | "danger" | "soft-danger"',
+      default: '"primary"'
+    },
     { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
-    { name: "onCheckedChange", type: "(checked: boolean) => void", default: "undefined" },
-    { name: "children", type: "Snippet", default: "undefined" }
-  ]}
-/>
-
-### SwitchGroup Props
-
-Groups multiple switches, propagating `disabled`, `readonly`, and `size` to all children via context. Individual switches can override `disabled` and `readonly` locally.
-
-<PropsTable
-  showHeader
-  props={[
-    { name: "children", type: "Snippet", default: "—" },
     { name: "disabled", type: "boolean", default: "undefined" },
-    { name: "readonly", type: "boolean", default: "undefined" },
-    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
-    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
-    { name: "id", type: "string", default: "auto-generated" }
+    { name: "loading", type: "boolean", default: "false" },
+    { name: "iconOnly", type: "boolean", default: "false" },
+    { name: "type", type: '"button" | "submit" | "reset"', default: '"button"' },
+    { name: "startContent", type: "Snippet<[]> | string", default: "undefined" },
+    { name: "endContent", type: "Snippet<[]> | string", default: "undefined" },
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "onclick", type: "MouseEventHandler<HTMLButtonElement>", default: "undefined" },
+    { name: "ref", type: "HTMLButtonElement | null", default: "null" }
   ]}
 />

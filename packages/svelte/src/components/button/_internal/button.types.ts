@@ -9,10 +9,6 @@ export type ButtonVariant = NonNullable<ButtonVariants["variant"]>;
 
 export type IconContent = Snippet<[]> | string;
 
-export interface ButtonRenderState {
-  isLoading: boolean;
-}
-
 type ButtonBaseProps = Omit<HTMLButtonAttributes, "children" | "disabled">;
 
 interface NormalButtonProps extends ButtonBaseProps {
@@ -21,7 +17,8 @@ interface NormalButtonProps extends ButtonBaseProps {
   size?: ButtonSize;
   disabled?: boolean;
   loading?: boolean;
-  children?: Snippet<[ButtonRenderState]>;
+  ref?: HTMLButtonElement | null;
+  children?: Snippet;
   startContent?: IconContent;
   endContent?: IconContent;
 }
@@ -32,7 +29,8 @@ interface IconOnlyButtonProps extends ButtonBaseProps {
   size?: ButtonSize;
   disabled?: boolean;
   loading?: boolean;
-  children: Snippet<[ButtonRenderState]>;
+  ref?: HTMLButtonElement | null;
+  children: Snippet;
   startContent?: never;
   endContent?: never;
 }

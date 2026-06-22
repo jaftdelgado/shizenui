@@ -3,7 +3,7 @@
   import { cn } from "../../lib/utils";
 
   import { warnIf } from "../../lib/runes/index.js";
-  import type { ButtonProps, ButtonRenderState, IconContent } from "./_internal/index.js";
+  import type { ButtonProps, IconContent } from "./_internal/index.js";
   import { ButtonState } from "./_internal/index.js";
 
   let {
@@ -11,6 +11,7 @@
     startContent,
     endContent,
     onclick,
+    ref = $bindable(null),
     class: className,
     type = "button",
     variant,
@@ -40,8 +41,6 @@
     loading: () => loading
   });
 
-  const renderState = $derived<ButtonRenderState>({ isLoading: loading });
-
   const styles = $derived(
     buttonStyles({
       variant: state.finalVariant,
@@ -62,6 +61,7 @@
 {/snippet}
 
 <button
+  bind:this={ref}
   {type}
   {onclick}
   disabled={state.finalDisabled}
@@ -72,13 +72,13 @@
   <span class={styles.content()}>
     {#if iconOnly}
       <span class={styles.icon()}>
-        {@render children?.(renderState)}
+        {@render children?.()}
       </span>
     {:else}
       {@render renderIcon(startContent, "start")}
       {#if children}
         <span class={styles.label()}>
-          {@render children(renderState)}
+          {@render children()}
         </span>
       {/if}
       {@render renderIcon(endContent, "end")}

@@ -18,12 +18,22 @@ const description = frontmatter.description;
 const preview = frontmatter.preview;
 const headings: MarkdownHeading[] = rawProps.headings ?? [];
 
-const previewModules = import.meta.glob("../previews/*.astro", {
+const previewModules = import.meta.glob("../examples/svelte/**/*.astro", {
   eager: true
 }) as Record<string, { default?: unknown }>;
 
-const previewPath = preview ? `../previews/${preview}.astro` : undefined;
-const PreviewComponent: any = previewPath ? previewModules[previewPath]?.default : undefined;
+const matchedPreviewPath = preview
+  ? (() => {
+      const previewPath = `../examples/svelte/${preview}.astro`;
+      return previewModules[previewPath]
+        ? previewPath
+        : Object.keys(previewModules).find((path) => path.endsWith(`/${preview}.astro`));
+    })()
+  : undefined;
+
+const PreviewComponent: any = matchedPreviewPath
+  ? previewModules[matchedPreviewPath]?.default
+  : undefined;
 ---
 
 <html lang="en">
