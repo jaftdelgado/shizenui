@@ -1,0 +1,216 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Button
+description: Interactive element that lets users take actions with a click.
+preview: ButtonPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+
+import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.svelte?raw";
+
+import ButtonVariants from "@examples/svelte/button/ButtonVariants.svelte";
+import ButtonSizes from "@examples/svelte/button/ButtonSizes.svelte";
+import ButtonContent from "@examples/svelte/button/ButtonContent.svelte";
+import ButtonIconOnly from "@examples/svelte/button/ButtonIconOnly.svelte";
+import ButtonDisabled from "@examples/svelte/button/ButtonDisabled.svelte";
+import ButtonLoading from "@examples/svelte/button/ButtonLoading.svelte";
+
+import ButtonTwStyling from "@examples/svelte/button/ButtonTwStyling.svelte";
+import ButtonCssStylingCode from "@examples/svelte/button/ButtonCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { Button } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/button/ButtonVariants.svelte">
+  <ButtonVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/button/ButtonSizes.svelte">
+  <ButtonSizes client:load />
+</ComponentExample>
+
+### Start & End Content
+
+<ComponentExample src="svelte/button/ButtonContent.svelte">
+  <ButtonContent client:load />
+</ComponentExample>
+
+### Icon Only
+
+<ComponentExample src="svelte/button/ButtonIconOnly.svelte">
+  <ButtonIconOnly client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/button/ButtonDisabled.svelte">
+  <ButtonDisabled client:load />
+</ComponentExample>
+
+### Loading State
+
+<ComponentExample src="svelte/button/ButtonLoading.svelte">
+  <ButtonLoading client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to Button.
+
+<ComponentExample src="svelte/button/ButtonTwStyling.svelte">
+  <ButtonTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Button component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={ButtonCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Base & Size Classes
+
+<PropsTable
+  props={[
+    {
+      name: "button",
+      description: "Root element. Manages layout, tokens, and interaction states."
+    },
+    {
+      name: "button__content",
+      description: "Inner flex container that aligns the icon and label."
+    },
+    {
+      name: "button__icon",
+      description:
+        "Wrapper for any icon inside the button. Prevents shrinking and centers the glyph."
+    },
+    {
+      name: "button__icon--start",
+      description: "Optically aligns a leading icon with the button edge."
+    },
+    {
+      name: "button__icon--end",
+      description: "Optically aligns a trailing icon with the button edge."
+    },
+    {
+      name: "button__label",
+      description: "Wraps the text content and keeps it vertically centered."
+    },
+    {
+      name: "button--sm",
+      description: "Small size variant. Reduces height, padding, and font size."
+    },
+    { name: "button--md", description: "Medium size variant. Default height and padding." },
+    {
+      name: "button--lg",
+      description: "Large size variant. Increases height, padding, and font size."
+    },
+    {
+      name: "button--icon-only",
+      description: "Square medium button for a single icon with no label."
+    },
+    { name: "button--icon-only--sm", description: "Square small button for icon-only use." },
+    { name: "button--icon-only--lg", description: "Square large button for icon-only use." }
+  ]}
+/>
+
+#### Variant Classes
+
+<PropsTable
+  props={[
+    {
+      name: "button--primary",
+      description: "Accent-filled button. Use for the main call-to-action."
+    },
+    {
+      name: "button--secondary",
+      description:
+        "Subtle background with accent-colored text. Pairs well next to a primary button."
+    },
+    {
+      name: "button--tertiary",
+      description: "Subtle background with standard text color. For low-priority actions."
+    },
+    {
+      name: "button--ghost",
+      description: "No background. Hover and pressed fills appear only on interaction."
+    },
+    {
+      name: "button--outline",
+      description:
+        "Ghost style with an inset border. Useful when a boundary is needed without fill."
+    },
+    {
+      name: "button--danger",
+      description: "Signals a destructive or irreversible action."
+    },
+    {
+      name: "button--soft-danger",
+      description: "A less prominent destructive affordance with standard background."
+    }
+  ]}
+/>
+
+#### Interactive States
+
+<PropsTable
+  props={[
+    {
+      name: ":disabled / aria-disabled",
+      description: "Marks the button as non-interactive and communicates it visually."
+    },
+    {
+      name: ":focus-visible",
+      description: "Indicates keyboard focus for accessibility."
+    },
+    {
+      name: ":hover",
+      description: "Provides visual feedback when the pointer is over the button."
+    },
+    {
+      name: ":active / data-pressed",
+      description: "Confirms the button is being activated by the user."
+    }
+  ]}
+/>
+
+## API Reference
+
+### Button Props
+
+<PropsTable
+  showHeader
+  props={[
+    {
+      name: "variant",
+      type: '"primary" | "secondary" | "tertiary" | "ghost" | "outline" | "danger" | "soft-danger"',
+      default: '"primary"'
+    },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "loading", type: "boolean", default: "false" },
+    { name: "iconOnly", type: "boolean", default: "false" },
+    { name: "type", type: '"button" | "submit" | "reset"', default: '"button"' },
+    { name: "startContent", type: "Snippet<[]> | string", default: "undefined" },
+    { name: "endContent", type: "Snippet<[]> | string", default: "undefined" },
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "onclick", type: "MouseEventHandler<HTMLButtonElement>", default: "undefined" },
+    { name: "ref", type: "HTMLButtonElement | null", default: "null" }
+  ]}
+/>

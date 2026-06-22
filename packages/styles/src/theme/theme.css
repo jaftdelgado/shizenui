@@ -70,8 +70,8 @@
   );
   --color-control-pressed: color-mix(
     in oklab,
-    var(--color-control) 90%,
-    var(--color-control-foreground) 10%
+    var(--color-control) 92%,
+    var(--color-control-foreground) 8%
   );
 
   /* Form fields (input, select, checkbox, etc.) state colors */
@@ -89,6 +89,18 @@
   /* Ghost (for transparent-bg elements) state colors */
   --color-ghost-hover: color-mix(in oklab, var(--color-control-foreground) 6%, transparent);
   --color-ghost-pressed: color-mix(in oklab, var(--color-control-foreground) 10%, transparent);
+
+  --color-danger-hover: color-mix(
+    in oklab,
+    var(--color-danger) 94%,
+    var(--color-danger-foreground) 6%
+  );
+
+  --color-danger-pressed: color-mix(
+    in oklab,
+    var(--color-danger) 92%,
+    var(--color-danger-foreground) 8%
+  );
 
   /* Soft Colors */
   --color-accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
