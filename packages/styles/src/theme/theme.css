@@ -107,4 +107,9 @@
   --color-succes-soft: color-mix(in oklab, var(--success) 15%, transparent);
   --color-warning-soft: color-mix(in oklab, var(--warning) 15%, transparent);
   --color-danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
+
+  /* Shadows */
+  --shadow-border:
+    0px 0px 0px 1px rgba(0, 0, 0, 0.06), 0px 1px 2px -1px rgba(0, 0, 0, 0.06),
+    0px 2px 4px 0px rgba(0, 0, 0, 0.04);
 }
