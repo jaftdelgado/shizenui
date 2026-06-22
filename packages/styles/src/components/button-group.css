@@ -1,3 +1,147 @@
-.button-group {
-  display: block;
+@layer components {
+  .button-group {
+    @apply isolate inline-flex;
+
+    &[data-orientation="vertical"] {
+      @apply flex-col items-stretch;
+
+      > .button,
+      > :is([style*="display: contents"], [style*="display:contents"]) .button {
+        @apply flex w-full items-center justify-center;
+      }
+
+      > .button.button--icon-only,
+      > :is([style*="display: contents"], [style*="display:contents"]) .button--icon-only {
+        @apply aspect-square w-full min-w-max;
+      }
+    }
+  }
+
+  /* ── Border radius ── */
+  .button-group[data-orientation="horizontal"] .button {
+    @apply rounded-none;
+  }
+  .button-group[data-orientation="horizontal"] > :first-child .button,
+  .button-group[data-orientation="horizontal"] > .button:first-child {
+    @apply rounded-l-control;
+  }
+  .button-group[data-orientation="horizontal"] > :last-child .button,
+  .button-group[data-orientation="horizontal"] > .button:last-child {
+    @apply rounded-r-control;
+  }
+  .button-group[data-orientation="horizontal"] > :only-child .button,
+  .button-group[data-orientation="horizontal"] > .button:only-child {
+    @apply rounded-control;
+  }
+
+  .button-group[data-orientation="vertical"] .button {
+    @apply rounded-none;
+  }
+  .button-group[data-orientation="vertical"] > :first-child .button,
+  .button-group[data-orientation="vertical"] > .button:first-child {
+    @apply rounded-t-control;
+  }
+  .button-group[data-orientation="vertical"] > :last-child .button,
+  .button-group[data-orientation="vertical"] > .button:last-child {
+    @apply rounded-b-control;
+  }
+  .button-group[data-orientation="vertical"] > :only-child .button,
+  .button-group[data-orientation="vertical"] > .button:only-child {
+    @apply rounded-control;
+  }
+
+  /* ── Outline borders ── */
+  .button-group--outline {
+    &[data-orientation="horizontal"] {
+      > :first-child .button,
+      > .button:first-child {
+        @apply border-r-0;
+      }
+      > :not(:first-child):not(:last-child) .button,
+      > .button:not(:first-child):not(:last-child) {
+        @apply border-x-0;
+      }
+      > :last-child .button,
+      > .button:last-child {
+        @apply border-l-0;
+      }
+      > :only-child .button,
+      > .button:only-child {
+        @apply border;
+      }
+    }
+
+    &[data-orientation="vertical"] {
+      > :first-child .button,
+      > .button:first-child {
+        @apply border-b-0;
+      }
+      > :not(:first-child):not(:last-child) .button,
+      > .button:not(:first-child):not(:last-child) {
+        @apply border-y-0;
+      }
+      > :last-child .button,
+      > .button:last-child {
+        @apply border-t-0;
+      }
+      > :only-child .button,
+      > .button:only-child {
+        @apply border;
+      }
+    }
+  }
+
+  /* ── Button overrides inside group ── */
+  .button-group .button {
+    @apply relative;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      @apply z-10;
+    }
+    &:active:not(:disabled) {
+      @apply z-20;
+    }
+
+    &:active:not(:disabled),
+    &[data-pressed="true"]:not(:disabled) {
+      transform: none;
+
+      .button__content {
+        transform: scale(0.96);
+        transition: transform 100ms cubic-bezier(0.4, 0, 1, 1);
+      }
+    }
+
+    .button__content {
+      transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+
+  /* ── Separators ── */
+  .button-group--separators {
+    > .button:not(:last-child)::after,
+    > :not(:last-child) .button::after {
+      content: "";
+      @apply absolute rounded-full bg-current opacity-20;
+    }
+  }
+
+  .button-group[data-orientation="horizontal"].button-group--separators {
+    > .button:not(:last-child)::after,
+    > :not(:last-child) .button::after {
+      @apply top-1/2 right-0 -translate-y-1/2;
+      width: 1px;
+      height: 60%;
+    }
+  }
+
+  .button-group[data-orientation="vertical"].button-group--separators {
+    > .button:not(:last-child)::after,
+    > :not(:last-child) .button::after {
+      @apply bottom-0 left-1/2 -translate-x-1/2;
+      height: 1px;
+      width: 60%;
+    }
+  }
 }
