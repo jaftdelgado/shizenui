@@ -1,5 +1,6 @@
 <script lang="ts">
   import { buttonGroupStyles } from "@shizen-ui/styles";
+  import { warnIf } from "../../lib/runes/index.js";
   import { cn, presence } from "../../lib/utils";
   import type { ButtonGroupProps } from "./_internal/index.js";
   import { setButtonGroupContext } from "./_internal/index.js";
@@ -14,6 +15,12 @@
     disabled = undefined,
     ...rest
   }: ButtonGroupProps = $props();
+
+  warnIf(
+    () => !children,
+    "ButtonGroup",
+    "No children provided. Add at least one <Button> as a child."
+  );
 
   setButtonGroupContext({
     get variant() {

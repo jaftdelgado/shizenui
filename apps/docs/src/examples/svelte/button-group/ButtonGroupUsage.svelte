@@ -24,7 +24,7 @@
     <Button>Years</Button>
     <Button>Months</Button>
     <Button>Days</Button>
-    <Button iconOnly>
+    <Button iconOnly aria-label="More options">
       <Icon icon={EllipsisVerticalIcon} />
     </Button>
   </ButtonGroup>

@@ -20,8 +20,10 @@ export class ButtonState {
   }
 
   get finalDisabled(): boolean {
-    const groupDisabled = this.#groupCtx.exists ? (this.#groupCtx.disabled ?? false) : false;
-    return groupDisabled || (this.#disabled() ?? false) || this.#loading();
+    const localDisabled = this.#disabled();
+    const groupDisabled = this.#groupCtx.exists ? this.#groupCtx.disabled : undefined;
+
+    return (localDisabled ?? groupDisabled ?? false) || this.#loading();
   }
 
   constructor(props: {
