@@ -8,11 +8,11 @@
   let {
     children,
     class: className,
-    variant,
-    size,
-    orientation,
-    hideSeparator,
-    disabled,
+    variant = "primary",
+    size = "md",
+    orientation = "horizontal",
+    hideSeparator = false,
+    disabled = undefined,
     ...rest
   }: ButtonGroupProps = $props();
 
@@ -58,7 +58,5 @@
   data-orientation={buttonGroupState.finalOrientation}
   {...rest}
 >
-  {#if children}
-    {@render children()}
-  {/if}
+  {@render children?.()}
 </div>

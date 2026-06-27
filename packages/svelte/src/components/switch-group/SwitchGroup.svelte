@@ -2,6 +2,7 @@
   import { switchGroupStyles } from "@shizen-ui/styles";
 
   import { cn, createId, presence } from "../../lib/utils";
+  import { warnIf } from "../../lib/runes/index.js";
   import type { SwitchGroupProps } from "./_internal/index.js";
   import { SwitchGroupState, setupSwitchGroupContexts } from "./_internal/index.js";
 
@@ -17,6 +18,12 @@
     id = createId("switch-group", uid),
     ...rest
   }: SwitchGroupProps = $props();
+
+  warnIf(
+    () => !children,
+    "SwitchGroup",
+    "No children provided. Add at least one <Switch> as a child."
+  );
 
   const switchGroupState = new SwitchGroupState({
     disabled: () => disabled,
@@ -43,5 +50,5 @@
   data-orientation={switchGroupState.finalOrientation}
   {...rest}
 >
-  {@render children()}
+  {@render children?.()}
 </div>

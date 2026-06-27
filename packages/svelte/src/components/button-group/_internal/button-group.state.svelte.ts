@@ -2,18 +2,18 @@ import type { ButtonVariants } from "@shizen-ui/styles";
 import type { ButtonGroupOrientation } from "./button-group.types.js";
 
 export class ButtonGroupState {
-  #variant: () => ButtonVariants["variant"] | undefined;
-  #size: () => ButtonVariants["size"] | undefined;
+  #variant: () => NonNullable<ButtonVariants["variant"]>;
+  #size: () => NonNullable<ButtonVariants["size"]>;
   #disabled: () => boolean | undefined;
-  #orientation: () => ButtonGroupOrientation | undefined;
-  #hideSeparator: () => boolean | undefined;
+  #orientation: () => ButtonGroupOrientation;
+  #hideSeparator: () => boolean;
 
   get finalVariant(): NonNullable<ButtonVariants["variant"]> {
-    return this.#variant() ?? "primary";
+    return this.#variant();
   }
 
   get finalSize(): NonNullable<ButtonVariants["size"]> {
-    return this.#size() ?? "md";
+    return this.#size();
   }
 
   get finalDisabled(): boolean {
@@ -21,19 +21,19 @@ export class ButtonGroupState {
   }
 
   get finalOrientation(): ButtonGroupOrientation {
-    return this.#orientation() ?? "horizontal";
+    return this.#orientation();
   }
 
   get finalHideSeparator(): boolean {
-    return this.#hideSeparator() ?? false;
+    return this.#hideSeparator();
   }
 
   constructor(props: {
-    variant: () => ButtonVariants["variant"] | undefined;
-    size: () => ButtonVariants["size"] | undefined;
+    variant: () => NonNullable<ButtonVariants["variant"]>;
+    size: () => NonNullable<ButtonVariants["size"]>;
     disabled: () => boolean | undefined;
-    orientation: () => ButtonGroupOrientation | undefined;
-    hideSeparator: () => boolean | undefined;
+    orientation: () => ButtonGroupOrientation;
+    hideSeparator: () => boolean;
   }) {
     this.#variant = props.variant;
     this.#size = props.size;

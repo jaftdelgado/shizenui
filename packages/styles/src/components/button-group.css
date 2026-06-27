@@ -5,47 +5,41 @@
     &[data-orientation="vertical"] {
       @apply flex-col items-stretch;
 
-      > .button,
-      > :is([style*="display: contents"], [style*="display:contents"]) .button {
+      > .button {
         @apply flex w-full items-center justify-center;
-      }
 
-      > .button.button--icon-only,
-      > :is([style*="display: contents"], [style*="display:contents"]) .button--icon-only {
-        @apply aspect-square w-full min-w-max;
+        &.button--icon-only {
+          @apply aspect-square w-full min-w-max;
+        }
       }
     }
   }
 
   /* ── Border radius ── */
-  .button-group[data-orientation="horizontal"] .button {
+  .button-group > .button {
     @apply rounded-none;
   }
-  .button-group[data-orientation="horizontal"] > :first-child .button,
+
   .button-group[data-orientation="horizontal"] > .button:first-child {
     @apply rounded-l-control;
   }
-  .button-group[data-orientation="horizontal"] > :last-child .button,
+
   .button-group[data-orientation="horizontal"] > .button:last-child {
     @apply rounded-r-control;
   }
-  .button-group[data-orientation="horizontal"] > :only-child .button,
+
   .button-group[data-orientation="horizontal"] > .button:only-child {
     @apply rounded-control;
   }
 
-  .button-group[data-orientation="vertical"] .button {
-    @apply rounded-none;
-  }
-  .button-group[data-orientation="vertical"] > :first-child .button,
   .button-group[data-orientation="vertical"] > .button:first-child {
     @apply rounded-t-control;
   }
-  .button-group[data-orientation="vertical"] > :last-child .button,
+
   .button-group[data-orientation="vertical"] > .button:last-child {
     @apply rounded-b-control;
   }
-  .button-group[data-orientation="vertical"] > :only-child .button,
+
   .button-group[data-orientation="vertical"] > .button:only-child {
     @apply rounded-control;
   }
@@ -60,7 +54,7 @@
   }
 
   /* ── Button overrides inside group ── */
-  .button-group .button {
+  .button-group > .button {
     @apply relative;
     transform-style: flat;
     will-change: auto;
@@ -92,29 +86,22 @@
   }
 
   /* ── Separators ── */
-  .button-group--separators {
-    > .button:not(:last-child)::after,
-    > :not(:last-child) .button::after {
-      content: "";
-      @apply absolute rounded-full bg-current opacity-20;
-    }
+  .button-group--separators > .button:not(:last-child)::after {
+    content: "";
+    @apply absolute rounded-full bg-current opacity-20;
   }
 
-  .button-group[data-orientation="horizontal"].button-group--separators {
-    > .button:not(:last-child)::after,
-    > :not(:last-child) .button::after {
-      @apply top-1/2 right-0 -translate-y-1/2;
-      width: 2px;
-      height: 40%;
-    }
+  .button-group[data-orientation="horizontal"].button-group--separators
+    > .button:not(:last-child)::after {
+    @apply top-1/2 right-0 -translate-y-1/2;
+    width: 2px;
+    height: 40%;
   }
 
-  .button-group[data-orientation="vertical"].button-group--separators {
-    > .button:not(:last-child)::after,
-    > :not(:last-child) .button::after {
-      @apply bottom-0 left-1/2 -translate-x-1/2;
-      height: 2px;
-      width: 40%;
-    }
+  .button-group[data-orientation="vertical"].button-group--separators
+    > .button:not(:last-child)::after {
+    @apply bottom-0 left-1/2 -translate-x-1/2;
+    height: 2px;
+    width: 40%;
   }
 }
