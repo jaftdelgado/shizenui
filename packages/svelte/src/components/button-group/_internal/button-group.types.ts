@@ -7,7 +7,7 @@ type ButtonGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "r
 export type ButtonGroupOrientation = "horizontal" | "vertical";
 
 export interface ButtonGroupProps extends ButtonGroupBaseProps {
-  children: Snippet;
+  children: Snippet | undefined;
   variant?: ButtonVariants["variant"];
   size?: ButtonVariants["size"];
   orientation?: ButtonGroupOrientation;

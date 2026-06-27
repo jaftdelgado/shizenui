@@ -105,7 +105,7 @@
     > :not(:last-child) .button::after {
       @apply top-1/2 right-0 -translate-y-1/2;
       width: 2px;
-      height: 60%;
+      height: 40%;
     }
   }
 
@@ -113,8 +113,8 @@
     > .button:not(:last-child)::after,
     > :not(:last-child) .button::after {
       @apply bottom-0 left-1/2 -translate-x-1/2;
-      height: 1px;
-      width: 60%;
+      height: 2px;
+      width: 40%;
     }
   }
 }

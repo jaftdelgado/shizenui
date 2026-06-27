@@ -10,20 +10,18 @@ export class ButtonState {
   #groupCtx: ButtonGroupContextResult;
 
   get finalVariant(): ButtonVariant {
-    return this.#groupCtx.exists
-      ? (this.#groupCtx.variant ?? "primary")
-      : (this.#variant() ?? "primary");
+    return this.#groupCtx.exists ? this.#groupCtx.variant : (this.#variant() ?? "primary");
   }
 
   get finalSize(): ButtonSize {
-    return this.#groupCtx.exists ? (this.#groupCtx.size ?? "md") : (this.#size() ?? "md");
+    return this.#groupCtx.exists ? this.#groupCtx.size : (this.#size() ?? "md");
   }
 
   get finalDisabled(): boolean {
     const localDisabled = this.#disabled();
-    const groupDisabled = this.#groupCtx.exists ? this.#groupCtx.disabled : undefined;
+    const groupDisabled = this.#groupCtx.exists ? this.#groupCtx.disabled : false;
 
-    return (localDisabled ?? groupDisabled ?? false) || this.#loading();
+    return (localDisabled ?? groupDisabled) || this.#loading();
   }
 
   constructor(props: {

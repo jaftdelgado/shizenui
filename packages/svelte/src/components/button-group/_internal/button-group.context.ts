@@ -2,15 +2,15 @@ import { getContext, setContext } from "svelte";
 import type { ButtonVariants } from "@shizen-ui/styles";
 
 export interface ButtonGroupContextValue {
-  readonly variant?: ButtonVariants["variant"];
-  readonly size?: ButtonVariants["size"];
-  readonly disabled?: boolean;
+  readonly variant: NonNullable<ButtonVariants["variant"]>;
+  readonly size: NonNullable<ButtonVariants["size"]>;
+  readonly disabled: boolean;
 }
 
 export interface ButtonGroupContextResult {
-  readonly variant: ButtonVariants["variant"] | undefined;
-  readonly size: ButtonVariants["size"] | undefined;
-  readonly disabled: boolean | undefined;
+  readonly variant: NonNullable<ButtonVariants["variant"]>;
+  readonly size: NonNullable<ButtonVariants["size"]>;
+  readonly disabled: boolean;
   readonly exists: boolean;
 }
 
@@ -26,13 +26,13 @@ export function useButtonGroupContext(): ButtonGroupContextResult {
   if (!context) {
     return {
       get variant() {
-        return undefined;
+        return "primary" as NonNullable<ButtonVariants["variant"]>;
       },
       get size() {
-        return undefined;
+        return "md" as NonNullable<ButtonVariants["size"]>;
       },
       get disabled() {
-        return undefined;
+        return false;
       },
       get exists() {
         return false;

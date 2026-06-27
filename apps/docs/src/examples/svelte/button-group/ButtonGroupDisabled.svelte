@@ -12,6 +12,7 @@
         <Button>Right</Button>
       </ButtonGroup>
     </div>
+
     <div class="flex flex-col items-start gap-2">
       <Description>Group disabled, but one button overrides</Description>
       <ButtonGroup disabled={true}>

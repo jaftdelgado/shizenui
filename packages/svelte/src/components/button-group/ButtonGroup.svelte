@@ -3,16 +3,16 @@
   import { warnIf } from "../../lib/runes/index.js";
   import { cn, presence } from "../../lib/utils";
   import type { ButtonGroupProps } from "./_internal/index.js";
-  import { setButtonGroupContext } from "./_internal/index.js";
+  import { ButtonGroupState, setButtonGroupContext } from "./_internal/index.js";
 
   let {
     children,
     class: className,
-    variant = "primary",
-    size = "md",
-    orientation = "horizontal",
-    hideSeparator = false,
-    disabled = undefined,
+    variant,
+    size,
+    orientation,
+    hideSeparator,
+    disabled,
     ...rest
   }: ButtonGroupProps = $props();
 
@@ -22,27 +22,43 @@
     "No children provided. Add at least one <Button> as a child."
   );
 
+  const buttonGroupState = new ButtonGroupState({
+    variant: () => variant,
+    size: () => size,
+    disabled: () => disabled,
+    orientation: () => orientation,
+    hideSeparator: () => hideSeparator
+  });
+
   setButtonGroupContext({
     get variant() {
-      return variant;
+      return buttonGroupState.finalVariant;
     },
     get size() {
-      return size;
+      return buttonGroupState.finalSize;
     },
     get disabled() {
-      return disabled;
+      return buttonGroupState.finalDisabled;
     }
   });
 
-  const styles = $derived(buttonGroupStyles({ variant, size, hideSeparator }));
+  const styles = $derived(
+    buttonGroupStyles({
+      variant: buttonGroupState.finalVariant,
+      size: buttonGroupState.finalSize,
+      hideSeparator: buttonGroupState.finalHideSeparator
+    })
+  );
 </script>
 
 <div
   role="group"
   class={cn(styles, className)}
-  data-disabled={presence(disabled ?? false)}
-  data-orientation={orientation}
+  data-disabled={presence(buttonGroupState.finalDisabled)}
+  data-orientation={buttonGroupState.finalOrientation}
   {...rest}
 >
-  {@render children()}
+  {#if children}
+    {@render children()}
+  {/if}
 </div>

@@ -1,0 +1,21 @@
+@layer components {
+  .button-group {
+    @apply rounded-xl shadow-md;
+  }
+
+  .button-group--outline {
+    --btn-border: var(--color-violet-300);
+  }
+
+  .button-group--separators > .button:not(:last-child)::after,
+  .button-group--separators > :not(:last-child) .button::after {
+    @apply bg-violet-400 opacity-40;
+  }
+
+  .button-group .button {
+    --btn-bg: var(--color-violet-600);
+    --btn-bg-hover: var(--color-violet-700);
+    --btn-bg-pressed: var(--color-violet-800);
+    --btn-fg: var(--color-white);
+  }
+}
