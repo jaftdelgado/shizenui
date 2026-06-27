@@ -4,7 +4,7 @@ import type { SwitchSize } from "../../switch/_internal/index.js";
 import type { SwitchGroupOrientation } from "./switch-group.context.js";
 
 export interface SwitchGroupProps extends HTMLAttributes<HTMLDivElement> {
-  children: Snippet;
+  children?: Snippet;
   disabled?: boolean;
   readonly?: boolean;
   size?: SwitchSize;

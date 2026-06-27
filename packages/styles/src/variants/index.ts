@@ -1,5 +1,6 @@
 // Component variants exports
 export * from "./button";
+export * from "./button-group";
 export * from "./description";
 export * from "./label";
 export * from "./switch";

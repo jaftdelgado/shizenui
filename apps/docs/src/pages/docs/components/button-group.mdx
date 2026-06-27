@@ -1,0 +1,148 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Button Group
+description: Groups multiple buttons sharing properties and state between them.
+preview: ButtonGroupPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+
+import ButtonGroupVariants from "@examples/svelte/button-group/ButtonGroupVariants.svelte";
+import ButtonGroupSizes from "@examples/svelte/button-group/ButtonGroupSizes.svelte";
+import ButtonGroupOrientation from "@examples/svelte/button-group/ButtonGroupOrientation.svelte";
+import ButtonGroupDisabled from "@examples/svelte/button-group/ButtonGroupDisabled.svelte";
+import ButtonGroupWithoutSeparators from "@examples/svelte/button-group/ButtonGroupWithoutSeparators.svelte";
+
+import ButtonGroupTwStyling from "@examples/svelte/button-group/ButtonGroupTwStyling.svelte";
+import ButtonGroupCssStylingCode from "@examples/svelte/button-group/ButtonGroupCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { ButtonGroup } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/button-group/ButtonGroupVariants.svelte">
+  <ButtonGroupVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/button-group/ButtonGroupSizes.svelte">
+  <ButtonGroupSizes client:load />
+</ComponentExample>
+
+### Orientation
+
+<ComponentExample src="svelte/button-group/ButtonGroupOrientation.svelte">
+  <ButtonGroupOrientation client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/button-group/ButtonGroupDisabled.svelte">
+  <ButtonGroupDisabled client:load />
+</ComponentExample>
+
+### Without Separator
+
+<ComponentExample src="svelte/button-group/ButtonGroupWithoutSeparators.svelte">
+  <ButtonGroupWithoutSeparators client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to ButtonGroup.
+
+<ComponentExample src="svelte/button-group/ButtonGroupTwStyling.svelte">
+  <ButtonGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the ButtonGroup component classes, you can use the `@layer components` directive.
+
+<CodeBlock
+  code={ButtonGroupCssStylingCode}
+  lang="css"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+### CSS Classes
+
+#### Base & Size Classes
+
+<PropsTable
+  props={[
+    {
+      name: "button-group",
+      description: "Root element. Manages layout and stacking context of child buttons."
+    },
+    {
+      name: "button-group--separators",
+      description: "Adds a thin divider between each button to visually separate actions."
+    },
+    {
+      name: "button-group--sm",
+      description: "Small size variant. Propagates to child buttons."
+    },
+    {
+      name: "button-group--md",
+      description: "Medium size variant. Default."
+    },
+    {
+      name: "button-group--lg",
+      description: "Large size variant. Propagates to child buttons."
+    },
+    {
+      name: "data-disabled",
+      description: "Marks the entire group as non-interactive."
+    }
+  ]}
+/>
+
+#### Orientation
+
+<PropsTable
+  props={[
+    {
+      name: 'data-orientation="horizontal"',
+      description: "Arranges buttons in a row."
+    },
+    {
+      name: 'data-orientation="vertical"',
+      description: "Arranges buttons in a column."
+    }
+  ]}
+/>
+
+## API Reference
+
+### ButtonGroup Props
+
+Groups multiple buttons and propagates `variant`, `size`, and `disabled` to all children. Individual buttons can override `disabled` locally.
+
+<PropsTable
+  showHeader
+  props={[
+    {
+      name: "variant",
+      type: '"primary" | "secondary" | "tertiary" | "ghost" | "outline" | "danger" | "soft-danger"',
+      default: '"primary"'
+    },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"' },
+    { name: "hideSeparator", type: "boolean", default: "false" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "children", type: "Snippet", default: "—" }
+  ]}
+/>
