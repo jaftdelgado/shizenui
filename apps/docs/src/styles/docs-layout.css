@@ -40,11 +40,12 @@
     width: calc(var(--docs-body-w) + var(--docs-gap) + var(--docs-toc-w));
   }
 
-  /* ─── Header: titlebar + source links ────────────────────── */
+  /* ─── Header: titlebar + description + source links ──────── */
 
   .docs-header {
     display: flex;
     flex-direction: column;
+    gap: 0;
     flex-shrink: 0;
   }
 
@@ -53,14 +54,17 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
+
+    min-height: 40px;
   }
 
   .docs-titlebar h1 {
-    @apply text-primary-text mb-2 text-3xl font-semibold tracking-tighter;
+    @apply text-primary-text text-3xl font-semibold tracking-tighter;
   }
 
-  .docs-titlebar p {
+  .docs-description {
     @apply text-secondary-text text-base;
+    margin-top: 8px;
   }
 
   .titlebar-actions {
@@ -70,11 +74,13 @@
     flex-shrink: 0;
   }
 
-  /* Source links */
+  /* ─── Source links ────────────────────────────────────────── */
+
   .docs-source-links {
     display: flex;
     gap: 4px;
     padding-top: 20px;
+    user-select: none;
   }
 
   /* ─── Content grid ────────────────────────────────────────── */
