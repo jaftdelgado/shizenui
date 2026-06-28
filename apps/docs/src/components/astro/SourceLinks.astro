@@ -1,0 +1,28 @@
+---
+import SourceLinksSvelte from "@components/svelte/SourceLinks.svelte";
+
+interface Props {
+  title: string;
+  sourceFile?: string;
+  styleFile?: string;
+}
+
+const { title, sourceFile, styleFile } = Astro.props;
+
+const toKebab = (str: string) => str.toLowerCase().replace(/\s+/g, "-");
+const toPascal = (str: string) =>
+  str.replace(/(?:^|\s)(\w)/g, (_: string, c: string) => c.toUpperCase()).replace(/\s+/g, "");
+
+const slug = toKebab(title);
+const pascal = toPascal(title);
+
+const GITHUB_BASE = "https://github.com/jaftdelgado/shizenui/blob/develop";
+
+const resolvedSourceFile = sourceFile ?? `${slug}/${pascal}.svelte`;
+const resolvedStyleFile = styleFile ?? `${slug}.css`;
+
+const sourceUrl = `${GITHUB_BASE}/packages/svelte/src/components/${resolvedSourceFile}`;
+const stylesUrl = `${GITHUB_BASE}/packages/styles/src/components/${resolvedStyleFile}`;
+---
+
+<SourceLinksSvelte sourceUrl={sourceUrl} stylesUrl={stylesUrl} client:load />

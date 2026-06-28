@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import TableOfContents from "@components/astro/TableOfContents.astro";
+import SourceLinks from "@components/svelte/SourceLinks.svelte";
 import type { MarkdownHeading } from "astro";
 
 interface Props {
@@ -17,6 +18,24 @@ const title = frontmatter.title;
 const description = frontmatter.description;
 const preview = frontmatter.preview;
 const headings: MarkdownHeading[] = rawProps.headings ?? [];
+
+const sourceFile: string | undefined = frontmatter.sourceFile;
+const styleFile: string | undefined = frontmatter.styleFile;
+
+const toKebab = (str: string) => str.toLowerCase().replace(/\s+/g, "-");
+const toPascal = (str: string) =>
+  str.replace(/(?:^|\s)(\w)/g, (_: string, c: string) => c.toUpperCase()).replace(/\s+/g, "");
+
+const slug = toKebab(title);
+const pascal = toPascal(title);
+
+const GITHUB_BASE = "https://github.com/jaftdelgado/shizenui/blob/develop";
+
+const resolvedSourceFile = sourceFile ?? `${slug}/${pascal}.svelte`;
+const resolvedStyleFile = styleFile ?? `${slug}.css`;
+
+const sourceUrl = `${GITHUB_BASE}/packages/svelte/src/components/${resolvedSourceFile}`;
+const stylesUrl = `${GITHUB_BASE}/packages/styles/src/components/${resolvedStyleFile}`;
 
 const previewModules = import.meta.glob("../examples/svelte/**/*.astro", {
   eager: true
@@ -50,13 +69,19 @@ const PreviewComponent: any = matchedPreviewPath
       </aside>
 
       <div class="docs-main">
-        <div class="docs-titlebar">
-          <div>
-            <h1>{title}</h1>
-            {description && <p>{description}</p>}
+        <div class="docs-header">
+          <div class="docs-titlebar">
+            <div>
+              <h1>{title}</h1>
+              {description && <p>{description}</p>}
+            </div>
+            <div class="titlebar-actions">
+              <slot name="actions" />
+            </div>
           </div>
-          <div class="titlebar-actions">
-            <slot name="actions" />
+
+          <div class="docs-source-links">
+            <SourceLinks sourceUrl={sourceUrl} stylesUrl={stylesUrl} client:load />
           </div>
         </div>
 

@@ -4,6 +4,7 @@
   --docs-toc-w: 190px;
   --docs-gap: 98px;
   --docs-toc-top: 32px;
+  --docs-section-gap: 40px;
 }
 
 @layer components {
@@ -20,19 +21,31 @@
     overflow-y: auto;
   }
 
+  /* ─── Main column ─────────────────────────────────────────── */
+
   .docs-main {
     @apply mt-8;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 48px;
+    gap: var(--docs-section-gap);
     min-height: 100vh;
   }
 
-  .docs-titlebar,
+  /* ─── Shared width ────────────────────────────────────────── */
+
+  .docs-header,
   .docs-preview,
   .docs-content-grid {
     width: calc(var(--docs-body-w) + var(--docs-gap) + var(--docs-toc-w));
+  }
+
+  /* ─── Header: titlebar + source links ────────────────────── */
+
+  .docs-header {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
   }
 
   .docs-titlebar {
@@ -40,7 +53,6 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    flex-shrink: 0;
   }
 
   .docs-titlebar h1 {
@@ -57,6 +69,15 @@
     gap: 8px;
     flex-shrink: 0;
   }
+
+  /* Source links */
+  .docs-source-links {
+    display: flex;
+    gap: 4px;
+    padding-top: 20px;
+  }
+
+  /* ─── Content grid ────────────────────────────────────────── */
 
   .docs-content-grid {
     display: grid;
@@ -77,6 +98,8 @@
     grid-column: 1 / -1;
     grid-row: 3;
   }
+
+  /* ─── Table of contents ───────────────────────────────────── */
 
   .docs-toc {
     @apply text-secondary-text self-start text-sm;
@@ -111,7 +134,8 @@
     }
   }
 
-  /* Component preview styles */
+  /* ─── Component preview ───────────────────────────────────── */
+
   .component-preview {
     @apply shadow-border overflow-hidden rounded-3xl;
   }
@@ -119,6 +143,8 @@
   .preview-inner {
     @apply flex min-h-96 items-center justify-center p-8;
   }
+
+  /* ─── Mobile ──────────────────────────────────────────────── */
 
   @media (max-width: 768px) {
     .docs-layout {
@@ -133,7 +159,7 @@
       align-items: stretch;
     }
 
-    .docs-titlebar,
+    .docs-header,
     .docs-preview,
     .docs-content-grid {
       width: 100%;
