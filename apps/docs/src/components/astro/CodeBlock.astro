@@ -1,5 +1,6 @@
 ---
 import { codeToHtml } from "shiki";
+import CopyButton from "@components/svelte/CopyButton.svelte";
 
 interface Props {
   code: string;
@@ -12,7 +13,7 @@ interface Props {
 
 const {
   code = "",
-  lang = "tsx",
+  lang = "svelte",
   theme = "github-light",
   showLineNumbers = true,
   isContained = false,
@@ -32,7 +33,7 @@ const instanceId = crypto.randomUUID();
 
 <div
   class:list={[
-    "bg-component code-block-root",
+    "bg-component code-block-root relative",
     {
       "shadow-border my-8 rounded-2xl": !isContained,
       "rounded-none border-none shadow-none": isContained
@@ -43,10 +44,14 @@ const instanceId = crypto.randomUUID();
   data-collapsed={collapsible ? "true" : undefined}
 >
   <div
-    class:list={["shiki-container overflow-x-auto", { "line-numbers": showLineNumbers }]}
+    class:list={["shiki-container overflow-x-auto pt-2", { "line-numbers": showLineNumbers }]}
     data-code-content={instanceId}
   >
     <Fragment set:html={highlightedCode} />
+  </div>
+
+  <div class="absolute top-2 right-2">
+    <CopyButton text={cleanedCode} client:load />
   </div>
 
   {collapsible && <div class="code-block-footer" />}

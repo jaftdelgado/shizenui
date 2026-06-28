@@ -1,5 +1,6 @@
 ---
 import { codeToHtml } from "shiki";
+import CopyButton from "@components/svelte/CopyButton.svelte";
 
 interface Props {
   code?: string;
@@ -20,8 +21,12 @@ const highlightedCode = await codeToHtml(code, {
 });
 ---
 
-<div class="bg-component code-import-root shadow-border my-4 rounded-2xl" data-lang={lang}>
+<div class="bg-component code-import-root shadow-border relative my-4 rounded-2xl" data-lang={lang}>
   <div class="shiki-container code-import-content overflow-x-auto font-mono">
     <Fragment set:html={highlightedCode} />
+  </div>
+
+  <div class="absolute top-2 right-2">
+    <CopyButton text={code} client:load />
   </div>
 </div>
