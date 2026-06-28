@@ -1,3 +1,137 @@
-.toggle {
-  display: block;
+@layer components {
+  .toggle {
+    @apply rounded-control relative inline-flex origin-center items-center justify-center overflow-hidden text-center leading-none font-medium whitespace-nowrap select-none;
+
+    --toggle-bg: transparent;
+    --toggle-bg-hover: var(--toggle-bg);
+    --toggle-bg-pressed: var(--toggle-bg);
+    --toggle-bg-on: transparent;
+    --toggle-bg-on-hover: var(--toggle-bg-on);
+    --toggle-fg: currentColor;
+    --toggle-fg-on: var(--toggle-fg);
+
+    cursor: var(--cursor-interactive);
+    background-color: var(--toggle-bg);
+    color: var(--toggle-fg);
+
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
+
+    &:focus-visible {
+      @apply status-focused;
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      @apply status-disabled;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--toggle-bg-hover);
+    }
+
+    &:active:not(:disabled),
+    &[data-pressed="true"]:not(:disabled) {
+      background-color: var(--toggle-bg-pressed);
+      transform: scale(0.96);
+      transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        transform 100ms cubic-bezier(0.4, 0, 1, 1);
+    }
+
+    &[aria-pressed="true"] {
+      background-color: var(--toggle-bg-on);
+      color: var(--toggle-fg-on);
+
+      &:hover:not(:disabled) {
+        background-color: var(--toggle-bg-on-hover);
+      }
+    }
+  }
+
+  .toggle__content {
+    @apply relative z-10 flex h-full w-full items-center justify-center gap-(--toggle-gap);
+  }
+
+  .toggle__icon {
+    @apply flex shrink-0 items-center justify-center;
+  }
+
+  .toggle__icon--start {
+    margin-inline-start: var(--toggle-icon-inset);
+  }
+
+  .toggle__icon--end {
+    margin-inline-end: var(--toggle-icon-inset);
+  }
+
+  .toggle__label {
+    @apply flex items-center;
+  }
+
+  .toggle--default {
+    --toggle-bg: var(--color-control);
+    --toggle-fg: var(--color-secondary-text);
+    --toggle-bg-hover: var(--color-control-hover);
+    --toggle-bg-pressed: var(--color-control-pressed);
+    --toggle-bg-on: var(--color-accent-soft);
+    --toggle-bg-on-hover: var(--color-accent-soft-hover);
+    --toggle-fg-on: var(--color-accent);
+  }
+
+  .toggle--outline {
+    @apply border-separator border;
+    --toggle-fg: var(--color-control-foreground);
+    --toggle-bg-hover: var(--color-ghost-hover);
+    --toggle-bg-pressed: var(--color-ghost-pressed);
+    --toggle-bg-on: var(--color-accent-soft);
+    --toggle-bg-on-hover: var(--color-accent-soft-hover);
+    --toggle-fg-on: var(--color-accent);
+  }
+
+  .toggle--ghost {
+    --toggle-fg: var(--color-secondary-text);
+    --toggle-bg-hover: var(--color-ghost-hover);
+    --toggle-bg-pressed: var(--color-ghost-pressed);
+    --toggle-bg-on: var(--color-control);
+    --toggle-bg-on-hover: var(--color-control-hover);
+    --toggle-fg-on: var(--color-accent);
+  }
+
+  .toggle--sm {
+    @apply h-control-sm px-3 text-sm;
+    --toggle-gap: 0.5rem;
+    --toggle-icon-inset: -0.25rem;
+  }
+
+  .toggle--md {
+    @apply h-control-md px-4 text-sm;
+    --toggle-gap: 0.575rem;
+    --toggle-icon-inset: -0.375rem;
+  }
+
+  .toggle--lg {
+    @apply h-control-lg px-4 text-base;
+    --toggle-gap: 0.65rem;
+    --toggle-icon-inset: -0.25rem;
+  }
+
+  .toggle--icon-only {
+    @apply size-control-md;
+  }
+
+  .toggle--icon-only--sm {
+    @apply size-control-sm;
+  }
+
+  .toggle--icon-only--lg {
+    @apply size-control-lg;
+  }
 }

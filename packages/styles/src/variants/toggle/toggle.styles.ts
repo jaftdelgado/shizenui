@@ -1,18 +1,37 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const toggleStyles = tv({
-  base: "toggle",
+  slots: {
+    base: "toggle",
+    content: "toggle__content",
+    icon: "toggle__icon",
+    iconStart: "toggle__icon toggle__icon--start",
+    iconEnd: "toggle__icon toggle__icon--end",
+    label: "toggle__label"
+  },
   variants: {
-    invalid: {
-      true: "toggle--invalid"
+    variant: {
+      default: { base: "toggle--default" },
+      outline: { base: "toggle--outline" },
+      ghost: { base: "toggle--ghost" }
     },
-    disabled: {
-      true: "toggle--disabled"
+    size: {
+      sm: { base: "toggle--sm" },
+      md: { base: "toggle--md" },
+      lg: { base: "toggle--lg" }
+    },
+    iconOnly: {
+      true: { base: "toggle--icon-only" }
     }
   },
+  compoundVariants: [
+    { iconOnly: true, size: "sm", class: { base: "toggle--icon-only--sm" } },
+    { iconOnly: true, size: "md", class: { base: "toggle--icon-only--md" } },
+    { iconOnly: true, size: "lg", class: { base: "toggle--icon-only--lg" } }
+  ],
   defaultVariants: {
-    invalid: false,
-    disabled: false
+    variant: "default",
+    size: "md"
   }
 });
 
