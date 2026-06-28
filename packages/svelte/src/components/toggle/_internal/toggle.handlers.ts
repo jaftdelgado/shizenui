@@ -11,16 +11,30 @@ export function createToggleHandlers(options: {
 }) {
   const { state, getPressed, setPressed, onPressedChange, getOnClick } = options;
 
-  function handleClick(event: ToggleClickEvent): void {
+  function toggle(): void {
     if (state.finalDisabled) return;
-
     const next = !getPressed();
     setPressed(next);
     onPressedChange?.(next);
+  }
+
+  function handleClick(event: ToggleClickEvent): void {
+    toggle();
     getOnClick?.()?.(event);
   }
 
-  return { handleClick };
+  function handleKey(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
+    if (e.key !== " " && e.key !== "Enter") return;
+    e.preventDefault();
+    if (e.type === "keydown") {
+      e.currentTarget.setAttribute("data-pressed", "true");
+    } else if (e.type === "keyup") {
+      e.currentTarget.removeAttribute("data-pressed");
+      toggle();
+    }
+  }
+
+  return { handleClick, handleKey };
 }
 
 export type ToggleHandlers = ReturnType<typeof createToggleHandlers>;

@@ -4,4 +4,6 @@
   let { icon, size = 16, strokeWidth = 1.75, ...props } = $props();
 </script>
 
-<HugeiconsIcon {icon} {size} {strokeWidth} {...props} />
+{#key icon}
+  <HugeiconsIcon {icon} {size} {strokeWidth} {...props} />
+{/key}

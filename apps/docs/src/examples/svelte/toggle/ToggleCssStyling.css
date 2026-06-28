@@ -1,0 +1,18 @@
+@layer components {
+  .toggle {
+    @apply rounded-xl font-semibold tracking-wide;
+
+    --toggle-bg: var(--color-neutral-100);
+    --toggle-bg-hover: var(--color-neutral-200);
+    --toggle-bg-pressed: var(--color-neutral-300);
+    --toggle-fg: var(--color-neutral-700);
+    --toggle-bg-on: var(--color-violet-600);
+    --toggle-bg-on-hover: var(--color-violet-700);
+    --toggle-bg-on-pressed: var(--color-violet-800);
+    --toggle-fg-on: var(--color-white);
+  }
+
+  .toggle__content {
+    @apply gap-2;
+  }
+}

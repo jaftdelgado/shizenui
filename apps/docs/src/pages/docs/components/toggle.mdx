@@ -6,12 +6,20 @@ preview: TogglePreview
 ---
 
 import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
 
 import ToggleVariants from "@examples/svelte/toggle/ToggleVariants.svelte";
 import ToggleSizes from "@examples/svelte/toggle/ToggleSizes.svelte";
 import ToggleContent from "@examples/svelte/toggle/ToggleContent.svelte";
 import ToggleIconOnly from "@examples/svelte/toggle/ToggleIconOnly.svelte";
+import ToggleControlled from "@examples/svelte/toggle/ToggleControlled.svelte";
+import ToggleDisabled from "@examples/svelte/toggle/ToggleDisabled.svelte";
+
+import ToggleTwStyling from "@examples/svelte/toggle/ToggleTwStyling.svelte";
+import ToggleCssStylingCode from "@examples/svelte/toggle/ToggleCssStyling.css?raw";
 
 ## Import
 
@@ -42,3 +50,31 @@ import ToggleIconOnly from "@examples/svelte/toggle/ToggleIconOnly.svelte";
 <ComponentExample src="svelte/toggle/ToggleIconOnly.svelte">
   <ToggleIconOnly client:load />
 </ComponentExample>
+
+### Controlled
+
+<ComponentExample src="svelte/toggle/ToggleControlled.svelte">
+  <ToggleControlled client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/toggle/ToggleDisabled.svelte">
+  <ToggleDisabled client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to Toggle.
+
+<ComponentExample src="svelte/toggle/ToggleTwStyling.svelte">
+  <ToggleTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Toggle component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={ToggleCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />

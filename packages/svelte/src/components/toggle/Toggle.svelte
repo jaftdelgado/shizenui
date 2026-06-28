@@ -68,6 +68,8 @@
   disabled={state.finalDisabled}
   aria-pressed={pressed}
   onclick={handlers.handleClick}
+  onkeydown={handlers.handleKey}
+  onkeyup={handlers.handleKey}
   class={cn(styles.base(), className)}
   {...rest}
 >
