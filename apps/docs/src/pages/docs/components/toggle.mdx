@@ -1,0 +1,208 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Toggle
+description: Two-state button that toggles between active and inactive states.
+preview: TogglePreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+
+import ToggleVariants from "@examples/svelte/toggle/ToggleVariants.svelte";
+import ToggleSizes from "@examples/svelte/toggle/ToggleSizes.svelte";
+import ToggleContent from "@examples/svelte/toggle/ToggleContent.svelte";
+import ToggleIconOnly from "@examples/svelte/toggle/ToggleIconOnly.svelte";
+import ToggleControlled from "@examples/svelte/toggle/ToggleControlled.svelte";
+import ToggleDisabled from "@examples/svelte/toggle/ToggleDisabled.svelte";
+
+import ToggleTwStyling from "@examples/svelte/toggle/ToggleTwStyling.svelte";
+import ToggleCssStylingCode from "@examples/svelte/toggle/ToggleCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { Toggle } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/toggle/ToggleVariants.svelte">
+  <ToggleVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/toggle/ToggleSizes.svelte">
+  <ToggleSizes client:load />
+</ComponentExample>
+
+### Start & End Content
+
+<ComponentExample src="svelte/toggle/ToggleContent.svelte">
+  <ToggleContent client:load />
+</ComponentExample>
+
+### Icon Only
+
+<ComponentExample src="svelte/toggle/ToggleIconOnly.svelte">
+  <ToggleIconOnly client:load />
+</ComponentExample>
+
+### Controlled
+
+<ComponentExample src="svelte/toggle/ToggleControlled.svelte">
+  <ToggleControlled client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/toggle/ToggleDisabled.svelte">
+  <ToggleDisabled client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to Toggle.
+
+<ComponentExample src="svelte/toggle/ToggleTwStyling.svelte">
+  <ToggleTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Toggle component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={ToggleCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Base & Size Classes
+
+<PropsTable
+  props={[
+    {
+      name: "toggle",
+      description: "Root element. Manages layout, tokens, and interaction states."
+    },
+    {
+      name: "toggle__content",
+      description: "Inner flex container that aligns the icon and label."
+    },
+    {
+      name: "toggle__icon",
+      description:
+        "Wrapper for any icon inside the toggle. Prevents shrinking and centers the glyph."
+    },
+    {
+      name: "toggle__icon--start",
+      description: "Optically aligns a leading icon with the toggle edge."
+    },
+    {
+      name: "toggle__icon--end",
+      description: "Optically aligns a trailing icon with the toggle edge."
+    },
+    {
+      name: "toggle__label",
+      description: "Wraps the text content and keeps it vertically centered."
+    },
+    {
+      name: "toggle--sm",
+      description: "Small size variant. Reduces height, padding, and font size."
+    },
+    {
+      name: "toggle--md",
+      description: "Medium size variant. Default height and padding."
+    },
+    {
+      name: "toggle--lg",
+      description: "Large size variant. Increases height, padding, and font size."
+    },
+    {
+      name: "toggle--icon-only",
+      description: "Square medium toggle for a single icon with no label."
+    },
+    {
+      name: "toggle--icon-only--sm",
+      description: "Square small toggle for icon-only use."
+    },
+    {
+      name: "toggle--icon-only--lg",
+      description: "Square large toggle for icon-only use."
+    }
+  ]}
+/>
+
+#### Variant Classes
+
+<PropsTable
+  props={[
+    {
+      name: "toggle--default",
+      description: "Filled background. Switches to accent tint when active."
+    },
+    {
+      name: "toggle--outline",
+      description: "Border at rest, accent tint and accent border when active."
+    },
+    {
+      name: "toggle--ghost",
+      description: "No background or border. Fill appears only on interaction."
+    }
+  ]}
+/>
+
+#### Interactive States
+
+<PropsTable
+  props={[
+    {
+      name: ":disabled",
+      description: "Marks the toggle as non-interactive and communicates it visually."
+    },
+    {
+      name: ":focus-visible",
+      description: "Indicates keyboard focus for accessibility."
+    },
+    {
+      name: ":hover",
+      description: "Provides visual feedback when the pointer is over the toggle."
+    },
+    {
+      name: ":active / data-pressed",
+      description: "Confirms the toggle is being activated by the user."
+    },
+    {
+      name: "aria-pressed",
+      description: "Reflects the on state of the toggle. Switches to the active color palette."
+    }
+  ]}
+/>
+
+## API Reference
+
+### Toggle Props
+
+<PropsTable
+  showHeader
+  props={[
+    {
+      name: "variant",
+      type: '"default" | "outline" | "ghost"',
+      default: '"default"'
+    },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "iconOnly", type: "boolean", default: "false" },
+    { name: "pressed", type: "boolean", default: "false" },
+    { name: "onPressedChange", type: "(pressed: boolean) => void", default: "undefined" },
+    { name: "startContent", type: "Snippet<[]> | string", default: "undefined" },
+    { name: "endContent", type: "Snippet<[]> | string", default: "undefined" },
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLButtonElement | null", default: "null" }
+  ]}
+/>

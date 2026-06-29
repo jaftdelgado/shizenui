@@ -4,7 +4,7 @@
   import { Call02Icon, Search01Icon, Video02Icon } from "@hugeicons/core-free-icons";
 </script>
 
-<div class="flex w-full max-w-xs items-center gap-3">
+<div class="flex w-full max-w-xs items-center gap-2">
   <Button
     variant="secondary"
     class="h-auto flex-1 rounded-2xl py-2 [&_.button\_\_content]:flex-col [&_.button\_\_content]:gap-1.5 [&_.button\_\_icon--start]:m-0"

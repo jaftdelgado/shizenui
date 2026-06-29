@@ -104,12 +104,37 @@
 
   /* Soft Colors */
   --color-accent-soft: color-mix(in oklab, var(--accent) 15%, transparent);
+
+  --color-accent-soft-hover: color-mix(
+    in oklab,
+    var(--color-accent-soft) 96%,
+    var(--color-accent) 4%
+  );
+
+  --color-accent-soft-pressed: color-mix(
+    in oklab,
+    var(--color-accent-soft) 92%,
+    var(--color-accent) 8%
+  );
+
   --color-succes-soft: color-mix(in oklab, var(--success) 15%, transparent);
   --color-warning-soft: color-mix(in oklab, var(--warning) 15%, transparent);
   --color-danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
 
   /* Shadows */
-  --shadow-border:
-    0px 0px 0px 1px rgba(0, 0, 0, 0.06), 0px 1px 2px -1px rgba(0, 0, 0, 0.06),
-    0px 2px 4px 0px rgba(0, 0, 0, 0.04);
+  /* Border shadows are built from two layers: a 1px ring that changes per state,
+   and a shared halo that adds subtle depth. Use the variants below or compose your own. */
+  --shadow-border-halo: 0px 1px 2px -1px rgba(0, 0, 0, 0.06), 0px 2px 4px 0px rgba(0, 0, 0, 0.04);
+
+  --shadow-border: 0px 0px 0px 1px rgba(0, 0, 0, 0.06), var(--shadow-border-halo);
+  --shadow-border-hover: 0px 0px 0px 1px rgba(0, 0, 0, 0.16), var(--shadow-border-halo);
+  --shadow-border-accent:
+    0px 0px 0px 1px color-mix(in oklab, var(--color-accent) 40%, transparent),
+    var(--shadow-border-halo);
+  --shadow-border-accent-hover:
+    0px 0px 0px 1px color-mix(in oklab, var(--color-accent-hover) 60%, transparent),
+    var(--shadow-border-halo);
+  --shadow-border-danger: 0px 0px 0px 1px var(--color-danger), var(--shadow-border-halo);
+  --shadow-border-danger-hover:
+    0px 0px 0px 1px var(--color-danger-hover), var(--shadow-border-halo);
 }
