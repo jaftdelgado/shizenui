@@ -3,16 +3,25 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const toggleGroupStyles = tv({
   base: "toggle-group",
   variants: {
-    invalid: {
-      true: "toggle-group--invalid"
+    variant: {
+      default: "toggle-group--default",
+      outline: "toggle-group--outline",
+      ghost: "toggle-group--ghost"
     },
-    disabled: {
-      true: "toggle-group--disabled"
+    size: {
+      sm: "toggle-group--sm",
+      md: "toggle-group--md",
+      lg: "toggle-group--lg"
+    },
+    hideSeparator: {
+      false: "toggle-group--separators",
+      true: ""
     }
   },
   defaultVariants: {
-    invalid: false,
-    disabled: false
+    variant: "default",
+    size: "md",
+    hideSeparator: false
   }
 });
 

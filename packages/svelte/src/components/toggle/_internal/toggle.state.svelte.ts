@@ -1,19 +1,23 @@
 import type { ToggleVariant, ToggleSize } from "./toggle.types.js";
+import { useToggleGroupContext } from "../../toggle-group/_internal/index.js";
+import type { ToggleGroupContextResult } from "../../toggle-group/_internal/index.js";
 
 export class ToggleState {
   #variant: () => ToggleVariant | undefined;
   #size: () => ToggleSize | undefined;
   #disabled: () => boolean | undefined;
+  #groupCtx: ToggleGroupContextResult;
 
   get finalVariant(): ToggleVariant {
-    return this.#variant() ?? "default";
+    return this.#groupCtx.exists ? this.#groupCtx.variant : (this.#variant() ?? "default");
   }
 
   get finalSize(): ToggleSize {
-    return this.#size() ?? "md";
+    return this.#groupCtx.exists ? this.#groupCtx.size : (this.#size() ?? "md");
   }
 
   get finalDisabled(): boolean {
+    if (this.#groupCtx.exists && this.#groupCtx.disabled) return true;
     return this.#disabled() ?? false;
   }
 
@@ -21,11 +25,11 @@ export class ToggleState {
     variant: () => ToggleVariant | undefined;
     size: () => ToggleSize | undefined;
     disabled: () => boolean | undefined;
+    groupContext?: ToggleGroupContextResult;
   }) {
     this.#variant = props.variant;
     this.#size = props.size;
     this.#disabled = props.disabled;
-
-    // TODO: integrate ToggleGroupContext
+    this.#groupCtx = props.groupContext ?? useToggleGroupContext();
   }
 }
