@@ -19,18 +19,21 @@ export function createToggleHandlers(options: {
   }
 
   function handleClick(event: ToggleClickEvent): void {
+    if (event.detail === 0) return;
     toggle();
     getOnClick?.()?.(event);
   }
 
   function handleKey(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
     if (e.key !== " " && e.key !== "Enter") return;
-    e.preventDefault();
     if (e.type === "keydown") {
+      e.preventDefault();
+      if (e.repeat) return;
       e.currentTarget.setAttribute("data-pressed", "true");
     } else if (e.type === "keyup") {
       e.currentTarget.removeAttribute("data-pressed");
       toggle();
+      getOnClick?.()?.(e as unknown as ToggleClickEvent);
     }
   }
 

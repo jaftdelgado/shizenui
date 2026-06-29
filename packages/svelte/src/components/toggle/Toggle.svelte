@@ -10,7 +10,6 @@
     startContent,
     endContent,
     class: className,
-    type = "button",
     variant,
     size,
     disabled,
@@ -64,7 +63,7 @@
 
 <button
   bind:this={ref}
-  {type}
+  type="button"
   disabled={state.finalDisabled}
   aria-pressed={pressed}
   onclick={handlers.handleClick}

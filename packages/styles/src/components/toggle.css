@@ -30,8 +30,7 @@
       @apply status-focused;
     }
 
-    &:disabled,
-    &[aria-disabled="true"] {
+    &:disabled {
       @apply status-disabled;
     }
 

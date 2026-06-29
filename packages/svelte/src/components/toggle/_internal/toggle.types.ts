@@ -9,7 +9,7 @@ export type ToggleVariant = NonNullable<ToggleVariants["variant"]>;
 
 export type IconContent = Snippet<[]> | string;
 
-type ToggleBaseProps = Omit<HTMLButtonAttributes, "children" | "disabled">;
+type ToggleBaseProps = Omit<HTMLButtonAttributes, "children" | "disabled" | "type">;
 
 interface NormalToggleProps extends ToggleBaseProps {
   iconOnly?: false;
