@@ -1,6 +1,5 @@
 import type { ToggleState } from "./toggle.state.svelte.js";
-
-type ToggleClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
+import type { ToggleClickEvent } from "./toggle.types.js";
 
 export function createToggleHandlers(options: {
   state: ToggleState;
@@ -33,7 +32,6 @@ export function createToggleHandlers(options: {
     } else if (e.type === "keyup") {
       e.currentTarget.removeAttribute("data-pressed");
       toggle();
-      getOnClick?.()?.(e as unknown as ToggleClickEvent);
     }
   }
 

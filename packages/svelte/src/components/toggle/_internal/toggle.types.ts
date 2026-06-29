@@ -9,6 +9,8 @@ export type ToggleVariant = NonNullable<ToggleVariants["variant"]>;
 
 export type IconContent = Snippet<[]> | string;
 
+export type ToggleClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
+
 type ToggleBaseProps = Omit<HTMLButtonAttributes, "children" | "disabled" | "type">;
 
 interface NormalToggleProps extends ToggleBaseProps {

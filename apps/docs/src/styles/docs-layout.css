@@ -79,7 +79,7 @@
   .docs-source-links {
     display: flex;
     gap: 4px;
-    padding-top: 20px;
+    padding-top: 24px;
     user-select: none;
   }
 
@@ -147,7 +147,7 @@
   }
 
   .preview-inner {
-    @apply flex min-h-96 items-center justify-center p-8;
+    @apply flex min-h-92 items-center justify-center p-8;
   }
 
   /* ─── Mobile ──────────────────────────────────────────────── */

@@ -16,6 +16,7 @@
     iconOnly = false,
     pressed = $bindable(false),
     onPressedChange,
+    onclick,
     ref = $bindable(null),
     ...rest
   }: ToggleProps = $props();
@@ -39,7 +40,7 @@
       pressed = val;
     },
     onPressedChange: (val) => onPressedChange?.(val),
-    getOnClick: () => rest.onclick
+    getOnClick: () => onclick
   });
 
   const styles = $derived(
