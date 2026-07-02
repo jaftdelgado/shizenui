@@ -9,6 +9,7 @@ export class ToggleGroupState {
   #hideSeparator: () => boolean;
   #selectionMode: () => ToggleGroupSelectionMode | undefined;
   #value: () => string | string[] | undefined;
+  #setValue: (value: string | string[] | undefined) => void;
   #internalValues: string[] = $state([]);
   #onValueChange: () => ((value: string | undefined) => void) | ((value: string[]) => void) | undefined;
 
@@ -48,17 +49,26 @@ export class ToggleGroupState {
     const mode = this.#selectionMode();
     if (!mode) return;
 
+    const current = this.#value();
+    const currentValues =
+      current !== undefined ? (Array.isArray(current) ? current : [current]) : this.#internalValues;
+
     if (mode === "single") {
-      this.#internalValues = this.#internalValues[0] === value ? [] : [value];
-      (this.#onValueChange() as ((v: string | undefined) => void) | undefined)?.(
-        this.#internalValues[0] ?? undefined
-      );
+      const nextValues = currentValues[0] === value ? [] : [value];
+      const nextValue = nextValues[0] ?? undefined;
+
+      this.#internalValues = nextValues;
+      this.#setValue(nextValue);
+      (this.#onValueChange() as ((v: string | undefined) => void) | undefined)?.(nextValue);
     } else {
-      const exists = this.#internalValues.includes(value);
-      this.#internalValues = exists
-        ? this.#internalValues.filter((v) => v !== value)
-        : [...this.#internalValues, value];
-      (this.#onValueChange() as ((v: string[]) => void) | undefined)?.(this.#internalValues);
+      const exists = currentValues.includes(value);
+      const nextValues = exists
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
+
+      this.#internalValues = nextValues;
+      this.#setValue(nextValues);
+      (this.#onValueChange() as ((v: string[]) => void) | undefined)?.(nextValues);
     }
   }
 
@@ -70,6 +80,7 @@ export class ToggleGroupState {
     hideSeparator: () => boolean;
     selectionMode: () => ToggleGroupSelectionMode | undefined;
     value: () => string | string[] | undefined;
+    setValue: (value: string | string[] | undefined) => void;
     onValueChange: () => ((value: string | undefined) => void) | ((value: string[]) => void) | undefined;
   }) {
     this.#variant = props.variant;
@@ -79,6 +90,7 @@ export class ToggleGroupState {
     this.#hideSeparator = props.hideSeparator;
     this.#selectionMode = props.selectionMode;
     this.#value = props.value;
+    this.#setValue = props.setValue;
     this.#onValueChange = props.onValueChange;
   }
 }

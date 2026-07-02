@@ -14,7 +14,7 @@
     hideSeparator = false,
     disabled = undefined,
     selectionMode = undefined,
-    value = undefined,
+    value = $bindable(undefined),
     onValueChange = undefined,
     ...rest
   }: ToggleGroupProps = $props();
@@ -39,6 +39,9 @@
     hideSeparator: () => hideSeparator,
     selectionMode: () => selectionMode,
     value: () => value,
+    setValue: (nextValue) => {
+      value = nextValue;
+    },
     onValueChange: () => onValueChange
   });
 

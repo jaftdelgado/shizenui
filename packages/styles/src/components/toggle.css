@@ -136,9 +136,9 @@
     --toggle-fg: var(--color-control-foreground);
     --toggle-bg-hover: var(--color-ghost-hover);
     --toggle-bg-pressed: var(--color-ghost-pressed);
-    --toggle-bg-on: var(--color-control);
-    --toggle-bg-on-hover: var(--color-control-hover);
-    --toggle-bg-on-pressed: var(--color-control-pressed);
+    --toggle-bg-on: var(--color-accent-soft);
+    --toggle-bg-on-hover: var(--color-accent-soft-hover);
+    --toggle-bg-on-pressed: var(--color-accent-soft-hover);
     --toggle-fg-on: var(--color-accent);
   }
 

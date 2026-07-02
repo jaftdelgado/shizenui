@@ -7,14 +7,34 @@ type ToggleGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "r
 export type ToggleGroupOrientation = "horizontal" | "vertical";
 export type ToggleGroupSelectionMode = "single" | "multiple";
 
-export interface ToggleGroupProps extends ToggleGroupBaseProps {
+interface ToggleGroupSharedProps extends ToggleGroupBaseProps {
   children?: Snippet;
   variant?: ToggleVariant;
   size?: ToggleSize;
   orientation?: ToggleGroupOrientation;
   hideSeparator?: boolean;
   disabled?: boolean;
-  selectionMode?: ToggleGroupSelectionMode;
-  value?: string | string[];
-  onValueChange?: ((value: string | undefined) => void) | ((value: string[]) => void);
 }
+
+type ToggleGroupPropsWithoutSelectionMode = ToggleGroupSharedProps & {
+  selectionMode?: undefined;
+  value?: string | string[];
+  onValueChange?: never;
+};
+
+type ToggleGroupSingleSelectionProps = ToggleGroupSharedProps & {
+  selectionMode: "single";
+  value?: string;
+  onValueChange?: (value: string | undefined) => void;
+};
+
+type ToggleGroupMultipleSelectionProps = ToggleGroupSharedProps & {
+  selectionMode: "multiple";
+  value?: string[];
+  onValueChange?: (value: string[]) => void;
+};
+
+export type ToggleGroupProps =
+  | ToggleGroupPropsWithoutSelectionMode
+  | ToggleGroupSingleSelectionProps
+  | ToggleGroupMultipleSelectionProps;
