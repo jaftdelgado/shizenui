@@ -44,12 +44,15 @@
     @apply rounded-control;
   }
 
-  /* ── Outline group ── */
   .toggle-group--outline {
-    @apply shadow-border rounded-control;
+    @apply rounded-control shadow-border;
 
-    .toggle--outline {
-      box-shadow: none;
+    > .toggle.toggle--outline {
+      --shadow-border-halo: none;
+      --shadow-border: none;
+      --shadow-border-hover: none;
+      --shadow-border-accent: none;
+      --shadow-border-accent-hover: none;
     }
   }
 

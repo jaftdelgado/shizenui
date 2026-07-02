@@ -17,8 +17,9 @@ export class ToggleState {
   }
 
   get finalDisabled(): boolean {
-    if (this.#groupCtx.exists && this.#groupCtx.disabled) return true;
-    return this.#disabled() ?? false;
+    const localDisabled = this.#disabled();
+    const groupDisabled = this.#groupCtx.exists ? this.#groupCtx.disabled : false;
+    return localDisabled ?? groupDisabled;
   }
 
   constructor(props: {
