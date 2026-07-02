@@ -1,16 +1,23 @@
 import { getContext, setContext } from "svelte";
 import type { ToggleVariant, ToggleSize } from "../../toggle/_internal/index.js";
+import type { ToggleGroupSelectionMode } from "./toggle-group.types.js";
 
 export interface ToggleGroupContextValue {
   readonly variant: ToggleVariant;
   readonly size: ToggleSize;
   readonly disabled: boolean;
+  readonly selectionMode: ToggleGroupSelectionMode | undefined;
+  readonly selectedValues: Set<string>;
+  readonly onToggle: (value: string) => void;
 }
 
 export interface ToggleGroupContextResult {
   readonly variant: ToggleVariant;
   readonly size: ToggleSize;
   readonly disabled: boolean;
+  readonly selectionMode: ToggleGroupSelectionMode | undefined;
+  readonly selectedValues: Set<string>;
+  readonly onToggle: (value: string) => void;
   readonly exists: boolean;
 }
 
@@ -34,6 +41,15 @@ export function useToggleGroupContext(): ToggleGroupContextResult {
       get disabled() {
         return false;
       },
+      get selectionMode() {
+        return undefined;
+      },
+      get selectedValues() {
+        return new Set<string>();
+      },
+      get onToggle() {
+        return () => {};
+      },
       get exists() {
         return false;
       }
@@ -49,6 +65,15 @@ export function useToggleGroupContext(): ToggleGroupContextResult {
     },
     get disabled() {
       return context.disabled;
+    },
+    get selectionMode() {
+      return context.selectionMode;
+    },
+    get selectedValues() {
+      return context.selectedValues;
+    },
+    get onToggle() {
+      return context.onToggle;
     },
     get exists() {
       return true;

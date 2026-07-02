@@ -6,6 +6,10 @@ export class ToggleState {
   #variant: () => ToggleVariant | undefined;
   #size: () => ToggleSize | undefined;
   #disabled: () => boolean | undefined;
+  #value: () => string | undefined;
+  #pressed: () => boolean;
+  #setPressed: (value: boolean) => void;
+  #onPressedChange?: (value: boolean) => void;
   #groupCtx: ToggleGroupContextResult;
 
   get finalVariant(): ToggleVariant {
@@ -22,15 +26,51 @@ export class ToggleState {
     return localDisabled ?? groupDisabled;
   }
 
+  get groupCtx(): ToggleGroupContextResult {
+    return this.#groupCtx;
+  }
+
+  get finalPressed(): boolean {
+    if (this.#groupCtx.selectionMode !== undefined) {
+      const value = this.#value();
+      return value ? this.#groupCtx.selectedValues.has(value) : false;
+    }
+
+    return this.#pressed();
+  }
+
+  toggle(value?: string): void {
+    if (this.finalDisabled) return;
+
+    if (this.#groupCtx.selectionMode !== undefined) {
+      if (value) {
+        this.#groupCtx.onToggle(value);
+      }
+      return;
+    }
+
+    const next = !this.#pressed();
+    this.#setPressed(next);
+    this.#onPressedChange?.(next);
+  }
+
   constructor(props: {
     variant: () => ToggleVariant | undefined;
     size: () => ToggleSize | undefined;
     disabled: () => boolean | undefined;
+    value: () => string | undefined;
+    getPressed: () => boolean;
+    setPressed: (value: boolean) => void;
+    onPressedChange?: (value: boolean) => void;
     groupContext?: ToggleGroupContextResult;
   }) {
     this.#variant = props.variant;
     this.#size = props.size;
     this.#disabled = props.disabled;
+    this.#value = props.value;
+    this.#pressed = props.getPressed;
+    this.#setPressed = props.setPressed;
+    this.#onPressedChange = props.onPressedChange;
     this.#groupCtx = props.groupContext ?? useToggleGroupContext();
   }
 }

@@ -13,6 +13,7 @@
     variant,
     size,
     disabled,
+    value = undefined,
     iconOnly = false,
     pressed = $bindable(false),
     onPressedChange,
@@ -30,16 +31,30 @@
   const state = new ToggleState({
     variant: () => variant,
     size: () => size,
-    disabled: () => disabled
-  });
-
-  const handlers = createToggleHandlers({
-    state,
+    disabled: () => disabled,
+    value: () => value,
     getPressed: () => pressed,
     setPressed: (val) => {
       pressed = val;
     },
-    onPressedChange: (val) => onPressedChange?.(val),
+    onPressedChange: (val) => onPressedChange?.(val)
+  });
+
+  warnIf(
+    () => state.groupCtx.selectionMode !== undefined && !value,
+    "Toggle",
+    "Toggle inside a ToggleGroup with selectionMode requires a 'value' prop to participate in selection."
+  );
+
+  warnIf(
+    () => state.groupCtx.selectionMode !== undefined && pressed !== false,
+    "Toggle",
+    "Toggle inside a ToggleGroup with selectionMode: 'pressed' prop is ignored. Use ToggleGroup's value instead."
+  );
+
+  const handlers = createToggleHandlers({
+    state,
+    getValue: () => value,
     getOnClick: () => onclick
   });
 
@@ -66,7 +81,7 @@
   bind:this={ref}
   type="button"
   disabled={state.finalDisabled}
-  aria-pressed={pressed}
+  aria-pressed={state.finalPressed}
   onclick={handlers.handleClick}
   onkeydown={handlers.handleKey}
   onkeyup={handlers.handleKey}

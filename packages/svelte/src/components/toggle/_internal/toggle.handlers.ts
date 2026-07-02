@@ -3,18 +3,13 @@ import type { ToggleClickEvent } from "./toggle.types.js";
 
 export function createToggleHandlers(options: {
   state: ToggleState;
-  getPressed: () => boolean;
-  setPressed: (value: boolean) => void;
-  onPressedChange?: (value: boolean) => void;
+  getValue: () => string | undefined;
   getOnClick?: () => ((e: ToggleClickEvent) => void) | null | undefined;
 }) {
-  const { state, getPressed, setPressed, onPressedChange, getOnClick } = options;
+  const { state, getValue, getOnClick } = options;
 
   function toggle(): void {
-    if (state.finalDisabled) return;
-    const next = !getPressed();
-    setPressed(next);
-    onPressedChange?.(next);
+    state.toggle(getValue());
   }
 
   function handleClick(event: ToggleClickEvent): void {

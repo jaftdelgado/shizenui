@@ -13,6 +13,9 @@
     orientation = "horizontal",
     hideSeparator = false,
     disabled = undefined,
+    selectionMode = undefined,
+    value = undefined,
+    onValueChange = undefined,
     ...rest
   }: ToggleGroupProps = $props();
 
@@ -22,12 +25,21 @@
     "No children provided. Add at least one <Toggle> as a child."
   );
 
+  warnIf(
+    () => !selectionMode && value !== undefined,
+    "ToggleGroup",
+    "A 'value' prop was provided without 'selectionMode'. Did you mean to add selectionMode='single' or selectionMode='multiple'?"
+  );
+
   const toggleGroupState = new ToggleGroupState({
     variant: () => variant,
     size: () => size,
     disabled: () => disabled,
     orientation: () => orientation,
-    hideSeparator: () => hideSeparator
+    hideSeparator: () => hideSeparator,
+    selectionMode: () => selectionMode,
+    value: () => value,
+    onValueChange: () => onValueChange
   });
 
   setToggleGroupContext({
@@ -39,6 +51,15 @@
     },
     get disabled() {
       return toggleGroupState.finalDisabled;
+    },
+    get selectionMode() {
+      return toggleGroupState.finalSelectionMode;
+    },
+    get selectedValues() {
+      return toggleGroupState.finalSelectedValues;
+    },
+    get onToggle() {
+      return (value: string) => toggleGroupState.toggle(value);
     }
   });
 
