@@ -85,6 +85,7 @@
   onclick={handlers.handleClick}
   onkeydown={handlers.handleKey}
   onkeyup={handlers.handleKey}
+  onblur={handlers.handleBlur}
   class={cn(styles.base(), className)}
   {...rest}
 >

@@ -25,12 +25,19 @@ export function createToggleHandlers(options: {
       if (e.repeat) return;
       e.currentTarget.setAttribute("data-pressed", "true");
     } else if (e.type === "keyup") {
+      if (!e.currentTarget.hasAttribute("data-pressed")) return;
       e.currentTarget.removeAttribute("data-pressed");
       toggle();
     }
   }
 
-  return { handleClick, handleKey };
+  function handleBlur(e: FocusEvent & { currentTarget: HTMLButtonElement }): void {
+    if (e.currentTarget.hasAttribute("data-pressed")) {
+      e.currentTarget.removeAttribute("data-pressed");
+    }
+  }
+
+  return { handleClick, handleKey, handleBlur };
 }
 
 export type ToggleHandlers = ReturnType<typeof createToggleHandlers>;
