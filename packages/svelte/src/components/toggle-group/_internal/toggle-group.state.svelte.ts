@@ -1,4 +1,5 @@
 import type { ToggleVariant, ToggleSize } from "../../toggle/_internal/index.js";
+import type { ToggleGroupRegistration } from "./toggle-group.context.js";
 import type { ToggleGroupOrientation, ToggleGroupSelectionMode } from "./toggle-group.types.js";
 
 export class ToggleGroupState {
@@ -12,6 +13,9 @@ export class ToggleGroupState {
   #setValue: (value: string | string[] | undefined) => void;
   #internalValues: string[] = $state([]);
   #onValueChange: () => ((value: string | undefined) => void) | ((value: string[]) => void) | undefined;
+  #toggleIds: string[] = $state([]);
+  #toggleMap = new Map<string, ToggleGroupRegistration>();
+  #activeIndex = $state(0);
 
   get finalVariant(): ToggleVariant {
     return this.#variant();
@@ -43,6 +47,82 @@ export class ToggleGroupState {
       return new Set(Array.isArray(external) ? external : [external]);
     }
     return new Set(this.#internalValues);
+  }
+
+  register(id: string, entry: ToggleGroupRegistration): void {
+    this.#toggleMap.set(id, entry);
+    if (this.#toggleIds.includes(id)) return;
+
+    this.#toggleIds = [...this.#toggleIds, id];
+
+    const resolvedActiveIndex = this.#resolveActiveIndex();
+    if (resolvedActiveIndex === -1) {
+      const firstEnabledIndex = this.#findFirstEnabledIndex();
+      if (firstEnabledIndex !== -1) {
+        this.#activeIndex = firstEnabledIndex;
+      }
+    }
+  }
+
+  unregister(id: string): void {
+    const entryIndex = this.#toggleIds.indexOf(id);
+    if (entryIndex === -1) return;
+
+    const activeIndex = this.#resolveActiveIndex();
+    const wasActive = activeIndex === entryIndex;
+
+    this.#toggleIds = this.#toggleIds.filter((toggleId) => toggleId !== id);
+    this.#toggleMap.delete(id);
+
+    if (this.#toggleIds.length === 0) {
+      this.#activeIndex = 0;
+      return;
+    }
+
+    if (wasActive) {
+      const nextIndex = this.#findEnabledForwardFrom(entryIndex);
+      if (nextIndex !== -1) {
+        this.#activeIndex = nextIndex;
+        return;
+      }
+
+      const previousIndex = this.#findEnabledBackwardFrom(entryIndex - 1);
+      this.#activeIndex = previousIndex !== -1 ? previousIndex : 0;
+      return;
+    }
+
+    if (activeIndex > entryIndex) {
+      this.#activeIndex = activeIndex - 1;
+    }
+  }
+
+  setActive(id: string): void {
+    const entryIndex = this.#toggleIds.indexOf(id);
+    if (entryIndex === -1 || this.#getEntryByIndex(entryIndex)?.getDisabled()) return;
+
+    this.#activeIndex = entryIndex;
+  }
+
+  isActive(id: string): boolean {
+    const entryIndex = this.#toggleIds.indexOf(id);
+    if (entryIndex === -1 || this.#getEntryByIndex(entryIndex)?.getDisabled()) return false;
+
+    return entryIndex === this.#resolveActiveIndex();
+  }
+
+  moveFocus(direction: "next" | "prev"): void {
+    const activeIndex = this.#resolveActiveIndex();
+    if (activeIndex === -1) return;
+
+    const nextIndex =
+      direction === "next"
+        ? this.#findEnabledForwardFrom(activeIndex + 1)
+        : this.#findEnabledBackwardFrom(activeIndex - 1);
+
+    if (nextIndex === -1) return;
+
+    this.#activeIndex = nextIndex;
+    this.#getEntryByIndex(nextIndex)?.getRef()?.focus();
   }
 
   toggle(value: string): void {
@@ -92,5 +172,43 @@ export class ToggleGroupState {
     this.#value = props.value;
     this.#setValue = props.setValue;
     this.#onValueChange = props.onValueChange;
+  }
+
+  #resolveActiveIndex(): number {
+    const activeEntry = this.#getEntryByIndex(this.#activeIndex);
+    if (activeEntry && !activeEntry.getDisabled()) {
+      return this.#activeIndex;
+    }
+
+    return this.#findFirstEnabledIndex();
+  }
+
+  #findFirstEnabledIndex(): number {
+    return this.#toggleIds.findIndex((_, index) => !this.#getEntryByIndex(index)?.getDisabled());
+  }
+
+  #findEnabledForwardFrom(startIndex: number): number {
+    for (let index = startIndex; index < this.#toggleIds.length; index += 1) {
+      if (!this.#getEntryByIndex(index)?.getDisabled()) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  #findEnabledBackwardFrom(startIndex: number): number {
+    for (let index = startIndex; index >= 0; index -= 1) {
+      if (!this.#getEntryByIndex(index)?.getDisabled()) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  #getEntryByIndex(index: number): ToggleGroupRegistration | undefined {
+    const id = this.#toggleIds[index];
+    return id ? this.#toggleMap.get(id) : undefined;
   }
 }

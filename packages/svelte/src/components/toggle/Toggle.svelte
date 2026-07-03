@@ -1,9 +1,12 @@
 <script lang="ts">
+  import { onDestroy } from "svelte";
   import { toggleStyles } from "@shizen-ui/styles";
-  import { cn } from "../../lib/utils";
+  import { cn, createId } from "../../lib/utils";
   import { warnIf } from "../../lib/runes/index.js";
   import type { ToggleProps, IconContent } from "./_internal/index.js";
   import { ToggleState, createToggleHandlers } from "./_internal/index.js";
+
+  const uid = $props.id();
 
   let {
     children,
@@ -39,15 +42,27 @@
     },
     onPressedChange: (val) => onPressedChange?.(val)
   });
+  const groupCtx = state.groupCtx;
+  const toggleId = createId("toggle", uid);
+  const toggleGroupEntry = {
+    getRef: () => ref,
+    getDisabled: () => state.finalDisabled
+  };
+
+  groupCtx.register(toggleId, toggleGroupEntry);
+
+  onDestroy(() => {
+    groupCtx.unregister(toggleId);
+  });
 
   warnIf(
-    () => state.groupCtx.selectionMode !== undefined && !value,
+    () => groupCtx.selectionMode !== undefined && !value,
     "Toggle",
     "Toggle inside a ToggleGroup with selectionMode requires a 'value' prop to participate in selection."
   );
 
   warnIf(
-    () => state.groupCtx.selectionMode !== undefined && pressed !== false,
+    () => groupCtx.selectionMode !== undefined && pressed !== false,
     "Toggle",
     "Toggle inside a ToggleGroup with selectionMode: 'pressed' prop is ignored. Use ToggleGroup's value instead."
   );
@@ -82,10 +97,12 @@
   type="button"
   disabled={state.finalDisabled}
   aria-pressed={state.finalPressed}
+  tabindex={groupCtx.exists ? (groupCtx.isActive(toggleId) ? 0 : -1) : undefined}
   onclick={handlers.handleClick}
   onkeydown={handlers.handleKey}
   onkeyup={handlers.handleKey}
   onblur={handlers.handleBlur}
+  onfocus={() => groupCtx.setActive(toggleId)}
   class={cn(styles.base(), className)}
   {...rest}
 >

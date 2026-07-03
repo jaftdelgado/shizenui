@@ -2,6 +2,11 @@ import { getContext, setContext } from "svelte";
 import type { ToggleVariant, ToggleSize } from "../../toggle/_internal/index.js";
 import type { ToggleGroupSelectionMode } from "./toggle-group.types.js";
 
+export interface ToggleGroupRegistration {
+  getRef: () => HTMLButtonElement | null;
+  getDisabled: () => boolean;
+}
+
 export interface ToggleGroupContextValue {
   readonly variant: ToggleVariant;
   readonly size: ToggleSize;
@@ -9,6 +14,10 @@ export interface ToggleGroupContextValue {
   readonly selectionMode: ToggleGroupSelectionMode | undefined;
   readonly selectedValues: Set<string>;
   readonly onToggle: (value: string) => void;
+  readonly register: (id: string, entry: ToggleGroupRegistration) => void;
+  readonly unregister: (id: string) => void;
+  readonly isActive: (id: string) => boolean;
+  readonly setActive: (id: string) => void;
 }
 
 export interface ToggleGroupContextResult {
@@ -18,6 +27,10 @@ export interface ToggleGroupContextResult {
   readonly selectionMode: ToggleGroupSelectionMode | undefined;
   readonly selectedValues: Set<string>;
   readonly onToggle: (value: string) => void;
+  readonly register: (id: string, entry: ToggleGroupRegistration) => void;
+  readonly unregister: (id: string) => void;
+  readonly isActive: (id: string) => boolean;
+  readonly setActive: (id: string) => void;
   readonly exists: boolean;
 }
 
@@ -50,6 +63,18 @@ export function useToggleGroupContext(): ToggleGroupContextResult {
       get onToggle() {
         return () => {};
       },
+      get register() {
+        return (_id: string, _entry: ToggleGroupRegistration) => {};
+      },
+      get unregister() {
+        return (_id: string) => {};
+      },
+      get isActive() {
+        return (_id: string) => false;
+      },
+      get setActive() {
+        return (_id: string) => {};
+      },
       get exists() {
         return false;
       }
@@ -74,6 +99,18 @@ export function useToggleGroupContext(): ToggleGroupContextResult {
     },
     get onToggle() {
       return context.onToggle;
+    },
+    get register() {
+      return context.register;
+    },
+    get unregister() {
+      return context.unregister;
+    },
+    get isActive() {
+      return context.isActive;
+    },
+    get setActive() {
+      return context.setActive;
     },
     get exists() {
       return true;

@@ -3,7 +3,11 @@
   import { warnIf } from "../../lib/runes/index.js";
   import { cn, presence } from "../../lib/utils";
   import type { ToggleGroupProps } from "./_internal/index.js";
-  import { ToggleGroupState, setToggleGroupContext } from "./_internal/index.js";
+  import {
+    ToggleGroupState,
+    createToggleGroupHandlers,
+    setToggleGroupContext
+  } from "./_internal/index.js";
 
   let {
     children,
@@ -63,7 +67,24 @@
     },
     get onToggle() {
       return (value: string) => toggleGroupState.toggle(value);
+    },
+    get register() {
+      return (id, entry) => toggleGroupState.register(id, entry);
+    },
+    get unregister() {
+      return (id) => toggleGroupState.unregister(id);
+    },
+    get isActive() {
+      return (id) => toggleGroupState.isActive(id);
+    },
+    get setActive() {
+      return (id) => toggleGroupState.setActive(id);
     }
+  });
+
+  const handlers = createToggleGroupHandlers({
+    state: toggleGroupState,
+    getOrientation: () => toggleGroupState.finalOrientation
   });
 
   const styles = $derived(
@@ -80,6 +101,7 @@
   class={cn(styles, className)}
   data-disabled={presence(toggleGroupState.finalDisabled)}
   data-orientation={toggleGroupState.finalOrientation}
+  onkeydown={handlers.handleKeydown}
   {...rest}
 >
   {@render children?.()}
