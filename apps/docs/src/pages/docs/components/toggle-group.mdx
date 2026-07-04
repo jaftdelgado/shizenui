@@ -6,27 +6,33 @@ preview: ToggleGroupPreview
 ---
 
 import CodeImport from "@components/astro/CodeImport.astro";
+import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
+
+import ToggleGroupAnatomyCode from "@examples/svelte/toggle-group/ToggleGroupAnatomy.svelte?raw";
 
 import ToggleGroupVariants from "@examples/svelte/toggle-group/ToggleGroupVariants.svelte";
 import ToggleGroupSizes from "@examples/svelte/toggle-group/ToggleGroupSizes.svelte";
 import ToggleGroupOrientation from "@examples/svelte/toggle-group/ToggleGroupOrientation.svelte";
+import ToggleGroupSelectionMode from "@examples/svelte/toggle-group/ToggleGroupSelectionMode.svelte";
+import ToggleGroupControlled from "@examples/svelte/toggle-group/ToggleGroupControlled.svelte";
 import ToggleGroupDisabled from "@examples/svelte/toggle-group/ToggleGroupDisabled.svelte";
-import ToggleGroupPressed from "@examples/svelte/toggle-group/ToggleGroupPressed.svelte";
 import ToggleGroupWithoutSeparators from "@examples/svelte/toggle-group/ToggleGroupWithoutSeparators.svelte";
-import ToggleGroupTest from "@examples/svelte/toggle-group/ToggleGroupTest.svelte";
 
 ## Import
 
 <CodeImport code={`import { ToggleGroup, Toggle } from "@shizen-ui/svelte";`} />
 
+## Anatomy
+
+<CodeBlock
+  code={ToggleGroupAnatomyCode}
+  lang="svelte"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
 ## Examples
-
-### Test
-
-<ComponentExample src="svelte/toggle-group/ToggleGroupTest.svelte">
-  <ToggleGroupTest client:load />
-</ComponentExample>
 
 ### Variants
 
@@ -46,16 +52,22 @@ import ToggleGroupTest from "@examples/svelte/toggle-group/ToggleGroupTest.svelt
   <ToggleGroupOrientation client:load />
 </ComponentExample>
 
+### Selection Mode
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupSelectionMode.svelte">
+  <ToggleGroupSelectionMode client:load />
+</ComponentExample>
+
+### Controlled
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupControlled.svelte">
+  <ToggleGroupControlled client:load />
+</ComponentExample>
+
 ### Disabled State
 
 <ComponentExample src="svelte/toggle-group/ToggleGroupDisabled.svelte">
   <ToggleGroupDisabled client:load />
-</ComponentExample>
-
-### Pressed State
-
-<ComponentExample src="svelte/toggle-group/ToggleGroupPressed.svelte">
-  <ToggleGroupPressed client:load />
 </ComponentExample>
 
 ### Without Separator

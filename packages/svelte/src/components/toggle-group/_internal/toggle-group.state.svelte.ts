@@ -7,12 +7,15 @@ export class ToggleGroupState {
   #size: () => ToggleSize;
   #disabled: () => boolean | undefined;
   #orientation: () => ToggleGroupOrientation;
-  #hideSeparator: () => boolean;
+  #hideSeparators: () => boolean;
   #selectionMode: () => ToggleGroupSelectionMode | undefined;
   #value: () => string | string[] | undefined;
   #setValue: (value: string | string[] | undefined) => void;
   #internalValues: string[] = $state([]);
-  #onValueChange: () => ((value: string | undefined) => void) | ((value: string[]) => void) | undefined;
+  #onValueChange: () =>
+    | ((value: string | undefined) => void)
+    | ((value: string[]) => void)
+    | undefined;
   #toggleIds: string[] = $state([]);
   #toggleMap = new Map<string, ToggleGroupRegistration>();
   #activeIndex = $state(0);
@@ -33,8 +36,8 @@ export class ToggleGroupState {
     return this.#orientation();
   }
 
-  get finalHideSeparator(): boolean {
-    return this.#hideSeparator();
+  get finalHideSeparators(): boolean {
+    return this.#hideSeparators();
   }
 
   get finalSelectionMode(): ToggleGroupSelectionMode | undefined {
@@ -57,7 +60,7 @@ export class ToggleGroupState {
 
     const resolvedActiveIndex = this.#resolveActiveIndex();
     if (resolvedActiveIndex === -1) {
-      const firstEnabledIndex = this.#findFirstEnabledIndex();
+      const firstEnabledIndex = this.#findEnabledIndex(0, 1);
       if (firstEnabledIndex !== -1) {
         this.#activeIndex = firstEnabledIndex;
       }
@@ -80,13 +83,13 @@ export class ToggleGroupState {
     }
 
     if (wasActive) {
-      const nextIndex = this.#findEnabledForwardFrom(entryIndex);
+      const nextIndex = this.#findEnabledIndex(entryIndex, 1);
       if (nextIndex !== -1) {
         this.#activeIndex = nextIndex;
         return;
       }
 
-      const previousIndex = this.#findEnabledBackwardFrom(entryIndex - 1);
+      const previousIndex = this.#findEnabledIndex(entryIndex - 1, -1);
       this.#activeIndex = previousIndex !== -1 ? previousIndex : 0;
       return;
     }
@@ -116,8 +119,8 @@ export class ToggleGroupState {
 
     const nextIndex =
       direction === "next"
-        ? this.#findEnabledForwardFrom(activeIndex + 1)
-        : this.#findEnabledBackwardFrom(activeIndex - 1);
+        ? this.#findEnabledIndex(activeIndex + 1, 1)
+        : this.#findEnabledIndex(activeIndex - 1, -1);
 
     if (nextIndex === -1) return;
 
@@ -157,17 +160,20 @@ export class ToggleGroupState {
     size: () => ToggleSize;
     disabled: () => boolean | undefined;
     orientation: () => ToggleGroupOrientation;
-    hideSeparator: () => boolean;
+    hideSeparators: () => boolean;
     selectionMode: () => ToggleGroupSelectionMode | undefined;
     value: () => string | string[] | undefined;
     setValue: (value: string | string[] | undefined) => void;
-    onValueChange: () => ((value: string | undefined) => void) | ((value: string[]) => void) | undefined;
+    onValueChange: () =>
+      | ((value: string | undefined) => void)
+      | ((value: string[]) => void)
+      | undefined;
   }) {
     this.#variant = props.variant;
     this.#size = props.size;
     this.#disabled = props.disabled;
     this.#orientation = props.orientation;
-    this.#hideSeparator = props.hideSeparator;
+    this.#hideSeparators = props.hideSeparators;
     this.#selectionMode = props.selectionMode;
     this.#value = props.value;
     this.#setValue = props.setValue;
@@ -180,25 +186,11 @@ export class ToggleGroupState {
       return this.#activeIndex;
     }
 
-    return this.#findFirstEnabledIndex();
+    return this.#findEnabledIndex(0, 1);
   }
 
-  #findFirstEnabledIndex(): number {
-    return this.#toggleIds.findIndex((_, index) => !this.#getEntryByIndex(index)?.getDisabled());
-  }
-
-  #findEnabledForwardFrom(startIndex: number): number {
-    for (let index = startIndex; index < this.#toggleIds.length; index += 1) {
-      if (!this.#getEntryByIndex(index)?.getDisabled()) {
-        return index;
-      }
-    }
-
-    return -1;
-  }
-
-  #findEnabledBackwardFrom(startIndex: number): number {
-    for (let index = startIndex; index >= 0; index -= 1) {
+  #findEnabledIndex(startIndex: number, direction: 1 | -1): number {
+    for (let index = startIndex; index >= 0 && index < this.#toggleIds.length; index += direction) {
       if (!this.#getEntryByIndex(index)?.getDisabled()) {
         return index;
       }

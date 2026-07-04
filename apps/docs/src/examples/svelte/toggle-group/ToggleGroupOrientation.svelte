@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Description, Toggle, ToggleGroup } from "@shizen-ui/svelte";
+  import { Toggle, ToggleGroup, Description } from "@shizen-ui/svelte";
+
   import Icon from "@components/svelte/Icon.svelte";
   import { Layers01Icon, GridIcon, Image01Icon } from "@hugeicons/core-free-icons";
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Description, Toggle, ToggleGroup } from "@shizen-ui/svelte";
+  import { Toggle, ToggleGroup, Description } from "@shizen-ui/svelte";
 
   const variantConfigs = [
     { value: "default", label: "Default" },

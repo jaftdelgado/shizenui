@@ -6,7 +6,7 @@
   import {
     ToggleGroupState,
     createToggleGroupHandlers,
-    setToggleGroupContext
+    setupToggleGroupContext
   } from "./_internal/index.js";
 
   let {
@@ -15,7 +15,7 @@
     variant = "default",
     size = "md",
     orientation = "horizontal",
-    hideSeparator = false,
+    hideSeparators = false,
     disabled = undefined,
     selectionMode = undefined,
     value = $bindable(undefined),
@@ -40,7 +40,7 @@
     size: () => size,
     disabled: () => disabled,
     orientation: () => orientation,
-    hideSeparator: () => hideSeparator,
+    hideSeparators: () => hideSeparators,
     selectionMode: () => selectionMode,
     value: () => value,
     setValue: (nextValue) => {
@@ -49,38 +49,7 @@
     onValueChange: () => onValueChange
   });
 
-  setToggleGroupContext({
-    get variant() {
-      return toggleGroupState.finalVariant;
-    },
-    get size() {
-      return toggleGroupState.finalSize;
-    },
-    get disabled() {
-      return toggleGroupState.finalDisabled;
-    },
-    get selectionMode() {
-      return toggleGroupState.finalSelectionMode;
-    },
-    get selectedValues() {
-      return toggleGroupState.finalSelectedValues;
-    },
-    get onToggle() {
-      return (value: string) => toggleGroupState.toggle(value);
-    },
-    get register() {
-      return (id, entry) => toggleGroupState.register(id, entry);
-    },
-    get unregister() {
-      return (id) => toggleGroupState.unregister(id);
-    },
-    get isActive() {
-      return (id) => toggleGroupState.isActive(id);
-    },
-    get setActive() {
-      return (id) => toggleGroupState.setActive(id);
-    }
-  });
+  setupToggleGroupContext(toggleGroupState);
 
   const handlers = createToggleGroupHandlers({
     state: toggleGroupState,
@@ -91,7 +60,7 @@
     toggleGroupStyles({
       variant: toggleGroupState.finalVariant,
       size: toggleGroupState.finalSize,
-      hideSeparator: toggleGroupState.finalHideSeparator
+      hideSeparators: toggleGroupState.finalHideSeparators
     })
   );
 </script>

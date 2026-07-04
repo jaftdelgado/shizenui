@@ -9,86 +9,81 @@
     TextAlignCenterIcon,
     TextAlignRightIcon,
     TextAlignJustifyCenterIcon,
-    ListViewIcon,
-    LeftToRightListBulletIcon
+    SquareLock02Icon,
+    UserGroupIcon,
+    Globe02Icon
   } from "@hugeicons/core-free-icons";
 
-  let isBold = $state(false);
-  let isItalic = $state(false);
-  let isUnderline = $state(true);
+  let formats = $state<string[]>([]);
+  let viewMode = $state<string | undefined>("grid");
 
-  let activeAlignment = $state("left");
+  let channels = $state<string[]>(["email", "sms", "push"]);
+  let activeAlignment = $state<string | undefined>("center");
 
-  let isBulletList = $state(false);
-  let isNumberedList = $state(true);
+  let visibility = $state<string | undefined>("team");
 </script>
 
-<div class="flex flex-wrap gap-3">
-  <ToggleGroup variant="default">
-    <Toggle bind:pressed={isBold} aria-label="Bold" iconOnly>
+<div class="max-w-auto flex flex-wrap items-start gap-3 sm:max-w-sm">
+  <ToggleGroup selectionMode="multiple" bind:value={formats}>
+    <Toggle value="bold" iconOnly aria-label="Bold">
       <Icon icon={TextBoldIcon} />
     </Toggle>
-
-    <Toggle bind:pressed={isItalic} aria-label="Italic" iconOnly>
+    <Toggle value="italic" iconOnly aria-label="Italic">
       <Icon icon={TextItalicIcon} />
     </Toggle>
-
-    <Toggle bind:pressed={isUnderline} aria-label="Underline" iconOnly>
+    <Toggle value="underline" iconOnly aria-label="Underline">
       <Icon icon={TextUnderlineIcon} />
     </Toggle>
   </ToggleGroup>
 
-  <ToggleGroup variant="outline">
-    <Toggle
-      pressed={activeAlignment === "left"}
-      onPressedChange={() => (activeAlignment = "left")}
-      aria-label="Align left"
-      iconOnly
-    >
+  <ToggleGroup selectionMode="single" bind:value={viewMode}>
+    <Toggle value="grid">Grid</Toggle>
+    <Toggle value="list">List</Toggle>
+    <Toggle value="kanban">Kanban</Toggle>
+  </ToggleGroup>
+
+  <ToggleGroup variant="outline" selectionMode="multiple" bind:value={channels}>
+    <Toggle value="email">Email</Toggle>
+    <Toggle value="sms">SMS</Toggle>
+    <Toggle value="push">Push</Toggle>
+  </ToggleGroup>
+
+  <ToggleGroup variant="outline" selectionMode="single" bind:value={activeAlignment}>
+    <Toggle value="left" aria-label="Align left" iconOnly>
       <Icon icon={TextAlignLeftIcon} />
     </Toggle>
 
-    <Toggle
-      pressed={activeAlignment === "center"}
-      onPressedChange={() => (activeAlignment = "center")}
-      aria-label="Align center"
-      iconOnly
-    >
+    <Toggle value="center" aria-label="Align center" iconOnly>
       <Icon icon={TextAlignCenterIcon} />
     </Toggle>
 
-    <Toggle
-      pressed={activeAlignment === "right"}
-      onPressedChange={() => (activeAlignment = "right")}
-      aria-label="Align right"
-      iconOnly
-    >
+    <Toggle value="right" aria-label="Align right" iconOnly>
       <Icon icon={TextAlignRightIcon} />
     </Toggle>
 
-    <Toggle
-      pressed={activeAlignment === "justify"}
-      onPressedChange={() => (activeAlignment = "justify")}
-      aria-label="Justify"
-      iconOnly
-    >
+    <Toggle value="justify" aria-label="Justify" iconOnly>
       <Icon icon={TextAlignJustifyCenterIcon} />
     </Toggle>
   </ToggleGroup>
 
-  <ToggleGroup variant="ghost">
-    <Toggle bind:pressed={isBulletList}>
+  <ToggleGroup variant="ghost" selectionMode="single" bind:value={visibility}>
+    <Toggle value="private">
       {#snippet startContent()}
-        <Icon icon={ListViewIcon} />
+        <Icon icon={SquareLock02Icon} />
       {/snippet}
-      Bullet list
+      Private
     </Toggle>
-
-    <Toggle bind:pressed={isNumberedList}>
+    <Toggle value="team">
       {#snippet startContent()}
-        <Icon icon={LeftToRightListBulletIcon} />
+        <Icon icon={UserGroupIcon} />
       {/snippet}
-      Numbered list
+      Team
+    </Toggle>
+    <Toggle value="public">
+      {#snippet startContent()}
+        <Icon icon={Globe02Icon} />
+      {/snippet}
+      Public
     </Toggle>
   </ToggleGroup>
 </div>

@@ -8,4 +8,5 @@ export type {
 export { ToggleState } from "./toggle.state.svelte.js";
 
 export { createToggleHandlers } from "./toggle.handlers.js";
+export { setupToggleGroupRegistration } from "./toggle.setup.js";
 export type { ToggleHandlers } from "./toggle.handlers.js";

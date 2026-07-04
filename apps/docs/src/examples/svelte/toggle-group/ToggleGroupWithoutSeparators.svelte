@@ -8,7 +8,7 @@
 <div class="flex flex-col gap-4">
   <div class="flex flex-col gap-2">
     <Description>Default</Description>
-    <ToggleGroup variant="default" hideSeparator>
+    <ToggleGroup variant="default" hideSeparators>
       <Toggle>
         {#snippet startContent()}
           <Icon icon={BoldIcon} />
@@ -32,7 +32,7 @@
 
   <div class="flex flex-col gap-2">
     <Description>Outline</Description>
-    <ToggleGroup variant="outline" hideSeparator>
+    <ToggleGroup variant="outline" hideSeparators>
       <Toggle>
         {#snippet startContent()}
           <Icon icon={BoldIcon} />
@@ -56,7 +56,7 @@
 
   <div class="flex flex-col gap-2">
     <Description>Ghost</Description>
-    <ToggleGroup variant="ghost" hideSeparator>
+    <ToggleGroup variant="ghost" hideSeparators>
       <Toggle>
         {#snippet startContent()}
           <Icon icon={BoldIcon} />

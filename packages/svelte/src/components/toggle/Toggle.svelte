@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
   import { toggleStyles } from "@shizen-ui/styles";
   import { cn, createId } from "../../lib/utils";
   import { warnIf } from "../../lib/runes/index.js";
   import type { ToggleProps, IconContent } from "./_internal/index.js";
-  import { ToggleState, createToggleHandlers } from "./_internal/index.js";
+  import {
+    ToggleState,
+    createToggleHandlers,
+    setupToggleGroupRegistration
+  } from "./_internal/index.js";
 
   const uid = $props.id();
 
@@ -44,15 +47,11 @@
   });
   const groupCtx = state.groupCtx;
   const toggleId = createId("toggle", uid);
-  const toggleGroupEntry = {
+  setupToggleGroupRegistration({
+    groupCtx,
+    id: toggleId,
     getRef: () => ref,
     getDisabled: () => state.finalDisabled
-  };
-
-  groupCtx.register(toggleId, toggleGroupEntry);
-
-  onDestroy(() => {
-    groupCtx.unregister(toggleId);
   });
 
   warnIf(

@@ -12,7 +12,7 @@ interface ToggleGroupSharedProps extends ToggleGroupBaseProps {
   variant?: ToggleVariant;
   size?: ToggleSize;
   orientation?: ToggleGroupOrientation;
-  hideSeparator?: boolean;
+  hideSeparators?: boolean;
   disabled?: boolean;
 }
 

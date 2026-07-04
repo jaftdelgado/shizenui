@@ -13,7 +13,7 @@ export const toggleGroupStyles = tv({
       md: "toggle-group--md",
       lg: "toggle-group--lg"
     },
-    hideSeparator: {
+    hideSeparators: {
       false: "toggle-group--separators",
       true: ""
     }
@@ -21,7 +21,7 @@ export const toggleGroupStyles = tv({
   defaultVariants: {
     variant: "default",
     size: "md",
-    hideSeparator: false
+    hideSeparators: false
   }
 });
 
