@@ -6,8 +6,10 @@ preview: ToggleGroupPreview
 ---
 
 import CodeImport from "@components/astro/CodeImport.astro";
+
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
 
 import ToggleGroupAnatomyCode from "@examples/svelte/toggle-group/ToggleGroupAnatomy.svelte?raw";
 
@@ -18,6 +20,9 @@ import ToggleGroupSelectionMode from "@examples/svelte/toggle-group/ToggleGroupS
 import ToggleGroupControlled from "@examples/svelte/toggle-group/ToggleGroupControlled.svelte";
 import ToggleGroupDisabled from "@examples/svelte/toggle-group/ToggleGroupDisabled.svelte";
 import ToggleGroupWithoutSeparators from "@examples/svelte/toggle-group/ToggleGroupWithoutSeparators.svelte";
+
+import ToggleGroupTwStyling from "@examples/svelte/toggle-group/ToggleGroupTwStyling.svelte";
+import ToggleGroupCssStylingCode from "@examples/svelte/toggle-group/ToggleGroupCssStyling.css?raw";
 
 ## Import
 
@@ -75,3 +80,105 @@ import ToggleGroupWithoutSeparators from "@examples/svelte/toggle-group/ToggleGr
 <ComponentExample src="svelte/toggle-group/ToggleGroupWithoutSeparators.svelte">
   <ToggleGroupWithoutSeparators client:load />
 </ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to ToggleGroup.
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupTwStyling.svelte">
+  <ToggleGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the ToggleGroup component classes, you can use the `@layer components` directive.
+
+<CodeBlock
+  code={ToggleGroupCssStylingCode}
+  lang="css"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+### CSS Classes
+
+#### Base & Size Classes
+
+<PropsTable
+  props={[
+    {
+      name: "toggle-group",
+      description: "Root element. Manages layout and stacking context of child toggles."
+    },
+    {
+      name: "toggle-group--separators",
+      description: "Adds a thin divider between each toggle to visually separate options."
+    },
+    {
+      name: "toggle-group--sm",
+      description: "Small size variant. Propagates to child toggles."
+    },
+    {
+      name: "toggle-group--md",
+      description: "Medium size variant. Default."
+    },
+    {
+      name: "toggle-group--lg",
+      description: "Large size variant. Propagates to child toggles."
+    }
+  ]}
+/>
+
+#### Orientation
+
+<PropsTable
+  props={[
+    {
+      name: 'data-orientation="horizontal"',
+      description: "Arranges toggles in a row."
+    },
+    {
+      name: 'data-orientation="vertical"',
+      description: "Arranges toggles in a column."
+    }
+  ]}
+/>
+
+## API Reference
+
+### ToggleGroup Props
+
+Groups multiple toggles and propagates `variant`, `size`, and `disabled` to all children. Individual toggles can override `disabled` locally. When `selectionMode` is set, the group also coordinates selection and keyboard navigation between its toggles.
+
+<PropsTable
+  showHeader
+  props={[
+    {
+      name: "variant",
+      type: '"default" | "outline" | "ghost"',
+      default: '"default"'
+    },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"' },
+    { name: "hideSeparators", type: "boolean", default: "false" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    {
+      name: "selectionMode",
+      type: '"single" | "multiple"',
+      default: "undefined"
+    },
+    {
+      name: "value",
+      type: "string | string[]",
+      default: "undefined"
+    },
+    {
+      name: "onValueChange",
+      type: "(value: string | undefined) => void | (value: string[]) => void",
+      default: "undefined"
+    },
+    { name: "children", type: "Snippet", default: "—" }
+  ]}
+/>

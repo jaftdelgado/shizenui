@@ -1,0 +1,18 @@
+@layer components {
+  .toggle-group {
+    @apply rounded-xl shadow-md;
+  }
+
+  .toggle-group--separators > .toggle:not(:last-child)::after {
+    @apply bg-violet-400 opacity-40;
+  }
+
+  .toggle-group .toggle {
+    --toggle-bg-hover: var(--color-violet-100);
+    --toggle-bg-pressed: var(--color-violet-200);
+    --toggle-bg-on: var(--color-violet-600);
+    --toggle-bg-on-hover: var(--color-violet-700);
+    --toggle-bg-on-pressed: var(--color-violet-800);
+    --toggle-fg-on: var(--color-white);
+  }
+}

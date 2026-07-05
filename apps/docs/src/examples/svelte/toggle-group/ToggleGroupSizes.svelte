@@ -8,15 +8,21 @@
   ] as const;
 
   const labels = ["Left", "Center", "Right"];
+
+  let selectedBySize = $state<Record<(typeof sizeConfigs)[number]["value"], string | undefined>>({
+    sm: undefined,
+    md: undefined,
+    lg: undefined
+  });
 </script>
 
 <div class="flex flex-col gap-4">
   {#each sizeConfigs as { value, label }}
     <div class="flex flex-col gap-2">
       <Description>{label}</Description>
-      <ToggleGroup size={value}>
+      <ToggleGroup size={value} selectionMode="single" bind:value={selectedBySize[value]}>
         {#each labels as label}
-          <Toggle>{label}</Toggle>
+          <Toggle value={label.toLowerCase()}>{label}</Toggle>
         {/each}
       </ToggleGroup>
     </div>

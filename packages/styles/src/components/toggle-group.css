@@ -16,43 +16,41 @@
   }
 
   /* ── Border radius ── */
-  .toggle-group > .toggle {
-    @apply rounded-none;
-  }
+  .toggle-group {
+    > .toggle {
+      @apply rounded-none;
 
-  .toggle-group[data-orientation="horizontal"] > .toggle:first-child {
-    @apply rounded-l-control;
-  }
+      &:only-child {
+        @apply rounded-control;
+      }
+    }
 
-  .toggle-group[data-orientation="horizontal"] > .toggle:last-child {
-    @apply rounded-r-control;
-  }
+    &[data-orientation="horizontal"] > .toggle {
+      &:first-child {
+        @apply rounded-l-control;
+      }
 
-  .toggle-group[data-orientation="horizontal"] > .toggle:only-child {
-    @apply rounded-control;
-  }
+      &:last-child {
+        @apply rounded-r-control;
+      }
+    }
 
-  .toggle-group[data-orientation="vertical"] > .toggle:first-child {
-    @apply rounded-t-control;
-  }
+    &[data-orientation="vertical"] > .toggle {
+      &:first-child {
+        @apply rounded-t-control;
+      }
 
-  .toggle-group[data-orientation="vertical"] > .toggle:last-child {
-    @apply rounded-b-control;
-  }
-
-  .toggle-group[data-orientation="vertical"] > .toggle:only-child {
-    @apply rounded-control;
+      &:last-child {
+        @apply rounded-b-control;
+      }
+    }
   }
 
   .toggle-group--outline {
     @apply rounded-control shadow-border;
 
     > .toggle.toggle--outline {
-      --shadow-border-halo: none;
-      --shadow-border: none;
-      --shadow-border-hover: none;
-      --shadow-border-accent: none;
-      --shadow-border-accent-hover: none;
+      @apply shadow-none;
     }
   }
 
@@ -78,6 +76,7 @@
       .toggle__content {
         transform: scale(0.96);
         transition: transform 100ms cubic-bezier(0.4, 0, 1, 1);
+        @apply motion-reduce:transition-none;
       }
     }
 
@@ -86,6 +85,7 @@
       will-change: transform;
       backface-visibility: hidden;
       transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      @apply motion-reduce:transition-none;
     }
   }
 

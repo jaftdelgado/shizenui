@@ -97,6 +97,7 @@
   }
 
   .toggle--outline {
+    @apply shadow-border;
     --toggle-fg: var(--color-control-foreground);
     --toggle-bg-hover: var(--color-ghost-hover);
     --toggle-bg-pressed: var(--color-ghost-pressed);
@@ -104,28 +105,6 @@
     --toggle-bg-on-hover: var(--color-accent-soft-hover);
     --toggle-bg-on-pressed: var(--color-accent-soft-hover);
     --toggle-fg-on: var(--color-accent);
-
-    box-shadow: var(--shadow-border);
-
-    &:hover:not(:disabled):not(:focus-visible) {
-      box-shadow: var(--shadow-border-hover);
-    }
-
-    &:active:not(:disabled):not(:focus-visible) {
-      box-shadow: var(--shadow-border-hover);
-    }
-
-    &[aria-pressed="true"]:not(:focus-visible) {
-      box-shadow: var(--shadow-border-accent);
-
-      &:hover:not(:disabled) {
-        box-shadow: var(--shadow-border-accent-hover);
-      }
-
-      &:active:not(:disabled) {
-        box-shadow: var(--shadow-border-accent-hover);
-      }
-    }
 
     &:focus-visible {
       @apply status-focused;
