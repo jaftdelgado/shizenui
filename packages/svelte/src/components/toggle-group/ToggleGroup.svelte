@@ -1,0 +1,71 @@
+<script lang="ts">
+  import { toggleGroupStyles } from "@shizen-ui/styles";
+  import { warnIf } from "../../lib/runes/index.js";
+  import { cn, presence } from "../../lib/utils";
+  import type { ToggleGroupProps } from "./_internal/index.js";
+  import {
+    ToggleGroupState,
+    createToggleGroupHandlers,
+    setupToggleGroupContext
+  } from "./_internal/index.js";
+
+  let {
+    children,
+    class: className,
+    variant = "default",
+    size = "md",
+    orientation = "horizontal",
+    hideSeparators = false,
+    disabled = undefined,
+    selectionMode = "single",
+    value = $bindable(undefined),
+    onValueChange = undefined,
+    ...rest
+  }: ToggleGroupProps = $props();
+
+  warnIf(
+    () => !children,
+    "ToggleGroup",
+    "No children provided. Add at least one <Toggle> as a child."
+  );
+
+  const toggleGroupState = new ToggleGroupState({
+    variant: () => variant,
+    size: () => size,
+    disabled: () => disabled,
+    orientation: () => orientation,
+    hideSeparators: () => hideSeparators,
+    selectionMode: () => selectionMode,
+    value: () => value,
+    setValue: (nextValue) => {
+      value = nextValue;
+    },
+    onValueChange: () => onValueChange
+  });
+
+  setupToggleGroupContext(toggleGroupState);
+
+  const handlers = createToggleGroupHandlers({
+    state: toggleGroupState,
+    getOrientation: () => toggleGroupState.finalOrientation
+  });
+
+  const styles = $derived(
+    toggleGroupStyles({
+      variant: toggleGroupState.finalVariant,
+      size: toggleGroupState.finalSize,
+      hideSeparators: toggleGroupState.finalHideSeparators
+    })
+  );
+</script>
+
+<div
+  role="group"
+  class={cn(styles, className)}
+  data-disabled={presence(toggleGroupState.finalDisabled)}
+  data-orientation={toggleGroupState.finalOrientation}
+  onkeydown={handlers.handleKeydown}
+  {...rest}
+>
+  {@render children?.()}
+</div>

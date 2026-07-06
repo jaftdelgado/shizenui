@@ -1,0 +1,111 @@
+@layer components {
+  .toggle-group {
+    @apply isolate inline-flex;
+
+    &[data-orientation="vertical"] {
+      @apply flex-col items-stretch;
+
+      > .toggle {
+        @apply flex w-full items-center justify-center;
+
+        &.toggle--icon-only {
+          @apply aspect-square w-full min-w-max;
+        }
+      }
+    }
+  }
+
+  /* ── Border radius ── */
+  .toggle-group {
+    > .toggle {
+      @apply rounded-none;
+
+      &:only-child {
+        @apply rounded-control;
+      }
+    }
+
+    &[data-orientation="horizontal"] > .toggle {
+      &:first-child {
+        @apply rounded-l-control;
+      }
+
+      &:last-child {
+        @apply rounded-r-control;
+      }
+    }
+
+    &[data-orientation="vertical"] > .toggle {
+      &:first-child {
+        @apply rounded-t-control;
+      }
+
+      &:last-child {
+        @apply rounded-b-control;
+      }
+    }
+  }
+
+  .toggle-group--outline {
+    @apply rounded-control shadow-border;
+
+    > .toggle.toggle--outline {
+      @apply shadow-none;
+    }
+  }
+
+  /* ── Toggle overrides inside group ── */
+  .toggle-group > .toggle {
+    @apply relative;
+    transform-style: flat;
+    will-change: auto;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      @apply z-10;
+    }
+
+    &:active:not(:disabled) {
+      @apply z-20;
+    }
+
+    &:active:not(:disabled),
+    &[data-pressed="true"]:not(:disabled) {
+      transform: none;
+
+      .toggle__content {
+        transform: scale(0.96);
+        transition: transform 100ms cubic-bezier(0.4, 0, 1, 1);
+        @apply motion-reduce:transition-none;
+      }
+    }
+
+    .toggle__content {
+      transform-style: preserve-3d;
+      will-change: transform;
+      backface-visibility: hidden;
+      transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      @apply motion-reduce:transition-none;
+    }
+  }
+
+  /* ── Separators ── */
+  .toggle-group--separators > .toggle:not(:last-child)::after {
+    content: "";
+    @apply absolute rounded-full bg-current opacity-20;
+  }
+
+  .toggle-group[data-orientation="horizontal"].toggle-group--separators
+    > .toggle:not(:last-child)::after {
+    @apply top-1/2 right-0 -translate-y-1/2;
+    width: 2px;
+    height: 40%;
+  }
+
+  .toggle-group[data-orientation="vertical"].toggle-group--separators
+    > .toggle:not(:last-child)::after {
+    @apply bottom-0 left-1/2 -translate-x-1/2;
+    height: 2px;
+    width: 40%;
+  }
+}

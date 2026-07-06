@@ -1,9 +1,15 @@
 <script lang="ts">
   import { toggleStyles } from "@shizen-ui/styles";
-  import { cn } from "../../lib/utils";
+  import { cn, createId } from "../../lib/utils";
   import { warnIf } from "../../lib/runes/index.js";
   import type { ToggleProps, IconContent } from "./_internal/index.js";
-  import { ToggleState, createToggleHandlers } from "./_internal/index.js";
+  import {
+    ToggleState,
+    createToggleHandlers,
+    setupToggleGroupRegistration
+  } from "./_internal/index.js";
+
+  const uid = $props.id();
 
   let {
     children,
@@ -13,6 +19,7 @@
     variant,
     size,
     disabled,
+    value = undefined,
     iconOnly = false,
     pressed = $bindable(false),
     onPressedChange,
@@ -30,16 +37,38 @@
   const state = new ToggleState({
     variant: () => variant,
     size: () => size,
-    disabled: () => disabled
-  });
-
-  const handlers = createToggleHandlers({
-    state,
+    disabled: () => disabled,
+    value: () => value,
     getPressed: () => pressed,
     setPressed: (val) => {
       pressed = val;
     },
-    onPressedChange: (val) => onPressedChange?.(val),
+    onPressedChange: (val) => onPressedChange?.(val)
+  });
+  const groupCtx = state.groupCtx;
+  const toggleId = createId("toggle", uid);
+  setupToggleGroupRegistration({
+    groupCtx,
+    id: toggleId,
+    getRef: () => ref,
+    getDisabled: () => state.finalDisabled
+  });
+
+  warnIf(
+    () => groupCtx.exists && !value,
+    "Toggle",
+    "Toggle inside a ToggleGroup requires a 'value' prop to participate in selection."
+  );
+
+  warnIf(
+    () => groupCtx.exists && pressed !== false,
+    "Toggle",
+    "Toggle inside a ToggleGroup: 'pressed' prop is ignored. Use ToggleGroup's value instead."
+  );
+
+  const handlers = createToggleHandlers({
+    state,
+    getValue: () => value,
     getOnClick: () => onclick
   });
 
@@ -66,10 +95,13 @@
   bind:this={ref}
   type="button"
   disabled={state.finalDisabled}
-  aria-pressed={pressed}
+  aria-pressed={state.finalPressed}
+  tabindex={groupCtx.exists ? (groupCtx.isActive(toggleId) ? 0 : -1) : undefined}
   onclick={handlers.handleClick}
   onkeydown={handlers.handleKey}
   onkeyup={handlers.handleKey}
+  onblur={handlers.handleBlur}
+  onfocus={() => groupCtx.setActive(toggleId)}
   class={cn(styles.base(), className)}
   {...rest}
 >

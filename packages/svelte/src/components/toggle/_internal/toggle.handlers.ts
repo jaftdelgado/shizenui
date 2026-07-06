@@ -3,18 +3,13 @@ import type { ToggleClickEvent } from "./toggle.types.js";
 
 export function createToggleHandlers(options: {
   state: ToggleState;
-  getPressed: () => boolean;
-  setPressed: (value: boolean) => void;
-  onPressedChange?: (value: boolean) => void;
+  getValue: () => string | undefined;
   getOnClick?: () => ((e: ToggleClickEvent) => void) | null | undefined;
 }) {
-  const { state, getPressed, setPressed, onPressedChange, getOnClick } = options;
+  const { state, getValue, getOnClick } = options;
 
   function toggle(): void {
-    if (state.finalDisabled) return;
-    const next = !getPressed();
-    setPressed(next);
-    onPressedChange?.(next);
+    state.toggle(getValue());
   }
 
   function handleClick(event: ToggleClickEvent): void {
@@ -30,12 +25,19 @@ export function createToggleHandlers(options: {
       if (e.repeat) return;
       e.currentTarget.setAttribute("data-pressed", "true");
     } else if (e.type === "keyup") {
+      if (!e.currentTarget.hasAttribute("data-pressed")) return;
       e.currentTarget.removeAttribute("data-pressed");
       toggle();
     }
   }
 
-  return { handleClick, handleKey };
+  function handleBlur(e: FocusEvent & { currentTarget: HTMLButtonElement }): void {
+    if (e.currentTarget.hasAttribute("data-pressed")) {
+      e.currentTarget.removeAttribute("data-pressed");
+    }
+  }
+
+  return { handleClick, handleKey, handleBlur };
 }
 
 export type ToggleHandlers = ReturnType<typeof createToggleHandlers>;

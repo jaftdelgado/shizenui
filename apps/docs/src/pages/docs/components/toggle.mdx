@@ -190,13 +190,10 @@ To customize the Toggle component classes, you can use the `@layer components` d
 <PropsTable
   showHeader
   props={[
-    {
-      name: "variant",
-      type: '"default" | "outline" | "ghost"',
-      default: '"default"'
-    },
+    { name: "variant", type: '"default" | "outline" | "ghost"', default: '"default"' },
     { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
     { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "value", type: "string", default: "undefined" },
     { name: "iconOnly", type: "boolean", default: "false" },
     { name: "pressed", type: "boolean", default: "false" },
     { name: "onPressedChange", type: "(pressed: boolean) => void", default: "undefined" },
@@ -206,3 +203,5 @@ To customize the Toggle component classes, you can use the `@layer components` d
     { name: "ref", type: "HTMLButtonElement | null", default: "null" }
   ]}
 />
+
+`value` only matters inside a `ToggleGroup`, where it's required to identify the toggle for selection. Standalone, it's ignored — `pressed` controls the toggle directly.

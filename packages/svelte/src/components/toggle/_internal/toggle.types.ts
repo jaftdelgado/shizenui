@@ -18,6 +18,7 @@ interface NormalToggleProps extends ToggleBaseProps {
   variant?: ToggleVariant;
   size?: ToggleSize;
   disabled?: boolean;
+  value?: string;
   pressed?: boolean;
   onPressedChange?: (pressed: boolean) => void;
   ref?: HTMLButtonElement | null;
@@ -31,6 +32,7 @@ interface IconOnlyToggleProps extends ToggleBaseProps {
   variant?: ToggleVariant;
   size?: ToggleSize;
   disabled?: boolean;
+  value?: string;
   pressed?: boolean;
   onPressedChange?: (pressed: boolean) => void;
   ref?: HTMLButtonElement | null;

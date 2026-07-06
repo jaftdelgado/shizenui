@@ -6,3 +6,4 @@ export * from "./label";
 export * from "./switch";
 export * from "./switch-group";
 export * from "./toggle";
+export * from "./toggle-group";

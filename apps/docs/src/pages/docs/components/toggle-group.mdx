@@ -1,0 +1,209 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Toggle Group
+description: Groups toggles into one control for single or multiple selection.
+preview: ToggleGroupPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+
+import ToggleGroupAnatomyCode from "@examples/svelte/toggle-group/ToggleGroupAnatomy.svelte?raw";
+
+import ToggleGroupVariants from "@examples/svelte/toggle-group/ToggleGroupVariants.svelte";
+import ToggleGroupSizes from "@examples/svelte/toggle-group/ToggleGroupSizes.svelte";
+import ToggleGroupOrientation from "@examples/svelte/toggle-group/ToggleGroupOrientation.svelte";
+import ToggleGroupSelectionMode from "@examples/svelte/toggle-group/ToggleGroupSelectionMode.svelte";
+import ToggleGroupBindValue from "@examples/svelte/toggle-group/ToggleGroupBindValue.svelte";
+import ToggleGroupFullyControlled from "@examples/svelte/toggle-group/ToggleGroupFullyControlled.svelte";
+import ToggleGroupDisabled from "@examples/svelte/toggle-group/ToggleGroupDisabled.svelte";
+import ToggleGroupWithoutSeparators from "@examples/svelte/toggle-group/ToggleGroupWithoutSeparators.svelte";
+
+import ToggleGroupTwStyling from "@examples/svelte/toggle-group/ToggleGroupTwStyling.svelte";
+import ToggleGroupCssStylingCode from "@examples/svelte/toggle-group/ToggleGroupCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { ToggleGroup, Toggle } from "@shizen-ui/svelte";`} />
+
+## Anatomy
+
+<CodeBlock
+  code={ToggleGroupAnatomyCode}
+  lang="svelte"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupVariants.svelte">
+  <ToggleGroupVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupSizes.svelte">
+  <ToggleGroupSizes client:load />
+</ComponentExample>
+
+### Orientation
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupOrientation.svelte">
+  <ToggleGroupOrientation client:load />
+</ComponentExample>
+
+### Selection Mode
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupSelectionMode.svelte">
+  <ToggleGroupSelectionMode client:load />
+</ComponentExample>
+
+### Two-Way Binding
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupBindValue.svelte">
+  <ToggleGroupBindValue client:load />
+</ComponentExample>
+
+### Fully Controlled
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupFullyControlled.svelte">
+  <ToggleGroupFullyControlled client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupDisabled.svelte">
+  <ToggleGroupDisabled client:load />
+</ComponentExample>
+
+### Without Separator
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupWithoutSeparators.svelte">
+  <ToggleGroupWithoutSeparators client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to ToggleGroup.
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupTwStyling.svelte">
+  <ToggleGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the ToggleGroup component classes, you can use the `@layer components` directive.
+
+<CodeBlock
+  code={ToggleGroupCssStylingCode}
+  lang="css"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+### CSS Classes
+
+#### Base & Size Classes
+
+<PropsTable
+  props={[
+    {
+      name: "toggle-group",
+      description: "Root element. Manages layout and stacking context of child toggles."
+    },
+    {
+      name: "toggle-group--separators",
+      description: "Adds a thin divider between each toggle to visually separate options."
+    },
+    {
+      name: "toggle-group--sm",
+      description: "Small size variant. Propagates to child toggles."
+    },
+    {
+      name: "toggle-group--md",
+      description: "Medium size variant. Default."
+    },
+    {
+      name: "toggle-group--lg",
+      description: "Large size variant. Propagates to child toggles."
+    }
+  ]}
+/>
+
+#### Orientation
+
+<PropsTable
+  props={[
+    {
+      name: 'data-orientation="horizontal"',
+      description: "Arranges toggles in a row."
+    },
+    {
+      name: 'data-orientation="vertical"',
+      description: "Arranges toggles in a column."
+    }
+  ]}
+/>
+
+## API Reference
+
+### ToggleGroup Props
+
+Groups multiple toggles and propagates `variant`, `size`, and `disabled` to all children. Individual toggles can override `disabled` locally.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "selectionMode", type: '"single" | "multiple"', default: '"single"' },
+    {
+      name: "variant",
+      type: '"default" | "outline" | "ghost"',
+      default: '"default"'
+    },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"' },
+    { name: "hideSeparators", type: "boolean", default: "false" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "children", type: "Snippet", default: "—" }
+  ]}
+/>
+
+### Selection Props
+
+`value` and `onValueChange` change shape depending on `selectionMode`: a single string in `"single"` mode, an array of strings in `"multiple"` mode.
+
+#### Single Selection
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string | undefined", default: "undefined" },
+    {
+      name: "onValueChange",
+      type: "(value: string | undefined) => void",
+      default: "undefined"
+    }
+  ]}
+/>
+
+#### Multiple Selection
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string[] | undefined", default: "undefined" },
+    {
+      name: "onValueChange",
+      type: "(value: string[]) => void",
+      default: "undefined"
+    }
+  ]}
+/>
