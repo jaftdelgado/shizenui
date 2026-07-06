@@ -45,19 +45,11 @@ export class ToggleGroupState {
   }
 
   get finalSelectedValues(): Set<string> {
-    const external = this.#value();
-    if (external !== undefined) {
-      return new Set(Array.isArray(external) ? external : [external]);
-    }
-    return new Set(this.#internalValues);
+    return new Set(this.#currentValues());
   }
 
   isSelected(value: string): boolean {
-    const external = this.#value();
-    if (external !== undefined) {
-      return Array.isArray(external) ? external.includes(value) : external === value;
-    }
-    return this.#internalValues.includes(value);
+    return this.#currentValues().includes(value);
   }
 
   register(id: string, entry: ToggleGroupRegistration): void {
@@ -140,9 +132,7 @@ export class ToggleGroupState {
     const mode = this.#selectionMode();
     if (!mode) return;
 
-    const current = this.#value();
-    const currentValues =
-      current !== undefined ? (Array.isArray(current) ? current : [current]) : this.#internalValues;
+    const currentValues = this.#currentValues();
 
     if (mode === "single") {
       const nextValues = currentValues[0] === value ? [] : [value];
@@ -195,6 +185,14 @@ export class ToggleGroupState {
     }
 
     return this.#findEnabledIndex(0, 1);
+  }
+
+  #currentValues(): string[] {
+    const external = this.#value();
+    if (external !== undefined) {
+      return Array.isArray(external) ? external : [external];
+    }
+    return this.#internalValues;
   }
 
   #findEnabledIndex(startIndex: number, direction: 1 | -1): number {
