@@ -17,7 +17,8 @@ import ToggleGroupVariants from "@examples/svelte/toggle-group/ToggleGroupVarian
 import ToggleGroupSizes from "@examples/svelte/toggle-group/ToggleGroupSizes.svelte";
 import ToggleGroupOrientation from "@examples/svelte/toggle-group/ToggleGroupOrientation.svelte";
 import ToggleGroupSelectionMode from "@examples/svelte/toggle-group/ToggleGroupSelectionMode.svelte";
-import ToggleGroupControlled from "@examples/svelte/toggle-group/ToggleGroupControlled.svelte";
+import ToggleGroupBindValue from "@examples/svelte/toggle-group/ToggleGroupBindValue.svelte";
+import ToggleGroupFullyControlled from "@examples/svelte/toggle-group/ToggleGroupFullyControlled.svelte";
 import ToggleGroupDisabled from "@examples/svelte/toggle-group/ToggleGroupDisabled.svelte";
 import ToggleGroupWithoutSeparators from "@examples/svelte/toggle-group/ToggleGroupWithoutSeparators.svelte";
 
@@ -63,10 +64,16 @@ import ToggleGroupCssStylingCode from "@examples/svelte/toggle-group/ToggleGroup
   <ToggleGroupSelectionMode client:load />
 </ComponentExample>
 
-### Controlled
+### Two-Way Binding
 
-<ComponentExample src="svelte/toggle-group/ToggleGroupControlled.svelte">
-  <ToggleGroupControlled client:load />
+<ComponentExample src="svelte/toggle-group/ToggleGroupBindValue.svelte">
+  <ToggleGroupBindValue client:load />
+</ComponentExample>
+
+### Fully Controlled
+
+<ComponentExample src="svelte/toggle-group/ToggleGroupFullyControlled.svelte">
+  <ToggleGroupFullyControlled client:load />
 </ComponentExample>
 
 ### Disabled State

@@ -1,4 +1,4 @@
-import { getContext, setContext } from "svelte";
+import { createContext } from "svelte";
 import type { ToggleVariant, ToggleSize } from "../../toggle/_internal/index.js";
 import type { ToggleGroupSelectionMode } from "./toggle-group.types.js";
 
@@ -13,6 +13,7 @@ export interface ToggleGroupContextValue {
   readonly disabled: boolean;
   readonly selectionMode: ToggleGroupSelectionMode | undefined;
   readonly selectedValues: Set<string>;
+  readonly isSelected: (value: string) => boolean;
   readonly onToggle: (value: string) => void;
   readonly register: (id: string, entry: ToggleGroupRegistration) => void;
   readonly unregister: (id: string) => void;
@@ -20,64 +21,39 @@ export interface ToggleGroupContextValue {
   readonly setActive: (id: string) => void;
 }
 
-export interface ToggleGroupContextResult {
-  readonly variant: ToggleVariant;
-  readonly size: ToggleSize;
-  readonly disabled: boolean;
-  readonly selectionMode: ToggleGroupSelectionMode | undefined;
-  readonly selectedValues: Set<string>;
-  readonly onToggle: (value: string) => void;
-  readonly register: (id: string, entry: ToggleGroupRegistration) => void;
-  readonly unregister: (id: string) => void;
-  readonly isActive: (id: string) => boolean;
-  readonly setActive: (id: string) => void;
+export interface ToggleGroupContextResult extends ToggleGroupContextValue {
   readonly exists: boolean;
 }
 
-const TOGGLE_GROUP_CONTEXT_KEY = Symbol("shizen:toggle-group");
+const [getToggleGroupContext, setToggleGroupContext] = createContext<ToggleGroupContextValue>();
 
-export function setToggleGroupContext(value: ToggleGroupContextValue): void {
-  setContext(TOGGLE_GROUP_CONTEXT_KEY, value);
+function tryGetToggleGroupContext(): ToggleGroupContextValue | undefined {
+  try {
+    return getToggleGroupContext();
+  } catch {
+    return undefined;
+  }
 }
 
+export { setToggleGroupContext };
+
 export function useToggleGroupContext(): ToggleGroupContextResult {
-  const context = getContext<ToggleGroupContextValue | undefined>(TOGGLE_GROUP_CONTEXT_KEY);
+  const context = tryGetToggleGroupContext();
 
   if (!context) {
     return {
-      get variant() {
-        return "default" as ToggleVariant;
-      },
-      get size() {
-        return "md" as ToggleSize;
-      },
-      get disabled() {
-        return false;
-      },
-      get selectionMode() {
-        return undefined;
-      },
-      get selectedValues() {
-        return new Set<string>();
-      },
-      get onToggle() {
-        return () => {};
-      },
-      get register() {
-        return (_id: string, _entry: ToggleGroupRegistration) => {};
-      },
-      get unregister() {
-        return (_id: string) => {};
-      },
-      get isActive() {
-        return (_id: string) => false;
-      },
-      get setActive() {
-        return (_id: string) => {};
-      },
-      get exists() {
-        return false;
-      }
+      variant: "default" as ToggleVariant,
+      size: "md" as ToggleSize,
+      disabled: false,
+      selectionMode: undefined,
+      selectedValues: new Set<string>(),
+      isSelected: () => false,
+      onToggle: () => {},
+      register: () => {},
+      unregister: () => {},
+      isActive: () => false,
+      setActive: () => {},
+      exists: false
     } satisfies ToggleGroupContextResult;
   }
 
@@ -96,6 +72,9 @@ export function useToggleGroupContext(): ToggleGroupContextResult {
     },
     get selectedValues() {
       return context.selectedValues;
+    },
+    get isSelected() {
+      return context.isSelected;
     },
     get onToggle() {
       return context.onToggle;

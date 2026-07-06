@@ -18,6 +18,9 @@ export function setupToggleGroupContext(state: ToggleGroupState): void {
     get selectedValues() {
       return state.finalSelectedValues;
     },
+    get isSelected() {
+      return (value: string) => state.isSelected(value);
+    },
     get onToggle() {
       return (value: string) => state.toggle(value);
     },

@@ -33,7 +33,7 @@ export class ToggleState {
   get finalPressed(): boolean {
     if (this.#groupCtx.selectionMode !== undefined) {
       const value = this.#value();
-      return value ? this.#groupCtx.selectedValues.has(value) : false;
+      return value ? this.#groupCtx.isSelected(value) : false;
     }
 
     return this.#pressed();

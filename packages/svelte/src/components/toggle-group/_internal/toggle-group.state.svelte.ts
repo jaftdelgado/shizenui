@@ -52,6 +52,14 @@ export class ToggleGroupState {
     return new Set(this.#internalValues);
   }
 
+  isSelected(value: string): boolean {
+    const external = this.#value();
+    if (external !== undefined) {
+      return Array.isArray(external) ? external.includes(value) : external === value;
+    }
+    return this.#internalValues.includes(value);
+  }
+
   register(id: string, entry: ToggleGroupRegistration): void {
     this.#toggleMap.set(id, entry);
     if (this.#toggleIds.includes(id)) return;
