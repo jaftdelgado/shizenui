@@ -17,7 +17,7 @@
     orientation = "horizontal",
     hideSeparators = false,
     disabled = undefined,
-    selectionMode = undefined,
+    selectionMode = "single",
     value = $bindable(undefined),
     onValueChange = undefined,
     ...rest
@@ -27,12 +27,6 @@
     () => !children,
     "ToggleGroup",
     "No children provided. Add at least one <Toggle> as a child."
-  );
-
-  warnIf(
-    () => !selectionMode && value !== undefined,
-    "ToggleGroup",
-    "A 'value' prop was provided without 'selectionMode'. Did you mean to add selectionMode='single' or selectionMode='multiple'?"
   );
 
   const toggleGroupState = new ToggleGroupState({

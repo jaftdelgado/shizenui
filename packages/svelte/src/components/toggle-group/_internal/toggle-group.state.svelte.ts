@@ -8,7 +8,7 @@ export class ToggleGroupState {
   #disabled: () => boolean | undefined;
   #orientation: () => ToggleGroupOrientation;
   #hideSeparators: () => boolean;
-  #selectionMode: () => ToggleGroupSelectionMode | undefined;
+  #selectionMode: () => ToggleGroupSelectionMode;
   #value: () => string | string[] | undefined;
   #setValue: (value: string | string[] | undefined) => void;
   #internalValues: string[] = $state([]);
@@ -40,7 +40,7 @@ export class ToggleGroupState {
     return this.#hideSeparators();
   }
 
-  get finalSelectionMode(): ToggleGroupSelectionMode | undefined {
+  get finalSelectionMode(): ToggleGroupSelectionMode {
     return this.#selectionMode();
   }
 
@@ -130,7 +130,6 @@ export class ToggleGroupState {
 
   toggle(value: string): void {
     const mode = this.#selectionMode();
-    if (!mode) return;
 
     const currentValues = this.#currentValues();
 
@@ -141,7 +140,7 @@ export class ToggleGroupState {
       this.#internalValues = nextValues;
       this.#setValue(nextValue);
       (this.#onValueChange() as ((v: string | undefined) => void) | undefined)?.(nextValue);
-    } else {
+    } else if (mode === "multiple") {
       const exists = currentValues.includes(value);
       const nextValues = exists
         ? currentValues.filter((v) => v !== value)
@@ -159,7 +158,7 @@ export class ToggleGroupState {
     disabled: () => boolean | undefined;
     orientation: () => ToggleGroupOrientation;
     hideSeparators: () => boolean;
-    selectionMode: () => ToggleGroupSelectionMode | undefined;
+    selectionMode: () => ToggleGroupSelectionMode;
     value: () => string | string[] | undefined;
     setValue: (value: string | string[] | undefined) => void;
     onValueChange: () =>

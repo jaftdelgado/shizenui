@@ -11,7 +11,7 @@ export interface ToggleGroupContextValue {
   readonly variant: ToggleVariant;
   readonly size: ToggleSize;
   readonly disabled: boolean;
-  readonly selectionMode: ToggleGroupSelectionMode | undefined;
+  readonly selectionMode: ToggleGroupSelectionMode;
   readonly selectedValues: Set<string>;
   readonly isSelected: (value: string) => boolean;
   readonly onToggle: (value: string) => void;
@@ -45,7 +45,7 @@ export function useToggleGroupContext(): ToggleGroupContextResult {
       variant: "default" as ToggleVariant,
       size: "md" as ToggleSize,
       disabled: false,
-      selectionMode: undefined,
+      selectionMode: "single" as ToggleGroupSelectionMode, // irrelevant because exists is false
       selectedValues: new Set<string>(),
       isSelected: () => false,
       onToggle: () => {},

@@ -16,14 +16,8 @@ interface ToggleGroupSharedProps extends ToggleGroupBaseProps {
   disabled?: boolean;
 }
 
-type ToggleGroupPropsWithoutSelectionMode = ToggleGroupSharedProps & {
-  selectionMode?: undefined;
-  value?: string | string[];
-  onValueChange?: never;
-};
-
 type ToggleGroupSingleSelectionProps = ToggleGroupSharedProps & {
-  selectionMode: "single";
+  selectionMode?: "single";
   value?: string;
   onValueChange?: (value: string | undefined) => void;
 };
@@ -34,7 +28,4 @@ type ToggleGroupMultipleSelectionProps = ToggleGroupSharedProps & {
   onValueChange?: (value: string[]) => void;
 };
 
-export type ToggleGroupProps =
-  | ToggleGroupPropsWithoutSelectionMode
-  | ToggleGroupSingleSelectionProps
-  | ToggleGroupMultipleSelectionProps;
+export type ToggleGroupProps = ToggleGroupSingleSelectionProps | ToggleGroupMultipleSelectionProps;

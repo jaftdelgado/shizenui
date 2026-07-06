@@ -31,7 +31,7 @@ export class ToggleState {
   }
 
   get finalPressed(): boolean {
-    if (this.#groupCtx.selectionMode !== undefined) {
+    if (this.#groupCtx.exists) {
       const value = this.#value();
       return value ? this.#groupCtx.isSelected(value) : false;
     }
@@ -42,7 +42,7 @@ export class ToggleState {
   toggle(value?: string): void {
     if (this.finalDisabled) return;
 
-    if (this.#groupCtx.selectionMode !== undefined) {
+    if (this.#groupCtx.exists) {
       if (value) {
         this.#groupCtx.onToggle(value);
       }

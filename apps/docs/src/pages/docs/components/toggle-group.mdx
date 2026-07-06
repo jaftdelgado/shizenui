@@ -157,11 +157,12 @@ To customize the ToggleGroup component classes, you can use the `@layer componen
 
 ### ToggleGroup Props
 
-Groups multiple toggles and propagates `variant`, `size`, and `disabled` to all children. Individual toggles can override `disabled` locally. When `selectionMode` is set, the group also coordinates selection and keyboard navigation between its toggles.
+Groups multiple toggles and propagates `variant`, `size`, and `disabled` to all children. Individual toggles can override `disabled` locally.
 
 <PropsTable
   showHeader
   props={[
+    { name: "selectionMode", type: '"single" | "multiple"', default: '"single"' },
     {
       name: "variant",
       type: '"default" | "outline" | "ghost"',
@@ -171,21 +172,38 @@ Groups multiple toggles and propagates `variant`, `size`, and `disabled` to all 
     { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"' },
     { name: "hideSeparators", type: "boolean", default: "false" },
     { name: "disabled", type: "boolean", default: "undefined" },
-    {
-      name: "selectionMode",
-      type: '"single" | "multiple"',
-      default: "undefined"
-    },
-    {
-      name: "value",
-      type: "string | string[]",
-      default: "undefined"
-    },
+    { name: "children", type: "Snippet", default: "—" }
+  ]}
+/>
+
+### Selection Props
+
+`value` and `onValueChange` change shape depending on `selectionMode`: a single string in `"single"` mode, an array of strings in `"multiple"` mode.
+
+#### Single Selection
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string | undefined", default: "undefined" },
     {
       name: "onValueChange",
-      type: "(value: string | undefined) => void | (value: string[]) => void",
+      type: "(value: string | undefined) => void",
       default: "undefined"
-    },
-    { name: "children", type: "Snippet", default: "—" }
+    }
+  ]}
+/>
+
+#### Multiple Selection
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string[] | undefined", default: "undefined" },
+    {
+      name: "onValueChange",
+      type: "(value: string[]) => void",
+      default: "undefined"
+    }
   ]}
 />

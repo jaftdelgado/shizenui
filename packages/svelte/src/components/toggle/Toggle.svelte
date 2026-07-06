@@ -55,15 +55,15 @@
   });
 
   warnIf(
-    () => groupCtx.selectionMode !== undefined && !value,
+    () => groupCtx.exists && !value,
     "Toggle",
-    "Toggle inside a ToggleGroup with selectionMode requires a 'value' prop to participate in selection."
+    "Toggle inside a ToggleGroup requires a 'value' prop to participate in selection."
   );
 
   warnIf(
-    () => groupCtx.selectionMode !== undefined && pressed !== false,
+    () => groupCtx.exists && pressed !== false,
     "Toggle",
-    "Toggle inside a ToggleGroup with selectionMode: 'pressed' prop is ignored. Use ToggleGroup's value instead."
+    "Toggle inside a ToggleGroup: 'pressed' prop is ignored. Use ToggleGroup's value instead."
   );
 
   const handlers = createToggleHandlers({
