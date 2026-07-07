@@ -1,4 +1,4 @@
-import { getContext, setContext } from "svelte";
+import { createContext } from "svelte";
 
 export interface RadioContextValue {
   readonly checked: boolean;
@@ -15,14 +15,20 @@ export interface RadioContextResult {
   readonly exists: boolean;
 }
 
-const RADIO_CONTEXT_KEY = Symbol("shizen:radio");
+const [getRadioContext, setRadioContext] = createContext<RadioContextValue>();
 
-export function setRadioContext(value: RadioContextValue): void {
-  setContext(RADIO_CONTEXT_KEY, value);
+function tryGetRadioContext(): RadioContextValue | undefined {
+  try {
+    return getRadioContext();
+  } catch {
+    return undefined;
+  }
 }
 
+export { setRadioContext };
+
 export function useRadioContext(): RadioContextResult {
-  const context = getContext<RadioContextValue | undefined>(RADIO_CONTEXT_KEY);
+  const context = tryGetRadioContext();
 
   if (!context) {
     return {

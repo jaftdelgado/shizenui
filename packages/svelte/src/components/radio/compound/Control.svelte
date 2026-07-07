@@ -1,25 +1,38 @@
 <script lang="ts">
-  import { type Snippet } from "svelte";
-  import { cn } from "@shizen-ui/styles";
   import { radioStyles } from "@shizen-ui/styles";
-  import { useRadioContext } from "../../../contexts/internal/index.js";
+
+  import { cn, presence } from "../../../lib/utils";
+  import { assertContext } from "../../../lib/runes/index.js";
+  import { useRadioContext } from "../_internal/index.js";
+  import type { RadioControlProps } from "../_internal/index.js";
+
   import Indicator from "./Indicator.svelte";
 
-  let { children, class: className }: { children?: Snippet; class?: string } = $props();
+  let { children, class: className, ref = $bindable(null), ...rest }: RadioControlProps = $props();
 
   const ctx = useRadioContext();
-  const styles = $derived(radioStyles({}));
+  const styles = $derived(radioStyles());
+
+  const { shouldRender } = assertContext(
+    () => !ctx.exists,
+    "Radio.Control",
+    "Must be used inside a <Radio> component."
+  );
 </script>
 
-<div
-  class={cn(styles.control(), className)}
-  data-state={ctx.checked ? "checked" : "unchecked"}
-  data-disabled={ctx.disabled ? "" : undefined}
-  data-invalid={ctx.invalid ? "" : undefined}
->
-  {#if children}
-    {@render children()}
-  {:else}
-    <Indicator />
-  {/if}
-</div>
+{#if shouldRender}
+  <div
+    bind:this={ref}
+    class={cn(styles.control(), className)}
+    data-state={ctx.checked ? "checked" : "unchecked"}
+    data-disabled={presence(ctx.disabled)}
+    data-invalid={presence(ctx.invalid)}
+    {...rest}
+  >
+    {#if children}
+      {@render children()}
+    {:else}
+      <Indicator />
+    {/if}
+  </div>
+{/if}

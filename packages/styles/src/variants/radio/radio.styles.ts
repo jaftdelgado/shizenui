@@ -5,7 +5,8 @@ export const radioStyles = tv({
     base: "radio",
     control: "radio__control",
     indicator: "radio__indicator",
-    content: "radio__content"
+    content: "radio__content",
+    input: "radio__input"
   }
 });
 

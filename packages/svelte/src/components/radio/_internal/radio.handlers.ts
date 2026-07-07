@@ -1,38 +1,46 @@
 import type { RadioStateInstance } from "./radio.state.svelte.js";
+import type { RadioClickEvent } from "./radio.types.js";
 
-export function createRadioHandlers(
-  state: RadioStateInstance,
-  setChecked: (val: boolean) => void,
-  getOnClick: () =>
-    | ((e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) => void)
-    | undefined
-) {
-  function handleChange() {
+export function createRadioHandlers(options: {
+  state: RadioStateInstance;
+  setChecked: (val: boolean) => void;
+  onCheckedChange?: (checked: boolean) => void;
+  getOnClick?: () => ((e: RadioClickEvent) => void) | undefined;
+  getInputRef?: () => HTMLInputElement | null;
+}) {
+  const { state, setChecked, onCheckedChange, getOnClick, getInputRef } = options;
+
+  function handleChange(): void {
     if (state.finalDisabled) return;
+
     if (state.groupCtx.exists) {
       state.groupCtx.setValue(state.value);
-    } else {
-      setChecked(true);
+      return;
     }
+
+    setChecked(true);
+    onCheckedChange?.(true);
   }
 
-  function handleKeyEnter(e: KeyboardEvent) {
+  function handleKeyEnter(e: KeyboardEvent): void {
     if (e.key !== "Enter") return;
     e.preventDefault();
     if (e.type === "keyup") handleChange();
   }
 
-  function handleContainerClick(e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
+  function handleContainerClick(e: RadioClickEvent): void {
+    if (state.finalDisabled) return;
+
     const target = e.target as HTMLElement;
     if (target.closest("label")) return;
+
     handleChange();
-    const input = e.currentTarget.querySelector('input[type="radio"]') as HTMLInputElement | null;
-    input?.focus();
+    getInputRef?.()?.focus();
   }
 
-  function handleClick(e: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
+  function handleClick(e: RadioClickEvent): void {
     handleContainerClick(e);
-    getOnClick()?.(e);
+    getOnClick?.()?.(e);
   }
 
   return {
