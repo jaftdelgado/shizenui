@@ -1,3 +1,93 @@
-.radio {
-  display: block;
+@layer components {
+  .radio {
+    @apply inline-flex items-start gap-3 transition-opacity duration-200 outline-none select-none;
+
+    /* Base tokens */
+    --radio-bg: var(--color-control);
+    --radio-bg-hover: var(--color-control-hover);
+    --radio-indicator: var(--color-accent-foreground);
+    --radio-border-width: 0px;
+    --radio-border-color: transparent;
+
+    &[data-disabled] {
+      @apply status-disabled;
+
+      &,
+      & * {
+        cursor: var(--cursor-disabled);
+      }
+    }
+
+    &[data-state="checked"] {
+      --radio-bg: var(--color-accent);
+      --radio-bg-hover: var(--color-accent-hover);
+      --radio-border-color: var(--color-accent);
+    }
+
+    &[data-invalid] {
+      & .radio__control {
+        @apply status-invalid-field ring-1;
+      }
+
+      &[data-state="checked"] {
+        & .radio__control {
+          @apply status-invalid-field ring-1;
+          background-color: var(--color-danger);
+          border-color: var(--color-danger);
+        }
+      }
+    }
+  }
+
+  .radio,
+  .radio * {
+    cursor: var(--cursor-interactive);
+  }
+
+  .radio--bordered {
+    --radio-border-width: 2px;
+    --radio-border-color: var(--color-separator);
+  }
+
+  .radio__control {
+    @apply relative flex shrink-0 items-center justify-center transition-all duration-200;
+    @apply mt-0.5 size-4 rounded-full;
+    box-sizing: border-box;
+    background-color: var(--radio-bg);
+    border-style: solid;
+    border-width: var(--radio-border-width);
+    border-color: var(--radio-border-color);
+
+    &:hover:not([data-disabled]) {
+      background-color: var(--radio-bg-hover);
+      border-color: var(--radio-bg-hover);
+    }
+
+    .radio[data-focus-visible] & {
+      @apply status-focused;
+    }
+  }
+
+  .radio__input {
+    @apply sr-only;
+  }
+
+  .radio__indicator {
+    @apply scale-0 rounded-full transition-transform duration-200;
+    width: 50%;
+    height: 50%;
+    background-color: var(--radio-indicator);
+
+    &[data-state="checked"] {
+      @apply scale-100;
+    }
+
+    &[data-custom] {
+      @apply flex size-full scale-100 items-center justify-center bg-transparent;
+    }
+  }
+
+  .radio__content {
+    @apply flex flex-col;
+  }
 }

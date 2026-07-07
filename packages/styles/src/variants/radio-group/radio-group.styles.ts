@@ -1,18 +1,22 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const radioGroupStyles = tv({
-  base: "radio-group",
+  slots: {
+    base: "radio-group",
+    items: "radio-group__items"
+  },
   variants: {
-    invalid: {
-      true: "radio-group--invalid"
-    },
-    disabled: {
-      true: "radio-group--disabled"
+    orientation: {
+      vertical: {
+        items: "radio-group__items--vertical"
+      },
+      horizontal: {
+        items: "radio-group__items--horizontal"
+      }
     }
   },
   defaultVariants: {
-    invalid: false,
-    disabled: false
+    orientation: "vertical"
   }
 });
 

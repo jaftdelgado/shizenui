@@ -1,18 +1,11 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const radioStyles = tv({
-  base: "radio",
-  variants: {
-    invalid: {
-      true: "radio--invalid"
-    },
-    disabled: {
-      true: "radio--disabled"
-    }
-  },
-  defaultVariants: {
-    invalid: false,
-    disabled: false
+  slots: {
+    base: "radio",
+    control: "radio__control",
+    indicator: "radio__indicator",
+    content: "radio__content"
   }
 });
 

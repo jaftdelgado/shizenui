@@ -1,3 +1,17 @@
-.radio-group {
-  display: block;
+@layer components {
+  .radio-group {
+    @apply flex w-fit flex-col;
+  }
+
+  .radio-group__items {
+    @apply mt-4 flex;
+  }
+
+  .radio-group__items--vertical {
+    @apply flex-col gap-4;
+  }
+
+  .radio-group__items--horizontal {
+    @apply flex-row flex-wrap gap-6;
+  }
 }
