@@ -11,6 +11,9 @@ export function setupRadioContexts(state: RadioState): void {
     get disabled() {
       return state.finalDisabled;
     },
+    get readonly() {
+      return state.finalReadonly;
+    },
     get invalid() {
       return state.finalInvalid;
     },
@@ -27,7 +30,7 @@ export function setupRadioContexts(state: RadioState): void {
       return state.finalDisabled;
     },
     get readonly() {
-      return false;
+      return state.finalReadonly;
     },
     get required() {
       return false;

@@ -24,8 +24,9 @@
   <div
     bind:this={ref}
     class={cn(styles.control(), className)}
-    data-state={ctx.checked ? "checked" : "unchecked"}
+    data-checked={presence(ctx.checked)}
     data-disabled={presence(ctx.disabled)}
+    data-readonly={presence(ctx.readonly)}
     data-invalid={presence(ctx.invalid)}
     {...rest}
   >

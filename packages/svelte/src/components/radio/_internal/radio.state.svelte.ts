@@ -4,6 +4,7 @@ import { useFieldStateContext, type FieldStateContextResult } from "../../../lib
 
 export class RadioState {
   #disabled: () => boolean | undefined;
+  #readonly: () => boolean | undefined;
   #invalid: () => boolean | undefined;
   #name: () => string | undefined;
   #id: () => string;
@@ -20,6 +21,16 @@ export class RadioState {
       ? this.groupCtx.disabled
       : this.parentFieldCtx.exists
         ? this.parentFieldCtx.disabled
+        : false;
+  }
+
+  get finalReadonly(): boolean {
+    const local = this.#readonly();
+    if (local !== undefined) return local;
+    return this.groupCtx.exists
+      ? this.groupCtx.readonly
+      : this.parentFieldCtx.exists
+        ? this.parentFieldCtx.readonly
         : false;
   }
 
@@ -52,6 +63,7 @@ export class RadioState {
   constructor(props: {
     value: () => string;
     disabled: () => boolean | undefined;
+    readonly: () => boolean | undefined;
     invalid: () => boolean | undefined;
     name: () => string | undefined;
     id: () => string;
@@ -61,6 +73,7 @@ export class RadioState {
   }) {
     this.#value = props.value;
     this.#disabled = props.disabled;
+    this.#readonly = props.readonly;
     this.#invalid = props.invalid;
     this.#name = props.name;
     this.#id = props.id;

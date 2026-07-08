@@ -12,6 +12,7 @@
     class: className,
     value,
     disabled = undefined,
+    readonly = undefined,
     invalid = undefined,
     name,
     id = createId("radio", uid),
@@ -32,6 +33,7 @@
   const state = new RadioState({
     value: () => value,
     disabled: () => disabled,
+    readonly: () => readonly,
     invalid: () => invalid,
     name: () => name,
     id: () => id,
@@ -64,9 +66,9 @@
 <div
   role="none"
   class={cn(styles.base(), className)}
-  data-state={state.isChecked ? "checked" : "unchecked"}
   data-checked={presence(state.isChecked)}
   data-disabled={presence(state.finalDisabled)}
+  data-readonly={presence(state.finalReadonly)}
   data-invalid={presence(state.finalInvalid)}
   data-focus-visible={presence(focus.isFocusVisible)}
   onmousedown={focus.onMouseDown}

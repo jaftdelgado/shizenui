@@ -29,7 +29,8 @@
   <span
     bind:this={ref}
     class={cn(!isCustom && styles.indicator(), className)}
-    data-state={ctx.checked ? "checked" : "unchecked"}
+    data-checked={presence(ctx.checked)}
+    data-readonly={presence(ctx.readonly)}
     data-custom={presence(isCustom)}
     {...rest}
   >

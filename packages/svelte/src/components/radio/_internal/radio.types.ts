@@ -24,6 +24,7 @@ export interface RadioProps extends RadioBaseProps {
   value: string;
   checked?: boolean;
   disabled?: boolean;
+  readonly?: boolean;
   invalid?: boolean;
   name?: string;
   id?: string;

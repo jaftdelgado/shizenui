@@ -3,15 +3,17 @@ import { createContext } from "svelte";
 export interface RadioContextValue {
   readonly checked: boolean;
   readonly disabled: boolean;
+  readonly readonly: boolean;
   readonly invalid: boolean;
-  readonly id: string;
+  readonly id: string | undefined;
 }
 
 export interface RadioContextResult {
   readonly checked: boolean;
   readonly disabled: boolean;
+  readonly readonly: boolean;
   readonly invalid: boolean;
-  readonly id: string;
+  readonly id: string | undefined;
   readonly exists: boolean;
 }
 
@@ -38,11 +40,14 @@ export function useRadioContext(): RadioContextResult {
       get disabled() {
         return false;
       },
+      get readonly() {
+        return false;
+      },
       get invalid() {
         return false;
       },
       get id() {
-        return "";
+        return undefined;
       },
       get exists() {
         return false;
@@ -56,6 +61,9 @@ export function useRadioContext(): RadioContextResult {
     },
     get disabled() {
       return context.disabled;
+    },
+    get readonly() {
+      return context.readonly;
     },
     get invalid() {
       return context.invalid;
