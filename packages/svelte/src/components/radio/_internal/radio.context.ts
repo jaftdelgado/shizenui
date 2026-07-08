@@ -6,10 +6,8 @@ export interface RadioContextValue {
   readonly readonly: boolean;
   readonly invalid: boolean;
   readonly id: string | undefined;
-  readonly hasContent: boolean;
+  readonly hasLabel: boolean;
   readonly hasDescription: boolean;
-  registerContent: (id: string) => void;
-  unregisterContent: (id: string) => void;
 }
 
 export interface RadioContextResult {
@@ -18,10 +16,8 @@ export interface RadioContextResult {
   readonly readonly: boolean;
   readonly invalid: boolean;
   readonly id: string | undefined;
-  readonly hasContent: boolean;
+  readonly hasLabel: boolean;
   readonly hasDescription: boolean;
-  registerContent: (id: string) => void;
-  unregisterContent: (id: string) => void;
   readonly exists: boolean;
 }
 
@@ -57,14 +53,12 @@ export function useRadioContext(): RadioContextResult {
       get id() {
         return undefined;
       },
-      get hasContent() {
+      get hasLabel() {
         return false;
       },
       get hasDescription() {
         return false;
       },
-      registerContent(_id: string) {},
-      unregisterContent(_id: string) {},
       get exists() {
         return false;
       }
@@ -87,17 +81,11 @@ export function useRadioContext(): RadioContextResult {
     get id() {
       return context.id;
     },
-    get hasContent() {
-      return context.hasContent;
+    get hasLabel() {
+      return context.hasLabel;
     },
     get hasDescription() {
       return context.hasDescription;
-    },
-    registerContent(id: string) {
-      return context.registerContent(id);
-    },
-    unregisterContent(id: string) {
-      return context.unregisterContent(id);
     },
     get exists() {
       return true;

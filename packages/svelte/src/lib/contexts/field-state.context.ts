@@ -1,4 +1,4 @@
-import { getContext, setContext } from "svelte";
+import { createContext } from "svelte";
 
 export interface FieldStateContextValue {
   readonly invalid: boolean;
@@ -6,10 +6,11 @@ export interface FieldStateContextValue {
   readonly readonly: boolean;
   readonly required: boolean;
   readonly keepDescription?: boolean;
-  readonly id: string;
+  readonly id: string | undefined;
   readonly inputId?: string;
   readonly labelId: string | undefined;
   readonly descriptionId: string | undefined;
+  readonly errorId: string | undefined;
 }
 
 export interface FieldStateContextResult {
@@ -18,21 +19,28 @@ export interface FieldStateContextResult {
   readonly readonly: boolean;
   readonly required: boolean;
   readonly keepDescription: boolean;
-  readonly id: string;
+  readonly id: string | undefined;
   readonly inputId: string | undefined;
   readonly labelId: string | undefined;
   readonly descriptionId: string | undefined;
+  readonly errorId: string | undefined;
   readonly exists: boolean;
 }
 
-const FIELD_STATE_CONTEXT_KEY = Symbol("shizen:field-state");
+const [getFieldStateContext, setFieldStateContext] = createContext<FieldStateContextValue>();
 
-export function setFieldStateContext(value: FieldStateContextValue): void {
-  setContext(FIELD_STATE_CONTEXT_KEY, value);
+function tryGetFieldStateContext(): FieldStateContextValue | undefined {
+  try {
+    return getFieldStateContext();
+  } catch {
+    return undefined;
+  }
 }
 
+export { setFieldStateContext };
+
 export function useFieldStateContext(): FieldStateContextResult {
-  const context = getContext<FieldStateContextValue | undefined>(FIELD_STATE_CONTEXT_KEY);
+  const context = tryGetFieldStateContext();
 
   if (!context) {
     return {
@@ -52,7 +60,7 @@ export function useFieldStateContext(): FieldStateContextResult {
         return false;
       },
       get id() {
-        return "";
+        return undefined;
       },
       get inputId() {
         return undefined;
@@ -61,6 +69,9 @@ export function useFieldStateContext(): FieldStateContextResult {
         return undefined;
       },
       get descriptionId() {
+        return undefined;
+      },
+      get errorId() {
         return undefined;
       },
       get exists() {
@@ -96,6 +107,9 @@ export function useFieldStateContext(): FieldStateContextResult {
     },
     get descriptionId() {
       return context.descriptionId;
+    },
+    get errorId() {
+      return context.errorId;
     },
     get exists() {
       return true;

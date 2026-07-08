@@ -3,7 +3,11 @@
 
   import { cn, createId, presence } from "../../lib/utils";
   import type { RadioGroupProps } from "./_internal/index.js";
-  import { RadioGroupState, setupRadioGroupContexts } from "./_internal/index.js";
+  import {
+    RadioGroupState,
+    setupRadioGroupContexts,
+    useRadioGroupContext
+  } from "./_internal/index.js";
   import { warnIf } from "../../lib/runes/index.js";
 
   const uid = $props.id();
@@ -50,13 +54,29 @@
 
   setupRadioGroupContexts(state);
 
+  const ctx = useRadioGroupContext();
+
+  warnIf(
+    () => !ctx.hasLabel && !rest["aria-label"],
+    "RadioGroup",
+    "No Label found. Add a <Label> as a child, or pass aria-label directly."
+  );
+
   const styles = $derived(radioGroupStyles({ orientation: state.finalOrientation }));
+
+  const describedBy = $derived(
+    [ctx.hasError ? ctx.errorId : null, ctx.hasDescription ? ctx.descriptionId : null]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
 </script>
 
 <div
   {id}
   role="radiogroup"
   class={cn(styles.base(), className)}
+  aria-labelledby={ctx.hasLabel ? ctx.labelId : undefined}
+  aria-describedby={describedBy}
   aria-invalid={state.finalInvalid ? true : undefined}
   aria-disabled={state.finalDisabled ? true : undefined}
   aria-readonly={state.finalReadonly ? true : undefined}

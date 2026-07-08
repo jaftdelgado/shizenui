@@ -58,9 +58,9 @@
   );
 
   warnIf(
-    () => !!children && !ctx.hasContent && !rest["aria-label"],
+    () => !!children && !ctx.hasLabel && !rest["aria-label"],
     "Radio",
-    "No Radio.Content found. Add <Radio.Content> with a <Label> inside, or pass aria-label directly."
+    "No Label found. Add a <Label> (typically inside <Radio.Content>), or pass aria-label directly."
   );
 
   const handlers = createRadioHandlers({
@@ -76,6 +76,18 @@
   const focus = createFocusVisible();
 
   const styles = $derived(radioStyles());
+
+  const describedBy = $derived(
+    [
+      ctx.hasDescription ? `${id}-description` : null,
+      state.groupCtx.exists && state.groupCtx.hasError ? state.groupCtx.errorId : null,
+      state.groupCtx.exists && !state.groupCtx.hasError && state.groupCtx.hasDescription
+        ? state.groupCtx.descriptionId
+        : null
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
 </script>
 
 <div
@@ -100,8 +112,8 @@
     class={styles.input()}
     tabindex={state.isChecked || !state.groupCtx.exists || !state.groupCtx.value ? 0 : -1}
     aria-checked={state.isChecked}
-    aria-labelledby={ctx.hasContent ? `${id}-label` : undefined}
-    aria-describedby={ctx.hasDescription ? `${id}-description` : undefined}
+    aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
+    aria-describedby={describedBy}
     onchange={handlers.handleChange}
     onkeydown={handlers.handleKeyEnter}
     onkeyup={handlers.handleKeyEnter}

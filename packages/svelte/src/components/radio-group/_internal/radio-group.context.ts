@@ -13,6 +13,12 @@ export interface RadioGroupContextValue {
   readonly readonly: boolean;
   readonly invalid: boolean;
   readonly orientation: RadioGroupOrientation;
+  readonly labelId: string | undefined;
+  readonly descriptionId: string | undefined;
+  readonly errorId: string | undefined;
+  readonly hasLabel: boolean;
+  readonly hasDescription: boolean;
+  readonly hasError: boolean;
   readonly setValue: (value: string) => void;
   readonly register: (id: string, entry: RadioGroupRegistration) => void;
   readonly unregister: (id: string) => void;
@@ -59,6 +65,24 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       get orientation() {
         return "vertical" as RadioGroupOrientation;
       },
+      get labelId() {
+        return undefined;
+      },
+      get descriptionId() {
+        return undefined;
+      },
+      get errorId() {
+        return undefined;
+      },
+      get hasLabel() {
+        return false;
+      },
+      get hasDescription() {
+        return false;
+      },
+      get hasError() {
+        return false;
+      },
       setValue(_value: string) {},
       register(_id: string, _entry: RadioGroupRegistration) {},
       unregister(_id: string) {},
@@ -88,6 +112,24 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     },
     get orientation() {
       return context.orientation;
+    },
+    get labelId() {
+      return context.labelId;
+    },
+    get descriptionId() {
+      return context.descriptionId;
+    },
+    get errorId() {
+      return context.errorId;
+    },
+    get hasLabel() {
+      return context.hasLabel;
+    },
+    get hasDescription() {
+      return context.hasDescription;
+    },
+    get hasError() {
+      return context.hasError;
     },
     setValue(value: string) {
       return context.setValue(value);
