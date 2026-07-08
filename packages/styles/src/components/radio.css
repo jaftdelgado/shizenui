@@ -1,6 +1,6 @@
 @layer components {
   .radio {
-    @apply inline-flex items-start gap-3 transition-opacity duration-200 outline-none select-none;
+    @apply inline-flex items-start gap-3 outline-none select-none;
 
     /* Base tokens */
     --radio-bg: var(--color-control);
@@ -8,6 +8,9 @@
     --radio-indicator: var(--color-accent-foreground);
     --radio-border-width: 0px;
     --radio-border-color: transparent;
+
+    transition: opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
 
     &[data-disabled] {
       @apply status-disabled;
@@ -18,7 +21,14 @@
       }
     }
 
-    &[data-state="checked"] {
+    &[data-readonly] {
+      &,
+      & * {
+        cursor: default;
+      }
+    }
+
+    &[data-checked] {
       --radio-bg: var(--color-accent);
       --radio-bg-hover: var(--color-accent-hover);
       --radio-border-color: var(--color-accent);
@@ -29,7 +39,7 @@
         @apply status-invalid-field ring-1;
       }
 
-      &[data-state="checked"] {
+      &[data-checked] {
         & .radio__control {
           @apply status-invalid-field ring-1;
           background-color: var(--color-danger);
@@ -40,7 +50,8 @@
   }
 
   .radio,
-  .radio * {
+  .radio__control,
+  .radio .label {
     cursor: var(--cursor-interactive);
   }
 
@@ -50,7 +61,7 @@
   }
 
   .radio__control {
-    @apply relative flex shrink-0 items-center justify-center transition-all duration-200;
+    @apply relative flex shrink-0 items-center justify-center;
     @apply mt-0.5 size-4 rounded-full;
     box-sizing: border-box;
     background-color: var(--radio-bg);
@@ -58,7 +69,13 @@
     border-width: var(--radio-border-width);
     border-color: var(--radio-border-color);
 
-    &:hover:not([data-disabled]) {
+    transition:
+      background-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
+      border-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
+      box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+
+    &:hover:not([data-disabled]):not([data-readonly]) {
       background-color: var(--radio-bg-hover);
       border-color: var(--radio-bg-hover);
     }
@@ -73,12 +90,15 @@
   }
 
   .radio__indicator {
-    @apply scale-0 rounded-full transition-transform duration-200;
+    @apply scale-0 rounded-full;
     width: 40%;
     height: 40%;
     background-color: var(--radio-indicator);
 
-    &[data-state="checked"] {
+    transition: transform 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+
+    &[data-checked] {
       @apply scale-100;
     }
 
