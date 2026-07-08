@@ -16,7 +16,7 @@
     children,
     class: className,
     value = $bindable(),
-    name = undefined,
+    name = createId("radio-group-name", uid),
     disabled = undefined,
     readonly = undefined,
     invalid = undefined,
@@ -35,7 +35,7 @@
   warnIf(
     () => !name,
     "RadioGroup",
-    "No 'name' prop provided. Radios inside this group won't be grouped correctly for form submission."
+    "No 'name' prop provided. A generated name will be used for accessibility grouping, but native form submission won't use a meaningful field name."
   );
 
   const state = new RadioGroupState({

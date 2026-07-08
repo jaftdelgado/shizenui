@@ -11,6 +11,8 @@ import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
 
+import RadioGroupOrientation from "@examples/svelte/radio-group/RadioGroupOrientation.svelte";
+import RadioGroupDisabled from "@examples/svelte/radio-group/RadioGroupDisabled.svelte";
 import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.svelte";
 
 ## Import
@@ -19,8 +21,20 @@ import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.sv
 
 ## Examples
 
+### Orientation
+
+<ComponentExample src="svelte/radio-group/RadioGroupOrientation.svelte">
+  <RadioGroupOrientation client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/radio-group/RadioGroupDisabled.svelte">
+  <RadioGroupDisabled client:load />
+</ComponentExample>
+
 ### Invalid State
 
-<ComponentExample src="examples/svelte/radio-group/RadioGroupInvalid.svelte">
+<ComponentExample src="svelte/radio-group/RadioGroupInvalid.svelte">
   <RadioGroupInvalid client:load />
 </ComponentExample>
