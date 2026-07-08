@@ -1,37 +1,29 @@
-import type { RadioGroupContextResult } from "../../../../contexts/internal/index.js";
+import type { RadioGroupContextResult } from "./radio-group.context.js";
 
-export function createRadioGroupItemsHandlers(
-  getContainer: () => HTMLDivElement,
-  groupCtx: RadioGroupContextResult
-) {
-  function getEnabledInputs(): HTMLInputElement[] {
-    return Array.from(
-      getContainer().querySelectorAll<HTMLInputElement>('input[type="radio"]:not(:disabled)')
-    );
-  }
+export function createRadioGroupItemsHandlers(options: {
+  getContainer: () => HTMLDivElement | null;
+  groupCtx: RadioGroupContextResult;
+}) {
+  const { getContainer, groupCtx } = options;
 
-  function handleFocusIn(e: FocusEvent) {
+  function handleFocusIn(e: FocusEvent): void {
     if (groupCtx.value) return;
 
     const container = getContainer();
+    if (!container) return;
+
     const relatedTarget = e.relatedTarget as HTMLElement | null;
 
     if (relatedTarget && container.contains(relatedTarget)) return;
-
-    const inputs = getEnabledInputs();
-    const first = inputs[0];
-    const last = inputs[inputs.length - 1];
-
-    if (!first || !last) return;
 
     const isShiftTab =
       relatedTarget !== null &&
       Boolean(container.compareDocumentPosition(relatedTarget) & Node.DOCUMENT_POSITION_FOLLOWING);
 
     if (isShiftTab) {
-      last.focus();
+      groupCtx.focusLastEnabled();
     } else {
-      first.focus();
+      groupCtx.focusFirstEnabled();
     }
   }
 

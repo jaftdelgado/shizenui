@@ -1,38 +1,72 @@
-import { getContext, setContext } from "svelte";
+import { createContext } from "svelte";
+import type { RadioGroupOrientation } from "./radio-group.types.js";
 
-export type RadioOrientation = "horizontal" | "vertical";
+export interface RadioGroupRegistration {
+  getRef: () => HTMLInputElement | null;
+  getDisabled: () => boolean;
+}
 
 export interface RadioGroupContextValue {
   readonly value: string | undefined;
-  readonly name: string;
+  readonly name: string | undefined;
   readonly disabled: boolean;
+  readonly readonly: boolean;
   readonly invalid: boolean;
-  readonly orientation: RadioOrientation;
+  readonly orientation: RadioGroupOrientation;
   readonly setValue: (value: string) => void;
+  readonly register: (id: string, entry: RadioGroupRegistration) => void;
+  readonly unregister: (id: string) => void;
+  readonly focusFirstEnabled: () => void;
+  readonly focusLastEnabled: () => void;
 }
 
 export interface RadioGroupContextResult extends RadioGroupContextValue {
   readonly exists: boolean;
 }
 
-const RADIO_GROUP_CONTEXT_KEY = Symbol("shizen:radio-group");
+const [getRadioGroupContext, setRadioGroupContext] = createContext<RadioGroupContextValue>();
 
-export function setRadioGroupContext(value: RadioGroupContextValue): void {
-  setContext(RADIO_GROUP_CONTEXT_KEY, value);
+function tryGetRadioGroupContext(): RadioGroupContextValue | undefined {
+  try {
+    return getRadioGroupContext();
+  } catch {
+    return undefined;
+  }
 }
 
+export { setRadioGroupContext };
+
 export function useRadioGroupContext(): RadioGroupContextResult {
-  const context = getContext<RadioGroupContextValue | undefined>(RADIO_GROUP_CONTEXT_KEY);
+  const context = tryGetRadioGroupContext();
 
   if (!context) {
     return {
-      value: undefined,
-      name: "",
-      disabled: false,
-      invalid: false,
-      orientation: "vertical",
-      setValue: (_: string) => {},
-      exists: false
+      get value() {
+        return undefined;
+      },
+      get name() {
+        return undefined;
+      },
+      get disabled() {
+        return false;
+      },
+      get readonly() {
+        return false;
+      },
+      get invalid() {
+        return false;
+      },
+      get orientation() {
+        return "vertical" as RadioGroupOrientation;
+      },
+      setValue(_value: string) {},
+      register(_id: string, _entry: RadioGroupRegistration) {},
+      unregister(_id: string) {},
+      focusFirstEnabled() {},
+      focusLastEnabled() {},
+      get exists() {
+        return false;
+      }
     } satisfies RadioGroupContextResult;
   }
 
@@ -46,13 +80,32 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     get disabled() {
       return context.disabled;
     },
+    get readonly() {
+      return context.readonly;
+    },
     get invalid() {
       return context.invalid;
     },
     get orientation() {
       return context.orientation;
     },
-    setValue: context.setValue,
-    exists: true
+    setValue(value: string) {
+      return context.setValue(value);
+    },
+    register(id: string, entry: RadioGroupRegistration) {
+      return context.register(id, entry);
+    },
+    unregister(id: string) {
+      return context.unregister(id);
+    },
+    focusFirstEnabled() {
+      return context.focusFirstEnabled();
+    },
+    focusLastEnabled() {
+      return context.focusLastEnabled();
+    },
+    get exists() {
+      return true;
+    }
   } satisfies RadioGroupContextResult;
 }

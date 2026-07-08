@@ -1,10 +1,12 @@
-import RadioGroupRoot from "./RadioGroup.svelte";
+import Root from "./RadioGroup.svelte";
 import Items from "./compound/Items.svelte";
 
-export const RadioGroup = Object.assign(RadioGroupRoot, {
+export type { RadioGroupProps, RadioGroupItemsProps } from "./_internal/index.js";
+
+export const RadioGroup = Object.assign(Root, {
   Items
 });
 
-export { RadioGroupRoot };
-
-export default RadioGroup;
+export default {
+  RadioGroup
+};
