@@ -1,3 +1,4 @@
+import { onDestroy } from "svelte";
 import { setRadioContext } from "./radio.context.js";
 import type { RadioContextValue } from "./radio.context.js";
 import { setFieldStateContext } from "../../../lib/index.js";
@@ -47,5 +48,21 @@ export function setupRadioContexts(state: RadioState): void {
     get keepDescription() {
       return true;
     }
+  });
+}
+
+export function setupRadioGroupRegistration(
+  state: RadioState,
+  getRef: () => HTMLInputElement | null
+): void {
+  const entry = {
+    getRef,
+    getDisabled: () => state.finalDisabled
+  };
+
+  state.groupCtx.register(state.id, entry);
+
+  onDestroy(() => {
+    state.groupCtx.unregister(state.id);
   });
 }

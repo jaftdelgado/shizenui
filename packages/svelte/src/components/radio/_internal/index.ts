@@ -8,7 +8,7 @@ export type {
 
 export { RadioState } from "./radio.state.svelte.js";
 export type { RadioStateInstance } from "./radio.state.svelte.js";
-export { setupRadioContexts } from "./radio.setup.js";
+export { setupRadioContexts, setupRadioGroupRegistration } from "./radio.setup.js";
 
 export { createRadioHandlers } from "./radio.handlers.js";
 export type { RadioHandlers } from "./radio.handlers.js";

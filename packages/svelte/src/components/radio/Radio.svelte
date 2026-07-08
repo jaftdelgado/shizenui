@@ -3,7 +3,12 @@
 
   import { cn, createId, presence } from "../../lib/utils";
   import type { RadioProps } from "./_internal/index.js";
-  import { RadioState, createRadioHandlers, setupRadioContexts } from "./_internal/index.js";
+  import {
+    RadioState,
+    createRadioHandlers,
+    setupRadioContexts,
+    setupRadioGroupRegistration
+  } from "./_internal/index.js";
   import { createFocusVisible, warnIf } from "../../lib/runes/index.js";
 
   const uid = $props.id();
@@ -41,6 +46,7 @@
   });
 
   setupRadioContexts(state);
+  setupRadioGroupRegistration(state, () => ref);
 
   warnIf(
     () => !state.groupCtx.exists && !name,
