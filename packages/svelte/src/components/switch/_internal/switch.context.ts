@@ -1,39 +1,41 @@
-import { getContext, setContext } from "svelte";
+import { createContext } from "svelte";
 import type { SwitchSize } from "./switch.types.js";
 
 export interface SwitchContextValue {
   readonly checked: boolean;
   readonly disabled: boolean;
   readonly readonly: boolean;
-  readonly id: string;
+  readonly id: string | undefined;
   readonly size: SwitchSize;
-  readonly hasContent: boolean;
+  readonly hasLabel: boolean;
   readonly hasDescription: boolean;
-  registerContent: (id: string) => void;
-  unregisterContent: (id: string) => void;
 }
 
 export interface SwitchContextResult {
   readonly checked: boolean;
   readonly disabled: boolean;
   readonly readonly: boolean;
-  readonly id: string;
+  readonly id: string | undefined;
   readonly size: SwitchSize;
-  readonly hasContent: boolean;
+  readonly hasLabel: boolean;
   readonly hasDescription: boolean;
-  registerContent: (id: string) => void;
-  unregisterContent: (id: string) => void;
   readonly exists: boolean;
 }
 
-const SWITCH_CONTEXT_KEY = Symbol("shizen:switch");
+const [getSwitchContext, setSwitchContext] = createContext<SwitchContextValue>();
 
-export function setSwitchContext(value: SwitchContextValue): void {
-  setContext(SWITCH_CONTEXT_KEY, value);
+function tryGetSwitchContext(): SwitchContextValue | undefined {
+  try {
+    return getSwitchContext();
+  } catch {
+    return undefined;
+  }
 }
 
+export { setSwitchContext };
+
 export function useSwitchContext(): SwitchContextResult {
-  const context = getContext<SwitchContextValue | undefined>(SWITCH_CONTEXT_KEY);
+  const context = tryGetSwitchContext();
 
   if (!context) {
     return {
@@ -47,19 +49,17 @@ export function useSwitchContext(): SwitchContextResult {
         return false;
       },
       get id() {
-        return "";
+        return undefined;
       },
       get size() {
         return "md" as SwitchSize;
       },
-      get hasContent() {
+      get hasLabel() {
         return false;
       },
       get hasDescription() {
         return false;
       },
-      registerContent(_id: string) {},
-      unregisterContent(_id: string) {},
       get exists() {
         return false;
       }
@@ -82,17 +82,11 @@ export function useSwitchContext(): SwitchContextResult {
     get size() {
       return context.size;
     },
-    get hasContent() {
-      return context.hasContent;
+    get hasLabel() {
+      return context.hasLabel;
     },
     get hasDescription() {
       return context.hasDescription;
-    },
-    registerContent(id: string) {
-      return context.registerContent(id);
-    },
-    unregisterContent(id: string) {
-      return context.unregisterContent(id);
     },
     get exists() {
       return true;

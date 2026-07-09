@@ -1,31 +1,36 @@
-import { getContext, setContext } from "svelte";
-import type { SwitchSize } from "../../switch/_internal";
-
-export type SwitchGroupOrientation = "horizontal" | "vertical";
+import { createContext } from "svelte";
+import type { SwitchSize } from "../../switch/_internal/index.js";
+import type { SwitchGroupOrientation } from "./switch-group.types.js";
 
 export interface SwitchGroupContextValue {
   readonly disabled: boolean;
   readonly readonly: boolean;
   readonly size: SwitchSize;
   readonly orientation: SwitchGroupOrientation;
+  readonly labelId: string | undefined;
+  readonly descriptionId: string | undefined;
+  readonly hasLabel: boolean;
+  readonly hasDescription: boolean;
 }
 
-export interface SwitchGroupContextResult {
-  readonly disabled: boolean;
-  readonly readonly: boolean;
-  readonly size: SwitchSize;
-  readonly orientation: SwitchGroupOrientation;
+export interface SwitchGroupContextResult extends SwitchGroupContextValue {
   readonly exists: boolean;
 }
 
-const SWITCH_GROUP_CONTEXT_KEY = Symbol("shizen:switch-group");
+const [getSwitchGroupContext, setSwitchGroupContext] = createContext<SwitchGroupContextValue>();
 
-export function setSwitchGroupContext(value: SwitchGroupContextValue): void {
-  setContext(SWITCH_GROUP_CONTEXT_KEY, value);
+function tryGetSwitchGroupContext(): SwitchGroupContextValue | undefined {
+  try {
+    return getSwitchGroupContext();
+  } catch {
+    return undefined;
+  }
 }
 
+export { setSwitchGroupContext };
+
 export function useSwitchGroupContext(): SwitchGroupContextResult {
-  const context = getContext<SwitchGroupContextValue | undefined>(SWITCH_GROUP_CONTEXT_KEY);
+  const context = tryGetSwitchGroupContext();
 
   if (!context) {
     return {
@@ -40,6 +45,18 @@ export function useSwitchGroupContext(): SwitchGroupContextResult {
       },
       get orientation() {
         return "vertical" as SwitchGroupOrientation;
+      },
+      get labelId() {
+        return undefined;
+      },
+      get descriptionId() {
+        return undefined;
+      },
+      get hasLabel() {
+        return false;
+      },
+      get hasDescription() {
+        return false;
       },
       get exists() {
         return false;
@@ -59,6 +76,18 @@ export function useSwitchGroupContext(): SwitchGroupContextResult {
     },
     get orientation() {
       return context.orientation;
+    },
+    get labelId() {
+      return context.labelId;
+    },
+    get descriptionId() {
+      return context.descriptionId;
+    },
+    get hasLabel() {
+      return context.hasLabel;
+    },
+    get hasDescription() {
+      return context.hasDescription;
     },
     get exists() {
       return true;

@@ -5,7 +5,7 @@
   import { useSwitchGroupContext } from "../_internal/index.js";
   import type { SwitchGroupItemsProps } from "../_internal/index.js";
 
-  let { children, class: className, ...rest }: SwitchGroupItemsProps = $props();
+  let { children, class: className, ref = $bindable(null), ...rest }: SwitchGroupItemsProps = $props();
 
   const groupCtx = useSwitchGroupContext();
   const { shouldRender } = assertContext(
@@ -19,7 +19,7 @@
 </script>
 
 {#if shouldRender}
-  <div class={cn(styles.items(), className)} {...rest}>
+  <div bind:this={ref} class={cn(styles.items(), className)} {...rest}>
     {@render children()}
   </div>
 {/if}

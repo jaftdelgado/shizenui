@@ -21,6 +21,7 @@
     value,
     id = createId("switch", uid),
     checked = $bindable(false),
+    ref = $bindable(null),
     size = "md",
     onCheckedChange,
     children,
@@ -39,8 +40,6 @@
     "A 'value' prop was provided without a 'name' prop. The switch won't be included in form submissions."
   );
 
-  let inputEl = $state<HTMLInputElement | null>(null);
-
   const switchState = new SwitchState({
     disabled: () => disabled,
     readonly: () => readonly,
@@ -55,9 +54,9 @@
   const ctx = useSwitchContext();
 
   warnIf(
-    () => !!children && !ctx.hasContent && !rest["aria-label"],
+    () => !!children && !ctx.hasLabel && !rest["aria-label"],
     "Switch",
-    "No Switch.Content found. Add <Switch.Content> with a <Label> inside, or pass aria-label directly."
+    "No Label found. Add a <Label> (typically inside <Switch.Content>), or pass aria-label directly."
   );
 
   const handlers = createSwitchHandlers({
@@ -67,12 +66,23 @@
       checked = val;
     },
     onCheckedChange: (val) => onCheckedChange?.(val),
-    getInputRef: () => inputEl
+    getInputRef: () => ref
   });
 
   const focus = createFocusVisible();
 
   const styles = $derived(switchStyles({ size: switchState.finalSize }));
+
+  const describedBy = $derived(
+    [
+      ctx.hasDescription ? `${id}-description` : null,
+      switchState.groupCtx.exists && switchState.groupCtx.hasDescription
+        ? switchState.groupCtx.descriptionId
+        : null
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
 </script>
 
 <div
@@ -86,7 +96,7 @@
   onclick={handlers.handleContainerClick}
 >
   <input
-    bind:this={inputEl}
+    bind:this={ref}
     type="checkbox"
     role="switch"
     {name}
@@ -98,8 +108,8 @@
     tabindex={!switchState.finalDisabled ? 0 : -1}
     aria-checked={checked}
     aria-readonly={switchState.finalReadonly ? true : undefined}
-    aria-labelledby={ctx.hasContent ? `${id}-label` : undefined}
-    aria-describedby={ctx.hasDescription ? `${id}-description` : undefined}
+    aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
+    aria-describedby={describedBy}
     onchange={handlers.handleToggle}
     onkeydown={(e) => {
       focus.onKeyDown();

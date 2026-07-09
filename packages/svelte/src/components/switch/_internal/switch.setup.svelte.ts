@@ -1,4 +1,5 @@
 import { setSwitchContext } from "./switch.context.js";
+import type { SwitchContextValue } from "./switch.context.js";
 import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
 import { SwitchState } from "./switch.state.svelte.js";
 
@@ -6,7 +7,7 @@ export function setupSwitchContexts(
   state: SwitchState,
   props: { checked: () => boolean; id: () => string }
 ): void {
-  let contentIds = $state(new Set<string>());
+  let labelIds = $state(new Set<string>());
   let descriptionIds = $state(new Set<string>());
 
   setSwitchContext({
@@ -25,25 +26,13 @@ export function setupSwitchContexts(
     get size() {
       return state.finalSize;
     },
-    get hasContent() {
-      return contentIds.size > 0;
+    get hasLabel() {
+      return labelIds.size > 0;
     },
     get hasDescription() {
       return descriptionIds.size > 0;
-    },
-    registerContent(id: string) {
-      if (contentIds.has(id)) return;
-      const next = new Set(contentIds);
-      next.add(id);
-      contentIds = next;
-    },
-    unregisterContent(id: string) {
-      if (!contentIds.has(id)) return;
-      const next = new Set(contentIds);
-      next.delete(id);
-      contentIds = next;
     }
-  });
+  } satisfies SwitchContextValue);
 
   setFieldStateContext({
     get invalid() {
@@ -70,12 +59,27 @@ export function setupSwitchContexts(
     get descriptionId() {
       return `${props.id()}-description`;
     },
+    get errorId() {
+      return undefined;
+    },
     get keepDescription() {
       return true;
     }
   });
 
   setContentSlotContext({
+    registerLabel(id: string) {
+      if (labelIds.has(id)) return;
+      const next = new Set(labelIds);
+      next.add(id);
+      labelIds = next;
+    },
+    unregisterLabel(id: string) {
+      if (!labelIds.has(id)) return;
+      const next = new Set(labelIds);
+      next.delete(id);
+      labelIds = next;
+    },
     registerDescription(id: string) {
       if (descriptionIds.has(id)) return;
       const next = new Set(descriptionIds);
@@ -87,6 +91,8 @@ export function setupSwitchContexts(
       const next = new Set(descriptionIds);
       next.delete(id);
       descriptionIds = next;
-    }
+    },
+    registerError(_id: string) {},
+    unregisterError(_id: string) {}
   });
 }
