@@ -7,21 +7,13 @@
 
   interface Props extends HTMLAttributes<HTMLParagraphElement> {
     children: Snippet;
-    truncate?: boolean;
     invalid?: boolean;
     id?: string;
   }
 
   const uid = $props.id();
 
-  let {
-    children,
-    class: className,
-    truncate = false,
-    invalid = true,
-    id: propId,
-    ...rest
-  }: Props = $props();
+  let { children, class: className, invalid = true, id: propId, ...rest }: Props = $props();
 
   const fieldContext = useFieldStateContext();
   const slotCtx = useContentSlotContext();
@@ -47,12 +39,7 @@
 {#if finalInvalid}
   <p
     id={finalId}
-    class={cn(
-      fieldErrorStyles({
-        truncate
-      }),
-      className
-    )}
+    class={cn(fieldErrorStyles(), className)}
     data-slot="error-message"
     role="alert"
     {...rest}

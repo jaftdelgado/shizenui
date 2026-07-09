@@ -1,10 +1,9 @@
 @layer components {
   .field-error {
-    @apply text-xs leading-snug font-medium wrap-break-word transition-all duration-200;
+    @apply text-xs leading-snug font-medium wrap-break-word;
     color: var(--color-danger);
-  }
 
-  .field-error--truncate {
-    @apply block truncate;
+    transition: color 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
   }
 }
