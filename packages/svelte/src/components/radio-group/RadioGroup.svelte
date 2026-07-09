@@ -16,6 +16,7 @@
     children,
     class: className,
     value = $bindable(),
+    onValueChange,
     name = createId("radio-group-name", uid),
     disabled = undefined,
     readonly = undefined,
@@ -23,6 +24,7 @@
     required = false,
     orientation = "vertical",
     id = createId("radio-group", uid),
+    ref = $bindable(null),
     ...rest
   }: RadioGroupProps = $props();
 
@@ -40,6 +42,7 @@
 
   const state = new RadioGroupState({
     value: () => value,
+    onValueChange: () => onValueChange,
     name: () => name,
     disabled: () => disabled,
     readonly: () => readonly,
@@ -72,6 +75,7 @@
 </script>
 
 <div
+  bind:this={ref}
   {id}
   role="radiogroup"
   class={cn(styles.base(), className)}

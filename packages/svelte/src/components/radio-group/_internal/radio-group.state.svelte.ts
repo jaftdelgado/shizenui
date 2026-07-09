@@ -3,6 +3,7 @@ import type { RadioGroupOrientation, RadioGroupProps } from "./radio-group.types
 
 export class RadioGroupState {
   #value: () => RadioGroupProps["value"];
+  #onValueChange: () => ((value: string) => void) | undefined;
   #name: () => string | undefined;
   #disabled: () => boolean | undefined;
   #readonly: () => boolean | undefined;
@@ -48,7 +49,9 @@ export class RadioGroupState {
   }
 
   setValue(value: string): void {
+    if (value === this.finalValue) return;
     this.#setValue(value);
+    this.#onValueChange()?.(value);
   }
 
   register(id: string, entry: RadioGroupRegistration): void {
@@ -81,6 +84,7 @@ export class RadioGroupState {
 
   constructor(props: {
     value: () => RadioGroupProps["value"];
+    onValueChange: () => ((value: string) => void) | undefined;
     name: () => string | undefined;
     disabled: () => boolean | undefined;
     readonly: () => boolean | undefined;
@@ -91,6 +95,7 @@ export class RadioGroupState {
     setValue: (value: string) => void;
   }) {
     this.#value = props.value;
+    this.#onValueChange = props.onValueChange;
     this.#name = props.name;
     this.#disabled = props.disabled;
     this.#readonly = props.readonly;
