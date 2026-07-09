@@ -6,7 +6,6 @@ export class RadioState {
   #disabled: () => boolean | undefined;
   #readonly: () => boolean | undefined;
   #invalid: () => boolean | undefined;
-  #name: () => string | undefined;
   #id: () => string;
   #checked: () => boolean;
   #value: () => string;
@@ -44,10 +43,6 @@ export class RadioState {
         : false;
   }
 
-  get activeName(): string | undefined {
-    return this.groupCtx.exists ? this.groupCtx.name : this.#name();
-  }
-
   get isChecked(): boolean {
     return this.groupCtx.exists ? this.groupCtx.value === this.#value() : this.#checked();
   }
@@ -65,7 +60,6 @@ export class RadioState {
     disabled: () => boolean | undefined;
     readonly: () => boolean | undefined;
     invalid: () => boolean | undefined;
-    name: () => string | undefined;
     id: () => string;
     checked: () => boolean;
     groupContext?: RadioGroupContextResult;
@@ -75,7 +69,6 @@ export class RadioState {
     this.#disabled = props.disabled;
     this.#readonly = props.readonly;
     this.#invalid = props.invalid;
-    this.#name = props.name;
     this.#id = props.id;
     this.#checked = props.checked;
 

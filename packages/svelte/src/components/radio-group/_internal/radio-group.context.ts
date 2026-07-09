@@ -2,8 +2,9 @@ import { createContext } from "svelte";
 import type { RadioGroupOrientation } from "./radio-group.types.js";
 
 export interface RadioGroupRegistration {
-  getRef: () => HTMLInputElement | null;
+  getRef: () => HTMLButtonElement | null;
   getDisabled: () => boolean;
+  getValue: () => string;
 }
 
 export interface RadioGroupContextValue {
@@ -22,6 +23,8 @@ export interface RadioGroupContextValue {
   readonly setValue: (value: string) => void;
   readonly register: (id: string, entry: RadioGroupRegistration) => void;
   readonly unregister: (id: string) => void;
+  readonly isActive: (id: string) => boolean;
+  readonly moveFocus: (direction: "next" | "prev") => void;
   readonly focusFirstEnabled: () => void;
   readonly focusLastEnabled: () => void;
 }
@@ -86,6 +89,10 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       setValue(_value: string) {},
       register(_id: string, _entry: RadioGroupRegistration) {},
       unregister(_id: string) {},
+      isActive(_id: string) {
+        return false;
+      },
+      moveFocus(_direction: "next" | "prev") {},
       focusFirstEnabled() {},
       focusLastEnabled() {},
       get exists() {
@@ -139,6 +146,12 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     },
     unregister(id: string) {
       return context.unregister(id);
+    },
+    isActive(id: string) {
+      return context.isActive(id);
+    },
+    moveFocus(direction: "next" | "prev") {
+      return context.moveFocus(direction);
     },
     focusFirstEnabled() {
       return context.focusFirstEnabled();

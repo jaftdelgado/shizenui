@@ -94,11 +94,12 @@ export function setupRadioContexts(state: RadioState): void {
 
 export function setupRadioGroupRegistration(
   state: RadioState,
-  getRef: () => HTMLInputElement | null
+  getRef: () => HTMLButtonElement | null
 ): void {
   const entry = {
     getRef,
-    getDisabled: () => state.finalDisabled
+    getDisabled: () => state.finalDisabled,
+    getValue: () => state.value
   };
 
   state.groupCtx.register(state.id, entry);

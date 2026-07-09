@@ -54,6 +54,12 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     unregister(id: string) {
       state.unregister(id);
     },
+    isActive(id: string) {
+      return state.isActive(id);
+    },
+    moveFocus(direction: "next" | "prev") {
+      state.moveFocus(direction);
+    },
     focusFirstEnabled() {
       state.focusFirstEnabled();
     },

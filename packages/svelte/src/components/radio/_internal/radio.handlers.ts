@@ -6,19 +6,11 @@ export function createRadioHandlers(options: {
   setChecked: (val: boolean) => void;
   onCheckedChange?: (checked: boolean) => void;
   getOnClick?: () => ((e: RadioClickEvent) => void) | undefined;
-  getInputRef?: () => HTMLInputElement | null;
 }) {
-  const { state, setChecked, onCheckedChange, getOnClick, getInputRef } = options;
+  const { state, setChecked, onCheckedChange, getOnClick } = options;
 
-  function handleChange(): void {
-    if (state.finalReadonly) {
-      const inputEl = getInputRef?.();
-      if (inputEl) inputEl.checked = state.isChecked;
-      return;
-    }
-
-    if (state.finalDisabled) return;
-
+  function activate(): void {
+    if (state.finalDisabled || state.finalReadonly) return;
     if (state.groupCtx.exists) {
       state.groupCtx.setValue(state.value);
       return;
@@ -28,31 +20,25 @@ export function createRadioHandlers(options: {
     onCheckedChange?.(true);
   }
 
-  function handleKeyEnter(e: KeyboardEvent): void {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    if (e.type === "keyup") handleChange();
-  }
-
-  function handleContainerClick(e: RadioClickEvent): void {
-    if (state.finalDisabled || state.finalReadonly) return;
-
-    const target = e.target as HTMLElement;
-    if (target.closest("label")) return;
-
-    handleChange();
-    getInputRef?.()?.focus();
-  }
-
   function handleClick(e: RadioClickEvent): void {
-    handleContainerClick(e);
+    activate();
     getOnClick?.()?.(e);
   }
 
+  function handleKeydown(e: KeyboardEvent): void {
+    if (e.key !== "Enter" && e.key !== " ") return;
+
+    if (e.type === "keydown") {
+      e.preventDefault();
+      return;
+    }
+
+    activate();
+  }
+
   return {
-    handleChange,
-    handleKeyEnter,
-    handleClick
+    handleClick,
+    handleKeydown
   };
 }
 

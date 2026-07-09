@@ -91,5 +91,11 @@
   data-orientation={state.finalOrientation}
   {...rest}
 >
+  <input
+    type="hidden"
+    name={state.finalName}
+    value={state.finalValue ?? ""}
+    disabled={state.finalDisabled}
+  />
   {@render children()}
 </div>

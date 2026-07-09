@@ -11,6 +11,9 @@ import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
 
+import RadioGroupAnatomyCode from "@examples/svelte/radio-group/RadioGroupAnatomy.svelte?raw";
+
+import RadioGroupIndicator from "@examples/svelte/radio-group/RadioGroupIndicator.svelte";
 import RadioGroupOrientation from "@examples/svelte/radio-group/RadioGroupOrientation.svelte";
 import RadioGroupDisabled from "@examples/svelte/radio-group/RadioGroupDisabled.svelte";
 import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.svelte";
@@ -19,7 +22,17 @@ import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.sv
 
 <CodeImport code={`import { Radio, RadioGroup } from "@shizen-ui/svelte";`} />
 
+## Anatomy
+
+<CodeBlock code={RadioGroupAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
+
 ## Examples
+
+### Custom Indicator
+
+<ComponentExample src="svelte/radio-group/RadioGroupIndicator.svelte">
+  <RadioGroupIndicator client:load />
+</ComponentExample>
 
 ### Orientation
 

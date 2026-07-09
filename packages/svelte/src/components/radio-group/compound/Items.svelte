@@ -33,6 +33,7 @@
     bind:this={ref}
     class={cn(styles.items(), className)}
     onfocusin={handlers.handleFocusIn}
+    onkeydown={handlers.handleKeydown}
     {...rest}
   >
     {@render children()}

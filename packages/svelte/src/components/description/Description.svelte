@@ -6,15 +6,21 @@
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
-  interface Props extends HTMLAttributes<HTMLParagraphElement> {
-    children: Snippet;
+  interface DescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
+    children?: Snippet;
     disabled?: boolean;
     id?: string;
   }
 
   const uid = $props.id();
 
-  let { children, class: className, disabled = false, id: propId, ...rest }: Props = $props();
+  let {
+    children,
+    class: className,
+    disabled = false,
+    id: propId,
+    ...rest
+  }: DescriptionProps = $props();
 
   const fieldContext = useFieldStateContext();
   const slotCtx = useContentSlotContext();
@@ -50,6 +56,6 @@
     data-invalid={presence(finalInvalid)}
     {...rest}
   >
-    {@render children()}
+    {@render children?.()}
   </p>
 {/if}

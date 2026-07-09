@@ -68,6 +68,34 @@ export class RadioGroupState {
     this.#itemMap.delete(id);
   }
 
+  isActive(id: string): boolean {
+    const index = this.#itemIds.indexOf(id);
+    if (index === -1) return false;
+
+    return index === this.#getActiveIndex();
+  }
+
+  moveFocus(direction: "next" | "prev"): void {
+    const currentIndex = this.#getActiveIndex();
+    if (currentIndex === -1) return;
+
+    const nextIndex =
+      direction === "next"
+        ? this.#findEnabledIndexWrapping(currentIndex, 1)
+        : this.#findEnabledIndexWrapping(currentIndex, -1);
+
+    if (nextIndex === -1) return;
+
+    const entry = this.#getEntryByIndex(nextIndex);
+    if (!entry) return;
+
+    entry.getRef()?.focus();
+
+    if (!this.finalReadonly) {
+      this.setValue(entry.getValue());
+    }
+  }
+
   focusFirstEnabled(): void {
     const index = this.#findEnabledIndex(0, 1);
     if (index === -1) return;
@@ -106,8 +134,33 @@ export class RadioGroupState {
     this.#setValue = props.setValue;
   }
 
+  #getActiveIndex(): number {
+    if (this.finalValue !== undefined) {
+      const selectedIndex = this.#itemIds.findIndex(
+        (id) => this.#itemMap.get(id)?.getValue() === this.finalValue
+      );
+      if (selectedIndex !== -1) return selectedIndex;
+    }
+
+    return this.#findEnabledIndex(0, 1);
+  }
+
   #findEnabledIndex(startIndex: number, direction: 1 | -1): number {
     for (let index = startIndex; index >= 0 && index < this.#itemIds.length; index += direction) {
+      if (!this.#getEntryByIndex(index)?.getDisabled()) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  #findEnabledIndexWrapping(startIndex: number, direction: 1 | -1): number {
+    const total = this.#itemIds.length;
+    if (total === 0) return -1;
+
+    for (let step = 1; step <= total; step += 1) {
+      const index = (startIndex + direction * step + total) % total;
       if (!this.#getEntryByIndex(index)?.getDisabled()) {
         return index;
       }
