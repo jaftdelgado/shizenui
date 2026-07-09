@@ -23,7 +23,7 @@
 </script>
 
 <div class="flex-center justify-center">
-  <RadioGroup bind:value={selectedTheme}>
+  <RadioGroup bind:value={selectedTheme} name="theme">
     <Label>Appearance</Label>
     <Description>Choose your preferred theme.</Description>
 

@@ -1,16 +1,19 @@
-import { onDestroy } from "svelte";
-import { setRadioContext } from "./radio.context.js";
-import type { RadioContextValue } from "./radio.context.js";
+import { setRadioGroupContext } from "./radio-group.context.js";
+import type { RadioGroupContextValue, RadioGroupRegistration } from "./radio-group.context.js";
 import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.js";
-import type { RadioState } from "./radio.state.svelte.js";
+import type { RadioGroupState } from "./radio-group.state.svelte.js";
 
-export function setupRadioContexts(state: RadioState): void {
+export function setupRadioGroupContexts(state: RadioGroupState): void {
   let labelIds = $state(new Set<string>());
   let descriptionIds = $state(new Set<string>());
+  let errorIds = $state(new Set<string>());
 
-  setRadioContext({
-    get checked() {
-      return state.isChecked;
+  setRadioGroupContext({
+    get value() {
+      return state.finalValue;
+    },
+    get name() {
+      return state.finalName;
     },
     get disabled() {
       return state.finalDisabled;
@@ -21,16 +24,43 @@ export function setupRadioContexts(state: RadioState): void {
     get invalid() {
       return state.finalInvalid;
     },
-    get id() {
-      return state.id;
+    get orientation() {
+      return state.finalOrientation;
+    },
+    get labelId() {
+      return `${state.id}-label`;
+    },
+    get descriptionId() {
+      return `${state.id}-description`;
+    },
+    get errorId() {
+      return `${state.id}-error`;
     },
     get hasLabel() {
       return labelIds.size > 0;
     },
     get hasDescription() {
       return descriptionIds.size > 0;
+    },
+    get hasError() {
+      return errorIds.size > 0;
+    },
+    setValue(value: string) {
+      state.setValue(value);
+    },
+    register(id: string, entry: RadioGroupRegistration) {
+      state.register(id, entry);
+    },
+    unregister(id: string) {
+      state.unregister(id);
+    },
+    focusFirstEnabled() {
+      state.focusFirstEnabled();
+    },
+    focusLastEnabled() {
+      state.focusLastEnabled();
     }
-  } satisfies RadioContextValue);
+  } satisfies RadioGroupContextValue);
 
   setFieldStateContext({
     get invalid() {
@@ -43,7 +73,7 @@ export function setupRadioContexts(state: RadioState): void {
       return state.finalReadonly;
     },
     get required() {
-      return false;
+      return state.finalRequired;
     },
     get id() {
       return state.id;
@@ -55,10 +85,10 @@ export function setupRadioContexts(state: RadioState): void {
       return `${state.id}-description`;
     },
     get errorId() {
-      return undefined;
+      return `${state.id}-error`;
     },
     get keepDescription() {
-      return true;
+      return false;
     }
   });
 
@@ -87,23 +117,17 @@ export function setupRadioContexts(state: RadioState): void {
       next.delete(id);
       descriptionIds = next;
     },
-    registerError(_id: string) {},
-    unregisterError(_id: string) {}
-  });
-}
-
-export function setupRadioGroupRegistration(
-  state: RadioState,
-  getRef: () => HTMLInputElement | null
-): void {
-  const entry = {
-    getRef,
-    getDisabled: () => state.finalDisabled
-  };
-
-  state.groupCtx.register(state.id, entry);
-
-  onDestroy(() => {
-    state.groupCtx.unregister(state.id);
+    registerError(id: string) {
+      if (errorIds.has(id)) return;
+      const next = new Set(errorIds);
+      next.add(id);
+      errorIds = next;
+    },
+    unregisterError(id: string) {
+      if (!errorIds.has(id)) return;
+      const next = new Set(errorIds);
+      next.delete(id);
+      errorIds = next;
+    }
   });
 }

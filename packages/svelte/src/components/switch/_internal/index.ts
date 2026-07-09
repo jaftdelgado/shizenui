@@ -13,5 +13,5 @@ export { setupSwitchContexts } from "./switch.setup.svelte.js";
 export { createSwitchHandlers } from "./switch.handlers.svelte.js";
 export type { SwitchHandlers } from "./switch.handlers.svelte.js";
 
-export { useSwitchContext } from "./switch.context.js";
-export type { SwitchContextResult } from "./switch.context.js";
+export { setSwitchContext, useSwitchContext } from "./switch.context.js";
+export type { SwitchContextValue, SwitchContextResult } from "./switch.context.js";

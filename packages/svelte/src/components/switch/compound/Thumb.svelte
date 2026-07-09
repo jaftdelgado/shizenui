@@ -12,7 +12,7 @@
     class: className,
     ref = $bindable(null),
     ...rest
-  }: SwitchThumbProps & { ref?: HTMLDivElement | null } = $props();
+  }: SwitchThumbProps = $props();
 
   const ctx = useSwitchContext();
   const styles = switchStyles();

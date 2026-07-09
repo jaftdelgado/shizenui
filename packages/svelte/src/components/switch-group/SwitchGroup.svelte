@@ -4,7 +4,11 @@
   import { cn, createId, presence } from "../../lib/utils";
   import { warnIf } from "../../lib/runes/index.js";
   import type { SwitchGroupProps } from "./_internal/index.js";
-  import { SwitchGroupState, setupSwitchGroupContexts } from "./_internal/index.js";
+  import {
+    SwitchGroupState,
+    setupSwitchGroupContexts,
+    useSwitchGroupContext
+  } from "./_internal/index.js";
 
   const uid = $props.id();
 
@@ -16,6 +20,7 @@
     size = "md",
     orientation = "vertical",
     id = createId("switch-group", uid),
+    ref = $bindable(null),
     ...rest
   }: SwitchGroupProps = $props();
 
@@ -32,19 +37,28 @@
     orientation: () => orientation
   });
 
-  const { getLabelId, getDescriptionId } = setupSwitchGroupContexts(switchGroupState, {
+  setupSwitchGroupContexts(switchGroupState, {
     id: () => id
   });
+
+  const ctx = useSwitchGroupContext();
+
+  warnIf(
+    () => !ctx.hasLabel && !rest["aria-label"],
+    "SwitchGroup",
+    "No Label found. Add a <Label> as a child, or pass aria-label directly."
+  );
 
   const styles = $derived(switchGroupStyles({ orientation: switchGroupState.finalOrientation }));
 </script>
 
 <div
+  bind:this={ref}
   role="group"
   {id}
   class={cn(styles.base(), className)}
-  aria-labelledby={getLabelId()}
-  aria-describedby={getDescriptionId()}
+  aria-labelledby={ctx.hasLabel ? ctx.labelId : undefined}
+  aria-describedby={ctx.hasDescription ? ctx.descriptionId : undefined}
   data-disabled={presence(switchGroupState.finalDisabled)}
   data-readonly={presence(switchGroupState.finalReadonly)}
   data-orientation={switchGroupState.finalOrientation}

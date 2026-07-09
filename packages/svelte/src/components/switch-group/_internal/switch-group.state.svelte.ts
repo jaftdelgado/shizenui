@@ -1,5 +1,5 @@
 import type { SwitchSize } from "../../switch/_internal/index.js";
-import type { SwitchGroupOrientation } from "./switch-group.context.js";
+import type { SwitchGroupOrientation } from "./switch-group.types.js";
 
 export class SwitchGroupState {
   #disabled: () => boolean | undefined;

@@ -30,6 +30,7 @@ export interface SwitchProps extends SwitchBaseProps {
   name?: string;
   value?: string;
   id?: string;
+  ref?: HTMLInputElement | null;
   size?: SwitchSize;
   onCheckedChange?: (checked: boolean) => void;
   children?: Snippet<[SwitchRenderState]>;
@@ -43,13 +44,16 @@ export interface SwitchRenderState {
 }
 
 export interface SwitchControlProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: HTMLDivElement | null;
   children?: Snippet;
 }
 
 export interface SwitchThumbProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: HTMLDivElement | null;
   children?: Snippet;
 }
 
 export interface SwitchContentProps extends HTMLAttributes<HTMLDivElement> {
+  ref?: HTMLDivElement | null;
   children: Snippet;
 }

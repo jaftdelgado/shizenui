@@ -1,7 +1,7 @@
 <script lang="ts">
   import { labelStyles } from "@shizen-ui/styles";
-  import { cn, presence } from "../../lib/utils";
-  import { useFieldStateContext } from "../../lib/index.js";
+  import { cn, createId, presence } from "../../lib/utils";
+  import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
@@ -12,6 +12,8 @@
     disabled?: boolean;
     for?: string;
   }
+
+  const uid = $props.id();
 
   let {
     children,
@@ -24,16 +26,29 @@
   }: Props = $props();
 
   const fieldContext = useFieldStateContext();
+  const slotCtx = useContentSlotContext();
 
   const finalInvalid = $derived(fieldContext.exists ? fieldContext.invalid : invalid);
   const finalDisabled = $derived(fieldContext.exists ? fieldContext.disabled : disabled);
   const finalRequired = $derived(fieldContext.exists ? fieldContext.required : required);
   const finalFor = $derived(htmlFor ?? (fieldContext.exists ? fieldContext.inputId : undefined));
+
+  const registrationId = fieldContext.labelId ?? createId("label", uid);
   const labelId = $derived(
-    fieldContext.exists ? fieldContext.labelId : undefined
+    fieldContext.exists ? (fieldContext.labelId ?? registrationId) : undefined
   );
 
   const { base, requiredIndicator } = labelStyles();
+
+  if (slotCtx.exists) {
+    slotCtx.registerLabel(registrationId);
+  }
+
+  $effect(() => {
+    return () => {
+      if (slotCtx.exists) slotCtx.unregisterLabel(registrationId);
+    };
+  });
 </script>
 
 {#if finalFor}

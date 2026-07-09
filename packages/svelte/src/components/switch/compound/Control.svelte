@@ -13,7 +13,7 @@
     class: className,
     ref = $bindable(null),
     ...rest
-  }: SwitchControlProps & { ref?: HTMLDivElement | null } = $props();
+  }: SwitchControlProps = $props();
 
   const ctx = useSwitchContext();
   const styles = switchStyles();

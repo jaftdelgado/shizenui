@@ -1,15 +1,5 @@
-import { tv, type VariantProps } from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
 export const fieldErrorStyles = tv({
-  base: "field-error",
-  variants: {
-    truncate: {
-      true: "field-error--truncate"
-    }
-  },
-  defaultVariants: {
-    truncate: false
-  }
+  base: "field-error"
 });
-
-export type FieldErrorVariants = VariantProps<typeof fieldErrorStyles>;
