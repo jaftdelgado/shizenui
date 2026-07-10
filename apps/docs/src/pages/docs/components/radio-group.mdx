@@ -14,9 +14,15 @@ import PropsTable from "@components/astro/PropsTable.astro";
 import RadioGroupAnatomyCode from "@examples/svelte/radio-group/RadioGroupAnatomy.svelte?raw";
 
 import RadioGroupIndicator from "@examples/svelte/radio-group/RadioGroupIndicator.svelte";
+import RadioGroupWithoutDescription from "@examples/svelte/radio-group/RadioGroupWithoutDescription.svelte";
 import RadioGroupOrientation from "@examples/svelte/radio-group/RadioGroupOrientation.svelte";
+import RadioGroupBindValue from "@examples/svelte/radio-group/RadioGroupBindValue.svelte";
+import RadioGroupFullyControlled from "@examples/svelte/radio-group/RadioGroupFullyControlled.svelte";
 import RadioGroupDisabled from "@examples/svelte/radio-group/RadioGroupDisabled.svelte";
 import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.svelte";
+
+import RadioGroupTwStyling from "@examples/svelte/radio-group/RadioGroupTwStyling.svelte";
+import RadioGroupCssStylingCode from "@examples/svelte/radio-group/RadioGroupCssStyling.css?raw";
 
 ## Import
 
@@ -34,10 +40,34 @@ import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.sv
   <RadioGroupIndicator client:load />
 </ComponentExample>
 
+### Without Description
+
+<ComponentExample src="svelte/radio-group/RadioGroupWithoutDescription.svelte">
+  <RadioGroupWithoutDescription client:load />
+</ComponentExample>
+
 ### Orientation
 
 <ComponentExample src="svelte/radio-group/RadioGroupOrientation.svelte">
   <RadioGroupOrientation client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/radio-group/RadioGroupBindValue.svelte">
+  <RadioGroupBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/radio-group/RadioGroupFullyControlled.svelte">
+  <RadioGroupFullyControlled client:load />
 </ComponentExample>
 
 ### Disabled State
@@ -51,3 +81,19 @@ import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.sv
 <ComponentExample src="svelte/radio-group/RadioGroupInvalid.svelte">
   <RadioGroupInvalid client:load />
 </ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to the Radio and RadioGroup.
+
+<ComponentExample src="svelte/radio-group/RadioGroupTwStyling.svelte">
+  <RadioGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Radio component classes, you can use the @layer components directive.
+
+<CodeBlock code={RadioGroupCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />

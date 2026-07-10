@@ -1,0 +1,18 @@
+@layer components {
+  .radio__control {
+    @apply border-2 border-current bg-transparent text-neutral-400;
+  }
+
+  .radio[data-checked] > .radio__control {
+    @apply border-violet-600 bg-transparent;
+  }
+
+  .radio .radio__indicator {
+    @apply scale-0 bg-violet-600;
+    transition-duration: 150ms;
+  }
+
+  .radio[data-checked] .radio__indicator {
+    @apply scale-50;
+  }
+}

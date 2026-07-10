@@ -6,8 +6,6 @@
     --radio-bg: var(--color-control);
     --radio-bg-hover: var(--color-control-hover);
     --radio-indicator: var(--color-accent-foreground);
-    --radio-border-width: 0px;
-    --radio-border-color: transparent;
 
     transition: opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
@@ -32,7 +30,6 @@
     &[data-checked] {
       --radio-bg: var(--color-accent);
       --radio-bg-hover: var(--color-accent-hover);
-      --radio-border-color: var(--color-accent);
     }
 
     &[data-invalid] {
@@ -44,7 +41,6 @@
         & .radio__control {
           @apply status-invalid-field ring-1;
           background-color: var(--color-danger);
-          border-color: var(--color-danger);
         }
       }
     }
@@ -56,51 +52,50 @@
     cursor: var(--cursor-interactive);
   }
 
-  .radio--bordered {
-    --radio-border-width: 2px;
-    --radio-border-color: var(--color-separator);
-  }
-
   .radio__control {
     @apply relative flex shrink-0 items-center justify-center;
     @apply mt-0.5 size-4 rounded-full;
     box-sizing: border-box;
     background-color: var(--radio-bg);
-    border-style: solid;
-    border-width: var(--radio-border-width);
-    border-color: var(--radio-border-color);
 
     transition:
       background-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
-      border-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
-      box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+      box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+      scale 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
 
     &:hover:not([data-disabled]):not([data-readonly]) {
       background-color: var(--radio-bg-hover);
-      border-color: var(--radio-bg-hover);
     }
 
     .radio[data-focus-visible] & {
       @apply status-focused;
     }
+
+    .radio[data-pressed] & {
+      @apply scale-95;
+    }
   }
 
   .radio__indicator {
-    @apply scale-0 rounded-full;
-    width: 50%;
-    height: 50%;
+    @apply rounded-full opacity-0;
+    width: 100%;
+    height: 100%;
     background-color: var(--radio-indicator);
+    scale: 1;
 
-    transition: transform 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    transition:
+      scale 300ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+      opacity 300ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
 
     &[data-checked] {
-      @apply scale-100;
+      @apply opacity-100;
+      scale: 0.35;
     }
 
-    &[data-custom] {
-      @apply flex size-full scale-100 items-center justify-center bg-transparent;
+    .radio[data-pressed][data-checked] & {
+      scale: 0.5;
     }
   }
 

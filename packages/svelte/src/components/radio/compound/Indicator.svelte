@@ -25,7 +25,7 @@
   );
 </script>
 
-{#if shouldRender && ctx.checked}
+{#if shouldRender}
   <span
     bind:this={ref}
     class={cn(!isCustom && styles.indicator(), className)}

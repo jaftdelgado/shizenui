@@ -25,7 +25,7 @@
 </script>
 
 <div class="flex-center justify-center p-4">
-  <RadioGroup bind:value={selectedMethod}>
+  <RadioGroup bind:value={selectedMethod} name="payment-method">
     <Label>Payment Method</Label>
     <Description>Select how you want to pay for your order.</Description>
 
@@ -34,7 +34,7 @@
         <Radio value={method.value}>
           <Radio.Control>
             <Radio.Indicator>
-              <Icon icon={Tick02Icon} class="text-accent-foreground size-2" strokeWidth={5} />
+              <Icon icon={Tick02Icon} class="size-2" strokeWidth={5} />
             </Radio.Indicator>
           </Radio.Control>
           <Radio.Content>

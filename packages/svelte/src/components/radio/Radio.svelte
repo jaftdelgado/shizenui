@@ -89,7 +89,6 @@
   disabled={state.finalDisabled}
   aria-checked={state.isChecked}
   aria-disabled={state.finalDisabled ? true : undefined}
-  aria-readonly={state.finalReadonly ? true : undefined}
   aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
   aria-describedby={describedBy}
   tabindex={state.groupCtx.exists ? (state.groupCtx.isActive(id) ? 0 : -1) : 0}
@@ -105,7 +104,12 @@
     handlers.handleKeydown(e);
   }}
   onkeyup={handlers.handleKeydown}
-  onmousedown={focus.onMouseDown}
+  onmousedown={(e) => {
+    focus.onMouseDown();
+    handlers.handleMouseDown(e);
+  }}
+  onmouseup={handlers.handleMouseUp}
+  onmouseleave={handlers.handleMouseLeave}
   onfocus={focus.onFocus}
   onblur={focus.onBlur}
   {...rest}
