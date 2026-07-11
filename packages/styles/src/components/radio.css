@@ -22,7 +22,8 @@
 
     &[data-readonly] {
       &,
-      & * {
+      & *,
+      & .label {
         cursor: default;
       }
     }
@@ -95,7 +96,7 @@
     }
 
     .radio[data-pressed][data-checked] & {
-      scale: 0.5;
+      scale: 0.6;
     }
   }
 

@@ -65,6 +65,9 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     },
     focusLastEnabled() {
       state.focusLastEnabled();
+    },
+    clearFocusOverride() {
+      state.clearFocusOverride();
     }
   } satisfies RadioGroupContextValue);
 

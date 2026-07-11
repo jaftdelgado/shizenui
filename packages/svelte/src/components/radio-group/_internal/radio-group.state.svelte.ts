@@ -15,6 +15,8 @@ export class RadioGroupState {
 
   #itemIds: string[] = $state([]);
   #itemMap = new Map<string, RadioGroupRegistration>();
+  #focusedItemId: string | undefined = $state(undefined);
+  #focusedValue: string | undefined;
 
   get finalValue(): string | undefined {
     return this.#value();
@@ -66,6 +68,10 @@ export class RadioGroupState {
 
     this.#itemIds = this.#itemIds.filter((itemId) => itemId !== id);
     this.#itemMap.delete(id);
+
+    if (this.#focusedItemId === id) {
+      this.#focusedItemId = undefined;
+    }
   }
 
   isActive(id: string): boolean {
@@ -86,28 +92,25 @@ export class RadioGroupState {
 
     if (nextIndex === -1) return;
 
-    const entry = this.#getEntryByIndex(nextIndex);
-    if (!entry) return;
-
-    entry.getRef()?.focus();
-
-    if (!this.finalReadonly) {
-      this.setValue(entry.getValue());
-    }
+    this.#focusEntry(nextIndex);
   }
 
   focusFirstEnabled(): void {
     const index = this.#findEnabledIndex(0, 1);
     if (index === -1) return;
 
-    this.#getEntryByIndex(index)?.getRef()?.focus();
+    this.#focusEntry(index);
   }
 
   focusLastEnabled(): void {
     const index = this.#findEnabledIndex(this.#itemIds.length - 1, -1);
     if (index === -1) return;
 
-    this.#getEntryByIndex(index)?.getRef()?.focus();
+    this.#focusEntry(index);
+  }
+
+  clearFocusOverride(): void {
+    this.#focusedItemId = undefined;
   }
 
   constructor(props: {
@@ -135,6 +138,16 @@ export class RadioGroupState {
   }
 
   #getActiveIndex(): number {
+    const overrideValid =
+      this.#focusedItemId !== undefined && this.finalValue === this.#focusedValue;
+
+    if (overrideValid) {
+      const overrideIndex = this.#itemIds.indexOf(this.#focusedItemId!);
+      if (overrideIndex !== -1 && !this.#getEntryByIndex(overrideIndex)?.getDisabled()) {
+        return overrideIndex;
+      }
+    }
+
     if (this.finalValue !== undefined) {
       const selectedIndex = this.#itemIds.findIndex(
         (id) => this.#itemMap.get(id)?.getValue() === this.finalValue
@@ -143,6 +156,20 @@ export class RadioGroupState {
     }
 
     return this.#findEnabledIndex(0, 1);
+  }
+
+  #focusEntry(index: number): void {
+    const entry = this.#getEntryByIndex(index);
+    if (!entry) return;
+
+    this.#focusedItemId = this.#itemIds[index];
+    entry.getRef()?.focus();
+
+    if (!this.finalReadonly) {
+      this.setValue(entry.getValue());
+    }
+
+    this.#focusedValue = this.finalValue;
   }
 
   #findEnabledIndex(startIndex: number, direction: 1 | -1): number {

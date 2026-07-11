@@ -27,6 +27,7 @@ export interface RadioGroupContextValue {
   readonly moveFocus: (direction: "next" | "prev") => void;
   readonly focusFirstEnabled: () => void;
   readonly focusLastEnabled: () => void;
+  readonly clearFocusOverride: () => void;
 }
 
 export interface RadioGroupContextResult extends RadioGroupContextValue {
@@ -95,6 +96,7 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       moveFocus(_direction: "next" | "prev") {},
       focusFirstEnabled() {},
       focusLastEnabled() {},
+      clearFocusOverride() {},
       get exists() {
         return false;
       }
@@ -158,6 +160,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     },
     focusLastEnabled() {
       return context.focusLastEnabled();
+    },
+    clearFocusOverride() {
+      return context.clearFocusOverride();
     },
     get exists() {
       return true;

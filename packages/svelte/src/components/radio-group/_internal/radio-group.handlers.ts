@@ -38,7 +38,18 @@ export function createRadioGroupItemsHandlers(options: {
     groupCtx.moveFocus(isNext ? "next" : "prev");
   }
 
-  return { handleFocusIn, handleKeydown };
+  function handleFocusOut(e: FocusEvent): void {
+    const container = getContainer();
+    if (!container) return;
+
+    const relatedTarget = e.relatedTarget as HTMLElement | null;
+
+    if (relatedTarget && container.contains(relatedTarget)) return;
+
+    groupCtx.clearFocusOverride();
+  }
+
+  return { handleFocusIn, handleKeydown, handleFocusOut };
 }
 
 export type RadioGroupItemsHandlers = ReturnType<typeof createRadioGroupItemsHandlers>;
