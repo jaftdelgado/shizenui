@@ -92,21 +92,21 @@ export class RadioGroupState {
 
     if (nextIndex === -1) return;
 
-    this.#focusEntry(nextIndex);
+    this.#focusEntry(nextIndex, { select: true });
   }
 
   focusFirstEnabled(): void {
     const index = this.#findEnabledIndex(0, 1);
     if (index === -1) return;
 
-    this.#focusEntry(index);
+    this.#focusEntry(index, { select: false });
   }
 
   focusLastEnabled(): void {
     const index = this.#findEnabledIndex(this.#itemIds.length - 1, -1);
     if (index === -1) return;
 
-    this.#focusEntry(index);
+    this.#focusEntry(index, { select: false });
   }
 
   clearFocusOverride(): void {
@@ -158,14 +158,14 @@ export class RadioGroupState {
     return this.#findEnabledIndex(0, 1);
   }
 
-  #focusEntry(index: number): void {
+  #focusEntry(index: number, options: { select: boolean }): void {
     const entry = this.#getEntryByIndex(index);
     if (!entry) return;
 
     this.#focusedItemId = this.#itemIds[index];
     entry.getRef()?.focus();
 
-    if (!this.finalReadonly) {
+    if (options.select && !this.finalReadonly) {
       this.setValue(entry.getValue());
     }
 
