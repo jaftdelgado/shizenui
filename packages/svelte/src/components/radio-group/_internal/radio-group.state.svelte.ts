@@ -46,14 +46,25 @@ export class RadioGroupState {
     return this.#orientation() ?? "vertical";
   }
 
+  get finalValueIsValid(): boolean {
+    return this.finalValue !== undefined && this.#findIdByValue(this.finalValue) !== undefined;
+  }
+
   get id(): string {
     return this.#id();
   }
 
   setValue(value: string): void {
     if (value === this.finalValue) return;
+
     this.#setValue(value);
     this.#onValueChange()?.(value);
+
+    const matchingId = this.#findIdByValue(value);
+    if (matchingId !== undefined) {
+      this.#focusedItemId = matchingId;
+    }
+    this.#focusedValue = value;
   }
 
   register(id: string, entry: RadioGroupRegistration): void {
@@ -149,9 +160,8 @@ export class RadioGroupState {
     }
 
     if (this.finalValue !== undefined) {
-      const selectedIndex = this.#itemIds.findIndex(
-        (id) => this.#itemMap.get(id)?.getValue() === this.finalValue
-      );
+      const matchingId = this.#findIdByValue(this.finalValue);
+      const selectedIndex = matchingId !== undefined ? this.#itemIds.indexOf(matchingId) : -1;
       if (selectedIndex !== -1) return selectedIndex;
     }
 
@@ -170,6 +180,10 @@ export class RadioGroupState {
     }
 
     this.#focusedValue = this.finalValue;
+  }
+
+  #findIdByValue(value: string): string | undefined {
+    return this.#itemIds.find((id) => this.#itemMap.get(id)?.getValue() === value);
   }
 
   #findEnabledIndex(startIndex: number, direction: 1 | -1): number {

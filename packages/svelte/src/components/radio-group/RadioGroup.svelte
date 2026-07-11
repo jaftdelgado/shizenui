@@ -17,7 +17,7 @@
     class: className,
     value = $bindable(),
     onValueChange,
-    name = createId("radio-group-name", uid),
+    name = undefined,
     disabled = undefined,
     readonly = undefined,
     invalid = undefined,
@@ -32,12 +32,6 @@
     () => !children,
     "RadioGroup",
     "No children provided. Add at least one <Radio> as a child."
-  );
-
-  warnIf(
-    () => !name,
-    "RadioGroup",
-    "No 'name' prop provided. A generated name will be used for accessibility grouping, but native form submission won't use a meaningful field name."
   );
 
   const state = new RadioGroupState({
@@ -91,11 +85,13 @@
   data-orientation={state.finalOrientation}
   {...rest}
 >
-  <input
-    type="hidden"
-    name={state.finalName}
-    value={state.finalValue ?? ""}
-    disabled={state.finalDisabled}
-  />
+  {#if state.finalName}
+    <input
+      type="hidden"
+      name={state.finalName}
+      value={state.finalValue}
+      disabled={state.finalDisabled || !state.finalValueIsValid}
+    />
+  {/if}
   {@render children()}
 </div>
