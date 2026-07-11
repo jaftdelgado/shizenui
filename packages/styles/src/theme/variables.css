@@ -53,7 +53,7 @@
     --danger-foreground: var(--snow);
 
     /* Control Colors */
-    --control: #eaeaec;
+    --control: #e0e0e1;
     --control-foreground: var(--control-text);
 
     /* Form Fields */

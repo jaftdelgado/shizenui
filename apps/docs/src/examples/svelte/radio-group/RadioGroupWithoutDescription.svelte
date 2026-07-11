@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex-center justify-center">
-  <RadioGroup readonly bind:value={selectedFrequency} name="notification-frequency">
+  <RadioGroup bind:value={selectedFrequency} name="notification-frequency">
     <Label>Notification Frequency</Label>
 
     <RadioGroup.Items>

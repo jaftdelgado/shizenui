@@ -28,7 +28,7 @@
 {#if shouldRender}
   <span
     bind:this={ref}
-    class={cn(!isCustom && styles.indicator(), className)}
+    class={cn(styles.indicator(), className)}
     data-checked={presence(ctx.checked)}
     data-readonly={presence(ctx.readonly)}
     data-custom={presence(isCustom)}

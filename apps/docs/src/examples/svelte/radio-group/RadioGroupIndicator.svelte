@@ -34,7 +34,7 @@
         <Radio value={method.value}>
           <Radio.Control>
             <Radio.Indicator>
-              <Icon icon={Tick02Icon} class="size-2" strokeWidth={5} />
+              <Icon icon={Tick02Icon} class="text-accent-foreground size-2" strokeWidth={5} />
             </Radio.Indicator>
           </Radio.Control>
           <Radio.Content>
