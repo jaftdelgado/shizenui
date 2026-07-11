@@ -62,7 +62,7 @@
   const styles = $derived(radioGroupStyles({ orientation: state.finalOrientation }));
 
   const describedBy = $derived(
-    [ctx.hasError ? ctx.errorId : null, ctx.hasDescription ? ctx.descriptionId : null]
+    [ctx.hasError ? ctx.errorId : null, !ctx.hasError && ctx.hasDescription ? ctx.descriptionId : null]
       .filter(Boolean)
       .join(" ") || undefined
   );

@@ -29,6 +29,19 @@ export function createRadioGroupItemsHandlers(options: {
 
   function handleKeydown(e: KeyboardEvent): void {
     const key = e.key;
+
+    if (key === "Home") {
+      e.preventDefault();
+      groupCtx.focusFirstEnabled({ select: true });
+      return;
+    }
+
+    if (key === "End") {
+      e.preventDefault();
+      groupCtx.focusLastEnabled({ select: true });
+      return;
+    }
+
     const isNext = key === "ArrowDown" || key === "ArrowRight";
     const isPrev = key === "ArrowUp" || key === "ArrowLeft";
 

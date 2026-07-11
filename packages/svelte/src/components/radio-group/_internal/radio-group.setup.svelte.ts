@@ -60,11 +60,11 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     moveFocus(direction: "next" | "prev") {
       state.moveFocus(direction);
     },
-    focusFirstEnabled() {
-      state.focusFirstEnabled();
+    focusFirstEnabled(options?: { select: boolean }) {
+      state.focusFirstEnabled(options);
     },
-    focusLastEnabled() {
-      state.focusLastEnabled();
+    focusLastEnabled(options?: { select: boolean }) {
+      state.focusLastEnabled(options);
     },
     clearFocusOverride() {
       state.clearFocusOverride();

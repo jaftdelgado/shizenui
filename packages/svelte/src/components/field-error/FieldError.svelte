@@ -31,13 +31,15 @@
     propId ?? (fieldContext.exists ? (fieldContext.errorId ?? registrationId) : registrationId)
   );
 
-  if (slotCtx.exists) {
-    slotCtx.registerError(registrationId);
-  }
-
   $effect(() => {
+    if (!slotCtx.exists) return;
+
+    if (finalInvalid) {
+      slotCtx.registerError(registrationId);
+    }
+
     return () => {
-      if (slotCtx.exists) slotCtx.unregisterError(registrationId);
+      slotCtx.unregisterError(registrationId);
     };
   });
 </script>

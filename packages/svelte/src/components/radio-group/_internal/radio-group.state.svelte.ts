@@ -106,18 +106,18 @@ export class RadioGroupState {
     this.#focusEntry(nextIndex, { select: true });
   }
 
-  focusFirstEnabled(): void {
+  focusFirstEnabled(options: { select: boolean } = { select: false }): void {
     const index = this.#findEnabledIndex(0, 1);
     if (index === -1) return;
 
-    this.#focusEntry(index, { select: false });
+    this.#focusEntry(index, options);
   }
 
-  focusLastEnabled(): void {
+  focusLastEnabled(options: { select: boolean } = { select: false }): void {
     const index = this.#findEnabledIndex(this.#itemIds.length - 1, -1);
     if (index === -1) return;
 
-    this.#focusEntry(index, { select: false });
+    this.#focusEntry(index, options);
   }
 
   clearFocusOverride(): void {

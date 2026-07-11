@@ -36,13 +36,15 @@
     !finalInvalid || (fieldContext.exists && fieldContext.keepDescription)
   );
 
-  if (slotCtx.exists) {
-    slotCtx.registerDescription(registrationId);
-  }
-
   $effect(() => {
+    if (!slotCtx.exists) return;
+
+    if (shouldShow) {
+      slotCtx.registerDescription(registrationId);
+    }
+
     return () => {
-      if (slotCtx.exists) slotCtx.unregisterDescription(registrationId);
+      slotCtx.unregisterDescription(registrationId);
     };
   });
 </script>

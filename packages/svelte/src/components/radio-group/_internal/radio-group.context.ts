@@ -25,8 +25,8 @@ export interface RadioGroupContextValue {
   readonly unregister: (id: string) => void;
   readonly isActive: (id: string) => boolean;
   readonly moveFocus: (direction: "next" | "prev") => void;
-  readonly focusFirstEnabled: () => void;
-  readonly focusLastEnabled: () => void;
+  readonly focusFirstEnabled: (options?: { select: boolean }) => void;
+  readonly focusLastEnabled: (options?: { select: boolean }) => void;
   readonly clearFocusOverride: () => void;
 }
 
@@ -94,8 +94,8 @@ export function useRadioGroupContext(): RadioGroupContextResult {
         return false;
       },
       moveFocus(_direction: "next" | "prev") {},
-      focusFirstEnabled() {},
-      focusLastEnabled() {},
+      focusFirstEnabled(_options?: { select: boolean }) {},
+      focusLastEnabled(_options?: { select: boolean }) {},
       clearFocusOverride() {},
       get exists() {
         return false;
@@ -155,11 +155,11 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     moveFocus(direction: "next" | "prev") {
       return context.moveFocus(direction);
     },
-    focusFirstEnabled() {
-      return context.focusFirstEnabled();
+    focusFirstEnabled(options?: { select: boolean }) {
+      return context.focusFirstEnabled(options);
     },
-    focusLastEnabled() {
-      return context.focusLastEnabled();
+    focusLastEnabled(options?: { select: boolean }) {
+      return context.focusLastEnabled(options);
     },
     clearFocusOverride() {
       return context.clearFocusOverride();
