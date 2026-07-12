@@ -57,17 +57,11 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     isActive(id: string) {
       return state.isActive(id);
     },
-    moveFocus(direction: "next" | "prev") {
-      state.moveFocus(direction);
+    getValueForId(id: string) {
+      return state.getValueForId(id);
     },
-    focusFirstEnabled(options?: { select: boolean }) {
-      state.focusFirstEnabled(options);
-    },
-    focusLastEnabled(options?: { select: boolean }) {
-      state.focusLastEnabled(options);
-    },
-    clearFocusOverride() {
-      state.clearFocusOverride();
+    setActiveId(id: string | undefined) {
+      state.setActiveId(id);
     }
   } satisfies RadioGroupContextValue);
 

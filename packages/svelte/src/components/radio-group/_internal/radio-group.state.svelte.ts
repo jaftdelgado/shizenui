@@ -13,10 +13,10 @@ export class RadioGroupState {
   #id: () => string;
   #setValue: (value: string) => void;
 
-  #itemIds: string[] = $state([]);
+  #itemIds: Set<string> = $state(new Set());
   #itemMap = new Map<string, RadioGroupRegistration>();
-  #focusedItemId: string | undefined = $state(undefined);
-  #focusedValue: string | undefined;
+  #activeId: string | undefined = $state(undefined);
+  #activeValueSnapshot: string | undefined;
 
   get finalValue(): string | undefined {
     return this.#value();
@@ -61,67 +61,42 @@ export class RadioGroupState {
     this.#onValueChange()?.(value);
 
     const matchingId = this.#findIdByValue(value);
-    if (matchingId !== undefined) {
-      this.#focusedItemId = matchingId;
-    }
-    this.#focusedValue = value;
+    this.setActiveId(matchingId);
   }
 
   register(id: string, entry: RadioGroupRegistration): void {
     this.#itemMap.set(id, entry);
-    if (this.#itemIds.includes(id)) return;
+    if (this.#itemIds.has(id)) return;
 
-    this.#itemIds = [...this.#itemIds, id];
+    const next = new Set(this.#itemIds);
+    next.add(id);
+    this.#itemIds = next;
   }
 
   unregister(id: string): void {
-    if (!this.#itemIds.includes(id)) return;
+    if (!this.#itemIds.has(id)) return;
 
-    this.#itemIds = this.#itemIds.filter((itemId) => itemId !== id);
+    const next = new Set(this.#itemIds);
+    next.delete(id);
+    this.#itemIds = next;
     this.#itemMap.delete(id);
 
-    if (this.#focusedItemId === id) {
-      this.#focusedItemId = undefined;
+    if (this.#activeId === id) {
+      this.#activeId = undefined;
     }
   }
 
   isActive(id: string): boolean {
-    const index = this.#itemIds.indexOf(id);
-    if (index === -1) return false;
-
-    return index === this.#getActiveIndex();
+    return id === this.#resolvedActiveId();
   }
 
-  moveFocus(direction: "next" | "prev"): void {
-    const currentIndex = this.#getActiveIndex();
-    if (currentIndex === -1) return;
-
-    const nextIndex =
-      direction === "next"
-        ? this.#findEnabledIndexWrapping(currentIndex, 1)
-        : this.#findEnabledIndexWrapping(currentIndex, -1);
-
-    if (nextIndex === -1) return;
-
-    this.#focusEntry(nextIndex, { select: true });
+  setActiveId(id: string | undefined): void {
+    this.#activeId = id;
+    this.#activeValueSnapshot = this.finalValue;
   }
 
-  focusFirstEnabled(options: { select: boolean } = { select: false }): void {
-    const index = this.#findEnabledIndex(0, 1);
-    if (index === -1) return;
-
-    this.#focusEntry(index, options);
-  }
-
-  focusLastEnabled(options: { select: boolean } = { select: false }): void {
-    const index = this.#findEnabledIndex(this.#itemIds.length - 1, -1);
-    if (index === -1) return;
-
-    this.#focusEntry(index, options);
-  }
-
-  clearFocusOverride(): void {
-    this.#focusedItemId = undefined;
+  getValueForId(id: string): string | undefined {
+    return this.#itemMap.get(id)?.getValue();
   }
 
   constructor(props: {
@@ -148,71 +123,34 @@ export class RadioGroupState {
     this.#setValue = props.setValue;
   }
 
-  #getActiveIndex(): number {
+  #resolvedActiveId(): string | undefined {
     const overrideValid =
-      this.#focusedItemId !== undefined && this.finalValue === this.#focusedValue;
+      this.#activeId !== undefined && this.finalValue === this.#activeValueSnapshot;
 
     if (overrideValid) {
-      const overrideIndex = this.#itemIds.indexOf(this.#focusedItemId!);
-      if (overrideIndex !== -1 && !this.#getEntryByIndex(overrideIndex)?.getDisabled()) {
-        return overrideIndex;
+      const entry = this.#itemMap.get(this.#activeId!);
+      if (this.#itemIds.has(this.#activeId!) && entry && !entry.getDisabled()) {
+        return this.#activeId;
       }
     }
 
     if (this.finalValue !== undefined) {
       const matchingId = this.#findIdByValue(this.finalValue);
-      const selectedIndex = matchingId !== undefined ? this.#itemIds.indexOf(matchingId) : -1;
-      if (selectedIndex !== -1) return selectedIndex;
+      if (matchingId !== undefined) return matchingId;
     }
 
-    return this.#findEnabledIndex(0, 1);
-  }
-
-  #focusEntry(index: number, options: { select: boolean }): void {
-    const entry = this.#getEntryByIndex(index);
-    if (!entry) return;
-
-    this.#focusedItemId = this.#itemIds[index];
-    entry.getRef()?.focus();
-
-    if (options.select && !this.finalReadonly) {
-      this.setValue(entry.getValue());
+    for (const id of this.#itemIds) {
+      if (!this.#itemMap.get(id)?.getDisabled()) return id;
     }
 
-    this.#focusedValue = this.finalValue;
+    return undefined;
   }
 
   #findIdByValue(value: string): string | undefined {
-    return this.#itemIds.find((id) => this.#itemMap.get(id)?.getValue() === value);
-  }
-
-  #findEnabledIndex(startIndex: number, direction: 1 | -1): number {
-    for (let index = startIndex; index >= 0 && index < this.#itemIds.length; index += direction) {
-      if (!this.#getEntryByIndex(index)?.getDisabled()) {
-        return index;
-      }
+    for (const id of this.#itemIds) {
+      if (this.#itemMap.get(id)?.getValue() === value) return id;
     }
-
-    return -1;
-  }
-
-  #findEnabledIndexWrapping(startIndex: number, direction: 1 | -1): number {
-    const total = this.#itemIds.length;
-    if (total === 0) return -1;
-
-    for (let step = 1; step <= total; step += 1) {
-      const index = (startIndex + direction * step + total) % total;
-      if (!this.#getEntryByIndex(index)?.getDisabled()) {
-        return index;
-      }
-    }
-
-    return -1;
-  }
-
-  #getEntryByIndex(index: number): RadioGroupRegistration | undefined {
-    const id = this.#itemIds[index];
-    return id ? this.#itemMap.get(id) : undefined;
+    return undefined;
   }
 }
 

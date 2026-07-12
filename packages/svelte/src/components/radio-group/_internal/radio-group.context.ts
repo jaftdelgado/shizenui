@@ -24,10 +24,8 @@ export interface RadioGroupContextValue {
   readonly register: (id: string, entry: RadioGroupRegistration) => void;
   readonly unregister: (id: string) => void;
   readonly isActive: (id: string) => boolean;
-  readonly moveFocus: (direction: "next" | "prev") => void;
-  readonly focusFirstEnabled: (options?: { select: boolean }) => void;
-  readonly focusLastEnabled: (options?: { select: boolean }) => void;
-  readonly clearFocusOverride: () => void;
+  readonly getValueForId: (id: string) => string | undefined;
+  readonly setActiveId: (id: string | undefined) => void;
 }
 
 export interface RadioGroupContextResult extends RadioGroupContextValue {
@@ -93,10 +91,10 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       isActive(_id: string) {
         return false;
       },
-      moveFocus(_direction: "next" | "prev") {},
-      focusFirstEnabled(_options?: { select: boolean }) {},
-      focusLastEnabled(_options?: { select: boolean }) {},
-      clearFocusOverride() {},
+      getValueForId(_id: string) {
+        return undefined;
+      },
+      setActiveId(_id: string | undefined) {},
       get exists() {
         return false;
       }
@@ -152,17 +150,11 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     isActive(id: string) {
       return context.isActive(id);
     },
-    moveFocus(direction: "next" | "prev") {
-      return context.moveFocus(direction);
+    getValueForId(id: string) {
+      return context.getValueForId(id);
     },
-    focusFirstEnabled(options?: { select: boolean }) {
-      return context.focusFirstEnabled(options);
-    },
-    focusLastEnabled(options?: { select: boolean }) {
-      return context.focusLastEnabled(options);
-    },
-    clearFocusOverride() {
-      return context.clearFocusOverride();
+    setActiveId(id: string | undefined) {
+      return context.setActiveId(id);
     },
     get exists() {
       return true;
