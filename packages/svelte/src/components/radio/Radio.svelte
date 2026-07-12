@@ -110,10 +110,7 @@
   }}
   onmouseup={handlers.handleMouseUp}
   onmouseleave={handlers.handleMouseLeave}
-  onfocus={(e) => {
-    focus.onFocus(e);
-    handlers.handleFocus();
-  }}
+  onfocus={focus.onFocus}
   onblur={focus.onBlur}
   {...rest}
 >

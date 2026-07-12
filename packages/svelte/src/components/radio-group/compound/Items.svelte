@@ -26,6 +26,16 @@
     getContainer: () => ref,
     groupCtx
   });
+
+  $effect(() => {
+    if (!shouldRender) return;
+
+    groupCtx.registerItems();
+
+    return () => {
+      groupCtx.unregisterItems();
+    };
+  });
 </script>
 
 {#if shouldRender}
@@ -36,6 +46,8 @@
     onkeydown={handlers.handleKeydown}
     {...rest}
   >
-    {@render children()}
+    {#if children}
+      {@render children()}
+    {/if}
   </div>
 {/if}

@@ -59,10 +59,19 @@
     "No Label found. Add a <Label> as a child, or pass aria-label directly."
   );
 
+  warnIf(
+    () => !ctx.hasItems,
+    "RadioGroup",
+    "No <RadioGroup.Items> found. Wrap your <Radio> children in <RadioGroup.Items> to enable roving focus and keyboard navigation."
+  );
+
   const styles = $derived(radioGroupStyles({ orientation: state.finalOrientation }));
 
   const describedBy = $derived(
-    [ctx.hasError ? ctx.errorId : null, !ctx.hasError && ctx.hasDescription ? ctx.descriptionId : null]
+    [
+      ctx.hasError ? ctx.errorId : null,
+      !ctx.hasError && ctx.hasDescription ? ctx.descriptionId : null
+    ]
       .filter(Boolean)
       .join(" ") || undefined
   );

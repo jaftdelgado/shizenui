@@ -140,7 +140,12 @@ export class RadioGroupState {
 
     if (this.hasSelection) {
       const matchingId = this.#findIdByValue(this.finalValue);
-      if (matchingId !== undefined) return matchingId;
+      if (matchingId !== undefined) {
+        const entry = this.#itemMap.get(matchingId);
+        if (this.#itemIds.has(matchingId) && entry && !entry.getDisabled()) {
+          return matchingId;
+        }
+      }
     }
 
     if (this.#activeId !== undefined) {
