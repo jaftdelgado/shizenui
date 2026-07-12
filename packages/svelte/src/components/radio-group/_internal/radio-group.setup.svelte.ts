@@ -12,6 +12,9 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     get value() {
       return state.finalValue;
     },
+    get hasSelection() {
+      return state.hasSelection;
+    },
     get name() {
       return state.finalName;
     },

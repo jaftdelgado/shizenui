@@ -13,7 +13,7 @@ export function createRadioGroupItemsHandlers(options: {
   const { getContainer, groupCtx } = options;
 
   function handleFocusIn(e: FocusEvent): void {
-    if (groupCtx.value !== undefined) return;
+    if (groupCtx.hasSelection) return;
 
     const container = getContainer();
     if (!container) return;

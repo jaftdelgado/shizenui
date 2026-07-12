@@ -8,6 +8,7 @@ export interface RadioGroupRegistration {
 
 export interface RadioGroupContextValue {
   readonly value: string | undefined;
+  readonly hasSelection: boolean;
   readonly name: string | undefined;
   readonly disabled: boolean;
   readonly readonly: boolean;
@@ -50,6 +51,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     return {
       get value() {
         return undefined;
+      },
+      get hasSelection() {
+        return false;
       },
       get name() {
         return undefined;
@@ -103,6 +107,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
   return {
     get value() {
       return context.value;
+    },
+    get hasSelection() {
+      return context.hasSelection;
     },
     get name() {
       return context.name;

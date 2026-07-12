@@ -27,7 +27,7 @@ export function createRadioHandlers(options: {
 
   function handleFocus(): void {
     if (!state.groupCtx.exists) return;
-    if (state.groupCtx.value === undefined) return;
+    if (!state.groupCtx.hasSelection) return;
     if (state.finalDisabled || state.finalReadonly) return;
 
     state.groupCtx.setValue(state.value);

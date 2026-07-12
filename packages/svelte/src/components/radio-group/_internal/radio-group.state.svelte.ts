@@ -22,6 +22,10 @@ export class RadioGroupState {
     return this.#value();
   }
 
+  get hasSelection(): boolean {
+    return this.finalValue !== undefined && this.#findIdByValue(this.finalValue) !== undefined;
+  }
+
   get finalName(): string | undefined {
     return this.#name();
   }
@@ -47,7 +51,7 @@ export class RadioGroupState {
   }
 
   get finalValueIsValid(): boolean {
-    return this.finalValue !== undefined && this.#findIdByValue(this.finalValue) !== undefined;
+    return this.hasSelection;
   }
 
   get id(): string {
@@ -127,16 +131,23 @@ export class RadioGroupState {
     const overrideValid =
       this.#activeId !== undefined && this.finalValue === this.#activeValueSnapshot;
 
-    if (overrideValid) {
+    if (this.hasSelection && overrideValid) {
       const entry = this.#itemMap.get(this.#activeId!);
       if (this.#itemIds.has(this.#activeId!) && entry && !entry.getDisabled()) {
         return this.#activeId;
       }
     }
 
-    if (this.finalValue !== undefined) {
+    if (this.hasSelection) {
       const matchingId = this.#findIdByValue(this.finalValue);
       if (matchingId !== undefined) return matchingId;
+    }
+
+    if (this.#activeId !== undefined) {
+      const entry = this.#itemMap.get(this.#activeId);
+      if (this.#itemIds.has(this.#activeId) && entry && !entry.getDisabled()) {
+        return this.#activeId;
+      }
     }
 
     for (const id of this.#itemIds) {

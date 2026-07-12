@@ -117,5 +117,7 @@
   onblur={focus.onBlur}
   {...rest}
 >
-  {@render children()}
+  {#if children}
+    {@render children()}
+  {/if}
 </button>

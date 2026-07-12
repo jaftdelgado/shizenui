@@ -93,5 +93,7 @@
       disabled={state.finalDisabled || !state.finalValueIsValid}
     />
   {/if}
-  {@render children()}
+  {#if children}
+    {@render children()}
+  {/if}
 </div>
