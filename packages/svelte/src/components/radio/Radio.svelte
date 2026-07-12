@@ -45,7 +45,7 @@
   });
 
   setupRadioContexts(state);
-  setupRadioGroupRegistration(state, () => ref);
+  setupRadioGroupRegistration(state);
 
   const ctx = useRadioContext();
 
@@ -110,7 +110,10 @@
   }}
   onmouseup={handlers.handleMouseUp}
   onmouseleave={handlers.handleMouseLeave}
-  onfocus={focus.onFocus}
+  onfocus={(e) => {
+    focus.onFocus(e);
+    handlers.handleFocus();
+  }}
   onblur={focus.onBlur}
   {...rest}
 >

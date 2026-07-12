@@ -92,12 +92,8 @@ export function setupRadioContexts(state: RadioState): void {
   });
 }
 
-export function setupRadioGroupRegistration(
-  state: RadioState,
-  getRef: () => HTMLButtonElement | null
-): void {
+export function setupRadioGroupRegistration(state: RadioState): void {
   const entry = {
-    getRef,
     getDisabled: () => state.finalDisabled,
     getValue: () => state.value
   };

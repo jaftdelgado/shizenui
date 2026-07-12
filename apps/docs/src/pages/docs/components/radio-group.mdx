@@ -97,3 +97,62 @@ Use the `class` prop to apply Tailwind utility classes directly to the Radio and
 To customize the Radio component classes, you can use the @layer components directive.
 
 <CodeBlock code={RadioGroupCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Radio Classes
+
+<PropsTable
+  props={[
+    {
+      name: "radio",
+      description: "Root element. Manages layout, tokens, and interaction states."
+    },
+    { name: "radio__control", description: "The visible circle that changes color when selected." },
+    {
+      name: "radio__indicator",
+      description: "The dot that appears inside the circle to mark the selected option."
+    },
+    { name: "radio__content", description: "Stacks label and description next to the control." }
+  ]}
+/>
+
+#### RadioGroup Classes
+
+<PropsTable
+  props={[
+    { name: "radio-group", description: "Root wrapper for a group of radio buttons." },
+    { name: "radio-group__items", description: "Container for the radio items. Adds top margin." },
+    {
+      name: "radio-group__items--vertical",
+      description: "Stacks items in a column with equal gap."
+    },
+    {
+      name: "radio-group__items--horizontal",
+      description: "Lays items in a row, wrapping when needed."
+    }
+  ]}
+/>
+
+#### Interactive States
+
+<PropsTable
+  props={[
+    {
+      name: "data-checked",
+      description:
+        "Applied when the radio is selected. Updates control color to accent and reveals the indicator."
+    },
+    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
+    { name: "data-readonly", description: "Prevents selection without visual disabled treatment." },
+    {
+      name: "data-invalid",
+      description: "Marks the control with an error state to signal a validation issue."
+    },
+    {
+      name: "data-focus-visible",
+      description: "Applies a focus ring to the control when navigating with keyboard."
+    },
+    { name: "data-pressed", description: "Shrinks the control slightly while it's being pressed." }
+  ]}
+/>

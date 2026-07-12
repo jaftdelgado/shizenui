@@ -2,7 +2,6 @@ import { createContext } from "svelte";
 import type { RadioGroupOrientation } from "./radio-group.types.js";
 
 export interface RadioGroupRegistration {
-  getRef: () => HTMLButtonElement | null;
   getDisabled: () => boolean;
   getValue: () => string;
 }
@@ -24,8 +23,8 @@ export interface RadioGroupContextValue {
   readonly register: (id: string, entry: RadioGroupRegistration) => void;
   readonly unregister: (id: string) => void;
   readonly isActive: (id: string) => boolean;
-  readonly getValueForId: (id: string) => string | undefined;
   readonly setActiveId: (id: string | undefined) => void;
+  readonly getValueForId: (id: string) => string | undefined;
 }
 
 export interface RadioGroupContextResult extends RadioGroupContextValue {
@@ -91,10 +90,10 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       isActive(_id: string) {
         return false;
       },
+      setActiveId(_id: string | undefined) {},
       getValueForId(_id: string) {
         return undefined;
       },
-      setActiveId(_id: string | undefined) {},
       get exists() {
         return false;
       }
@@ -150,11 +149,11 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     isActive(id: string) {
       return context.isActive(id);
     },
-    getValueForId(id: string) {
-      return context.getValueForId(id);
-    },
     setActiveId(id: string | undefined) {
       return context.setActiveId(id);
+    },
+    getValueForId(id: string) {
+      return context.getValueForId(id);
     },
     get exists() {
       return true;

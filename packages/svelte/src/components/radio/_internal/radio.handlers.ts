@@ -25,6 +25,14 @@ export function createRadioHandlers(options: {
     getOnClick?.()?.(e);
   }
 
+  function handleFocus(): void {
+    if (!state.groupCtx.exists) return;
+    if (state.groupCtx.value === undefined) return;
+    if (state.finalDisabled || state.finalReadonly) return;
+
+    state.groupCtx.setValue(state.value);
+  }
+
   function handleMouseDown(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
     if (state.finalDisabled || state.finalReadonly) return;
     e.currentTarget.setAttribute("data-pressed", "true");
@@ -55,6 +63,7 @@ export function createRadioHandlers(options: {
 
   return {
     handleClick,
+    handleFocus,
     handleMouseDown,
     handleMouseUp,
     handleMouseLeave,

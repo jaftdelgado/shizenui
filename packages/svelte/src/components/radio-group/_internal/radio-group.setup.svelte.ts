@@ -57,11 +57,11 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     isActive(id: string) {
       return state.isActive(id);
     },
-    getValueForId(id: string) {
-      return state.getValueForId(id);
-    },
     setActiveId(id: string | undefined) {
       state.setActiveId(id);
+    },
+    getValueForId(id: string) {
+      return state.getValueForId(id);
     }
   } satisfies RadioGroupContextValue);
 
