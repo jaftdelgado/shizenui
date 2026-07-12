@@ -4,7 +4,7 @@ import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.
 import type { RadioGroupState } from "./radio-group.state.svelte.js";
 
 export function setupRadioGroupContexts(state: RadioGroupState): void {
-  let hasItems = $state(false);
+  let itemsInstanceIds = $state(new Set<string>());
   let labelIds = $state(new Set<string>());
   let descriptionIds = $state(new Set<string>());
   let errorIds = $state(new Set<string>());
@@ -41,7 +41,7 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
       return `${state.id}-error`;
     },
     get hasItems() {
-      return hasItems;
+      return itemsInstanceIds.size > 0;
     },
     get hasLabel() {
       return labelIds.size > 0;
@@ -70,11 +70,17 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     getValueForId(id: string) {
       return state.getValueForId(id);
     },
-    registerItems() {
-      hasItems = true;
+    registerItems(id: string) {
+      if (itemsInstanceIds.has(id)) return;
+      const next = new Set(itemsInstanceIds);
+      next.add(id);
+      itemsInstanceIds = next;
     },
-    unregisterItems() {
-      hasItems = false;
+    unregisterItems(id: string) {
+      if (!itemsInstanceIds.has(id)) return;
+      const next = new Set(itemsInstanceIds);
+      next.delete(id);
+      itemsInstanceIds = next;
     }
   } satisfies RadioGroupContextValue);
 

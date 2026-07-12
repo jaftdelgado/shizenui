@@ -27,8 +27,8 @@ export interface RadioGroupContextValue {
   readonly isActive: (id: string) => boolean;
   readonly setActiveId: (id: string | undefined) => void;
   readonly getValueForId: (id: string) => string | undefined;
-  readonly registerItems: () => void;
-  readonly unregisterItems: () => void;
+  readonly registerItems: (id: string) => void;
+  readonly unregisterItems: (id: string) => void;
 }
 
 export interface RadioGroupContextResult extends RadioGroupContextValue {
@@ -104,8 +104,8 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       getValueForId(_id: string) {
         return undefined;
       },
-      registerItems() {},
-      unregisterItems() {},
+      registerItems(_id: string) {},
+      unregisterItems(_id: string) {},
       get exists() {
         return false;
       }
@@ -173,11 +173,11 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     getValueForId(id: string) {
       return context.getValueForId(id);
     },
-    registerItems() {
-      return context.registerItems();
+    registerItems(id: string) {
+      return context.registerItems(id);
     },
-    unregisterItems() {
-      return context.unregisterItems();
+    unregisterItems(id: string) {
+      return context.unregisterItems(id);
     },
     get exists() {
       return true;

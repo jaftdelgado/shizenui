@@ -5,6 +5,7 @@ import Content from "./compound/Content.svelte";
 
 export type {
   RadioProps,
+  RadioClickEvent,
   RadioControlProps,
   RadioContentProps,
   RadioIndicatorProps

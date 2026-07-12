@@ -5,6 +5,8 @@
   import { useRadioGroupContext, createRadioGroupItemsHandlers } from "../_internal/index.js";
   import type { RadioGroupItemsProps } from "../_internal/index.js";
 
+  const itemsUid = $props.id();
+
   let {
     children,
     class: className,
@@ -30,10 +32,10 @@
   $effect(() => {
     if (!shouldRender) return;
 
-    groupCtx.registerItems();
+    groupCtx.registerItems(itemsUid);
 
     return () => {
-      groupCtx.unregisterItems();
+      groupCtx.unregisterItems(itemsUid);
     };
   });
 </script>

@@ -21,7 +21,7 @@
     disabled = undefined,
     readonly = undefined,
     invalid = undefined,
-    required = false,
+    required = undefined,
     orientation = "vertical",
     id = createId("radio-group", uid),
     ref = $bindable(null),
