@@ -4,6 +4,7 @@ import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.
 import type { RadioGroupState } from "./radio-group.state.svelte.js";
 
 export function setupRadioGroupContexts(state: RadioGroupState): void {
+  let itemsInstanceIds = $state(new Set<string>());
   let labelIds = $state(new Set<string>());
   let descriptionIds = $state(new Set<string>());
   let errorIds = $state(new Set<string>());
@@ -11,6 +12,9 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
   setRadioGroupContext({
     get value() {
       return state.finalValue;
+    },
+    get hasSelection() {
+      return state.hasSelection;
     },
     get name() {
       return state.finalName;
@@ -36,6 +40,9 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     get errorId() {
       return `${state.id}-error`;
     },
+    get hasItems() {
+      return itemsInstanceIds.size > 0;
+    },
     get hasLabel() {
       return labelIds.size > 0;
     },
@@ -54,11 +61,26 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     unregister(id: string) {
       state.unregister(id);
     },
-    focusFirstEnabled() {
-      state.focusFirstEnabled();
+    isActive(id: string) {
+      return state.isActive(id);
     },
-    focusLastEnabled() {
-      state.focusLastEnabled();
+    setActiveId(id: string | undefined) {
+      state.setActiveId(id);
+    },
+    getValueForId(id: string) {
+      return state.getValueForId(id);
+    },
+    registerItems(id: string) {
+      if (itemsInstanceIds.has(id)) return;
+      const next = new Set(itemsInstanceIds);
+      next.add(id);
+      itemsInstanceIds = next;
+    },
+    unregisterItems(id: string) {
+      if (!itemsInstanceIds.has(id)) return;
+      const next = new Set(itemsInstanceIds);
+      next.delete(id);
+      itemsInstanceIds = next;
     }
   } satisfies RadioGroupContextValue);
 

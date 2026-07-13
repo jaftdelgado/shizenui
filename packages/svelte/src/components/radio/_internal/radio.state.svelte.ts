@@ -4,11 +4,7 @@ import { useFieldStateContext, type FieldStateContextResult } from "../../../lib
 
 export class RadioState {
   #disabled: () => boolean | undefined;
-  #readonly: () => boolean | undefined;
-  #invalid: () => boolean | undefined;
-  #name: () => string | undefined;
   #id: () => string;
-  #checked: () => boolean;
   #value: () => string;
 
   readonly groupCtx: RadioGroupContextResult;
@@ -25,8 +21,6 @@ export class RadioState {
   }
 
   get finalReadonly(): boolean {
-    const local = this.#readonly();
-    if (local !== undefined) return local;
     return this.groupCtx.exists
       ? this.groupCtx.readonly
       : this.parentFieldCtx.exists
@@ -35,8 +29,6 @@ export class RadioState {
   }
 
   get finalInvalid(): boolean {
-    const local = this.#invalid();
-    if (local !== undefined) return local;
     return this.groupCtx.exists
       ? this.groupCtx.invalid
       : this.parentFieldCtx.exists
@@ -44,12 +36,8 @@ export class RadioState {
         : false;
   }
 
-  get activeName(): string | undefined {
-    return this.groupCtx.exists ? this.groupCtx.name : this.#name();
-  }
-
   get isChecked(): boolean {
-    return this.groupCtx.exists ? this.groupCtx.value === this.#value() : this.#checked();
+    return this.groupCtx.value === this.#value();
   }
 
   get value(): string {
@@ -63,21 +51,13 @@ export class RadioState {
   constructor(props: {
     value: () => string;
     disabled: () => boolean | undefined;
-    readonly: () => boolean | undefined;
-    invalid: () => boolean | undefined;
-    name: () => string | undefined;
     id: () => string;
-    checked: () => boolean;
     groupContext?: RadioGroupContextResult;
     fieldContext?: FieldStateContextResult;
   }) {
     this.#value = props.value;
     this.#disabled = props.disabled;
-    this.#readonly = props.readonly;
-    this.#invalid = props.invalid;
-    this.#name = props.name;
     this.#id = props.id;
-    this.#checked = props.checked;
 
     this.groupCtx = props.groupContext ?? useRadioGroupContext();
     this.parentFieldCtx = props.fieldContext ?? useFieldStateContext();

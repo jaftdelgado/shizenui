@@ -16,13 +16,15 @@
     children,
     class: className,
     value = $bindable(),
-    name = createId("radio-group-name", uid),
+    onValueChange,
+    name = undefined,
     disabled = undefined,
     readonly = undefined,
     invalid = undefined,
-    required = false,
+    required = undefined,
     orientation = "vertical",
     id = createId("radio-group", uid),
+    ref = $bindable(null),
     ...rest
   }: RadioGroupProps = $props();
 
@@ -32,14 +34,9 @@
     "No children provided. Add at least one <Radio> as a child."
   );
 
-  warnIf(
-    () => !name,
-    "RadioGroup",
-    "No 'name' prop provided. A generated name will be used for accessibility grouping, but native form submission won't use a meaningful field name."
-  );
-
   const state = new RadioGroupState({
     value: () => value,
+    onValueChange: () => onValueChange,
     name: () => name,
     disabled: () => disabled,
     readonly: () => readonly,
@@ -62,16 +59,26 @@
     "No Label found. Add a <Label> as a child, or pass aria-label directly."
   );
 
+  warnIf(
+    () => !ctx.hasItems,
+    "RadioGroup",
+    "No <RadioGroup.Items> found. Wrap your <Radio> children in <RadioGroup.Items> to enable roving focus and keyboard navigation."
+  );
+
   const styles = $derived(radioGroupStyles({ orientation: state.finalOrientation }));
 
   const describedBy = $derived(
-    [ctx.hasError ? ctx.errorId : null, ctx.hasDescription ? ctx.descriptionId : null]
+    [
+      ctx.hasError ? ctx.errorId : null,
+      !ctx.hasError && ctx.hasDescription ? ctx.descriptionId : null
+    ]
       .filter(Boolean)
       .join(" ") || undefined
   );
 </script>
 
 <div
+  bind:this={ref}
   {id}
   role="radiogroup"
   class={cn(styles.base(), className)}
@@ -87,5 +94,15 @@
   data-orientation={state.finalOrientation}
   {...rest}
 >
-  {@render children()}
+  {#if state.finalName}
+    <input
+      type="hidden"
+      name={state.finalName}
+      value={state.finalValue}
+      disabled={state.finalDisabled || !state.finalValueIsValid}
+    />
+  {/if}
+  {#if children}
+    {@render children()}
+  {/if}
 </div>

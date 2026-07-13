@@ -1,16 +1,14 @@
-import type { HTMLInputAttributes, HTMLAttributes } from "svelte/elements";
+import type { HTMLButtonAttributes, HTMLAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
 
 type RadioBaseProps = Omit<
-  HTMLInputAttributes,
+  HTMLButtonAttributes,
   | "checked"
   | "type"
   | "value"
   | "disabled"
-  | "name"
   | "id"
   | "onclick"
-  | "onchange"
   | "onkeydown"
   | "onkeyup"
   | "onfocus"
@@ -18,20 +16,15 @@ type RadioBaseProps = Omit<
   | "children"
 >;
 
-export type RadioClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLDivElement };
+export type RadioClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
 
 export interface RadioProps extends RadioBaseProps {
   value: string;
-  checked?: boolean;
   disabled?: boolean;
-  readonly?: boolean;
-  invalid?: boolean;
-  name?: string;
   id?: string;
-  ref?: HTMLInputElement | null;
-  onCheckedChange?: (checked: boolean) => void;
+  ref?: HTMLButtonElement | null;
   onclick?: (e: RadioClickEvent) => void;
-  children: Snippet;
+  children?: Snippet;
 }
 
 export interface RadioControlProps extends HTMLAttributes<HTMLDivElement> {
@@ -40,7 +33,7 @@ export interface RadioControlProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export interface RadioContentProps extends HTMLAttributes<HTMLDivElement> {
-  children: Snippet;
+  children?: Snippet;
   ref?: HTMLDivElement | null;
 }
 

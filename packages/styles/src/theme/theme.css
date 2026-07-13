@@ -48,6 +48,9 @@
   --color-control: var(--control);
   --color-control-foreground: var(--control-foreground);
 
+  --color-field: var(--field);
+  --color-field-foreground: var(--field-foreground);
+
   /* Calculated Variables */
 
   /* Accent state colors */

@@ -5,8 +5,8 @@
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
-  interface Props extends HTMLAttributes<HTMLElement> {
-    children: Snippet;
+  interface LabelProps extends HTMLAttributes<HTMLElement> {
+    children?: Snippet;
     required?: boolean;
     invalid?: boolean;
     disabled?: boolean;
@@ -23,7 +23,7 @@
     disabled = false,
     for: htmlFor,
     ...rest
-  }: Props = $props();
+  }: LabelProps = $props();
 
   const fieldContext = useFieldStateContext();
   const slotCtx = useContentSlotContext();
@@ -61,7 +61,7 @@
     data-required={presence(finalRequired)}
     {...rest}
   >
-    {@render children()}
+    {@render children?.()}
 
     {#if finalRequired}
       <span class={requiredIndicator()} aria-hidden="true" data-slot="required-indicator"> * </span>
@@ -76,7 +76,7 @@
     data-required={presence(finalRequired)}
     {...rest}
   >
-    {@render children()}
+    {@render children?.()}
 
     {#if finalRequired}
       <span class={requiredIndicator()} aria-hidden="true" data-slot="required-indicator"> * </span>

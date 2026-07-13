@@ -11,20 +11,63 @@ import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
 
+import RadioGroupAnatomyCode from "@examples/svelte/radio-group/RadioGroupAnatomy.svelte?raw";
+
+import RadioGroupIndicator from "@examples/svelte/radio-group/RadioGroupIndicator.svelte";
+import RadioGroupWithoutDescription from "@examples/svelte/radio-group/RadioGroupWithoutDescription.svelte";
 import RadioGroupOrientation from "@examples/svelte/radio-group/RadioGroupOrientation.svelte";
+import RadioGroupBindValue from "@examples/svelte/radio-group/RadioGroupBindValue.svelte";
+import RadioGroupFullyControlled from "@examples/svelte/radio-group/RadioGroupFullyControlled.svelte";
 import RadioGroupDisabled from "@examples/svelte/radio-group/RadioGroupDisabled.svelte";
 import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.svelte";
+
+import RadioGroupTwStyling from "@examples/svelte/radio-group/RadioGroupTwStyling.svelte";
+import RadioGroupCssStylingCode from "@examples/svelte/radio-group/RadioGroupCssStyling.css?raw";
 
 ## Import
 
 <CodeImport code={`import { Radio, RadioGroup } from "@shizen-ui/svelte";`} />
 
+## Anatomy
+
+<CodeBlock code={RadioGroupAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
+
 ## Examples
+
+### Custom Indicator
+
+<ComponentExample src="svelte/radio-group/RadioGroupIndicator.svelte">
+  <RadioGroupIndicator client:load />
+</ComponentExample>
+
+### Without Description
+
+<ComponentExample src="svelte/radio-group/RadioGroupWithoutDescription.svelte">
+  <RadioGroupWithoutDescription client:load />
+</ComponentExample>
 
 ### Orientation
 
 <ComponentExample src="svelte/radio-group/RadioGroupOrientation.svelte">
   <RadioGroupOrientation client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/radio-group/RadioGroupBindValue.svelte">
+  <RadioGroupBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/radio-group/RadioGroupFullyControlled.svelte">
+  <RadioGroupFullyControlled client:load />
 </ComponentExample>
 
 ### Disabled State
@@ -38,3 +81,160 @@ import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.sv
 <ComponentExample src="svelte/radio-group/RadioGroupInvalid.svelte">
   <RadioGroupInvalid client:load />
 </ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to the Radio and RadioGroup.
+
+<ComponentExample src="svelte/radio-group/RadioGroupTwStyling.svelte">
+  <RadioGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Radio and RadioGroup component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={RadioGroupCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Radio Classes
+
+<PropsTable
+  props={[
+    {
+      name: "radio",
+      description: "Root element. Manages layout, tokens, and interaction states."
+    },
+    { name: "radio__control", description: "The visible circle that changes color when selected." },
+    {
+      name: "radio__indicator",
+      description: "The dot that appears inside the circle to mark the selected option."
+    },
+    { name: "radio__content", description: "Stacks label and description next to the control." }
+  ]}
+/>
+
+#### RadioGroup Classes
+
+<PropsTable
+  props={[
+    { name: "radio-group", description: "Root wrapper for a group of radio buttons." },
+    { name: "radio-group__items", description: "Container for the radio items. Adds top margin." },
+    {
+      name: "radio-group__items--vertical",
+      description: "Stacks items in a column with equal gap."
+    },
+    {
+      name: "radio-group__items--horizontal",
+      description: "Lays items in a row, wrapping when needed."
+    }
+  ]}
+/>
+
+#### Interactive States
+
+<PropsTable
+  props={[
+    {
+      name: "data-checked",
+      description:
+        "Applied when the radio is selected. Updates control color and reveals the indicator."
+    },
+    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
+    { name: "data-readonly", description: "Prevents selection without visual disabled treatment." },
+    {
+      name: "data-invalid",
+      description: "Marks the control with an error state to signal a validation issue."
+    },
+    {
+      name: "data-focus-visible",
+      description: "Applies a focus ring to the control when navigating with keyboard."
+    },
+    { name: "data-pressed", description: "Shrinks the control slightly while it's being pressed." }
+  ]}
+/>
+
+## API Reference
+
+### RadioGroup Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string", default: "undefined" },
+    { name: "onValueChange", type: "(value: string) => void", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+  ]}
+/>
+
+#### RadioGroup.Items Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
+
+### Radio Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLButtonElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+  ]}
+/>
+
+#### Radio.Content Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
+
+#### Radio.Control Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
+
+#### Radio.Indicator Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
+/>

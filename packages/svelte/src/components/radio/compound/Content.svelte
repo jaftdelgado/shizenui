@@ -1,7 +1,7 @@
 <script lang="ts">
   import { cn } from "../../../lib/utils";
   import { radioStyles } from "@shizen-ui/styles";
-  import { assertContext } from "../../../lib/runes/index.js";
+  import { assertContext, warnIf } from "../../../lib/runes/index.js";
   import { useRadioContext } from "../_internal/index.js";
   import type { RadioContentProps } from "../_internal/index.js";
 
@@ -15,10 +15,18 @@
     "Radio.Content",
     "Must be used inside a <Radio> component."
   );
+
+  warnIf(
+    () => !children,
+    "Radio.Content",
+    "No children provided. Add content such as <Label> or <Description>."
+  );
 </script>
 
 {#if shouldRender}
   <div bind:this={ref} class={cn(styles.content(), className)} {...rest}>
-    {@render children()}
+    {#if children}
+      {@render children()}
+    {/if}
   </div>
 {/if}

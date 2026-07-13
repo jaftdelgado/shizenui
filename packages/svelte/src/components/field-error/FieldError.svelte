@@ -5,15 +5,21 @@
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
-  interface Props extends HTMLAttributes<HTMLParagraphElement> {
-    children: Snippet;
+  interface FieldErrorProps extends HTMLAttributes<HTMLParagraphElement> {
+    children?: Snippet;
     invalid?: boolean;
     id?: string;
   }
 
   const uid = $props.id();
 
-  let { children, class: className, invalid = true, id: propId, ...rest }: Props = $props();
+  let {
+    children,
+    class: className,
+    invalid = true,
+    id: propId,
+    ...rest
+  }: FieldErrorProps = $props();
 
   const fieldContext = useFieldStateContext();
   const slotCtx = useContentSlotContext();
@@ -25,13 +31,15 @@
     propId ?? (fieldContext.exists ? (fieldContext.errorId ?? registrationId) : registrationId)
   );
 
-  if (slotCtx.exists) {
-    slotCtx.registerError(registrationId);
-  }
-
   $effect(() => {
+    if (!slotCtx.exists) return;
+
+    if (finalInvalid) {
+      slotCtx.registerError(registrationId);
+    }
+
     return () => {
-      if (slotCtx.exists) slotCtx.unregisterError(registrationId);
+      slotCtx.unregisterError(registrationId);
     };
   });
 </script>
@@ -44,6 +52,6 @@
     role="alert"
     {...rest}
   >
-    {@render children()}
+    {@render children?.()}
   </p>
 {/if}

@@ -18,13 +18,8 @@
     class: className,
     value,
     disabled = undefined,
-    readonly = undefined,
-    invalid = undefined,
-    name,
     id = createId("radio", uid),
-    checked = $bindable(false),
     ref = $bindable(null),
-    onCheckedChange,
     onclick,
     children,
     ...rest
@@ -39,23 +34,13 @@
   const state = new RadioState({
     value: () => value,
     disabled: () => disabled,
-    readonly: () => readonly,
-    invalid: () => invalid,
-    name: () => name,
-    id: () => id,
-    checked: () => checked
+    id: () => id
   });
 
   setupRadioContexts(state);
-  setupRadioGroupRegistration(state, () => ref);
+  setupRadioGroupRegistration(state);
 
   const ctx = useRadioContext();
-
-  warnIf(
-    () => !state.groupCtx.exists && !name,
-    "Radio",
-    "No 'name' prop provided and not inside a <RadioGroup>. The radio won't be grouped correctly for form submission."
-  );
 
   warnIf(
     () => !!children && !ctx.hasLabel && !rest["aria-label"],
@@ -65,12 +50,7 @@
 
   const handlers = createRadioHandlers({
     state,
-    setChecked: (val) => {
-      checked = val;
-    },
-    onCheckedChange: (val) => onCheckedChange?.(val),
-    getOnClick: () => onclick,
-    getInputRef: () => ref
+    getOnClick: () => onclick
   });
 
   const focus = createFocusVisible();
@@ -90,36 +70,40 @@
   );
 </script>
 
-<div
-  role="none"
+<button
+  bind:this={ref}
+  type="button"
+  role="radio"
+  {id}
+  disabled={state.finalDisabled}
+  aria-checked={state.isChecked}
+  aria-disabled={state.finalDisabled ? true : undefined}
+  aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
+  aria-describedby={describedBy}
+  tabindex={state.groupCtx.isActive(id) ? 0 : -1}
   class={cn(styles.base(), className)}
   data-checked={presence(state.isChecked)}
   data-disabled={presence(state.finalDisabled)}
   data-readonly={presence(state.finalReadonly)}
   data-invalid={presence(state.finalInvalid)}
   data-focus-visible={presence(focus.isFocusVisible)}
-  onmousedown={focus.onMouseDown}
   onclick={handlers.handleClick}
+  onkeydown={(e) => {
+    focus.onKeyDown();
+    handlers.handleKeydown(e);
+  }}
+  onkeyup={handlers.handleKeydown}
+  onmousedown={(e) => {
+    focus.onMouseDown();
+    handlers.handleMouseDown(e);
+  }}
+  onmouseup={handlers.handleMouseUp}
+  onmouseleave={handlers.handleMouseLeave}
+  onfocus={focus.onFocus}
+  onblur={focus.onBlur}
+  {...rest}
 >
-  <input
-    bind:this={ref}
-    type="radio"
-    {value}
-    name={state.activeName}
-    {id}
-    checked={state.isChecked}
-    disabled={state.finalDisabled}
-    class={styles.input()}
-    tabindex={state.isChecked || !state.groupCtx.exists || !state.groupCtx.value ? 0 : -1}
-    aria-checked={state.isChecked}
-    aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
-    aria-describedby={describedBy}
-    onchange={handlers.handleChange}
-    onkeydown={handlers.handleKeyEnter}
-    onkeyup={handlers.handleKeyEnter}
-    onfocus={focus.onFocus}
-    onblur={focus.onBlur}
-    {...rest}
-  />
-  {@render children()}
-</div>
+  {#if children}
+    {@render children()}
+  {/if}
+</button>

@@ -3,6 +3,7 @@ import type { RadioGroupOrientation, RadioGroupProps } from "./radio-group.types
 
 export class RadioGroupState {
   #value: () => RadioGroupProps["value"];
+  #onValueChange: () => ((value: string) => void) | undefined;
   #name: () => string | undefined;
   #disabled: () => boolean | undefined;
   #readonly: () => boolean | undefined;
@@ -12,11 +13,17 @@ export class RadioGroupState {
   #id: () => string;
   #setValue: (value: string) => void;
 
-  #itemIds: string[] = $state([]);
+  #itemIds: Set<string> = $state(new Set());
   #itemMap = new Map<string, RadioGroupRegistration>();
+  #activeId: string | undefined = $state(undefined);
+  #activeValueSnapshot: string | undefined;
 
   get finalValue(): string | undefined {
     return this.#value();
+  }
+
+  get hasSelection(): boolean {
+    return this.finalValue !== undefined && this.#findIdByValue(this.finalValue) !== undefined;
   }
 
   get finalName(): string | undefined {
@@ -43,44 +50,62 @@ export class RadioGroupState {
     return this.#orientation() ?? "vertical";
   }
 
+  get finalValueIsValid(): boolean {
+    return this.hasSelection;
+  }
+
   get id(): string {
     return this.#id();
   }
 
   setValue(value: string): void {
+    if (value === this.finalValue) return;
+
     this.#setValue(value);
+    this.#onValueChange()?.(value);
+
+    const matchingId = this.#findIdByValue(value);
+    this.setActiveId(matchingId);
   }
 
   register(id: string, entry: RadioGroupRegistration): void {
     this.#itemMap.set(id, entry);
-    if (this.#itemIds.includes(id)) return;
+    if (this.#itemIds.has(id)) return;
 
-    this.#itemIds = [...this.#itemIds, id];
+    const next = new Set(this.#itemIds);
+    next.add(id);
+    this.#itemIds = next;
   }
 
   unregister(id: string): void {
-    if (!this.#itemIds.includes(id)) return;
+    if (!this.#itemIds.has(id)) return;
 
-    this.#itemIds = this.#itemIds.filter((itemId) => itemId !== id);
+    const next = new Set(this.#itemIds);
+    next.delete(id);
+    this.#itemIds = next;
     this.#itemMap.delete(id);
+
+    if (this.#activeId === id) {
+      this.#activeId = undefined;
+    }
   }
 
-  focusFirstEnabled(): void {
-    const index = this.#findEnabledIndex(0, 1);
-    if (index === -1) return;
-
-    this.#getEntryByIndex(index)?.getRef()?.focus();
+  isActive(id: string): boolean {
+    return id === this.#resolvedActiveId();
   }
 
-  focusLastEnabled(): void {
-    const index = this.#findEnabledIndex(this.#itemIds.length - 1, -1);
-    if (index === -1) return;
+  setActiveId(id: string | undefined): void {
+    this.#activeId = id;
+    this.#activeValueSnapshot = this.finalValue;
+  }
 
-    this.#getEntryByIndex(index)?.getRef()?.focus();
+  getValueForId(id: string): string | undefined {
+    return this.#itemMap.get(id)?.getValue();
   }
 
   constructor(props: {
     value: () => RadioGroupProps["value"];
+    onValueChange: () => ((value: string) => void) | undefined;
     name: () => string | undefined;
     disabled: () => boolean | undefined;
     readonly: () => boolean | undefined;
@@ -91,6 +116,7 @@ export class RadioGroupState {
     setValue: (value: string) => void;
   }) {
     this.#value = props.value;
+    this.#onValueChange = props.onValueChange;
     this.#name = props.name;
     this.#disabled = props.disabled;
     this.#readonly = props.readonly;
@@ -101,19 +127,46 @@ export class RadioGroupState {
     this.#setValue = props.setValue;
   }
 
-  #findEnabledIndex(startIndex: number, direction: 1 | -1): number {
-    for (let index = startIndex; index >= 0 && index < this.#itemIds.length; index += direction) {
-      if (!this.#getEntryByIndex(index)?.getDisabled()) {
-        return index;
+  #resolvedActiveId(): string | undefined {
+    const overrideValid =
+      this.#activeId !== undefined && this.finalValue === this.#activeValueSnapshot;
+
+    if (this.hasSelection && overrideValid) {
+      const entry = this.#itemMap.get(this.#activeId!);
+      if (this.#itemIds.has(this.#activeId!) && entry && !entry.getDisabled()) {
+        return this.#activeId;
       }
     }
 
-    return -1;
+    if (this.hasSelection) {
+      const matchingId = this.#findIdByValue(this.finalValue);
+      if (matchingId !== undefined) {
+        const entry = this.#itemMap.get(matchingId);
+        if (this.#itemIds.has(matchingId) && entry && !entry.getDisabled()) {
+          return matchingId;
+        }
+      }
+    }
+
+    if (this.#activeId !== undefined) {
+      const entry = this.#itemMap.get(this.#activeId);
+      if (this.#itemIds.has(this.#activeId) && entry && !entry.getDisabled()) {
+        return this.#activeId;
+      }
+    }
+
+    for (const id of this.#itemIds) {
+      if (!this.#itemMap.get(id)?.getDisabled()) return id;
+    }
+
+    return undefined;
   }
 
-  #getEntryByIndex(index: number): RadioGroupRegistration | undefined {
-    const id = this.#itemIds[index];
-    return id ? this.#itemMap.get(id) : undefined;
+  #findIdByValue(value: string): string | undefined {
+    for (const id of this.#itemIds) {
+      if (this.#itemMap.get(id)?.getValue() === value) return id;
+    }
+    return undefined;
   }
 }
 

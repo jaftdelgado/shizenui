@@ -2,12 +2,13 @@ import { createContext } from "svelte";
 import type { RadioGroupOrientation } from "./radio-group.types.js";
 
 export interface RadioGroupRegistration {
-  getRef: () => HTMLInputElement | null;
   getDisabled: () => boolean;
+  getValue: () => string;
 }
 
 export interface RadioGroupContextValue {
   readonly value: string | undefined;
+  readonly hasSelection: boolean;
   readonly name: string | undefined;
   readonly disabled: boolean;
   readonly readonly: boolean;
@@ -16,14 +17,18 @@ export interface RadioGroupContextValue {
   readonly labelId: string | undefined;
   readonly descriptionId: string | undefined;
   readonly errorId: string | undefined;
+  readonly hasItems: boolean;
   readonly hasLabel: boolean;
   readonly hasDescription: boolean;
   readonly hasError: boolean;
   readonly setValue: (value: string) => void;
   readonly register: (id: string, entry: RadioGroupRegistration) => void;
   readonly unregister: (id: string) => void;
-  readonly focusFirstEnabled: () => void;
-  readonly focusLastEnabled: () => void;
+  readonly isActive: (id: string) => boolean;
+  readonly setActiveId: (id: string | undefined) => void;
+  readonly getValueForId: (id: string) => string | undefined;
+  readonly registerItems: (id: string) => void;
+  readonly unregisterItems: (id: string) => void;
 }
 
 export interface RadioGroupContextResult extends RadioGroupContextValue {
@@ -50,6 +55,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       get value() {
         return undefined;
       },
+      get hasSelection() {
+        return false;
+      },
       get name() {
         return undefined;
       },
@@ -74,6 +82,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       get errorId() {
         return undefined;
       },
+      get hasItems() {
+        return false;
+      },
       get hasLabel() {
         return false;
       },
@@ -86,8 +97,15 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       setValue(_value: string) {},
       register(_id: string, _entry: RadioGroupRegistration) {},
       unregister(_id: string) {},
-      focusFirstEnabled() {},
-      focusLastEnabled() {},
+      isActive(_id: string) {
+        return false;
+      },
+      setActiveId(_id: string | undefined) {},
+      getValueForId(_id: string) {
+        return undefined;
+      },
+      registerItems(_id: string) {},
+      unregisterItems(_id: string) {},
       get exists() {
         return false;
       }
@@ -97,6 +115,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
   return {
     get value() {
       return context.value;
+    },
+    get hasSelection() {
+      return context.hasSelection;
     },
     get name() {
       return context.name;
@@ -122,6 +143,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     get errorId() {
       return context.errorId;
     },
+    get hasItems() {
+      return context.hasItems;
+    },
     get hasLabel() {
       return context.hasLabel;
     },
@@ -140,11 +164,20 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     unregister(id: string) {
       return context.unregister(id);
     },
-    focusFirstEnabled() {
-      return context.focusFirstEnabled();
+    isActive(id: string) {
+      return context.isActive(id);
     },
-    focusLastEnabled() {
-      return context.focusLastEnabled();
+    setActiveId(id: string | undefined) {
+      return context.setActiveId(id);
+    },
+    getValueForId(id: string) {
+      return context.getValueForId(id);
+    },
+    registerItems(id: string) {
+      return context.registerItems(id);
+    },
+    unregisterItems(id: string) {
+      return context.unregisterItems(id);
     },
     get exists() {
       return true;

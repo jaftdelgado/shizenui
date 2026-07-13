@@ -3,56 +3,54 @@ import type { RadioClickEvent } from "./radio.types.js";
 
 export function createRadioHandlers(options: {
   state: RadioStateInstance;
-  setChecked: (val: boolean) => void;
-  onCheckedChange?: (checked: boolean) => void;
   getOnClick?: () => ((e: RadioClickEvent) => void) | undefined;
-  getInputRef?: () => HTMLInputElement | null;
 }) {
-  const { state, setChecked, onCheckedChange, getOnClick, getInputRef } = options;
+  const { state, getOnClick } = options;
 
-  function handleChange(): void {
-    if (state.finalReadonly) {
-      const inputEl = getInputRef?.();
-      if (inputEl) inputEl.checked = state.isChecked;
-      return;
-    }
-
-    if (state.finalDisabled) return;
-
-    if (state.groupCtx.exists) {
-      state.groupCtx.setValue(state.value);
-      return;
-    }
-
-    setChecked(true);
-    onCheckedChange?.(true);
-  }
-
-  function handleKeyEnter(e: KeyboardEvent): void {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    if (e.type === "keyup") handleChange();
-  }
-
-  function handleContainerClick(e: RadioClickEvent): void {
+  function activate(): void {
     if (state.finalDisabled || state.finalReadonly) return;
-
-    const target = e.target as HTMLElement;
-    if (target.closest("label")) return;
-
-    handleChange();
-    getInputRef?.()?.focus();
+    state.groupCtx.setValue(state.value);
   }
 
   function handleClick(e: RadioClickEvent): void {
-    handleContainerClick(e);
+    activate();
     getOnClick?.()?.(e);
   }
 
+  function handleMouseDown(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+    if (state.finalDisabled || state.finalReadonly) return;
+    e.currentTarget.setAttribute("data-pressed", "true");
+  }
+
+  function handleMouseUp(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+    e.currentTarget.removeAttribute("data-pressed");
+  }
+
+  function handleMouseLeave(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+    e.currentTarget.removeAttribute("data-pressed");
+  }
+
+  function handleKeydown(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
+    if (e.key !== "Enter" && e.key !== " ") return;
+
+    if (e.type === "keydown") {
+      e.preventDefault();
+      if (e.repeat) return;
+      e.currentTarget.setAttribute("data-pressed", "true");
+      return;
+    }
+
+    if (!e.currentTarget.hasAttribute("data-pressed")) return;
+    e.currentTarget.removeAttribute("data-pressed");
+    activate();
+  }
+
   return {
-    handleChange,
-    handleKeyEnter,
-    handleClick
+    handleClick,
+    handleMouseDown,
+    handleMouseUp,
+    handleMouseLeave,
+    handleKeydown
   };
 }
 

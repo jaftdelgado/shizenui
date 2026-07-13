@@ -6,15 +6,21 @@
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
-  interface Props extends HTMLAttributes<HTMLParagraphElement> {
-    children: Snippet;
+  interface DescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
+    children?: Snippet;
     disabled?: boolean;
     id?: string;
   }
 
   const uid = $props.id();
 
-  let { children, class: className, disabled = false, id: propId, ...rest }: Props = $props();
+  let {
+    children,
+    class: className,
+    disabled = false,
+    id: propId,
+    ...rest
+  }: DescriptionProps = $props();
 
   const fieldContext = useFieldStateContext();
   const slotCtx = useContentSlotContext();
@@ -30,13 +36,15 @@
     !finalInvalid || (fieldContext.exists && fieldContext.keepDescription)
   );
 
-  if (slotCtx.exists) {
-    slotCtx.registerDescription(registrationId);
-  }
-
   $effect(() => {
+    if (!slotCtx.exists) return;
+
+    if (shouldShow) {
+      slotCtx.registerDescription(registrationId);
+    }
+
     return () => {
-      if (slotCtx.exists) slotCtx.unregisterDescription(registrationId);
+      slotCtx.unregisterDescription(registrationId);
     };
   });
 </script>
@@ -50,6 +58,6 @@
     data-invalid={presence(finalInvalid)}
     {...rest}
   >
-    {@render children()}
+    {@render children?.()}
   </p>
 {/if}
