@@ -6,7 +6,7 @@ export type RadioGroupOrientation = "horizontal" | "vertical";
 type RadioGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "role">;
 
 export interface RadioGroupProps extends RadioGroupBaseProps {
-  children: Snippet;
+  children?: Snippet;
   value?: string;
   onValueChange?: (value: string) => void;
   name?: string;
@@ -20,6 +20,6 @@ export interface RadioGroupProps extends RadioGroupBaseProps {
 }
 
 export interface RadioGroupItemsProps extends HTMLAttributes<HTMLDivElement> {
-  children: Snippet;
+  children?: Snippet;
   ref?: HTMLDivElement | null;
 }

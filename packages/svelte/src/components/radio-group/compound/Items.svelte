@@ -1,7 +1,7 @@
 <script lang="ts">
   import { cn } from "../../../lib/utils";
   import { radioGroupStyles } from "@shizen-ui/styles";
-  import { assertContext } from "../../../lib/runes/index.js";
+  import { assertContext, warnIf } from "../../../lib/runes/index.js";
   import { useRadioGroupContext, createRadioGroupItemsHandlers } from "../_internal/index.js";
   import type { RadioGroupItemsProps } from "../_internal/index.js";
 
@@ -22,6 +22,12 @@
     () => !groupCtx.exists,
     "RadioGroup.Items",
     "Must be used inside a <RadioGroup> component."
+  );
+
+  warnIf(
+    () => !children,
+    "RadioGroup.Items",
+    "No children provided. Add at least one <Radio> as a child."
   );
 
   const handlers = createRadioGroupItemsHandlers({

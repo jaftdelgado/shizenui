@@ -28,7 +28,7 @@ export interface RadioProps extends RadioBaseProps {
   ref?: HTMLButtonElement | null;
   onCheckedChange?: (checked: boolean) => void;
   onclick?: (e: RadioClickEvent) => void;
-  children: Snippet;
+  children?: Snippet;
 }
 
 export interface RadioControlProps extends HTMLAttributes<HTMLDivElement> {
@@ -37,7 +37,7 @@ export interface RadioControlProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export interface RadioContentProps extends HTMLAttributes<HTMLDivElement> {
-  children: Snippet;
+  children?: Snippet;
   ref?: HTMLDivElement | null;
 }
 

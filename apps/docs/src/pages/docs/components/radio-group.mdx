@@ -94,7 +94,7 @@ Use the `class` prop to apply Tailwind utility classes directly to the Radio and
 
 ### Custom CSS
 
-To customize the Radio component classes, you can use the @layer components directive.
+To customize the Radio and RadioGroup component classes, you can use the `@layer components` directive.
 
 <CodeBlock code={RadioGroupCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
 
@@ -141,7 +141,7 @@ To customize the Radio component classes, you can use the @layer components dire
     {
       name: "data-checked",
       description:
-        "Applied when the radio is selected. Updates control color to accent and reveals the indicator."
+        "Applied when the radio is selected. Updates control color and reveals the indicator."
     },
     { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
     { name: "data-readonly", description: "Prevents selection without visual disabled treatment." },
@@ -154,5 +154,91 @@ To customize the Radio component classes, you can use the @layer components dire
       description: "Applies a focus ring to the control when navigating with keyboard."
     },
     { name: "data-pressed", description: "Shrinks the control slightly while it's being pressed." }
+  ]}
+/>
+
+## API Reference
+
+### RadioGroup Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string", default: "undefined" },
+    { name: "onValueChange", type: "(value: string) => void", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+  ]}
+/>
+
+#### RadioGroup.Items Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
+
+### Radio Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string" },
+    { name: "checked", type: "boolean", default: "false" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLButtonElement | null", default: "null" },
+    { name: "onCheckedChange", type: "(checked: boolean) => void", default: "undefined" },
+    { name: "children", type: "Snippet", default: "undefined" }
+  ]}
+/>
+
+#### Radio.Content Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
+
+#### Radio.Control Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
+
+#### Radio.Indicator Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
   ]}
 />

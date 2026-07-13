@@ -57,6 +57,4 @@
     <Button variant="outline" size="sm" onclick={handleClear}>Clear</Button>
     <Button variant="primary" size="sm" onclick={handleSubmit}>Save Changes</Button>
   </div>
-
-  <Description>Current selection: {selected}</Description>
 </div>
