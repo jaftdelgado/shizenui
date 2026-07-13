@@ -29,9 +29,9 @@
 </script>
 
 {#if shouldRender}
-  <div bind:this={ref} class={cn(styles.content(), className)} {...rest}>
+  <span bind:this={ref} class={cn(styles.content(), className)} {...rest}>
     {#if children}
       {@render children()}
     {/if}
-  </div>
+  </span>
 {/if}

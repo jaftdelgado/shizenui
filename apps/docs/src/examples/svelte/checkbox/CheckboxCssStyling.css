@@ -1,0 +1,18 @@
+@layer components {
+  .checkbox__control {
+    @apply rounded-md border-2 border-zinc-300 bg-white;
+  }
+
+  .checkbox[data-checked] > .checkbox__control {
+    @apply border-emerald-600 bg-emerald-600;
+  }
+
+  .checkbox .checkbox__indicator {
+    @apply text-white opacity-0;
+    transition: opacity 120ms ease;
+  }
+
+  .checkbox[data-checked] .checkbox__indicator {
+    @apply opacity-100;
+  }
+}

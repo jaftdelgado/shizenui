@@ -51,8 +51,6 @@
   });
 
   setupCheckboxContexts(state);
-  // TODO: CheckboxGroup registration — pendiente, no implementado en este scope.
-  // setupCheckboxGroupRegistration(state);
 
   const ctx = useCheckboxContext();
 

@@ -26,7 +26,7 @@
 </script>
 
 {#if shouldRender}
-  <div
+  <span
     bind:this={ref}
     class={cn(styles.control(), className)}
     data-checked={presence(ctx.checked)}
@@ -41,5 +41,5 @@
     {:else}
       <Indicator />
     {/if}
-  </div>
+  </span>
 {/if}

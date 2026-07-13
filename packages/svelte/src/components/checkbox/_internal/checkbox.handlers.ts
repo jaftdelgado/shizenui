@@ -40,8 +40,6 @@ export function createCheckboxHandlers(options: {
   }
 
   function handleKeydown(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
-    // Solo Space activa el checkbox (patrón ARIA APG). Enter se previene para
-    // suprimir el click nativo sintetizado por el <button>, pero no togglea.
     if (e.key !== "Enter" && e.key !== " ") return;
 
     if (e.type === "keydown") {

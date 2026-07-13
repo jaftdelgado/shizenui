@@ -35,14 +35,14 @@ export interface CheckboxProps extends CheckboxBaseProps {
   children?: Snippet;
 }
 
-export interface CheckboxControlProps extends HTMLAttributes<HTMLDivElement> {
+export interface CheckboxControlProps extends HTMLAttributes<HTMLSpanElement> {
   children?: Snippet;
-  ref?: HTMLDivElement | null;
+  ref?: HTMLSpanElement | null;
 }
 
-export interface CheckboxContentProps extends HTMLAttributes<HTMLDivElement> {
+export interface CheckboxContentProps extends HTMLAttributes<HTMLSpanElement> {
   children?: Snippet;
-  ref?: HTMLDivElement | null;
+  ref?: HTMLSpanElement | null;
 }
 
 export interface CheckboxIndicatorProps extends HTMLAttributes<HTMLSpanElement> {

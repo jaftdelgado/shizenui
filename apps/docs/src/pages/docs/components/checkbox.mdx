@@ -1,7 +1,7 @@
 ---
 layout: "@layouts/DocsLayout.astro"
 title: Checkbox
-description: A control that allows users to toggle an option on or off.
+description: Allows users to select or deselect an independent option.
 preview: CheckboxPreview
 ---
 
@@ -11,6 +11,191 @@ import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
 
+import CheckboxAnatomyCode from "@examples/svelte/checkbox/CheckboxAnatomy.svelte?raw";
+
+import CheckboxIndicator from "@examples/svelte/checkbox/CheckboxIndicator.svelte";
+import CheckboxWithoutDescription from "@examples/svelte/checkbox/CheckboxWithoutDescription.svelte";
+import CheckboxBindChecked from "@examples/svelte/checkbox/CheckboxBindChecked.svelte";
+import CheckboxFullyControlled from "@examples/svelte/checkbox/CheckboxFullyControlled.svelte";
+import CheckboxIndeterminate from "@examples/svelte/checkbox/CheckboxIndeterminate.svelte";
+import CheckboxDisabled from "@examples/svelte/checkbox/CheckboxDisabled.svelte";
+import CheckboxInvalid from "@examples/svelte/checkbox/CheckboxInvalid.svelte";
+
+import CheckboxTwStyling from "@examples/svelte/checkbox/CheckboxTwStyling.svelte";
+import CheckboxCssStylingCode from "@examples/svelte/checkbox/CheckboxCssStyling.css?raw";
+
 ## Import
 
 <CodeImport code={`import { Checkbox } from "@shizen-ui/svelte";`} />
+
+## Anatomy
+
+<CodeBlock code={CheckboxAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
+
+## Examples
+
+### Custom Indicator
+
+<ComponentExample src="svelte/checkbox/CheckboxIndicator.svelte">
+  <CheckboxIndicator client:load />
+</ComponentExample>
+
+### Without Description
+
+<ComponentExample src="svelte/checkbox/CheckboxWithoutDescription.svelte">
+  <CheckboxWithoutDescription client:load />
+</ComponentExample>
+
+### Managing Checked State
+
+#### Two-Way Binding
+
+Use `bind:checked` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/checkbox/CheckboxBindChecked.svelte">
+  <CheckboxBindChecked client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/checkbox/CheckboxFullyControlled.svelte">
+  <CheckboxFullyControlled client:load />
+</ComponentExample>
+
+### Indeterminate
+
+<ComponentExample src="svelte/checkbox/CheckboxIndeterminate.svelte">
+  <CheckboxIndeterminate client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/checkbox/CheckboxDisabled.svelte">
+  <CheckboxDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/checkbox/CheckboxInvalid.svelte">
+  <CheckboxInvalid client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to the Checkbox.
+
+<ComponentExample src="svelte/checkbox/CheckboxTwStyling.svelte">
+  <CheckboxTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Checkbox component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={CheckboxCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Checkbox Classes
+
+<PropsTable
+  props={[
+    {
+      name: "checkbox",
+      description: "Root element. Manages layout, tokens, and interaction states."
+    },
+    { name: "checkbox__control", description: "The visible box that changes color when checked." },
+    {
+      name: "checkbox__indicator",
+      description: "The check icon that appears inside the box to mark the selected option."
+    },
+    { name: "checkbox__content", description: "Stacks label and description next to the control." }
+  ]}
+/>
+
+### Interactive States
+
+<PropsTable
+  props={[
+    {
+      name: "data-checked",
+      description:
+        "Applied when the checkbox is selected. Updates control color and reveals the indicator."
+    },
+    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
+    { name: "data-readonly", description: "Prevents selection without visual disabled treatment." },
+    {
+      name: "data-invalid",
+      description: "Marks the control with an error state to signal a validation issue."
+    },
+    {
+      name: "data-focus-visible",
+      description: "Applies a focus ring to the control when navigating with keyboard."
+    },
+    { name: "data-pressed", description: "Shrinks the control slightly while it's being pressed." }
+  ]}
+/>
+
+## API Reference
+
+### Checkbox Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "checked", type: "boolean", default: "false" },
+    { name: "onCheckedChange", type: "(checked: boolean) => void", default: "undefined" },
+    { name: "indeterminate", type: "boolean", default: "false" },
+    { name: "onIndeterminateChange", type: "(indeterminate: boolean) => void", default: "undefined" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "value", type: "string", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLButtonElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+
+]}
+/>
+
+#### Checkbox.Content Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
+/>
+
+#### Checkbox.Control Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
+/>
+
+#### Checkbox.Indicator Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
+/>

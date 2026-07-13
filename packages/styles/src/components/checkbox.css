@@ -38,17 +38,18 @@
     }
 
     &[data-invalid] {
+      --checkbox-bg: var(--color-field);
+      --checkbox-bg-hover: var(--color-field-hover);
+      --checkbox-border-color: var(--color-danger);
+
       & .checkbox__control {
         @apply status-invalid-field ring-1;
       }
 
       &[data-checked],
       &[data-indeterminate] {
-        & .checkbox__control {
-          @apply status-invalid-field ring-1;
-          background-color: var(--color-danger);
-          border-color: var(--color-danger);
-        }
+        --checkbox-bg: var(--color-danger);
+        --checkbox-bg-hover: var(--color-danger-hover);
       }
     }
   }
@@ -89,11 +90,8 @@
   }
 
   .checkbox__indicator {
-    @apply flex items-center justify-center rounded-md opacity-0;
-    width: 75%;
-    height: 75%;
+    @apply flex size-3 items-center justify-center rounded-md opacity-0;
     color: var(--checkbox-indicator);
-    scale: 1;
 
     transition:
       scale 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
@@ -107,14 +105,9 @@
       scale: 1;
     }
 
-    .checkbox[data-pressed][data-checked] &,
-    .checkbox[data-pressed][data-indeterminate] & {
-      scale: 0.85;
-    }
-
     /* Custom indicator */
     &[data-custom] {
-      @apply size-full rounded-none;
+      @apply size-full;
       background-color: transparent;
 
       &[data-checked],
@@ -125,6 +118,6 @@
   }
 
   .checkbox__content {
-    @apply flex flex-col;
+    @apply flex flex-col items-start;
   }
 }
