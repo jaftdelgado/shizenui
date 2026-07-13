@@ -1,3 +1,91 @@
-.checkbox {
-  display: block;
+@layer components {
+  .checkbox {
+    @apply inline-flex items-start gap-3 transition-opacity duration-200 outline-none select-none;
+
+    /* Base tokens */
+    --checkbox-bg: var(--color-field);
+    --checkbox-bg-hover: var(--color-field-hover);
+    --checkbox-indicator: var(--color-accent-foreground);
+    --checkbox-border-width: 0px;
+    --checkbox-border-color: transparent;
+
+    &[data-disabled] {
+      @apply status-disabled;
+
+      &,
+      & * {
+        cursor: var(--cursor-disabled);
+      }
+    }
+
+    &[data-state="checked"],
+    &[data-state="indeterminate"] {
+      --checkbox-bg: var(--color-accent);
+      --checkbox-bg-hover: var(--color-accent-hover);
+      --checkbox-border-color: var(--color-accent);
+    }
+
+    &[data-invalid] {
+      & .checkbox__control {
+        @apply status-invalid-field ring-1;
+      }
+
+      &[data-state="checked"],
+      &[data-state="indeterminate"] {
+        & .checkbox__control {
+          @apply status-invalid-field ring-1;
+          background-color: var(--color-danger);
+          border-color: var(--color-danger);
+        }
+      }
+    }
+  }
+
+  .checkbox,
+  .checkbox * {
+    cursor: var(--cursor-interactive);
+  }
+
+  .checkbox__control {
+    @apply relative flex shrink-0 items-center justify-center transition-all duration-200;
+    @apply mt-0.5 size-4 rounded-md;
+    box-sizing: border-box;
+    background-color: var(--checkbox-bg);
+    border-style: solid;
+    border-width: var(--checkbox-border-width);
+    border-color: var(--checkbox-border-color);
+
+    &:hover:not([data-disabled]) {
+      background-color: var(--checkbox-bg-hover);
+      border-color: var(--checkbox-bg-hover);
+    }
+
+    .checkbox[data-focus-visible] & {
+      @apply status-focused;
+    }
+  }
+
+  .checkbox__input {
+    @apply sr-only;
+  }
+
+  .checkbox__indicator {
+    @apply flex scale-0 items-center justify-center text-current transition-transform duration-200;
+    color: var(--checkbox-indicator);
+    width: 75%;
+    height: 75%;
+
+    &[data-state="checked"],
+    &[data-state="indeterminate"] {
+      @apply scale-100;
+    }
+
+    &[data-custom] {
+      @apply size-full scale-100 bg-transparent;
+    }
+  }
+
+  .checkbox__content {
+    @apply flex flex-col;
+  }
 }

@@ -1,18 +1,11 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const checkboxStyles = tv({
-  base: "checkbox",
-  variants: {
-    invalid: {
-      true: "checkbox--invalid"
-    },
-    disabled: {
-      true: "checkbox--disabled"
-    }
-  },
-  defaultVariants: {
-    invalid: false,
-    disabled: false
+  slots: {
+    base: "checkbox",
+    control: "checkbox__control",
+    indicator: "checkbox__indicator",
+    content: "checkbox__content"
   }
 });
 
