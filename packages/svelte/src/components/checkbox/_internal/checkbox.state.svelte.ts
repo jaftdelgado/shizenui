@@ -1,146 +1,90 @@
-import { checkboxStyles } from "@shizen-ui/styles";
-import { setCheckboxContext } from "./checkbox.context.js";
-import { useCheckboxGroupContext } from "../../../contexts/internal/index.js";
-import { setFieldStateContext, useFieldStateContext } from "../../../contexts/index.js";
-import type { CheckboxState } from "./checkbox.types.js";
+import { useFieldStateContext } from "../../../lib/index.js";
+import type { FieldStateContextResult } from "../../../lib/index.js";
 
-export interface CheckboxStateProps {
-  readonly value: string | undefined;
-  readonly disabled: boolean;
-  readonly invalid: boolean;
-  readonly name: string | undefined;
-  readonly id: string;
-  readonly checked: boolean;
-  readonly indeterminate: boolean;
+export class CheckboxState {
+  #checked: () => boolean;
+  #indeterminate: () => boolean;
+  #disabled: () => boolean | undefined;
+  #invalid: () => boolean | undefined;
+  #readonly: () => boolean | undefined;
+  #required: () => boolean | undefined;
+  #value: () => string | undefined;
+  #name: () => string | undefined;
+  #id: () => string;
+
+  readonly parentFieldCtx: FieldStateContextResult;
+  // TODO: CheckboxGroup context — pendiente, no implementado en este scope.
+  // Cuando exista CheckboxGroup, agregar `readonly groupCtx: CheckboxGroupContextResult`
+  // y anteponerlo en cada cascada final*, igual que RadioState.groupCtx.
+
+  get finalDisabled(): boolean {
+    const local = this.#disabled();
+    if (local !== undefined) return local;
+    return this.parentFieldCtx.exists ? this.parentFieldCtx.disabled : false;
+  }
+
+  get finalReadonly(): boolean {
+    const local = this.#readonly();
+    if (local !== undefined) return local;
+    return this.parentFieldCtx.exists ? this.parentFieldCtx.readonly : false;
+  }
+
+  get finalInvalid(): boolean {
+    const local = this.#invalid();
+    if (local !== undefined) return local;
+    return this.parentFieldCtx.exists ? this.parentFieldCtx.invalid : false;
+  }
+
+  get finalRequired(): boolean {
+    const local = this.#required();
+    if (local !== undefined) return local;
+    return this.parentFieldCtx.exists ? this.parentFieldCtx.required : false;
+  }
+
+  get isChecked(): boolean {
+    return this.#checked();
+  }
+
+  get isIndeterminate(): boolean {
+    return this.#indeterminate();
+  }
+
+  get value(): string | undefined {
+    return this.#value();
+  }
+
+  get name(): string | undefined {
+    return this.#name();
+  }
+
+  get id(): string {
+    return this.#id();
+  }
+
+  constructor(props: {
+    checked: () => boolean;
+    indeterminate: () => boolean;
+    disabled: () => boolean | undefined;
+    invalid: () => boolean | undefined;
+    readonly: () => boolean | undefined;
+    required: () => boolean | undefined;
+    value: () => string | undefined;
+    name: () => string | undefined;
+    id: () => string;
+    fieldContext?: FieldStateContextResult;
+  }) {
+    this.#checked = props.checked;
+    this.#indeterminate = props.indeterminate;
+    this.#disabled = props.disabled;
+    this.#invalid = props.invalid;
+    this.#readonly = props.readonly;
+    this.#required = props.required;
+    this.#value = props.value;
+    this.#name = props.name;
+    this.#id = props.id;
+
+    this.parentFieldCtx = props.fieldContext ?? useFieldStateContext();
+  }
 }
 
-export function createCheckboxState(props: CheckboxStateProps) {
-  const groupCtx = useCheckboxGroupContext();
-  const parentFieldContext = useFieldStateContext();
-
-  let inputElement = $state<HTMLInputElement | null>(null);
-
-  const finalDisabled = $derived(
-    parentFieldContext.exists
-      ? parentFieldContext.disabled
-      : groupCtx.exists
-        ? groupCtx.disabled
-        : props.disabled
-  );
-
-  const finalInvalid = $derived(
-    parentFieldContext.exists
-      ? parentFieldContext.invalid
-      : groupCtx.exists
-        ? groupCtx.invalid
-        : props.invalid
-  );
-
-  const activeName = $derived(groupCtx.exists ? groupCtx.name : props.name);
-
-  const isChecked = $derived.by<boolean>(() => {
-    if (groupCtx.exists && props.value !== undefined) {
-      return groupCtx.value.includes(props.value);
-    }
-    return props.checked;
-  });
-
-  const isIndeterminate = $derived.by<boolean>(() => {
-    if (groupCtx.exists) return false;
-    return props.indeterminate;
-  });
-
-  const checkboxState = $derived.by<CheckboxState>(() => {
-    if (isIndeterminate) return "indeterminate";
-    if (isChecked) return "checked";
-    return "unchecked";
-  });
-
-  const styles = $derived(checkboxStyles());
-
-  setCheckboxContext({
-    get checked() {
-      return isChecked;
-    },
-    get indeterminate() {
-      return isIndeterminate;
-    },
-    get checkboxState() {
-      return checkboxState;
-    },
-    get disabled() {
-      return finalDisabled;
-    },
-    get invalid() {
-      return finalInvalid;
-    },
-    get id() {
-      return props.id;
-    }
-  });
-
-  setFieldStateContext({
-    get invalid() {
-      return finalInvalid;
-    },
-    get disabled() {
-      return finalDisabled;
-    },
-    get required() {
-      return false;
-    },
-    get id() {
-      return props.id;
-    },
-    get keepDescription() {
-      return true;
-    }
-  });
-
-  $effect(() => {
-    if (inputElement) {
-      inputElement.indeterminate = isIndeterminate;
-    }
-  });
-
-  return {
-    get inputElement() {
-      return inputElement;
-    },
-    set inputElement(el: HTMLInputElement | null) {
-      inputElement = el;
-    },
-    get finalDisabled() {
-      return finalDisabled;
-    },
-    get finalInvalid() {
-      return finalInvalid;
-    },
-    get activeName() {
-      return activeName;
-    },
-    get isChecked() {
-      return isChecked;
-    },
-    get isIndeterminate() {
-      return isIndeterminate;
-    },
-    get checkboxState() {
-      return checkboxState;
-    },
-    get styles() {
-      return styles;
-    },
-    get groupCtx() {
-      return groupCtx;
-    },
-    get value() {
-      return props.value;
-    },
-    get id() {
-      return props.id;
-    }
-  };
-}
-
-export type CheckboxStateInstance = ReturnType<typeof createCheckboxState>;
+export type CheckboxStateInstance = InstanceType<typeof CheckboxState>;

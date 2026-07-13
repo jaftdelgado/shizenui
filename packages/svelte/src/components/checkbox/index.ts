@@ -1,15 +1,21 @@
-import CheckboxRoot from "./Checkbox.svelte";
+import Root from "./Checkbox.svelte";
 import Control from "./compound/Control.svelte";
 import Indicator from "./compound/Indicator.svelte";
 import Content from "./compound/Content.svelte";
 
-export const Checkbox = Object.assign(CheckboxRoot, {
+export type {
+  CheckboxProps,
+  CheckboxClickEvent,
+  CheckboxControlProps,
+  CheckboxContentProps,
+  CheckboxIndicatorProps
+} from "./_internal/index.js";
+
+export const Checkbox = Object.assign(Root, {
   Control,
   Indicator,
   Content
 });
-
-export { CheckboxRoot };
 
 export default {
   Checkbox

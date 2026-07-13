@@ -1,39 +1,51 @@
+import type { HTMLButtonAttributes, HTMLAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
-import type { HTMLInputAttributes } from "svelte/elements";
 
-export type CheckboxState = "checked" | "unchecked" | "indeterminate" | "onclick";
+type CheckboxBaseProps = Omit<
+  HTMLButtonAttributes,
+  | "checked"
+  | "type"
+  | "value"
+  | "disabled"
+  | "id"
+  | "onclick"
+  | "onkeydown"
+  | "onkeyup"
+  | "onfocus"
+  | "onblur"
+  | "children"
+>;
 
-export interface CheckboxProps extends Omit<
-  HTMLInputAttributes,
-  "type" | "checked" | "indeterminate"
-> {
+export type CheckboxClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
+
+export interface CheckboxProps extends CheckboxBaseProps {
   value?: string;
-  invalid?: boolean;
+  name?: string;
   disabled?: boolean;
+  readonly?: boolean;
+  invalid?: boolean;
+  required?: boolean;
   checked?: boolean;
   indeterminate?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   onIndeterminateChange?: (indeterminate: boolean) => void;
-  children: Snippet;
-  name?: string;
   id?: string;
-
-  onclick?: (e: MouseEvent) => void;
+  ref?: HTMLButtonElement | null;
+  onclick?: (e: CheckboxClickEvent) => void;
+  children?: Snippet;
 }
 
-export interface CheckboxContext {
-  readonly checked: boolean;
-  readonly indeterminate: boolean;
-  readonly checkboxState: CheckboxState;
-  readonly disabled: boolean;
-  readonly invalid: boolean;
-  readonly id: string;
+export interface CheckboxControlProps extends HTMLAttributes<HTMLDivElement> {
+  children?: Snippet;
+  ref?: HTMLDivElement | null;
 }
 
-export interface FieldStateContext {
-  readonly invalid: boolean;
-  readonly disabled: boolean;
-  readonly required: boolean;
-  readonly id: string;
-  readonly keepDescription: boolean;
+export interface CheckboxContentProps extends HTMLAttributes<HTMLDivElement> {
+  children?: Snippet;
+  ref?: HTMLDivElement | null;
+}
+
+export interface CheckboxIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
+  children?: Snippet;
+  ref?: HTMLSpanElement | null;
 }

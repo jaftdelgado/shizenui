@@ -1,28 +1,45 @@
 <script lang="ts">
-  import { type Snippet } from "svelte";
-  import { cn } from "@shizen-ui/styles";
   import { checkboxStyles } from "@shizen-ui/styles";
-  import { useCheckboxContext } from "../_internal/index.js";
-  import { CheckIcon } from "../../../shared/icons/index.js";
 
-  let { children, class: className }: { children?: Snippet; class?: string } = $props();
+  import { cn, presence } from "../../../lib/utils";
+  import { assertContext } from "../../../lib/runes/index.js";
+  import { useCheckboxContext } from "../_internal/index.js";
+  import type { CheckboxIndicatorProps } from "../_internal/index.js";
+  import { CheckIcon } from "../../../lib/icons";
+
+  let {
+    children,
+    class: className,
+    ref = $bindable(null),
+    ...rest
+  }: CheckboxIndicatorProps = $props();
 
   const ctx = useCheckboxContext();
-  const styles = $derived(checkboxStyles({}));
-  const isCustom = $derived(Boolean(children));
+  const styles = $derived(checkboxStyles());
+
+  const isCustom = $derived(!!children);
+
+  const { shouldRender } = assertContext(
+    () => !ctx.exists,
+    "Checkbox.Indicator",
+    "Must be used inside a <Checkbox> component."
+  );
 </script>
 
-{#if ctx.checkboxState === "checked" || ctx.checkboxState === "indeterminate"}
+{#if shouldRender}
   <span
-    class={cn(!isCustom && styles.indicator(), className)}
-    data-state={ctx.checkboxState}
-    data-disabled={ctx.disabled ? "" : undefined}
-    data-invalid={ctx.invalid ? "" : undefined}
-    data-custom={isCustom ? "" : undefined}
+    bind:this={ref}
+    class={cn(styles.indicator(), className)}
+    data-checked={presence(ctx.checked)}
+    data-indeterminate={presence(ctx.indeterminate)}
+    data-disabled={presence(ctx.disabled)}
+    data-invalid={presence(ctx.invalid)}
+    data-custom={presence(isCustom)}
+    {...rest}
   >
     {#if children}
       {@render children()}
-    {:else if ctx.checkboxState === "indeterminate"}
+    {:else if ctx.indeterminate}
       <svg
         width="100%"
         height="100%"

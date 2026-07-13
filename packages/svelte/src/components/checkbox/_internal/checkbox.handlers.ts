@@ -1,52 +1,70 @@
 import type { CheckboxStateInstance } from "./checkbox.state.svelte.js";
+import type { CheckboxClickEvent } from "./checkbox.types.js";
 
-export function createCheckboxHandlers(
-  state: CheckboxStateInstance,
-  getChecked: () => boolean,
-  setChecked: (val: boolean) => void,
-  getIndeterminate: () => boolean,
-  setIndeterminate: (val: boolean) => void,
-  onCheckedChange?: (val: boolean) => void,
-  onIndeterminateChange?: (val: boolean) => void
-) {
-  function handleChange() {
-    if (state.finalDisabled) return;
+export function createCheckboxHandlers(options: {
+  state: CheckboxStateInstance;
+  setChecked: (value: boolean) => void;
+  setIndeterminate: (value: boolean) => void;
+  getOnClick?: () => ((e: CheckboxClickEvent) => void) | undefined;
+}) {
+  const { state, setChecked, setIndeterminate, getOnClick } = options;
 
-    if (state.groupCtx.exists) {
-      if (state.value === undefined) return;
-      state.groupCtx.toggleValue(state.value);
-      return;
-    }
+  function activate(): void {
+    if (state.finalDisabled || state.finalReadonly) return;
 
-    if (getIndeterminate()) {
+    if (state.isIndeterminate) {
       setIndeterminate(false);
-      onIndeterminateChange?.(false);
       setChecked(true);
-      onCheckedChange?.(true);
       return;
     }
 
-    const next = !getChecked();
-    setChecked(next);
-    onCheckedChange?.(next);
+    setChecked(!state.isChecked);
   }
 
-  function handleKeyEnter(e: KeyboardEvent) {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    if (e.type === "keyup") handleChange();
+  function handleClick(e: CheckboxClickEvent): void {
+    activate();
+    getOnClick?.()?.(e);
   }
 
-  function handleContainerClick(e: MouseEvent) {
-    const target = e.target as HTMLElement;
-    if (target.tagName === "INPUT" || target.closest("label")) return;
-    handleChange();
-    const container = e.currentTarget as HTMLDivElement;
-    const input = container.querySelector("input");
-    input?.focus();
+  function handleMouseDown(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+    if (state.finalDisabled || state.finalReadonly) return;
+    e.currentTarget.setAttribute("data-pressed", "true");
   }
 
-  return { handleChange, handleKeyEnter, handleContainerClick };
+  function handleMouseUp(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+    e.currentTarget.removeAttribute("data-pressed");
+  }
+
+  function handleMouseLeave(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+    e.currentTarget.removeAttribute("data-pressed");
+  }
+
+  function handleKeydown(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
+    // Solo Space activa el checkbox (patrón ARIA APG). Enter se previene para
+    // suprimir el click nativo sintetizado por el <button>, pero no togglea.
+    if (e.key !== "Enter" && e.key !== " ") return;
+
+    if (e.type === "keydown") {
+      e.preventDefault();
+      if (e.key === "Enter") return;
+      if (e.repeat) return;
+      e.currentTarget.setAttribute("data-pressed", "true");
+      return;
+    }
+
+    if (e.key === "Enter") return;
+    if (!e.currentTarget.hasAttribute("data-pressed")) return;
+    e.currentTarget.removeAttribute("data-pressed");
+    activate();
+  }
+
+  return {
+    handleClick,
+    handleMouseDown,
+    handleMouseUp,
+    handleMouseLeave,
+    handleKeydown
+  };
 }
 
 export type CheckboxHandlers = ReturnType<typeof createCheckboxHandlers>;

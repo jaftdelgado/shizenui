@@ -1,10 +1,21 @@
-export type { CheckboxProps, CheckboxState } from "./checkbox.types.js";
+export type {
+  CheckboxProps,
+  CheckboxClickEvent,
+  CheckboxControlProps,
+  CheckboxContentProps,
+  CheckboxIndicatorProps
+} from "./checkbox.types.js";
 
-export type { CheckboxStateInstance, CheckboxStateProps } from "./checkbox.state.svelte.js";
-export { createCheckboxState } from "./checkbox.state.svelte.js";
+export { CheckboxState } from "./checkbox.state.svelte.js";
+export type { CheckboxStateInstance } from "./checkbox.state.svelte.js";
 
-export type { CheckboxHandlers } from "./checkbox.handlers.svelte.js";
-export { createCheckboxHandlers } from "./checkbox.handlers.svelte.js";
+export { setupCheckboxContexts } from "./checkbox.setup.svelte.js";
 
-export type { CheckboxContextValue, CheckboxContextResult } from "./checkbox.context.js";
+// TODO: CheckboxGroup
+// export { setupCheckboxGroupRegistration } from "./checkbox.registration.js";
+
+export { createCheckboxHandlers } from "./checkbox.handlers.js";
+export type { CheckboxHandlers } from "./checkbox.handlers.js";
+
 export { setCheckboxContext, useCheckboxContext } from "./checkbox.context.js";
+export type { CheckboxContextValue, CheckboxContextResult } from "./checkbox.context.js";

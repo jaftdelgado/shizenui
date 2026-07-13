@@ -1,6 +1,6 @@
 @layer components {
   .checkbox {
-    @apply inline-flex items-start gap-3 transition-opacity duration-200 outline-none select-none;
+    @apply inline-flex items-start gap-3 outline-none select-none;
 
     /* Base tokens */
     --checkbox-bg: var(--color-field);
@@ -9,17 +9,29 @@
     --checkbox-border-width: 0px;
     --checkbox-border-color: transparent;
 
+    transition: opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+
     &[data-disabled] {
       @apply status-disabled;
 
       &,
-      & * {
+      & *,
+      & .label {
         cursor: var(--cursor-disabled);
       }
     }
 
-    &[data-state="checked"],
-    &[data-state="indeterminate"] {
+    &[data-readonly] {
+      &,
+      & *,
+      & .label {
+        cursor: default;
+      }
+    }
+
+    &[data-checked],
+    &[data-indeterminate] {
       --checkbox-bg: var(--color-accent);
       --checkbox-bg-hover: var(--color-accent-hover);
       --checkbox-border-color: var(--color-accent);
@@ -30,8 +42,8 @@
         @apply status-invalid-field ring-1;
       }
 
-      &[data-state="checked"],
-      &[data-state="indeterminate"] {
+      &[data-checked],
+      &[data-indeterminate] {
         & .checkbox__control {
           @apply status-invalid-field ring-1;
           background-color: var(--color-danger);
@@ -42,12 +54,13 @@
   }
 
   .checkbox,
-  .checkbox * {
+  .checkbox__control,
+  .checkbox .label {
     cursor: var(--cursor-interactive);
   }
 
   .checkbox__control {
-    @apply relative flex shrink-0 items-center justify-center transition-all duration-200;
+    @apply relative flex shrink-0 items-center justify-center;
     @apply mt-0.5 size-4 rounded-md;
     box-sizing: border-box;
     background-color: var(--checkbox-bg);
@@ -55,7 +68,13 @@
     border-width: var(--checkbox-border-width);
     border-color: var(--checkbox-border-color);
 
-    &:hover:not([data-disabled]) {
+    transition:
+      background-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
+      box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+      scale 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+
+    &:hover:not([data-disabled]):not([data-readonly]) {
       background-color: var(--checkbox-bg-hover);
       border-color: var(--checkbox-bg-hover);
     }
@@ -63,25 +82,45 @@
     .checkbox[data-focus-visible] & {
       @apply status-focused;
     }
-  }
 
-  .checkbox__input {
-    @apply sr-only;
+    .checkbox[data-pressed] & {
+      @apply scale-95;
+    }
   }
 
   .checkbox__indicator {
-    @apply flex scale-0 items-center justify-center text-current transition-transform duration-200;
-    color: var(--checkbox-indicator);
+    @apply flex items-center justify-center rounded-md opacity-0;
     width: 75%;
     height: 75%;
+    color: var(--checkbox-indicator);
+    scale: 1;
 
-    &[data-state="checked"],
-    &[data-state="indeterminate"] {
-      @apply scale-100;
+    transition:
+      scale 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+      opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+
+    /* Default indicator */
+    &[data-checked],
+    &[data-indeterminate] {
+      @apply opacity-100;
+      scale: 1;
     }
 
+    .checkbox[data-pressed][data-checked] &,
+    .checkbox[data-pressed][data-indeterminate] & {
+      scale: 0.85;
+    }
+
+    /* Custom indicator */
     &[data-custom] {
-      @apply size-full scale-100 bg-transparent;
+      @apply size-full rounded-none;
+      background-color: transparent;
+
+      &[data-checked],
+      &[data-indeterminate] {
+        scale: 1;
+      }
     }
   }
 
