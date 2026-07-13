@@ -18,12 +18,8 @@
     class: className,
     value,
     disabled = undefined,
-    readonly = undefined,
-    invalid = undefined,
     id = createId("radio", uid),
-    checked = $bindable(false),
     ref = $bindable(null),
-    onCheckedChange,
     onclick,
     children,
     ...rest
@@ -38,10 +34,7 @@
   const state = new RadioState({
     value: () => value,
     disabled: () => disabled,
-    readonly: () => readonly,
-    invalid: () => invalid,
-    id: () => id,
-    checked: () => checked
+    id: () => id
   });
 
   setupRadioContexts(state);
@@ -57,10 +50,6 @@
 
   const handlers = createRadioHandlers({
     state,
-    setChecked: (val) => {
-      checked = val;
-    },
-    onCheckedChange: (val) => onCheckedChange?.(val),
     getOnClick: () => onclick
   });
 
@@ -91,7 +80,7 @@
   aria-disabled={state.finalDisabled ? true : undefined}
   aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
   aria-describedby={describedBy}
-  tabindex={state.groupCtx.exists ? (state.groupCtx.isActive(id) ? 0 : -1) : 0}
+  tabindex={state.groupCtx.isActive(id) ? 0 : -1}
   class={cn(styles.base(), className)}
   data-checked={presence(state.isChecked)}
   data-disabled={presence(state.finalDisabled)}

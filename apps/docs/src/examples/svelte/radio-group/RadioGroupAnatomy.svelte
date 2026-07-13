@@ -5,11 +5,12 @@
 <RadioGroup>
   <Label />
   <Description />
-
   <RadioGroup.Items>
     <Radio value="option1">
       <Radio.Control>
-        <Radio.Indicator />
+        <Radio.Indicator>
+          <!-- Custom indicator (optional) -->
+        </Radio.Indicator>
       </Radio.Control>
       <Radio.Content>
         <Label />
@@ -17,6 +18,5 @@
       </Radio.Content>
     </Radio>
   </RadioGroup.Items>
-
   <FieldError />
 </RadioGroup>

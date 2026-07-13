@@ -1,31 +1,31 @@
 <script lang="ts">
   import { RadioGroup, Radio, Label, Description } from "@shizen-ui/svelte";
 
-  let notification = $state("all");
+  let audience = $state("followers");
 
   const options = [
     {
-      value: "all",
-      label: "All notifications",
-      description: "Get notified for every activity."
+      value: "public",
+      label: "Public",
+      description: "Anyone on the platform can see this post."
     },
     {
-      value: "mentions",
-      label: "Mentions only",
-      description: "Only when someone tags you."
+      value: "followers",
+      label: "Followers only",
+      description: "Only people who follow you can see this post."
     },
     {
-      value: "none",
-      label: "Nothing",
-      description: "Turn off all notifications."
+      value: "private",
+      label: "Only me",
+      description: "This post will only be visible to you."
     }
   ];
 </script>
 
 <div class="flex max-w-sm flex-col">
-  <RadioGroup bind:value={notification} name="notification-preference">
-    <Label>Notifications</Label>
-    <Description>Choose what activity you want to be notified about.</Description>
+  <RadioGroup bind:value={audience} name="post-preference">
+    <Label>Who can see this post?</Label>
+    <Description>Choose the audience for this post before publishing.</Description>
 
     <RadioGroup.Items>
       {#each options as option}

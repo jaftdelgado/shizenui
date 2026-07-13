@@ -20,13 +20,9 @@ export type RadioClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLBu
 
 export interface RadioProps extends RadioBaseProps {
   value: string;
-  checked?: boolean;
   disabled?: boolean;
-  readonly?: boolean;
-  invalid?: boolean;
   id?: string;
   ref?: HTMLButtonElement | null;
-  onCheckedChange?: (checked: boolean) => void;
   onclick?: (e: RadioClickEvent) => void;
   children?: Snippet;
 }

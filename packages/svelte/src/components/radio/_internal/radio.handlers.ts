@@ -3,21 +3,13 @@ import type { RadioClickEvent } from "./radio.types.js";
 
 export function createRadioHandlers(options: {
   state: RadioStateInstance;
-  setChecked: (val: boolean) => void;
-  onCheckedChange?: (checked: boolean) => void;
   getOnClick?: () => ((e: RadioClickEvent) => void) | undefined;
 }) {
-  const { state, setChecked, onCheckedChange, getOnClick } = options;
+  const { state, getOnClick } = options;
 
   function activate(): void {
     if (state.finalDisabled || state.finalReadonly) return;
-    if (state.groupCtx.exists) {
-      state.groupCtx.setValue(state.value);
-      return;
-    }
-
-    setChecked(true);
-    onCheckedChange?.(true);
+    state.groupCtx.setValue(state.value);
   }
 
   function handleClick(e: RadioClickEvent): void {
