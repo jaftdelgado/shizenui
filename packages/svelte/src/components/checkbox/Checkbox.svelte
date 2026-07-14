@@ -35,6 +35,7 @@
   let hasInteracted = false;
   let baselineChecked = $state(checked);
   let baselineIndeterminate = $state(indeterminate);
+  let submissionInvalid = $state(false);
 
   $effect(() => {
     if (hasInteracted) return;
@@ -55,9 +56,16 @@
     invalid: () => invalid,
     readonly: () => readonly,
     required: () => required,
+    submissionInvalid: () => submissionInvalid,
     value: () => value,
     name: () => name,
     id: () => id
+  });
+
+  $effect(() => {
+    if (checkboxState.isChecked) {
+      submissionInvalid = false;
+    }
   });
 
   setupCheckboxContexts(checkboxState);
@@ -114,6 +122,7 @@
     onReset: () => {
       checked = baselineChecked;
       indeterminate = baselineIndeterminate;
+      submissionInvalid = false;
     }
   });
 </script>
@@ -172,5 +181,10 @@
     checked={checkboxState.isChecked}
     disabled={checkboxState.finalDisabled}
     required={checkboxState.finalRequired}
+    oninvalid={(e) => {
+      e.preventDefault();
+      submissionInvalid = true;
+      ref?.focus();
+    }}
   />
 {/if}

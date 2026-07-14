@@ -8,7 +8,11 @@
 }
 
 @utility invalid-field-ring {
-  @apply ring-danger ring-2 ring-offset-0 outline-none;
+  @apply ring-danger outline-none;
+}
+
+@utility focus-invalid-field-ring {
+  @apply ring-danger/30 ring-offset-danger ring-3 ring-offset-1 outline-none;
 }
 
 /* Statuses utilities*/
@@ -27,6 +31,10 @@
 
 @utility status-invalid-field {
   @apply invalid-field-ring;
+}
+
+@utility status-focused-invalid-field {
+  @apply focus-invalid-field-ring;
 }
 
 @utility scrollbar-overlay {

@@ -65,9 +65,6 @@
     @apply mt-0.5 size-4 rounded-md;
     box-sizing: border-box;
     background-color: var(--checkbox-bg);
-    border-style: solid;
-    border-width: var(--checkbox-border-width);
-    border-color: var(--checkbox-border-color);
 
     transition:
       background-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
@@ -77,11 +74,14 @@
 
     &:hover:not([data-disabled]):not([data-readonly]) {
       background-color: var(--checkbox-bg-hover);
-      border-color: var(--checkbox-bg-hover);
     }
 
     .checkbox[data-focus-visible] & {
       @apply status-focused;
+    }
+
+    .checkbox[data-invalid][data-focus-visible] & {
+      @apply status-focused-invalid-field;
     }
 
     .checkbox[data-pressed] & {
@@ -90,7 +90,7 @@
   }
 
   .checkbox__indicator {
-    @apply flex size-3 items-center justify-center rounded-md opacity-0;
+    @apply flex size-2 items-center justify-center rounded-md opacity-0;
     color: var(--checkbox-indicator);
 
     transition:
@@ -102,7 +102,6 @@
     &[data-checked],
     &[data-indeterminate] {
       @apply opacity-100;
-      scale: 1;
     }
 
     /* Custom indicator */

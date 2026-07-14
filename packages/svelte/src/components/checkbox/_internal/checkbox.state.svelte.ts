@@ -8,6 +8,7 @@ export class CheckboxState {
   #invalid: () => boolean | undefined;
   #readonly: () => boolean | undefined;
   #required: () => boolean | undefined;
+  #submissionInvalid: () => boolean;
   #value: () => string | undefined;
   #name: () => string | undefined;
   #id: () => string;
@@ -32,7 +33,8 @@ export class CheckboxState {
   get finalInvalid(): boolean {
     const local = this.#invalid();
     if (local !== undefined) return local;
-    return this.parentFieldCtx.exists ? this.parentFieldCtx.invalid : false;
+    const cascadeInvalid = this.parentFieldCtx.exists ? this.parentFieldCtx.invalid : false;
+    return cascadeInvalid || this.#submissionInvalid();
   }
 
   get finalRequired(): boolean {
@@ -68,6 +70,7 @@ export class CheckboxState {
     invalid: () => boolean | undefined;
     readonly: () => boolean | undefined;
     required: () => boolean | undefined;
+    submissionInvalid: () => boolean;
     value: () => string | undefined;
     name: () => string | undefined;
     id: () => string;
@@ -79,6 +82,7 @@ export class CheckboxState {
     this.#invalid = props.invalid;
     this.#readonly = props.readonly;
     this.#required = props.required;
+    this.#submissionInvalid = props.submissionInvalid;
     this.#value = props.value;
     this.#name = props.name;
     this.#id = props.id;
