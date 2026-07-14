@@ -116,6 +116,6 @@
   }
 
   .radio__content {
-    @apply flex flex-col;
+    @apply flex flex-col items-start;
   }
 }

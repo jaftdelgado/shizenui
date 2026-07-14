@@ -5,7 +5,7 @@
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
-  interface FieldErrorProps extends HTMLAttributes<HTMLParagraphElement> {
+  interface FieldErrorProps extends HTMLAttributes<HTMLSpanElement> {
     children?: Snippet;
     invalid?: boolean;
     id?: string;
@@ -45,7 +45,7 @@
 </script>
 
 {#if finalInvalid}
-  <p
+  <span
     id={finalId}
     class={cn(fieldErrorStyles(), className)}
     data-slot="error-message"
@@ -53,5 +53,5 @@
     {...rest}
   >
     {@render children?.()}
-  </p>
+  </span>
 {/if}

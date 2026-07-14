@@ -39,7 +39,7 @@
     --control-text: #2e3137;
     --inverted-text: var(--snow);
 
-    --accent: #007aff;
+    --accent: #0d6fff;
     --accent-foreground: var(--snow);
 
     /* Status Colors */
@@ -49,7 +49,7 @@
     --warning: #f5a524;
     --warning-foreground: var(--snow);
 
-    --danger: #ff3b30;
+    --danger: #ff383c;
     --danger-foreground: var(--snow);
 
     /* Control Colors */

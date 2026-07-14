@@ -95,14 +95,14 @@
 
   --color-danger-hover: color-mix(
     in oklab,
-    var(--color-danger) 94%,
-    var(--color-danger-foreground) 6%
+    var(--color-danger) 92%,
+    var(--color-danger-foreground) 8%
   );
 
   --color-danger-pressed: color-mix(
     in oklab,
-    var(--color-danger) 92%,
-    var(--color-danger-foreground) 8%
+    var(--color-danger) 90%,
+    var(--color-danger-foreground) 10%
   );
 
   /* Soft Colors */

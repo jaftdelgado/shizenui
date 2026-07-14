@@ -1,7 +1,7 @@
 :root {
   --docs-sidebar-w: 260px;
   --docs-body-w: 640px;
-  --docs-toc-w: 190px;
+  --docs-toc-w: 210px;
   --docs-gap: 98px;
   --docs-toc-top: 32px;
   --docs-section-gap: 40px;
@@ -22,7 +22,6 @@
   }
 
   /* ─── Main column ─────────────────────────────────────────── */
-
   .docs-main {
     @apply mt-8;
     display: flex;
@@ -33,7 +32,6 @@
   }
 
   /* ─── Shared width ────────────────────────────────────────── */
-
   .docs-header,
   .docs-preview,
   .docs-content-grid {
