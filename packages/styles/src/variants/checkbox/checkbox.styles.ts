@@ -5,7 +5,8 @@ export const checkboxStyles = tv({
     base: "checkbox",
     control: "checkbox__control",
     indicator: "checkbox__indicator",
-    content: "checkbox__content"
+    content: "checkbox__content",
+    input: "checkbox__input"
   }
 });
 

@@ -9,7 +9,7 @@
     setupCheckboxContexts,
     useCheckboxContext
   } from "./_internal/index.js";
-  import { createFocusVisible, warnIf } from "../../lib/runes/index.js";
+  import { createFocusVisible, warnIf, syncFormReset } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -32,13 +32,23 @@
     ...rest
   }: CheckboxProps = $props();
 
+  let hasInteracted = false;
+  let baselineChecked = $state(checked);
+  let baselineIndeterminate = $state(indeterminate);
+
+  $effect(() => {
+    if (hasInteracted) return;
+    baselineChecked = checked;
+    baselineIndeterminate = indeterminate;
+  });
+
   warnIf(
     () => !children,
     "Checkbox",
     "No children provided. Add at least <Checkbox.Control /> as a child."
   );
 
-  const state = new CheckboxState({
+  const checkboxState = new CheckboxState({
     checked: () => checked,
     indeterminate: () => indeterminate,
     disabled: () => disabled,
@@ -50,35 +60,42 @@
     id: () => id
   });
 
-  setupCheckboxContexts(state);
+  setupCheckboxContexts(checkboxState);
 
   const ctx = useCheckboxContext();
 
   warnIf(
-    () => !!children && !ctx.hasLabel && !rest["aria-label"],
+    () => !ctx.hasLabel && !rest["aria-label"] && !rest["aria-labelledby"],
     "Checkbox",
-    "No Label found. Add a <Label> (typically inside <Checkbox.Content>), or pass aria-label directly."
+    "No accessible name found. Add a <Label> (typically inside <Checkbox.Content>), or pass aria-label/aria-labelledby directly."
+  );
+
+  warnIf(
+    () => !!ref && !checkboxState.name && !!ref.closest("form"),
+    "Checkbox",
+    "This checkbox is inside a <form> but no `name` was provided — it will not participate in native form submission."
   );
 
   function setChecked(next: boolean): void {
+    hasInteracted = true;
     checked = next;
     onCheckedChange?.(next);
   }
 
   function setIndeterminate(next: boolean): void {
+    hasInteracted = true;
     indeterminate = next;
     onIndeterminateChange?.(next);
   }
 
   const handlers = createCheckboxHandlers({
-    state,
+    state: checkboxState,
     setChecked,
     setIndeterminate,
     getOnClick: () => onclick
   });
 
   const focus = createFocusVisible();
-
   const styles = $derived(checkboxStyles());
 
   const describedBy = $derived(
@@ -89,6 +106,16 @@
       .filter(Boolean)
       .join(" ") || undefined
   );
+
+  let hiddenInputRef: HTMLInputElement | null = $state(null);
+
+  syncFormReset({
+    getRef: () => ref,
+    onReset: () => {
+      checked = baselineChecked;
+      indeterminate = baselineIndeterminate;
+    }
+  });
 </script>
 
 <button
@@ -96,21 +123,21 @@
   type="button"
   role="checkbox"
   {id}
-  disabled={state.finalDisabled}
-  aria-checked={state.isIndeterminate ? "mixed" : state.isChecked}
-  aria-disabled={state.finalDisabled ? true : undefined}
-  aria-invalid={state.finalInvalid ? true : undefined}
-  aria-readonly={state.finalReadonly ? true : undefined}
-  aria-required={state.finalRequired ? true : undefined}
+  disabled={checkboxState.finalDisabled}
+  aria-checked={checkboxState.isIndeterminate ? "mixed" : checkboxState.isChecked}
+  aria-disabled={checkboxState.finalDisabled ? true : undefined}
+  aria-invalid={checkboxState.finalInvalid ? true : undefined}
+  aria-readonly={checkboxState.finalReadonly ? true : undefined}
+  aria-required={checkboxState.finalRequired ? true : undefined}
   aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
   aria-describedby={describedBy}
-  tabindex={!state.finalDisabled ? 0 : -1}
+  tabindex={!checkboxState.finalDisabled ? 0 : -1}
   class={cn(styles.base(), className)}
-  data-checked={presence(state.isChecked)}
-  data-indeterminate={presence(state.isIndeterminate)}
-  data-disabled={presence(state.finalDisabled)}
-  data-readonly={presence(state.finalReadonly)}
-  data-invalid={presence(state.finalInvalid)}
+  data-checked={presence(checkboxState.isChecked)}
+  data-indeterminate={presence(checkboxState.isIndeterminate)}
+  data-disabled={presence(checkboxState.finalDisabled)}
+  data-readonly={presence(checkboxState.finalReadonly)}
+  data-invalid={presence(checkboxState.finalInvalid)}
   data-focus-visible={presence(focus.isFocusVisible)}
   onclick={handlers.handleClick}
   onkeydown={(e) => {
@@ -133,16 +160,17 @@
   {/if}
 </button>
 
-{#if state.name}
+{#if checkboxState.name}
   <input
+    bind:this={hiddenInputRef}
     type="checkbox"
-    hidden
+    class={styles.input()}
     tabindex={-1}
     aria-hidden="true"
-    name={state.name}
-    value={state.value ?? "on"}
-    checked={state.isChecked}
-    disabled={state.finalDisabled}
-    required={state.finalRequired}
+    name={checkboxState.name}
+    value={checkboxState.value ?? "on"}
+    checked={checkboxState.isChecked}
+    disabled={checkboxState.finalDisabled}
+    required={checkboxState.finalRequired}
   />
 {/if}

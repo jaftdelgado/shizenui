@@ -120,4 +120,8 @@
   .checkbox__content {
     @apply flex flex-col items-start;
   }
+
+  .checkbox__input {
+    @apply sr-only;
+  }
 }

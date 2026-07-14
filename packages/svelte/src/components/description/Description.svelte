@@ -6,7 +6,7 @@
   import type { HTMLAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
 
-  interface DescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
+  interface DescriptionProps extends HTMLAttributes<HTMLSpanElement> {
     children?: Snippet;
     disabled?: boolean;
     id?: string;
@@ -50,7 +50,7 @@
 </script>
 
 {#if shouldShow}
-  <p
+  <span
     id={finalId}
     class={cn(descriptionStyles(), className)}
     data-slot="description"
@@ -59,5 +59,5 @@
     {...rest}
   >
     {@render children?.()}
-  </p>
+  </span>
 {/if}
