@@ -32,15 +32,22 @@
     ...rest
   }: CheckboxProps = $props();
 
-  let hasInteracted = false;
+  let isInternalWrite = false;
   let baselineChecked = $state(checked);
   let baselineIndeterminate = $state(indeterminate);
   let submissionInvalid = $state(false);
 
   $effect(() => {
-    if (hasInteracted) return;
-    baselineChecked = checked;
-    baselineIndeterminate = indeterminate;
+    const c = checked;
+    const ind = indeterminate;
+
+    if (isInternalWrite) {
+      isInternalWrite = false;
+      return;
+    }
+
+    baselineChecked = c;
+    baselineIndeterminate = ind;
   });
 
   warnIf(
@@ -85,13 +92,13 @@
   );
 
   function setChecked(next: boolean): void {
-    hasInteracted = true;
+    isInternalWrite = true;
     checked = next;
     onCheckedChange?.(next);
   }
 
   function setIndeterminate(next: boolean): void {
-    hasInteracted = true;
+    isInternalWrite = true;
     indeterminate = next;
     onIndeterminateChange?.(next);
   }

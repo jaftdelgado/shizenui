@@ -5,9 +5,8 @@
     /* Base tokens */
     --checkbox-bg: var(--color-field);
     --checkbox-bg-hover: var(--color-field-hover);
+    --checkbox-bg-pressed: var(--color-field-pressed);
     --checkbox-indicator: var(--color-accent-foreground);
-    --checkbox-border-width: 0px;
-    --checkbox-border-color: transparent;
 
     transition: opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
@@ -34,13 +33,11 @@
     &[data-indeterminate] {
       --checkbox-bg: var(--color-accent);
       --checkbox-bg-hover: var(--color-accent-hover);
-      --checkbox-border-color: var(--color-accent);
     }
 
     &[data-invalid] {
       --checkbox-bg: var(--color-field);
       --checkbox-bg-hover: var(--color-field-hover);
-      --checkbox-border-color: var(--color-danger);
 
       & .checkbox__control {
         @apply status-invalid-field ring-1;
@@ -63,13 +60,12 @@
   .checkbox__control {
     @apply relative flex shrink-0 items-center justify-center;
     @apply mt-0.5 size-4 rounded-md;
-    box-sizing: border-box;
     background-color: var(--checkbox-bg);
 
     transition:
-      background-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
+      background-color 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
       box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
-      scale 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+      scale 100ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
 
     &:hover:not([data-disabled]):not([data-readonly]) {
@@ -90,7 +86,7 @@
   }
 
   .checkbox__indicator {
-    @apply flex size-2 items-center justify-center rounded-md opacity-0;
+    @apply flex size-3 items-center justify-center rounded-md opacity-0;
     color: var(--checkbox-indicator);
 
     transition:
@@ -98,13 +94,25 @@
       opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
 
-    /* Default indicator */
+    & .check-icon__path {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      transition: stroke-dashoffset 200ms var(--ease-in, cubic-bezier(0.8, 0, 1, 1));
+      @apply motion-reduce:transition-none;
+    }
+
     &[data-checked],
     &[data-indeterminate] {
       @apply opacity-100;
+      transition-delay: 20ms;
+
+      & .check-icon__path {
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)) 50ms;
+        @apply motion-reduce:transition-none;
+      }
     }
 
-    /* Custom indicator */
     &[data-custom] {
       @apply size-full;
       background-color: transparent;

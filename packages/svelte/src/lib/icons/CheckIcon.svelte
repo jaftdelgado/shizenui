@@ -1,12 +1,21 @@
-<script>
-  export let size = 16;
-  export let color = "currentColor";
+<script lang="ts">
+  import type { SVGAttributes } from "svelte/elements";
+
+  type Props = SVGAttributes<SVGSVGElement>;
+
+  let { class: className, ...props }: Props = $props();
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 16 16">
-  <path
-    fill={color}
-    transform="translate(0, 0.8) scale(1.6)"
-    d="M3.67605 8.93C4.04565 8.93 4.32535 8.78984 4.51515 8.49952L9.11022 1.46164C9.25007 1.24139 9.31 1.05118 9.31 0.860964C9.31 0.360404 8.93041 0 8.41097 0C8.06134 0 7.85157 0.130146 7.6318 0.460516L3.64608 6.77759L1.60827 4.22473C1.40849 3.98446 1.19871 3.87434 0.899034 3.87434C0.379592 3.87434 0 4.24475 0 4.75532C0 4.97557 0.0699249 5.1758 0.259721 5.39604L2.83695 8.53956C3.05672 8.80986 3.31644 8.93 3.66606 8.93H3.67605Z"
-  />
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class="check-icon {className}"
+  {...props}
+>
+  <path d="M4 12l5 5L20 6" pathLength="1" class="check-icon__path" />
 </svg>
