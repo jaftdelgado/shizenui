@@ -12,6 +12,11 @@ export function createCheckboxHandlers(options: {
   function activate(): void {
     if (state.finalDisabled || state.finalReadonly) return;
 
+    if (state.groupCtx.exists) {
+      if (state.value !== undefined) state.groupCtx.toggleValue(state.value);
+      return;
+    }
+
     if (state.isIndeterminate) {
       setIndeterminate(false);
       setChecked(true);

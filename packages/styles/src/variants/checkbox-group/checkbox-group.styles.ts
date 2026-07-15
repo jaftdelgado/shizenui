@@ -1,18 +1,22 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const checkboxGroupStyles = tv({
-  base: "checkbox-group",
+  slots: {
+    base: "checkbox-group",
+    items: "checkbox-group__items"
+  },
   variants: {
-    invalid: {
-      true: "checkbox-group--invalid"
-    },
-    disabled: {
-      true: "checkbox-group--disabled"
+    orientation: {
+      vertical: {
+        items: "checkbox-group__items--vertical"
+      },
+      horizontal: {
+        items: "checkbox-group__items--horizontal"
+      }
     }
   },
   defaultVariants: {
-    invalid: false,
-    disabled: false
+    orientation: "vertical"
   }
 });
 

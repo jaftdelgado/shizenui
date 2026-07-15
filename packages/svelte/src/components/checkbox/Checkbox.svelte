@@ -7,6 +7,7 @@
     CheckboxState,
     createCheckboxHandlers,
     setupCheckboxContexts,
+    setupCheckboxGroupRegistration,
     useCheckboxContext
   } from "./_internal/index.js";
   import { createFocusVisible, warnIf, syncFormReset } from "../../lib/runes/index.js";
@@ -76,8 +77,15 @@
   });
 
   setupCheckboxContexts(checkboxState);
+  setupCheckboxGroupRegistration(checkboxState);
 
   const ctx = useCheckboxContext();
+
+  warnIf(
+    () => checkboxState.groupCtx.exists && value === undefined,
+    "Checkbox",
+    "Un Checkbox dentro de Checkbox.Group requiere la prop value."
+  );
 
   warnIf(
     () => !ctx.hasLabel && !rest["aria-label"] && !rest["aria-labelledby"],
@@ -116,7 +124,17 @@
   const describedBy = $derived(
     [
       ctx.hasError ? `${id}-error` : null,
-      !ctx.hasError && ctx.hasDescription ? `${id}-description` : null
+      !ctx.hasError && ctx.hasDescription ? `${id}-description` : null,
+      !ctx.hasError && checkboxState.groupCtx.exists && checkboxState.groupCtx.hasError
+        ? checkboxState.groupCtx.errorId
+        : null,
+      !ctx.hasError &&
+      !ctx.hasDescription &&
+      checkboxState.groupCtx.exists &&
+      !checkboxState.groupCtx.hasError &&
+      checkboxState.groupCtx.hasDescription
+        ? checkboxState.groupCtx.descriptionId
+        : null
     ]
       .filter(Boolean)
       .join(" ") || undefined

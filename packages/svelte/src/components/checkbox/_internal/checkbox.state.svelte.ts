@@ -1,3 +1,5 @@
+import { useCheckboxGroupContext } from "../../checkbox-group/_internal/checkbox-group.context.js";
+import type { CheckboxGroupContextResult } from "../../checkbox-group/_internal/checkbox-group.context.js";
 import { useFieldStateContext } from "../../../lib/index.js";
 import type { FieldStateContextResult } from "../../../lib/index.js";
 
@@ -13,38 +15,56 @@ export class CheckboxState {
   #name: () => string | undefined;
   #id: () => string;
 
+  readonly groupCtx: CheckboxGroupContextResult;
   readonly parentFieldCtx: FieldStateContextResult;
-  // TODO: CheckboxGroup context — pendiente, no implementado en este scope.
-  // Cuando exista CheckboxGroup, agregar `readonly groupCtx: CheckboxGroupContextResult`
-  // y anteponerlo en cada cascada final*, igual que RadioState.groupCtx.
 
   get finalDisabled(): boolean {
     const local = this.#disabled();
     if (local !== undefined) return local;
-    return this.parentFieldCtx.exists ? this.parentFieldCtx.disabled : false;
+    return this.groupCtx.exists
+      ? this.groupCtx.disabled
+      : this.parentFieldCtx.exists
+        ? this.parentFieldCtx.disabled
+        : false;
   }
 
   get finalReadonly(): boolean {
     const local = this.#readonly();
     if (local !== undefined) return local;
-    return this.parentFieldCtx.exists ? this.parentFieldCtx.readonly : false;
+    return this.groupCtx.exists
+      ? this.groupCtx.readonly
+      : this.parentFieldCtx.exists
+        ? this.parentFieldCtx.readonly
+        : false;
   }
 
   get finalInvalid(): boolean {
     const local = this.#invalid();
-    if (local !== undefined) return local;
-    const cascadeInvalid = this.parentFieldCtx.exists ? this.parentFieldCtx.invalid : false;
+    const cascadeInvalid =
+      local !== undefined
+        ? local
+        : this.groupCtx.exists
+          ? this.groupCtx.invalid
+          : this.parentFieldCtx.exists
+            ? this.parentFieldCtx.invalid
+            : false;
     return cascadeInvalid || this.#submissionInvalid();
   }
 
   get finalRequired(): boolean {
     const local = this.#required();
     if (local !== undefined) return local;
-    return this.parentFieldCtx.exists ? this.parentFieldCtx.required : false;
+    return this.groupCtx.exists
+      ? this.groupCtx.required
+      : this.parentFieldCtx.exists
+        ? this.parentFieldCtx.required
+        : false;
   }
 
   get isChecked(): boolean {
-    return this.#checked();
+    return this.groupCtx.exists
+      ? this.value !== undefined && this.groupCtx.isSelected(this.value)
+      : this.#checked();
   }
 
   get isIndeterminate(): boolean {
@@ -56,7 +76,9 @@ export class CheckboxState {
   }
 
   get name(): string | undefined {
-    return this.#name();
+    const local = this.#name();
+    if (local !== undefined) return local;
+    return this.groupCtx.exists ? this.groupCtx.name : undefined;
   }
 
   get id(): string {
@@ -74,6 +96,7 @@ export class CheckboxState {
     value: () => string | undefined;
     name: () => string | undefined;
     id: () => string;
+    groupContext?: CheckboxGroupContextResult;
     fieldContext?: FieldStateContextResult;
   }) {
     this.#checked = props.checked;
@@ -87,6 +110,7 @@ export class CheckboxState {
     this.#name = props.name;
     this.#id = props.id;
 
+    this.groupCtx = props.groupContext ?? useCheckboxGroupContext();
     this.parentFieldCtx = props.fieldContext ?? useFieldStateContext();
   }
 }

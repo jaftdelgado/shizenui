@@ -10,9 +10,7 @@ export { CheckboxState } from "./checkbox.state.svelte.js";
 export type { CheckboxStateInstance } from "./checkbox.state.svelte.js";
 
 export { setupCheckboxContexts } from "./checkbox.setup.svelte.js";
-
-// TODO: CheckboxGroup
-// export { setupCheckboxGroupRegistration } from "./checkbox.registration.js";
+export { setupCheckboxGroupRegistration } from "./checkbox.registration.js";
 
 export { createCheckboxHandlers } from "./checkbox.handlers.js";
 export type { CheckboxHandlers } from "./checkbox.handlers.js";
