@@ -1,6 +1,7 @@
 /* Components styles */
 @import "./button-group.css";
 @import "./button.css";
+@import "./checkbox-group.css";
 @import "./checkbox.css";
 @import "./description.css";
 @import "./field-error.css";

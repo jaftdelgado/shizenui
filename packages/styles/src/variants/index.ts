@@ -2,6 +2,7 @@
 export * from "./button";
 export * from "./button-group";
 export * from "./checkbox";
+export * from "./checkbox-group";
 export * from "./description";
 export * from "./field-error";
 export * from "./label";
