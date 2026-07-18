@@ -76,3 +76,39 @@ Use a Function Binding for complete control over the state's reads and writes.
 <ComponentExample src="svelte/checkbox-group/CheckboxGroupInvalid.svelte">
   <CheckboxGroupInvalid client:load />
 </ComponentExample>
+
+## API Reference
+
+### CheckboxGroup Props
+
+Extends `HTMLAttributes<HTMLDivElement>` except `children` and `role`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "value", type: "string[]", default: "undefined" },
+    { name: "onValueChange", type: "(value: string[]) => void", default: "undefined" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+
+]}
+/>
+
+#### CheckboxGroup.Items Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
