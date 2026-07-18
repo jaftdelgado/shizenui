@@ -4,3 +4,75 @@ title: Checkbox Group
 description: Groups multiple checkboxes sharing state and validation context between them.
 preview: CheckboxGroupPreview
 ---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+
+import CheckboxGroupAnatomyCode from "@examples/svelte/checkbox-group/CheckboxGroupAnatomy.svelte?raw";
+
+import CheckboxGroupOrientation from "@examples/svelte/checkbox-group/CheckboxGroupOrientation.svelte";
+import CheckboxGroupBindValue from "@examples/svelte/checkbox-group/CheckboxGroupBindValue.svelte";
+import CheckboxGroupFullyControlled from "@examples/svelte/checkbox-group/CheckboxGroupFullyControlled.svelte";
+import CheckboxGroupIndeterminate from "@examples/svelte/checkbox-group/CheckboxGroupIndeterminate.svelte";
+import CheckboxGroupDisabled from "@examples/svelte/checkbox-group/CheckboxGroupDisabled.svelte";
+import CheckboxGroupInvalid from "@examples/svelte/checkbox-group/CheckboxGroupInvalid.svelte";
+
+## Import
+
+<CodeImport code={`import { CheckboxGroup, Checkbox } from "@shizen-ui/svelte";`} />
+
+## Anatomy
+
+<CodeBlock
+  code={CheckboxGroupAnatomyCode}
+  lang="svelte"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+## Examples
+
+### Orientation
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupOrientation.svelte">
+  <CheckboxGroupOrientation client:load />
+</ComponentExample>
+
+### Managing Checked State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupBindValue.svelte">
+  <CheckboxGroupBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupFullyControlled.svelte">
+  <CheckboxGroupFullyControlled client:load />
+</ComponentExample>
+
+### Indeterminate
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupIndeterminate.svelte">
+  <CheckboxGroupIndeterminate client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupDisabled.svelte">
+  <CheckboxGroupDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupInvalid.svelte">
+  <CheckboxGroupInvalid client:load />
+</ComponentExample>
