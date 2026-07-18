@@ -12,6 +12,8 @@ import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
 
 import CheckboxGroupAnatomyCode from "@examples/svelte/checkbox-group/CheckboxGroupAnatomy.svelte?raw";
+import CheckboxGroupTwStyling from "@examples/svelte/checkbox-group/CheckboxGroupTwStyling.svelte";
+import CheckboxGroupCssStylingCode from "@examples/svelte/checkbox-group/CheckboxGroupCssStyling.css?raw";
 
 import CheckboxGroupOrientation from "@examples/svelte/checkbox-group/CheckboxGroupOrientation.svelte";
 import CheckboxGroupBindValue from "@examples/svelte/checkbox-group/CheckboxGroupBindValue.svelte";
@@ -76,6 +78,52 @@ Use a Function Binding for complete control over the state's reads and writes.
 <ComponentExample src="svelte/checkbox-group/CheckboxGroupInvalid.svelte">
   <CheckboxGroupInvalid client:load />
 </ComponentExample>
+
+## Styling
+
+### Tailwind CSS Classes
+
+Use the `class` prop to style the group container and `CheckboxGroup.Items` layout directly.
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupTwStyling.svelte">
+  <CheckboxGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the default `CheckboxGroup` styles, override its component classes inside `@layer components`.
+
+<CodeBlock
+  code={CheckboxGroupCssStylingCode}
+  lang="css"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+### CSS Classes
+
+#### CheckboxGroup Classes
+
+<PropsTable
+  props={[
+    {
+      name: "checkbox-group",
+      description: "Wraps the full field and gives the group its overall spacing and surface."
+    },
+    {
+      name: "checkbox-group__items",
+      description: "Holds the checkbox list and separates it from the group heading."
+    },
+    {
+      name: "checkbox-group__items--vertical",
+      description: "Stacks items in a column for forms and settings panels."
+    },
+    {
+      name: "checkbox-group__items--horizontal",
+      description: "Places items in a row when the options should scan side by side."
+    }
+  ]}
+/>
 
 ## API Reference
 

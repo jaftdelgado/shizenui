@@ -125,7 +125,7 @@
   }
 
   .checkbox__content {
-    @apply flex flex-col items-start;
+    @apply flex flex-col;
   }
 
   .checkbox__input {
