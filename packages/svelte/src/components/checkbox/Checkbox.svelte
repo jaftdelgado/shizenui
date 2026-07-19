@@ -123,17 +123,13 @@
 
   const describedBy = $derived(
     [
-      ctx.hasError ? `${id}-error` : null,
-      !ctx.hasError && ctx.hasDescription ? `${id}-description` : null,
-      !ctx.hasError && checkboxState.groupCtx.exists && checkboxState.groupCtx.hasError
-        ? checkboxState.groupCtx.errorId
-        : null,
-      !ctx.hasError &&
-      !ctx.hasDescription &&
-      checkboxState.groupCtx.exists &&
-      !checkboxState.groupCtx.hasError &&
-      checkboxState.groupCtx.hasDescription
-        ? checkboxState.groupCtx.descriptionId
+      ctx.hasError ? `${id}-error` : ctx.hasDescription ? `${id}-description` : null,
+      checkboxState.groupCtx.exists
+        ? checkboxState.groupCtx.hasError
+          ? checkboxState.groupCtx.errorId
+          : checkboxState.groupCtx.hasDescription
+            ? checkboxState.groupCtx.descriptionId
+            : null
         : null
     ]
       .filter(Boolean)
