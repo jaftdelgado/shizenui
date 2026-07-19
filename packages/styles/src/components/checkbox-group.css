@@ -14,4 +14,8 @@
   .checkbox-group__items--horizontal {
     @apply flex-row flex-wrap gap-6;
   }
+
+  .checkbox-group__input {
+    @apply sr-only;
+  }
 }

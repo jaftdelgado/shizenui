@@ -1,8 +1,5 @@
 import { setCheckboxGroupContext } from "./checkbox-group.context.js";
-import type {
-  CheckboxGroupContextValue,
-  CheckboxGroupRegistration
-} from "./checkbox-group.context.js";
+import type { CheckboxGroupContextValue } from "./checkbox-group.context.js";
 import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.js";
 import type { CheckboxGroupState } from "./checkbox-group.state.svelte.js";
 
@@ -56,12 +53,6 @@ export function setupCheckboxGroupContexts(state: CheckboxGroupState): void {
     },
     toggleValue(value: string) {
       return state.toggleValue(value);
-    },
-    register(id: string, entry: CheckboxGroupRegistration) {
-      state.register(id, entry);
-    },
-    unregister(id: string) {
-      state.unregister(id);
     }
   } satisfies CheckboxGroupContextValue);
 

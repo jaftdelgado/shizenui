@@ -7,7 +7,6 @@
     CheckboxState,
     createCheckboxHandlers,
     setupCheckboxContexts,
-    setupCheckboxGroupRegistration,
     useCheckboxContext
   } from "./_internal/index.js";
   import { createFocusVisible, warnIf, syncFormReset } from "../../lib/runes/index.js";
@@ -77,7 +76,6 @@
   });
 
   setupCheckboxContexts(checkboxState);
-  setupCheckboxGroupRegistration(checkboxState);
 
   const ctx = useCheckboxContext();
 
@@ -141,9 +139,10 @@
   syncFormReset({
     getRef: () => ref,
     onReset: () => {
+      submissionInvalid = false;
+      if (checkboxState.groupCtx.exists) return;
       checked = baselineChecked;
       indeterminate = baselineIndeterminate;
-      submissionInvalid = false;
     }
   });
 </script>

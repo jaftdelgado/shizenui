@@ -3,7 +3,8 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const checkboxGroupStyles = tv({
   slots: {
     base: "checkbox-group",
-    items: "checkbox-group__items"
+    items: "checkbox-group__items",
+    input: "checkbox-group__input"
   },
   variants: {
     orientation: {

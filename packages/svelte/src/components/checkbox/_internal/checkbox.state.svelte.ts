@@ -54,11 +54,9 @@ export class CheckboxState {
   get finalRequired(): boolean {
     const local = this.#required();
     if (local !== undefined) return local;
-    return this.groupCtx.exists
-      ? this.groupCtx.required
-      : this.parentFieldCtx.exists
-        ? this.parentFieldCtx.required
-        : false;
+    // Group-level `required` means "at least one option in the group",
+    // so individual checkboxes must not inherit it as native `required`.
+    return this.parentFieldCtx.exists ? this.parentFieldCtx.required : false;
   }
 
   get isChecked(): boolean {

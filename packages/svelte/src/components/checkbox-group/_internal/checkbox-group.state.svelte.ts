@@ -1,4 +1,3 @@
-import type { CheckboxGroupRegistration } from "./checkbox-group.context.js";
 import type { CheckboxGroupOrientation, CheckboxGroupProps } from "./checkbox-group.types.js";
 
 export class CheckboxGroupState {
@@ -8,12 +7,11 @@ export class CheckboxGroupState {
   #disabled: () => boolean | undefined;
   #readonly: () => boolean | undefined;
   #invalid: () => boolean | undefined;
+  #submissionInvalid: () => boolean;
   #required: () => boolean | undefined;
   #orientation: () => CheckboxGroupOrientation | undefined;
   #id: () => string;
   #setValue: (value: string[]) => void;
-
-  #itemMap = new Map<string, CheckboxGroupRegistration>();
 
   get finalValue(): string[] {
     return this.#value() ?? [];
@@ -32,7 +30,8 @@ export class CheckboxGroupState {
   }
 
   get finalInvalid(): boolean {
-    return this.#invalid() ?? false;
+    const local = this.#invalid();
+    return (local ?? false) || this.#submissionInvalid();
   }
 
   get finalRequired(): boolean {
@@ -61,14 +60,6 @@ export class CheckboxGroupState {
     this.#onValueChange()?.(next);
   }
 
-  register(id: string, entry: CheckboxGroupRegistration): void {
-    this.#itemMap.set(id, entry);
-  }
-
-  unregister(id: string): void {
-    this.#itemMap.delete(id);
-  }
-
   constructor(props: {
     value: () => CheckboxGroupProps["value"];
     onValueChange: () => ((value: string[]) => void) | undefined;
@@ -76,6 +67,7 @@ export class CheckboxGroupState {
     disabled: () => boolean | undefined;
     readonly: () => boolean | undefined;
     invalid: () => boolean | undefined;
+    submissionInvalid: () => boolean;
     required: () => boolean | undefined;
     orientation: () => CheckboxGroupOrientation | undefined;
     id: () => string;
@@ -87,6 +79,7 @@ export class CheckboxGroupState {
     this.#disabled = props.disabled;
     this.#readonly = props.readonly;
     this.#invalid = props.invalid;
+    this.#submissionInvalid = props.submissionInvalid;
     this.#required = props.required;
     this.#orientation = props.orientation;
     this.#id = props.id;

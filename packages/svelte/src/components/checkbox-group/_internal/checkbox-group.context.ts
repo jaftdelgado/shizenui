@@ -1,11 +1,6 @@
 import { createContext } from "svelte";
 import type { CheckboxGroupOrientation } from "./checkbox-group.types.js";
 
-export interface CheckboxGroupRegistration {
-  getDisabled: () => boolean;
-  getValue: () => string | undefined;
-}
-
 export interface CheckboxGroupContextValue {
   readonly value: string[];
   readonly name: string | undefined;
@@ -22,8 +17,6 @@ export interface CheckboxGroupContextValue {
   readonly hasError: boolean;
   readonly isSelected: (value: string) => boolean;
   readonly toggleValue: (value: string) => void;
-  readonly register: (id: string, entry: CheckboxGroupRegistration) => void;
-  readonly unregister: (id: string) => void;
 }
 
 export interface CheckboxGroupContextResult extends CheckboxGroupContextValue {
@@ -91,8 +84,6 @@ export function useCheckboxGroupContext(): CheckboxGroupContextResult {
         return false;
       },
       toggleValue(_value: string) {},
-      register(_id: string, _entry: CheckboxGroupRegistration) {},
-      unregister(_id: string) {},
       get exists() {
         return false;
       }
@@ -144,12 +135,6 @@ export function useCheckboxGroupContext(): CheckboxGroupContextResult {
     },
     toggleValue(value: string) {
       return context.toggleValue(value);
-    },
-    register(id: string, entry: CheckboxGroupRegistration) {
-      return context.register(id, entry);
-    },
-    unregister(id: string) {
-      return context.unregister(id);
     },
     get exists() {
       return true;
