@@ -16,11 +16,11 @@
   }
 </script>
 
-<form class="flex max-w-sm flex-col gap-6" onsubmit={handleSubmit}>
+<form class="flex w-full max-w-72 flex-col gap-6" onsubmit={handleSubmit}>
   <CheckboxGroup required bind:value={events} name="events">
     <Label>Trigger events</Label>
     <Description>Choose which repository events send a payload.</Description>
-
+    <FieldError>Select at least one event.</FieldError>
     <CheckboxGroup.Items>
       <Checkbox value="push">
         <Checkbox.Control />
@@ -50,8 +50,6 @@
         </Checkbox.Content>
       </Checkbox>
     </CheckboxGroup.Items>
-
-    <FieldError>Select at least one event.</FieldError>
   </CheckboxGroup>
 
   <div class="flex gap-2">

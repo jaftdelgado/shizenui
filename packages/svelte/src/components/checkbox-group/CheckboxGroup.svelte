@@ -8,7 +8,7 @@
     setupCheckboxGroupContexts,
     useCheckboxGroupContext
   } from "./_internal/index.js";
-  import { syncFormReset, warnIf } from "../../lib/runes/index.js";
+  import { SubmissionInvalidState, syncFormReset, warnIf } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -30,7 +30,6 @@
 
   let isInternalWrite = false;
   let baselineValue = $state<string[]>([...(value ?? [])]);
-  let submissionInvalid = $state(false);
   let hiddenInputRef: HTMLInputElement | null = $state(null);
 
   $effect(() => {
@@ -57,7 +56,7 @@
     disabled: () => disabled,
     readonly: () => readonly,
     invalid: () => invalid,
-    submissionInvalid: () => submissionInvalid,
+    submissionInvalid: () => submissionInvalid.value,
     required: () => required,
     orientation: () => orientation,
     id: () => id,
@@ -66,6 +65,10 @@
       value = v;
     }
   });
+
+  const submissionInvalid = new SubmissionInvalidState(
+    () => checkboxGroupState.finalValue.length > 0
+  );
 
   setupCheckboxGroupContexts(checkboxGroupState);
 
@@ -90,13 +93,10 @@
       .join(" ") || undefined
   );
 
-  $effect(() => {
-    if (checkboxGroupState.finalValue.length > 0) submissionInvalid = false;
-  });
-
   syncFormReset({
     getRef: () => ref,
     onReset: () => {
+      submissionInvalid.clear();
       isInternalWrite = true;
       value = [...baselineValue];
       onValueChange?.(value);
@@ -135,7 +135,7 @@
       required
       oninvalid={(e) => {
         e.preventDefault();
-        submissionInvalid = true;
+        submissionInvalid.set(true);
         ref?.querySelector<HTMLButtonElement>('[role="checkbox"]')?.focus();
       }}
     />

@@ -9,7 +9,12 @@
     setupCheckboxContexts,
     useCheckboxContext
   } from "./_internal/index.js";
-  import { createFocusVisible, warnIf, syncFormReset } from "../../lib/runes/index.js";
+  import {
+    createFocusVisible,
+    SubmissionInvalidState,
+    warnIf,
+    syncFormReset
+  } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -35,7 +40,6 @@
   let isInternalWrite = false;
   let baselineChecked = $state(checked);
   let baselineIndeterminate = $state(indeterminate);
-  let submissionInvalid = $state(false);
 
   $effect(() => {
     const c = checked;
@@ -63,17 +67,13 @@
     invalid: () => invalid,
     readonly: () => readonly,
     required: () => required,
-    submissionInvalid: () => submissionInvalid,
+    submissionInvalid: () => submissionInvalid.value,
     value: () => value,
     name: () => name,
     id: () => id
   });
 
-  $effect(() => {
-    if (checkboxState.isChecked) {
-      submissionInvalid = false;
-    }
-  });
+  const submissionInvalid = new SubmissionInvalidState(() => checkboxState.isChecked);
 
   setupCheckboxContexts(checkboxState);
 
@@ -139,7 +139,7 @@
   syncFormReset({
     getRef: () => ref,
     onReset: () => {
-      submissionInvalid = false;
+      submissionInvalid.clear();
       if (checkboxState.groupCtx.exists) return;
       checked = baselineChecked;
       indeterminate = baselineIndeterminate;
@@ -203,7 +203,7 @@
     required={checkboxState.finalRequired}
     oninvalid={(e) => {
       e.preventDefault();
-      submissionInvalid = true;
+      submissionInvalid.set(true);
       ref?.focus();
     }}
   />
