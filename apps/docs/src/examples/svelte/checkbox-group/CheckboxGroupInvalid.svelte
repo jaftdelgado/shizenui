@@ -33,6 +33,7 @@
 
   function handleSubmit() {
     isSubmitted = true;
+    alert(`Selected alert channels: ${selectedAlerts.join(", ")}`);
   }
 
   function handleClear() {
@@ -42,11 +43,10 @@
 </script>
 
 <div class="flex max-w-md flex-col gap-6 p-4">
-  <CheckboxGroup bind:value={selectedAlerts} invalid={isInvalid}>
+  <CheckboxGroup required invalid={isInvalid} bind:value={selectedAlerts}>
     <Label>Admin Alerts</Label>
     <Description>Select at least one alert channel.</Description>
     <FieldError>Select one or more alert channels.</FieldError>
-
     <CheckboxGroup.Items>
       {#each alertChannels as channel}
         <Checkbox value={channel.value}>

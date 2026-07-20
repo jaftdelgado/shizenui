@@ -12,8 +12,6 @@ import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
 
 import CheckboxGroupAnatomyCode from "@examples/svelte/checkbox-group/CheckboxGroupAnatomy.svelte?raw";
-import CheckboxGroupTwStyling from "@examples/svelte/checkbox-group/CheckboxGroupTwStyling.svelte";
-import CheckboxGroupCssStylingCode from "@examples/svelte/checkbox-group/CheckboxGroupCssStyling.css?raw";
 
 import CheckboxGroupOrientation from "@examples/svelte/checkbox-group/CheckboxGroupOrientation.svelte";
 import CheckboxGroupBindValue from "@examples/svelte/checkbox-group/CheckboxGroupBindValue.svelte";
@@ -21,6 +19,10 @@ import CheckboxGroupFullyControlled from "@examples/svelte/checkbox-group/Checkb
 import CheckboxGroupIndeterminate from "@examples/svelte/checkbox-group/CheckboxGroupIndeterminate.svelte";
 import CheckboxGroupDisabled from "@examples/svelte/checkbox-group/CheckboxGroupDisabled.svelte";
 import CheckboxGroupInvalid from "@examples/svelte/checkbox-group/CheckboxGroupInvalid.svelte";
+import CheckboxGroupForm from "@examples/svelte/checkbox-group/CheckboxGroupForm.svelte";
+
+import CheckboxGroupTwStyling from "@examples/svelte/checkbox-group/CheckboxGroupTwStyling.svelte";
+import CheckboxGroupCssStylingCode from "@examples/svelte/checkbox-group/CheckboxGroupCssStyling.css?raw";
 
 ## Import
 
@@ -77,6 +79,12 @@ Use a Function Binding for complete control over the state's reads and writes.
 
 <ComponentExample src="svelte/checkbox-group/CheckboxGroupInvalid.svelte">
   <CheckboxGroupInvalid client:load />
+</ComponentExample>
+
+### Form Integration
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupForm.svelte">
+  <CheckboxGroupForm client:load />
 </ComponentExample>
 
 ## Styling
