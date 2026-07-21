@@ -112,6 +112,8 @@
   aria-labelledby={ctx.hasLabel ? ctx.labelId : undefined}
   aria-describedby={describedBy}
   aria-disabled={checkboxGroupState.finalDisabled ? true : undefined}
+  aria-required={checkboxGroupState.finalRequired ? true : undefined}
+  aria-invalid={checkboxGroupState.finalInvalid ? true : undefined}
   data-checkbox-group=""
   data-invalid={presence(checkboxGroupState.finalInvalid)}
   data-disabled={presence(checkboxGroupState.finalDisabled)}
