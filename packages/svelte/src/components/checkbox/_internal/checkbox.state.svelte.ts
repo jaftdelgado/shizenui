@@ -2,6 +2,7 @@ import { useCheckboxGroupContext } from "../../checkbox-group/_internal/checkbox
 import type { CheckboxGroupContextResult } from "../../checkbox-group/_internal/checkbox-group.context.js";
 import { useFieldStateContext } from "../../../lib/index.js";
 import type { FieldStateContextResult } from "../../../lib/index.js";
+import type { CheckboxContextResult } from "./checkbox.context.js";
 
 export class CheckboxState {
   #checked: () => boolean;
@@ -120,3 +121,24 @@ export class CheckboxState {
 }
 
 export type CheckboxStateInstance = InstanceType<typeof CheckboxState>;
+
+export function resolveCheckboxDescribedBy(
+  state: CheckboxStateInstance,
+  ctx: CheckboxContextResult,
+  id: string
+): string | undefined {
+  return (
+    [
+      ctx.hasError ? `${id}-error` : ctx.hasDescription ? `${id}-description` : null,
+      state.groupCtx.exists
+        ? state.groupCtx.hasError
+          ? state.groupCtx.errorId
+          : state.groupCtx.hasDescription
+            ? state.groupCtx.descriptionId
+            : null
+        : null
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
+}

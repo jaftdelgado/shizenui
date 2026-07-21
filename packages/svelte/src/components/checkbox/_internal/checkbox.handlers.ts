@@ -5,9 +5,10 @@ export function createCheckboxHandlers(options: {
   state: CheckboxStateInstance;
   setChecked: (value: boolean) => void;
   setIndeterminate: (value: boolean) => void;
+  focus: { onKeyDown: () => void; onMouseDown: () => void };
   getOnClick?: () => ((e: CheckboxClickEvent) => void) | undefined;
 }) {
-  const { state, setChecked, setIndeterminate, getOnClick } = options;
+  const { state, setChecked, setIndeterminate, focus, getOnClick } = options;
 
   function activate(): void {
     if (state.finalDisabled || state.finalReadonly) return;
@@ -32,6 +33,7 @@ export function createCheckboxHandlers(options: {
   }
 
   function handleMouseDown(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+    focus.onMouseDown();
     if (state.finalDisabled || state.finalReadonly) return;
     e.currentTarget.setAttribute("data-pressed", "true");
   }
@@ -45,6 +47,8 @@ export function createCheckboxHandlers(options: {
   }
 
   function handleKeydown(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
+    if (e.type === "keydown") focus.onKeyDown();
+
     if (e.key !== "Enter" && e.key !== " ") return;
 
     if (e.type === "keydown") {

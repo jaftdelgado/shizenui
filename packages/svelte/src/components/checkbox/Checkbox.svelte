@@ -6,15 +6,12 @@
   import {
     CheckboxState,
     createCheckboxHandlers,
+    resolveCheckboxDescribedBy,
     setupCheckboxContexts,
+    setupCheckboxFormWarnings,
     useCheckboxContext
   } from "./_internal/index.js";
-  import {
-    createFocusVisible,
-    SubmissionInvalidState,
-    warnIf,
-    syncFormReset
-  } from "../../lib/runes/index.js";
+  import { createFocusVisible, warnIf, syncFormReset } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -40,7 +37,6 @@
   let isInternalWrite = false;
   let baselineChecked = $state(checked);
   let baselineIndeterminate = $state(indeterminate);
-  let submissionInvalid: SubmissionInvalidState;
 
   $effect(() => {
     const c = checked;
@@ -74,11 +70,14 @@
     id: () => id
   });
 
-  submissionInvalid = new SubmissionInvalidState(() => checkboxState.isChecked);
-
   setupCheckboxContexts(checkboxState);
 
   const ctx = useCheckboxContext();
+
+  const submissionInvalid = setupCheckboxFormWarnings({
+    state: checkboxState,
+    getRef: () => ref
+  });
 
   warnIf(
     () => checkboxState.groupCtx.exists && value === undefined,
@@ -90,18 +89,6 @@
     () => !ctx.hasLabel && !rest["aria-label"] && !rest["aria-labelledby"],
     "Checkbox",
     "No accessible name found. Add a <Label> (typically inside <Checkbox.Content>), or pass aria-label/aria-labelledby directly."
-  );
-
-  warnIf(
-    () => !!ref && !checkboxState.name && !checkboxState.finalRequired && !!ref.closest("form"),
-    "Checkbox",
-    "This checkbox is inside a <form> but no `name` was provided — it will not participate in native form submission."
-  );
-
-  warnIf(
-    () => !!ref && !checkboxState.name && checkboxState.finalRequired && !!ref.closest("form"),
-    "Checkbox",
-    "This checkbox is `required` inside a <form> but no `name` was provided — it will block native form submission until checked, but its value will not be included in the submitted FormData. Pass `name` if you also need its value submitted."
   );
 
   function setChecked(next: boolean): void {
@@ -116,30 +103,19 @@
     onIndeterminateChange?.(next);
   }
 
+  const focus = createFocusVisible();
+
   const handlers = createCheckboxHandlers({
     state: checkboxState,
     setChecked,
     setIndeterminate,
+    focus,
     getOnClick: () => onclick
   });
 
-  const focus = createFocusVisible();
   const styles = $derived(checkboxStyles());
 
-  const describedBy = $derived(
-    [
-      ctx.hasError ? `${id}-error` : ctx.hasDescription ? `${id}-description` : null,
-      checkboxState.groupCtx.exists
-        ? checkboxState.groupCtx.hasError
-          ? checkboxState.groupCtx.errorId
-          : checkboxState.groupCtx.hasDescription
-            ? checkboxState.groupCtx.descriptionId
-            : null
-        : null
-    ]
-      .filter(Boolean)
-      .join(" ") || undefined
-  );
+  const describedBy = $derived(resolveCheckboxDescribedBy(checkboxState, ctx, id));
 
   let hiddenInputRef: HTMLInputElement | null = $state(null);
 
@@ -168,7 +144,6 @@
   aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
   aria-describedby={describedBy}
   tabindex={!checkboxState.finalDisabled ? 0 : -1}
-  class={cn(styles.base(), className)}
   data-checked={presence(checkboxState.isChecked)}
   data-indeterminate={presence(checkboxState.isIndeterminate)}
   data-disabled={presence(checkboxState.finalDisabled)}
@@ -176,19 +151,14 @@
   data-invalid={presence(checkboxState.finalInvalid)}
   data-focus-visible={presence(focus.isFocusVisible)}
   onclick={handlers.handleClick}
-  onkeydown={(e) => {
-    focus.onKeyDown();
-    handlers.handleKeydown(e);
-  }}
+  onkeydown={handlers.handleKeydown}
   onkeyup={handlers.handleKeydown}
-  onmousedown={(e) => {
-    focus.onMouseDown();
-    handlers.handleMouseDown(e);
-  }}
+  onmousedown={handlers.handleMouseDown}
   onmouseup={handlers.handleMouseUp}
   onmouseleave={handlers.handleMouseLeave}
   onfocus={focus.onFocus}
   onblur={focus.onBlur}
+  class={cn(styles.base(), className)}
   {...rest}
 >
   {#if children}
