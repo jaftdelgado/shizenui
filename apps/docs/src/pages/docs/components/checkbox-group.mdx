@@ -91,7 +91,7 @@ Use a Function Binding for complete control over the state's reads and writes.
 
 ### Tailwind CSS Classes
 
-Use the `class` prop to style the group container and `CheckboxGroup.Items` layout directly.
+Use the `class` prop to apply Tailwind utility classes directly to the CheckboxGroup.
 
 <ComponentExample src="svelte/checkbox-group/CheckboxGroupTwStyling.svelte">
   <CheckboxGroupTwStyling client:load />
@@ -99,7 +99,7 @@ Use the `class` prop to style the group container and `CheckboxGroup.Items` layo
 
 ### Custom CSS
 
-To customize the default `CheckboxGroup` styles, override its component classes inside `@layer components`.
+To customize the CheckboxGroup component classes, you can use the `@layer components` directive.
 
 <CodeBlock
   code={CheckboxGroupCssStylingCode}
@@ -137,14 +137,12 @@ To customize the default `CheckboxGroup` styles, override its component classes 
 
 ### CheckboxGroup Props
 
-Extends `HTMLAttributes<HTMLDivElement>` except `children` and `role`.
-
 <PropsTable
   showHeader
   props={[
-    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
     { name: "value", type: "string[]", default: "undefined" },
     { name: "onValueChange", type: "(value: string[]) => void", default: "undefined" },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
     { name: "disabled", type: "boolean", default: "undefined" },
     { name: "invalid", type: "boolean", default: "undefined" },
     { name: "required", type: "boolean", default: "undefined" },

@@ -5,6 +5,7 @@
   import type { CheckboxGroupProps } from "./_internal/index.js";
   import {
     CheckboxGroupState,
+    resolveCheckboxGroupDescribedBy,
     setupCheckboxGroupContexts,
     useCheckboxGroupContext
   } from "./_internal/index.js";
@@ -30,7 +31,7 @@
 
   let isInternalWrite = false;
   let baselineValue = $state<string[]>([...(value ?? [])]);
-  let hiddenInputRef: HTMLInputElement | null = $state(null);
+  let submissionInvalid: SubmissionInvalidState;
 
   $effect(() => {
     const v = value;
@@ -66,9 +67,7 @@
     }
   });
 
-  const submissionInvalid = new SubmissionInvalidState(
-    () => checkboxGroupState.finalValue.length > 0
-  );
+  submissionInvalid = new SubmissionInvalidState(() => checkboxGroupState.finalValue.length > 0);
 
   setupCheckboxGroupContexts(checkboxGroupState);
 
@@ -84,14 +83,7 @@
     checkboxGroupStyles({ orientation: checkboxGroupState.finalOrientation })
   );
 
-  const describedBy = $derived(
-    [
-      ctx.hasError ? ctx.errorId : null,
-      !ctx.hasError && ctx.hasDescription ? ctx.descriptionId : null
-    ]
-      .filter(Boolean)
-      .join(" ") || undefined
-  );
+  const describedBy = $derived(resolveCheckboxGroupDescribedBy(ctx));
 
   syncFormReset({
     getRef: () => ref,
@@ -104,6 +96,7 @@
   });
 </script>
 
+<!-- svelte-ignore a11y_role_supports_aria_props -->
 <div
   bind:this={ref}
   {id}
@@ -128,7 +121,6 @@
 
   {#if checkboxGroupState.finalRequired}
     <input
-      bind:this={hiddenInputRef}
       type="checkbox"
       class={styles.input()}
       tabindex={-1}

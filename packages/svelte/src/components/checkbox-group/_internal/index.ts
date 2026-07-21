@@ -4,7 +4,10 @@ export type {
   CheckboxGroupItemsProps
 } from "./checkbox-group.types.js";
 
-export { CheckboxGroupState } from "./checkbox-group.state.svelte.js";
+export {
+  CheckboxGroupState,
+  resolveCheckboxGroupDescribedBy
+} from "./checkbox-group.state.svelte.js";
 export type { CheckboxGroupStateInstance } from "./checkbox-group.state.svelte.js";
 
 export { setupCheckboxGroupContexts } from "./checkbox-group.setup.svelte.js";

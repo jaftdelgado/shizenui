@@ -1,4 +1,5 @@
 import type { CheckboxGroupOrientation, CheckboxGroupProps } from "./checkbox-group.types.js";
+import type { CheckboxGroupContextResult } from "./checkbox-group.context.js";
 
 export class CheckboxGroupState {
   #value: () => CheckboxGroupProps["value"];
@@ -89,3 +90,16 @@ export class CheckboxGroupState {
 }
 
 export type CheckboxGroupStateInstance = InstanceType<typeof CheckboxGroupState>;
+
+export function resolveCheckboxGroupDescribedBy(
+  ctx: CheckboxGroupContextResult
+): string | undefined {
+  return (
+    [
+      ctx.hasError ? ctx.errorId : null,
+      !ctx.hasError && ctx.hasDescription ? ctx.descriptionId : null
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
+}

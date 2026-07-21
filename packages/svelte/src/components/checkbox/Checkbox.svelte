@@ -82,7 +82,7 @@
   warnIf(
     () => checkboxState.groupCtx.exists && value === undefined,
     "Checkbox",
-    "Un Checkbox dentro de Checkbox.Group requiere la prop value."
+    "A Checkbox inside Checkbox.Group requires the `value` prop."
   );
 
   warnIf(
@@ -116,8 +116,6 @@
   const styles = $derived(checkboxStyles());
 
   const describedBy = $derived(resolveCheckboxDescribedBy(checkboxState, ctx, id));
-
-  let hiddenInputRef: HTMLInputElement | null = $state(null);
 
   syncFormReset({
     getRef: () => ref,
@@ -168,7 +166,6 @@
 
 {#if checkboxState.name || checkboxState.finalRequired}
   <input
-    bind:this={hiddenInputRef}
     type="checkbox"
     class={styles.input()}
     tabindex={-1}
