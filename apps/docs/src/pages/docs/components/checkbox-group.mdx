@@ -1,0 +1,168 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Checkbox Group
+description: Groups multiple checkboxes sharing state and validation context between them.
+preview: CheckboxGroupPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+
+import CheckboxGroupAnatomyCode from "@examples/svelte/checkbox-group/CheckboxGroupAnatomy.svelte?raw";
+
+import CheckboxGroupOrientation from "@examples/svelte/checkbox-group/CheckboxGroupOrientation.svelte";
+import CheckboxGroupBindValue from "@examples/svelte/checkbox-group/CheckboxGroupBindValue.svelte";
+import CheckboxGroupFullyControlled from "@examples/svelte/checkbox-group/CheckboxGroupFullyControlled.svelte";
+import CheckboxGroupIndeterminate from "@examples/svelte/checkbox-group/CheckboxGroupIndeterminate.svelte";
+import CheckboxGroupDisabled from "@examples/svelte/checkbox-group/CheckboxGroupDisabled.svelte";
+import CheckboxGroupInvalid from "@examples/svelte/checkbox-group/CheckboxGroupInvalid.svelte";
+import CheckboxGroupForm from "@examples/svelte/checkbox-group/CheckboxGroupForm.svelte";
+
+import CheckboxGroupTwStyling from "@examples/svelte/checkbox-group/CheckboxGroupTwStyling.svelte";
+import CheckboxGroupCssStylingCode from "@examples/svelte/checkbox-group/CheckboxGroupCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { CheckboxGroup, Checkbox } from "@shizen-ui/svelte";`} />
+
+## Anatomy
+
+<CodeBlock
+  code={CheckboxGroupAnatomyCode}
+  lang="svelte"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+## Examples
+
+### Orientation
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupOrientation.svelte">
+  <CheckboxGroupOrientation client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupBindValue.svelte">
+  <CheckboxGroupBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupFullyControlled.svelte">
+  <CheckboxGroupFullyControlled client:load />
+</ComponentExample>
+
+### Indeterminate
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupIndeterminate.svelte">
+  <CheckboxGroupIndeterminate client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupDisabled.svelte">
+  <CheckboxGroupDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupInvalid.svelte">
+  <CheckboxGroupInvalid client:load />
+</ComponentExample>
+
+### Form Integration
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupForm.svelte">
+  <CheckboxGroupForm client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS Classes
+
+Use the `class` prop to apply Tailwind utility classes directly to the CheckboxGroup.
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupTwStyling.svelte">
+  <CheckboxGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the CheckboxGroup component classes, you can use the `@layer components` directive.
+
+<CodeBlock
+  code={CheckboxGroupCssStylingCode}
+  lang="css"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+### CSS Classes
+
+#### CheckboxGroup Classes
+
+<PropsTable
+  props={[
+    {
+      name: "checkbox-group",
+      description: "Wraps the full field and gives the group its overall spacing and surface."
+    },
+    {
+      name: "checkbox-group__items",
+      description: "Holds the checkbox list and separates it from the group heading."
+    },
+    {
+      name: "checkbox-group__items--vertical",
+      description: "Stacks items in a column for forms and settings panels."
+    },
+    {
+      name: "checkbox-group__items--horizontal",
+      description: "Places items in a row when the options should scan side by side."
+    }
+  ]}
+/>
+
+## API Reference
+
+### CheckboxGroup Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string[]", default: "undefined" },
+    { name: "onValueChange", type: "(value: string[]) => void", default: "undefined" },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+
+]}
+/>
+
+#### CheckboxGroup.Items Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>

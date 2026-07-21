@@ -1,0 +1,21 @@
+@layer components {
+  .checkbox-group {
+    @apply flex w-fit flex-col;
+  }
+
+  .checkbox-group__items {
+    @apply mt-4 flex;
+  }
+
+  .checkbox-group__items--vertical {
+    @apply flex-col gap-3;
+  }
+
+  .checkbox-group__items--horizontal {
+    @apply flex-row flex-wrap gap-6;
+  }
+
+  .checkbox-group__input {
+    @apply sr-only;
+  }
+}

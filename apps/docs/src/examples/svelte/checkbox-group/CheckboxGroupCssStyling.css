@@ -1,0 +1,17 @@
+@layer components {
+  .checkbox-group {
+    @apply rounded-2xl border border-zinc-200 bg-zinc-50 p-5 shadow-sm;
+  }
+
+  .checkbox-group__items {
+    @apply mt-5;
+  }
+
+  .checkbox-group__items--vertical {
+    @apply gap-3;
+  }
+
+  .checkbox-group__items--horizontal {
+    @apply gap-4;
+  }
+}

@@ -17,9 +17,7 @@
     Copy01Icon,
     ClipboardPasteIcon,
     Cancel01Icon,
-    Delete02Icon,
-    RestoreBinIcon,
-    AlertCircleIcon
+    Delete02Icon
   } from "@hugeicons/core-free-icons";
 </script>
 
