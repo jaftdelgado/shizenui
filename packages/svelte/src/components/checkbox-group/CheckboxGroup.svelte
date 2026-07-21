@@ -114,6 +114,7 @@
   aria-disabled={checkboxGroupState.finalDisabled ? true : undefined}
   aria-required={checkboxGroupState.finalRequired ? true : undefined}
   aria-invalid={checkboxGroupState.finalInvalid ? true : undefined}
+  aria-readonly={checkboxGroupState.finalReadonly ? true : undefined}
   data-checkbox-group=""
   data-invalid={presence(checkboxGroupState.finalInvalid)}
   data-disabled={presence(checkboxGroupState.finalDisabled)}
@@ -138,7 +139,7 @@
       oninvalid={(e) => {
         e.preventDefault();
         submissionInvalid.set(true);
-        ref?.querySelector<HTMLButtonElement>('[role="checkbox"]')?.focus();
+        ref?.querySelector<HTMLButtonElement>('[role="checkbox"]:not([data-disabled])')?.focus();
       }}
     />
   {/if}

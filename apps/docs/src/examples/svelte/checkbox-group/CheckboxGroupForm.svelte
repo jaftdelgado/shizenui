@@ -10,6 +10,13 @@
 
   let events = $state<string[]>([]);
 
+  const eventOptions = [
+    { value: "push", label: "Push" },
+    { value: "pull_request", label: "Pull request" },
+    { value: "release", label: "Release" },
+    { value: "issues", label: "Issues" }
+  ];
+
   function handleSubmit(event: SubmitEvent): void {
     event.preventDefault();
     alert(`Webhook saved!\n\nEvents: ${events.length > 0 ? events.join(", ") : "None"}`);
@@ -22,33 +29,14 @@
     <Description>Choose which repository events send a payload.</Description>
     <FieldError>Select at least one event.</FieldError>
     <CheckboxGroup.Items>
-      <Checkbox value="push">
-        <Checkbox.Control />
-        <Checkbox.Content>
-          <Label>Push</Label>
-        </Checkbox.Content>
-      </Checkbox>
-
-      <Checkbox value="pull_request">
-        <Checkbox.Control />
-        <Checkbox.Content>
-          <Label>Pull request</Label>
-        </Checkbox.Content>
-      </Checkbox>
-
-      <Checkbox value="release">
-        <Checkbox.Control />
-        <Checkbox.Content>
-          <Label>Release</Label>
-        </Checkbox.Content>
-      </Checkbox>
-
-      <Checkbox value="issues">
-        <Checkbox.Control />
-        <Checkbox.Content>
-          <Label>Issues</Label>
-        </Checkbox.Content>
-      </Checkbox>
+      {#each eventOptions as option}
+        <Checkbox value={option.value}>
+          <Checkbox.Control />
+          <Checkbox.Content>
+            <Label>{option.label}</Label>
+          </Checkbox.Content>
+        </Checkbox>
+      {/each}
     </CheckboxGroup.Items>
   </CheckboxGroup>
 

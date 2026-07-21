@@ -40,6 +40,7 @@
   let isInternalWrite = false;
   let baselineChecked = $state(checked);
   let baselineIndeterminate = $state(indeterminate);
+  let submissionInvalid: SubmissionInvalidState;
 
   $effect(() => {
     const c = checked;
@@ -73,7 +74,7 @@
     id: () => id
   });
 
-  const submissionInvalid = new SubmissionInvalidState(() => checkboxState.isChecked);
+  submissionInvalid = new SubmissionInvalidState(() => checkboxState.isChecked);
 
   setupCheckboxContexts(checkboxState);
 
@@ -92,9 +93,15 @@
   );
 
   warnIf(
-    () => !!ref && !checkboxState.name && !!ref.closest("form"),
+    () => !!ref && !checkboxState.name && !checkboxState.finalRequired && !!ref.closest("form"),
     "Checkbox",
     "This checkbox is inside a <form> but no `name` was provided — it will not participate in native form submission."
+  );
+
+  warnIf(
+    () => !!ref && !checkboxState.name && checkboxState.finalRequired && !!ref.closest("form"),
+    "Checkbox",
+    "This checkbox is `required` inside a <form> but no `name` was provided — it will block native form submission until checked, but its value will not be included in the submitted FormData. Pass `name` if you also need its value submitted."
   );
 
   function setChecked(next: boolean): void {
@@ -189,7 +196,7 @@
   {/if}
 </button>
 
-{#if checkboxState.name}
+{#if checkboxState.name || checkboxState.finalRequired}
   <input
     bind:this={hiddenInputRef}
     type="checkbox"

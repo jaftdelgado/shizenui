@@ -12,6 +12,7 @@ export class CheckboxGroupState {
   #orientation: () => CheckboxGroupOrientation | undefined;
   #id: () => string;
   #setValue: (value: string[]) => void;
+  #selectedSet = $derived(new Set(this.finalValue));
 
   get finalValue(): string[] {
     return this.#value() ?? [];
@@ -47,7 +48,7 @@ export class CheckboxGroupState {
   }
 
   isSelected(value: string): boolean {
-    return this.finalValue.includes(value);
+    return this.#selectedSet.has(value);
   }
 
   toggleValue(value: string): void {
