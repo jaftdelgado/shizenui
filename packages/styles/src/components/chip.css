@@ -1,3 +1,82 @@
-.chip {
-  display: block;
+@layer components {
+  .chip {
+    @apply rounded-full relative inline-flex items-center justify-center gap-(--chip-gap) text-center text-xs leading-none font-medium whitespace-nowrap select-none;
+
+    --chip-gap: 0.3125rem;
+    padding-inline: 0.625rem;
+    padding-block: 0.3125rem;
+
+    background-color: var(--chip-bg);
+    color: var(--chip-fg);
+
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
+  }
+
+  .chip__content {
+    @apply relative flex items-center justify-center gap-(--chip-gap);
+  }
+
+  .chip__icon {
+    @apply flex shrink-0 items-center justify-center;
+  }
+
+  .chip__icon--start {
+    margin-inline-start: -0.125rem;
+  }
+
+  .chip__icon--end {
+    margin-inline-end: -0.125rem;
+  }
+
+  .chip__label {
+    @apply flex items-center;
+  }
+
+  .chip--default {
+    --chip-color: var(--color-control-text);
+    --chip-color-foreground: var(--color-control);
+  }
+
+  .chip--accent {
+    --chip-color: var(--color-accent);
+    --chip-color-foreground: var(--color-accent-foreground);
+  }
+
+  .chip--success {
+    --chip-color: var(--color-success);
+    --chip-color-foreground: var(--color-success-foreground);
+  }
+
+  .chip--warning {
+    --chip-color: var(--color-warning);
+    --chip-color-foreground: var(--color-warning-foreground);
+  }
+
+  .chip--danger {
+    --chip-color: var(--color-danger);
+    --chip-color-foreground: var(--color-danger-foreground);
+  }
+
+  .chip--primary {
+    --chip-bg: var(--chip-color);
+    --chip-fg: var(--chip-color-foreground);
+  }
+
+  .chip--secondary {
+    --chip-bg: var(--color-control);
+    --chip-fg: var(--chip-color);
+  }
+
+  .chip--ghost {
+    --chip-bg: transparent;
+    --chip-fg: var(--chip-color);
+  }
+
+  .chip--soft {
+    /* No complete "soft background" token set exists for every status yet. */
+    --chip-bg: color-mix(in srgb, var(--chip-color) 14%, var(--color-control));
+    --chip-fg: var(--chip-color);
+  }
 }
