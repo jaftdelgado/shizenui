@@ -6,6 +6,7 @@ export * from "./checkbox-group";
 export * from "./chip";
 export * from "./description";
 export * from "./field-error";
+export * from "./input";
 export * from "./label";
 export * from "./radio";
 export * from "./radio-group";
