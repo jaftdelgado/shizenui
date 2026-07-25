@@ -1,6 +1,7 @@
 ---
 import { codeToHtml } from "shiki";
 import CopyButton from "@components/svelte/CopyButton.svelte";
+import CodeBlockToggle from "@components/svelte/CodeBlockToggle.svelte";
 
 interface Props {
   code: string;
@@ -54,5 +55,11 @@ const instanceId = crypto.randomUUID();
     <CopyButton text={cleanedCode} client:load />
   </div>
 
-  {collapsible && <div class="code-block-footer" />}
+  {
+    collapsible && (
+      <div class="code-block-footer">
+        <CodeBlockToggle instanceId={instanceId} collapsed={true} client:load />
+      </div>
+    )
+  }
 </div>
