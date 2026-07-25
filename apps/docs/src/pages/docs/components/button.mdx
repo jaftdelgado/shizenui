@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
 import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import ButtonVariants from "@examples/svelte/button/ButtonVariants.svelte";
@@ -82,86 +83,118 @@ To customize the Button component classes, you can use the `@layer components` d
 
 ### CSS Classes
 
-#### Base & Size Classes
+#### Base Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "button",
-      description: "Root element. Manages layout, tokens, and interaction states."
+      title: "button",
+      description: "Root element that holds all the button's states and styles.",
+      code: true
     },
     {
-      name: "button__content",
-      description: "Inner flex container that aligns the icon and label."
+      title: "button__content",
+      description: "Container that aligns the icon and label together.",
+      code: true
     },
     {
-      name: "button__icon",
-      description:
-        "Wrapper for any icon inside the button. Prevents shrinking and centers the glyph."
+      title: "button__icon",
+      description: "Wraps the icon so it keeps its size and stays centered.",
+      code: true
     },
     {
-      name: "button__icon--start",
-      description: "Optically aligns a leading icon with the button edge."
+      title: "button__icon--start",
+      description: "Aligns an icon placed before the label.",
+      code: true
     },
     {
-      name: "button__icon--end",
-      description: "Optically aligns a trailing icon with the button edge."
+      title: "button__icon--end",
+      description: "Aligns an icon placed after the label.",
+      code: true
     },
     {
-      name: "button__label",
-      description: "Wraps the text content and keeps it vertically centered."
+      title: "button__label",
+      description: "Wraps the button text and keeps it centered.",
+      code: true
+    }
+  ]}
+/>
+
+#### Size Classes
+
+<BulletList
+  items={[
+    {
+      title: "button--sm",
+      description: "Compact size, for tight spaces or secondary actions.",
+      code: true
     },
     {
-      name: "button--sm",
-      description: "Small size variant. Reduces height, padding, and font size."
-    },
-    { name: "button--md", description: "Medium size variant. Default height and padding." },
-    {
-      name: "button--lg",
-      description: "Large size variant. Increases height, padding, and font size."
+      title: "button--md",
+      description: "Default size, used in most cases.",
+      code: true
     },
     {
-      name: "button--icon-only",
-      description: "Square medium button for a single icon with no label."
+      title: "button--lg",
+      description: "Larger size, for emphasis or primary actions.",
+      code: true
     },
-    { name: "button--icon-only--sm", description: "Square small button for icon-only use." },
-    { name: "button--icon-only--lg", description: "Square large button for icon-only use." }
+    {
+      title: "button--icon-only",
+      description: "Square button with just an icon, no label.",
+      code: true
+    },
+    {
+      title: "button--icon-only--sm",
+      description: "Small variant of the icon-only button.",
+      code: true
+    },
+    {
+      title: "button--icon-only--lg",
+      description: "Large variant of the icon-only button.",
+      code: true
+    }
   ]}
 />
 
 #### Variant Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "button--primary",
-      description: "Accent-filled button. Use for the main call-to-action."
+      title: "button--primary",
+      description: "For the main action on the page.",
+      code: true
     },
     {
-      name: "button--secondary",
-      description:
-        "Subtle background with accent-colored text. Pairs well next to a primary button."
+      title: "button--secondary",
+      description: "For actions next to a primary button.",
+      code: true
     },
     {
-      name: "button--tertiary",
-      description: "Subtle background with standard text color. For low-priority actions."
+      title: "button--tertiary",
+      description: "For low-priority actions.",
+      code: true
     },
     {
-      name: "button--ghost",
-      description: "No background. Hover and pressed fills appear only on interaction."
+      title: "button--ghost",
+      description: "Invisible until you interact with it.",
+      code: true
     },
     {
-      name: "button--outline",
-      description:
-        "Ghost style with an inset border. Useful when a boundary is needed without fill."
+      title: "button--outline",
+      description: "Just a border, no fill.",
+      code: true
     },
     {
-      name: "button--danger",
-      description: "Signals a destructive or irreversible action."
+      title: "button--danger",
+      description: "For destructive actions.",
+      code: true
     },
     {
-      name: "button--soft-danger",
-      description: "A less prominent destructive affordance with standard background."
+      title: "button--soft-danger",
+      description: "A quieter take on the danger button.",
+      code: true
     }
   ]}
 />

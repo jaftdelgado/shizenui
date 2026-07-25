@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
 
 import ButtonGroupVariants from "@examples/svelte/button-group/ButtonGroupVariants.svelte";
 import ButtonGroupSizes from "@examples/svelte/button-group/ButtonGroupSizes.svelte";
@@ -81,46 +82,54 @@ To customize the ButtonGroup component classes, you can use the `@layer componen
 
 #### Base & Size Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "button-group",
-      description: "Root element. Manages layout and stacking context of child buttons."
+      title: "button-group",
+      description: "Root wrapper for grouped button actions.",
+      code: true
     },
     {
-      name: "button-group--separators",
-      description: "Adds a thin divider between each button to visually separate actions."
+      title: "button-group--separators",
+      description: "Adds visual separation when adjacent actions need clearer boundaries.",
+      code: true
     },
     {
-      name: "button-group--sm",
-      description: "Small size variant. Propagates to child buttons."
+      title: "button-group--sm",
+      description: "Compact group size for dense interfaces.",
+      code: true
     },
     {
-      name: "button-group--md",
-      description: "Medium size variant. Default."
+      title: "button-group--md",
+      description: "Default group size for most button sets.",
+      code: true
     },
     {
-      name: "button-group--lg",
-      description: "Large size variant. Propagates to child buttons."
+      title: "button-group--lg",
+      description: "Larger group size when actions need more presence.",
+      code: true
     },
     {
-      name: "data-disabled",
-      description: "Marks the entire group as non-interactive."
+      title: "data-disabled",
+      description: "Marks every action in the group as unavailable.",
+      code: true
     }
   ]}
 />
 
 #### Orientation
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: 'data-orientation="horizontal"',
-      description: "Arranges buttons in a row."
+      title: 'data-orientation="horizontal"',
+      description: "Use when the button group should read side by side.",
+      code: true
     },
     {
-      name: 'data-orientation="vertical"',
-      description: "Arranges buttons in a column."
+      title: 'data-orientation="vertical"',
+      description: "Use when the actions should stack in a vertical set.",
+      code: true
     }
   ]}
 />

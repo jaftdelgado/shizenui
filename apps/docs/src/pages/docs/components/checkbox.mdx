@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
 import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import CheckboxAnatomyCode from "@examples/svelte/checkbox/CheckboxAnatomy.svelte?raw";
@@ -110,18 +111,28 @@ To customize the Checkbox component classes, you can use the `@layer components`
 
 #### Checkbox Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "checkbox",
-      description: "Root element. Manages layout, tokens, and interaction states."
+      title: "checkbox",
+      description: "Root control for an independent selectable option.",
+      code: true
     },
-    { name: "checkbox__control", description: "The visible box that changes color when checked." },
     {
-      name: "checkbox__indicator",
-      description: "The check icon that appears inside the box to mark the selected option."
+      title: "checkbox__control",
+      description: "Visible box that represents the checked, unchecked, or mixed state.",
+      code: true
     },
-    { name: "checkbox__content", description: "Stacks label and description next to the control." }
+    {
+      title: "checkbox__indicator",
+      description: "Marks the selected or indeterminate state inside the box.",
+      code: true
+    },
+    {
+      title: "checkbox__content",
+      description: "Groups the label and description beside the control.",
+      code: true
+    }
   ]}
 />
 

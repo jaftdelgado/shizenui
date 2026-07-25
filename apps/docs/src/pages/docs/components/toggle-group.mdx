@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
 
 import ToggleGroupAnatomyCode from "@examples/svelte/toggle-group/ToggleGroupAnatomy.svelte?raw";
 
@@ -113,42 +114,49 @@ To customize the ToggleGroup component classes, you can use the `@layer componen
 
 #### Base & Size Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "toggle-group",
-      description: "Root element. Manages layout and stacking context of child toggles."
+      title: "toggle-group",
+      description: "Root control for grouped toggle options.",
+      code: true
     },
     {
-      name: "toggle-group--separators",
-      description: "Adds a thin divider between each toggle to visually separate options."
+      title: "toggle-group--separators",
+      description: "Adds visual separation when adjacent toggle options need clearer boundaries.",
+      code: true
     },
     {
-      name: "toggle-group--sm",
-      description: "Small size variant. Propagates to child toggles."
+      title: "toggle-group--sm",
+      description: "Compact group size for dense interfaces.",
+      code: true
     },
     {
-      name: "toggle-group--md",
-      description: "Medium size variant. Default."
+      title: "toggle-group--md",
+      description: "Default group size for most toggle sets.",
+      code: true
     },
     {
-      name: "toggle-group--lg",
-      description: "Large size variant. Propagates to child toggles."
+      title: "toggle-group--lg",
+      description: "Larger group size when options need more presence.",
+      code: true
     }
   ]}
 />
 
 #### Orientation
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: 'data-orientation="horizontal"',
-      description: "Arranges toggles in a row."
+      title: 'data-orientation="horizontal"',
+      description: "Use when toggle options should read side by side.",
+      code: true
     },
     {
-      name: 'data-orientation="vertical"',
-      description: "Arranges toggles in a column."
+      title: 'data-orientation="vertical"',
+      description: "Use when toggle options should stack in a vertical set.",
+      code: true
     }
   ]}
 />
