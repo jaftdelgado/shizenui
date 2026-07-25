@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import ButtonVariants from "@examples/svelte/button/ButtonVariants.svelte";
 import ButtonSizes from "@examples/svelte/button/ButtonSizes.svelte";
@@ -165,26 +166,17 @@ To customize the Button component classes, you can use the `@layer components` d
   ]}
 />
 
-#### Interactive States
+### Interactive States
 
-<PropsTable
+<InteractiveStatesTable
   props={[
+    { name: "pressed", description: "Confirms the button is being activated by the user." },
     {
-      name: ":disabled / aria-disabled",
+      name: "disabled",
       description: "Marks the button as non-interactive and communicates it visually."
     },
-    {
-      name: ":focus-visible",
-      description: "Indicates keyboard focus for accessibility."
-    },
-    {
-      name: ":hover",
-      description: "Provides visual feedback when the pointer is over the button."
-    },
-    {
-      name: ":active / data-pressed",
-      description: "Confirms the button is being activated by the user."
-    }
+    { name: "hover", description: "Provides visual feedback when the pointer is over the button." },
+    { name: "focus", description: "Indicates keyboard focus for accessibility." }
   ]}
 />
 

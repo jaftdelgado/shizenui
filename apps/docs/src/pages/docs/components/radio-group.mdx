@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import RadioGroupAnatomyCode from "@examples/svelte/radio-group/RadioGroupAnatomy.svelte?raw";
 
@@ -134,26 +135,30 @@ To customize the Radio and RadioGroup component classes, you can use the `@layer
   ]}
 />
 
-#### Interactive States
+### Interactive States
 
-<PropsTable
+<InteractiveStatesTable
   props={[
     {
-      name: "data-checked",
+      name: "checked",
       description:
         "Applied when the radio is selected. Updates control color and reveals the indicator."
     },
-    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
-    { name: "data-readonly", description: "Prevents selection without visual disabled treatment." },
+    { name: "pressed", description: "Shrinks the control slightly while it's being pressed." },
+    { name: "disabled", description: "Disables interaction and applies reduced opacity." },
     {
-      name: "data-invalid",
+      name: "invalid",
       description: "Marks the control with an error state to signal a validation issue."
     },
     {
-      name: "data-focus-visible",
+      name: "hover",
+      description: "Applies a hover background color to the control when the pointer is over it."
+    },
+    {
+      name: "focus",
       description: "Applies a focus ring to the control when navigating with keyboard."
     },
-    { name: "data-pressed", description: "Shrinks the control slightly while it's being pressed." }
+    { name: "readonly", description: "Prevents selection without visual disabled treatment." }
   ]}
 />
 

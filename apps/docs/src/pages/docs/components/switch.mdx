@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.svelte?raw";
 
@@ -139,20 +140,24 @@ To customize the Switch component classes, you can use the `@layer components` d
   ]}
 />
 
-#### Interactive States
+### Interactive States
 
-<PropsTable
+<InteractiveStatesTable
   props={[
     {
-      name: "data-checked",
+      name: "checked",
       description: "Applied when the switch is on. Updates track and thumb colors to accent."
     },
-    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
-    { name: "data-readonly", description: "Prevents toggling without visual disabled treatment." },
+    { name: "disabled", description: "Disables interaction and applies reduced opacity." },
     {
-      name: "data-focus-visible",
+      name: "hover",
+      description: "Applies a hover background color to the control when the pointer is over it."
+    },
+    {
+      name: "focus",
       description: "Applies a focus ring to the control when navigating with keyboard."
-    }
+    },
+    { name: "readonly", description: "Prevents toggling without visual disabled treatment." }
   ]}
 />
 

@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import ToggleVariants from "@examples/svelte/toggle/ToggleVariants.svelte";
 import ToggleSizes from "@examples/svelte/toggle/ToggleSizes.svelte";
@@ -156,30 +157,21 @@ To customize the Toggle component classes, you can use the `@layer components` d
   ]}
 />
 
-#### Interactive States
+### Interactive States
 
-<PropsTable
+<InteractiveStatesTable
   props={[
     {
-      name: ":disabled",
+      name: "pressed",
+      description: "Reflects the on state of the toggle. Switches to the active color palette."
+    },
+    { name: "active", description: "Confirms the toggle is being activated by the user." },
+    {
+      name: "disabled",
       description: "Marks the toggle as non-interactive and communicates it visually."
     },
-    {
-      name: ":focus-visible",
-      description: "Indicates keyboard focus for accessibility."
-    },
-    {
-      name: ":hover",
-      description: "Provides visual feedback when the pointer is over the toggle."
-    },
-    {
-      name: ":active / data-pressed",
-      description: "Confirms the toggle is being activated by the user."
-    },
-    {
-      name: "aria-pressed",
-      description: "Reflects the on state of the toggle. Switches to the active color palette."
-    }
+    { name: "hover", description: "Provides visual feedback when the pointer is over the toggle." },
+    { name: "focus", description: "Indicates keyboard focus for accessibility." }
   ]}
 />
 
