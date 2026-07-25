@@ -2,6 +2,7 @@ export * from "./components/button-group/index.ts";
 export * from "./components/button/index.js";
 export * from "./components/checkbox-group/index.ts";
 export * from "./components/checkbox/index.ts";
+export * from "./components/chip/index.ts";
 export * from "./components/description/index.js";
 export * from "./components/field-error/index.ts";
 export * from "./components/label/index.js";

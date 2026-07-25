@@ -1,0 +1,17 @@
+@layer components {
+  .chip {
+    @apply rounded-lg font-semibold;
+  }
+
+  .chip__content {
+    @apply gap-2;
+  }
+
+  .chip--accent {
+    --chip-tone-soft-bg: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+
+  .chip--lg {
+    @apply h-8 px-4 text-sm;
+  }
+}

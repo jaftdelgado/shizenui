@@ -162,7 +162,9 @@ export class RadioGroupState {
     return undefined;
   }
 
-  #findIdByValue(value: string): string | undefined {
+  #findIdByValue(value: string | undefined): string | undefined {
+    if (value === undefined) return undefined;
+
     for (const id of this.#itemIds) {
       if (this.#itemMap.get(id)?.getValue() === value) return id;
     }
