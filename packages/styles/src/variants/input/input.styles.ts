@@ -3,16 +3,20 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const inputStyles = tv({
   base: "input",
   variants: {
-    invalid: {
-      true: "input--invalid"
+    size: {
+      sm: "input--sm",
+      md: "input--md",
+      lg: "input--lg"
     },
-    disabled: {
-      true: "input--disabled"
+    variant: {
+      default: "input--default",
+      secondary: "input--secondary",
+      outline: "input--outline"
     }
   },
   defaultVariants: {
-    invalid: false,
-    disabled: false
+    size: "md",
+    variant: "default"
   }
 });
 

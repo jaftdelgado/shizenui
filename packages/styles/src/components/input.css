@@ -1,3 +1,86 @@
-.input {
-  display: block;
+@layer components {
+  .input {
+    @apply rounded-field relative inline-flex w-full items-center transition-all duration-200;
+    @apply placeholder:text-field-placeholder shadow-xs outline-none;
+
+    /* Base tokens */
+    --input-bg: var(--color-field);
+    --input-bg-hover: var(--color-field-hover);
+    --input-bg-focus: var(--color-field-hover);
+    --input-fg: var(--color-field-foreground);
+    --input-border: transparent;
+
+    background-color: var(--input-bg);
+    color: var(--input-fg);
+    border: 1px solid var(--input-border);
+
+    &:hover:not(:disabled, [data-invalid="true"]) {
+      background-color: var(--input-bg-hover);
+      border-color: var(--input-border-hover, var(--input-border));
+    }
+
+    &:focus {
+      @apply status-focused-field;
+      background-color: var(--input-bg-focus);
+    }
+
+    &[data-invalid="true"] {
+      @apply status-invalid-field;
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      @apply status-disabled;
+    }
+
+    &[data-in-group="true"] {
+      @apply h-full border-none bg-transparent shadow-none ring-0;
+      &:hover,
+      &:focus {
+        @apply bg-transparent shadow-none ring-0 outline-none;
+      }
+    }
+  }
+
+  /* Variants */
+  .input--default {
+    --input-bg: var(--color-field);
+    --input-bg-hover: var(--color-field-hover);
+    --input-bg-focus: var(--color-field-hover);
+    --input-fg: var(--color-field-foreground);
+  }
+
+  .input--secondary {
+    @apply shadow-none;
+    --input-bg: var(--color-field-secondary);
+    --input-bg-hover: var(--color-field-secondary-hover);
+    --input-bg-focus: var(--color-field-secondary-hover);
+    --input-fg: var(--color-field-foreground);
+  }
+
+  .input--outline {
+    --input-bg: transparent;
+    --input-bg-hover: var(--color-ghost-hover);
+    --input-bg-focus: var(--color-ghost-hover);
+    --input-fg: var(--color-field-foreground);
+    --input-border: var(--color-separator);
+    --input-border-hover: var(--color-outline-hover);
+  }
+
+  /* Sizes */
+  .input--sm {
+    @apply h-field-sm px-field-sm text-sm;
+  }
+
+  .input--md {
+    @apply h-field-md px-field-md text-sm;
+  }
+
+  .input--lg {
+    @apply h-field-lg px-field-lg text-base;
+  }
+
+  .input[data-in-group="true"] {
+    @apply h-full rounded-none py-0;
+  }
 }
