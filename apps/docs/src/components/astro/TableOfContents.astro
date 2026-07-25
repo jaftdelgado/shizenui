@@ -21,7 +21,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3 || h.d
             On this page
           </p>
         </slot>
-        <nav>
+        <nav class="toc-scroll" data-toc-scroll>
           <ul>
             {tocHeadings.map((heading) => (
               <li class={`toc-h${heading.depth}`}>
@@ -36,28 +36,171 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3 || h.d
     </aside>
   )
 }
-
 <script>
+  const scrollContainer = document.querySelector<HTMLElement>("[data-toc-scroll]");
   const links = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
   const headings = Array.from(
     document.querySelectorAll<HTMLElement>(".docs-body h2, .docs-body h3, .docs-body h4")
   );
 
-  if (links.length && headings.length) {
+  if (!scrollContainer || !links.length || !headings.length) {
+  } else {
+    const updateScrollEdges = () => {
+      const atTop = scrollContainer.scrollTop <= 1;
+      const atBottom =
+        scrollContainer.scrollTop + scrollContainer.clientHeight >=
+        scrollContainer.scrollHeight - 1;
+
+      scrollContainer.dataset.atTop = String(atTop);
+      scrollContainer.dataset.atBottom = String(atBottom);
+    };
+
+    updateScrollEdges();
+    scrollContainer.addEventListener("scroll", updateScrollEdges, { passive: true });
+    window.addEventListener("resize", updateScrollEdges);
+
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    let scrollAnimationFrame: number | null = null;
+
+    const animateScrollTo = (targetTop: number) => {
+      if (!scrollContainer) return;
+      if (scrollAnimationFrame !== null) cancelAnimationFrame(scrollAnimationFrame);
+
+      const maxScrollTop = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+      const clampedTarget = Math.max(0, Math.min(targetTop, maxScrollTop));
+
+      const startTop = scrollContainer.scrollTop;
+      const distance = clampedTarget - startTop;
+
+      const duration = Math.min(450, Math.max(180, Math.abs(distance) * 0.6));
+      const startTime = performance.now();
+
+      const previousScrollBehavior = scrollContainer.style.scrollBehavior;
+      scrollContainer.style.scrollBehavior = "auto";
+
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOutCubic(progress);
+
+        scrollContainer.scrollTop = startTop + distance * eased;
+
+        if (progress < 1) {
+          scrollAnimationFrame = requestAnimationFrame(step);
+        } else {
+          scrollAnimationFrame = null;
+          scrollContainer.style.scrollBehavior = previousScrollBehavior;
+        }
+      };
+
+      scrollAnimationFrame = requestAnimationFrame(step);
+    };
+
+    let activeIndex = -1;
+
+    const linkList = Array.from(links);
+
+    let suppressObserverUntil = 0;
+
+    const setActiveLink = (link: HTMLAnchorElement, newIndex: number) => {
+      links.forEach((l) => l.classList.remove("active"));
+      link.classList.add("active");
+      activeIndex = newIndex;
+    };
+
+    const centerLinkInView = (link: HTMLAnchorElement) => {
+      if (!scrollContainer) return;
+
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      const relativeTop = linkRect.top - containerRect.top;
+      const delta = relativeTop - scrollContainer.clientHeight / 2 + linkRect.height / 2;
+
+      animateScrollTo(scrollContainer.scrollTop + delta);
+    };
+
+    const followActiveLink = (newIndex: number) => {
+      if (newIndex === -1 || newIndex === activeIndex) return;
+
+      const direction = activeIndex === -1 ? null : newIndex > activeIndex ? "down" : "up";
+      activeIndex = newIndex;
+
+      const link = linkList[newIndex];
+      if (!link || !scrollContainer) return;
+
+      if (!direction) return;
+
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      const relativeTop = linkRect.top - containerRect.top;
+
+      const threshold =
+        direction === "down"
+          ? scrollContainer.clientHeight * 0.6
+          : scrollContainer.clientHeight * 0.4;
+
+      const crossedDown = direction === "down" && relativeTop > threshold;
+      const crossedUp = direction === "up" && relativeTop < threshold;
+
+      if (crossedDown || crossedUp) {
+        const delta = relativeTop - threshold;
+        animateScrollTo(scrollContainer.scrollTop + delta);
+      }
+    };
+
+    let suppressionFallback: ReturnType<typeof setTimeout> | null = null;
+
+    const releaseSuppression = () => {
+      suppressObserverUntil = 0;
+      if (suppressionFallback !== null) {
+        clearTimeout(suppressionFallback);
+        suppressionFallback = null;
+      }
+    };
+
+    linkList.forEach((link, idx) => {
+      link.addEventListener("click", () => {
+        setActiveLink(link, idx);
+        centerLinkInView(link);
+
+        suppressObserverUntil = Date.now() + 2000;
+
+        if (suppressionFallback !== null) clearTimeout(suppressionFallback);
+
+        if ("onscrollend" in window) {
+          window.addEventListener("scrollend", releaseSuppression, { once: true });
+        } else {
+          suppressionFallback = setTimeout(releaseSuppression, 900);
+        }
+      });
+    });
+
     const observer = new IntersectionObserver(
       (entries) => {
+        if (Date.now() < suppressObserverUntil) return;
+
         for (const entry of entries) {
           if (entry.isIntersecting) {
             const id = entry.target.getAttribute("id");
+
+            const activeLink = document.querySelector<HTMLAnchorElement>(
+              `.toc-link[href="#${id}"]`
+            );
+            if (!activeLink) continue;
+
+            const idx = linkList.findIndex((l) => l === activeLink);
+            if (idx === -1) continue;
+
             links.forEach((l) => l.classList.remove("active"));
-            document
-              .querySelector<HTMLAnchorElement>(`.toc-link[href="#${id}"]`)
-              ?.classList.add("active");
+            activeLink.classList.add("active");
+            followActiveLink(idx);
           }
         }
       },
       { rootMargin: "-20% 0px -70% 0px" }
     );
+
     headings.forEach((h) => observer.observe(h));
   }
 </script>

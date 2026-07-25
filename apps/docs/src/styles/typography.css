@@ -24,7 +24,7 @@
     }
 
     & code:not(pre code):not([data-example-container] *) {
-      @apply bg-control text-secondary-text rounded-md px-1.5 py-0.5 font-mono text-sm;
+      @apply bg-control text-control-text rounded-md px-1.5 py-0.5 font-mono text-sm;
     }
 
     & ul:not([data-example-container] *),

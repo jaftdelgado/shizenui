@@ -10,6 +10,8 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import ToggleVariants from "@examples/svelte/toggle/ToggleVariants.svelte";
 import ToggleSizes from "@examples/svelte/toggle/ToggleSizes.svelte";
@@ -83,103 +85,108 @@ To customize the Toggle component classes, you can use the `@layer components` d
 
 #### Base & Size Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "toggle",
-      description: "Root element. Manages layout, tokens, and interaction states."
+      title: "toggle",
+      description: "Root button for switching an option on or off.",
+      code: true
     },
     {
-      name: "toggle__content",
-      description: "Inner flex container that aligns the icon and label."
+      title: "toggle__content",
+      description: "Keeps the icon and label grouped as one control.",
+      code: true
     },
     {
-      name: "toggle__icon",
-      description:
-        "Wrapper for any icon inside the toggle. Prevents shrinking and centers the glyph."
+      title: "toggle__icon",
+      description: "Marks an icon as part of the toggle content.",
+      code: true
     },
     {
-      name: "toggle__icon--start",
-      description: "Optically aligns a leading icon with the toggle edge."
+      title: "toggle__icon--start",
+      description: "Identifies an icon placed before the label.",
+      code: true
     },
     {
-      name: "toggle__icon--end",
-      description: "Optically aligns a trailing icon with the toggle edge."
+      title: "toggle__icon--end",
+      description: "Identifies an icon placed after the label.",
+      code: true
     },
     {
-      name: "toggle__label",
-      description: "Wraps the text content and keeps it vertically centered."
+      title: "toggle__label",
+      description: "Marks the readable text inside the toggle.",
+      code: true
     },
     {
-      name: "toggle--sm",
-      description: "Small size variant. Reduces height, padding, and font size."
+      title: "toggle--sm",
+      description: "Compact toggle size for dense interfaces.",
+      code: true
     },
     {
-      name: "toggle--md",
-      description: "Medium size variant. Default height and padding."
+      title: "toggle--md",
+      description: "Default toggle size for most controls.",
+      code: true
     },
     {
-      name: "toggle--lg",
-      description: "Large size variant. Increases height, padding, and font size."
+      title: "toggle--lg",
+      description: "Larger toggle size when the control needs more presence.",
+      code: true
     },
     {
-      name: "toggle--icon-only",
-      description: "Square medium toggle for a single icon with no label."
+      title: "toggle--icon-only",
+      description: "Square toggle with just an icon, no label.",
+      code: true
     },
     {
-      name: "toggle--icon-only--sm",
-      description: "Square small toggle for icon-only use."
+      title: "toggle--icon-only--sm",
+      description: "Small variant of the icon-only toggle.",
+      code: true
     },
     {
-      name: "toggle--icon-only--lg",
-      description: "Square large toggle for icon-only use."
+      title: "toggle--icon-only--lg",
+      description: "Large variant of the icon-only toggle.",
+      code: true
     }
   ]}
 />
 
 #### Variant Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "toggle--default",
-      description: "Filled background. Switches to accent tint when active."
+      title: "toggle--default",
+      description: "Standard filled style for regular toggle controls.",
+      code: true
     },
     {
-      name: "toggle--outline",
-      description: "Border at rest, accent tint and accent border when active."
+      title: "toggle--outline",
+      description: "Outlined style for toggles that need a visible boundary.",
+      code: true
     },
     {
-      name: "toggle--ghost",
-      description: "No background or border. Fill appears only on interaction."
+      title: "toggle--ghost",
+      description: "Low-emphasis style for compact or secondary toggle actions.",
+      code: true
     }
   ]}
 />
 
-#### Interactive States
+### Interactive States
 
-<PropsTable
+<InteractiveStatesTable
   props={[
     {
-      name: ":disabled",
+      name: "pressed",
+      description: "Reflects the on state of the toggle. Switches to the active color palette."
+    },
+    { name: "active", description: "Confirms the toggle is being activated by the user." },
+    {
+      name: "disabled",
       description: "Marks the toggle as non-interactive and communicates it visually."
     },
-    {
-      name: ":focus-visible",
-      description: "Indicates keyboard focus for accessibility."
-    },
-    {
-      name: ":hover",
-      description: "Provides visual feedback when the pointer is over the toggle."
-    },
-    {
-      name: ":active / data-pressed",
-      description: "Confirms the toggle is being activated by the user."
-    },
-    {
-      name: "aria-pressed",
-      description: "Reflects the on state of the toggle. Switches to the active color palette."
-    }
+    { name: "hover", description: "Provides visual feedback when the pointer is over the toggle." },
+    { name: "focus", description: "Indicates keyboard focus for accessibility." }
   ]}
 />
 

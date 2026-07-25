@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
 
 import CheckboxGroupAnatomyCode from "@examples/svelte/checkbox-group/CheckboxGroupAnatomy.svelte?raw";
 
@@ -112,23 +113,27 @@ To customize the CheckboxGroup component classes, you can use the `@layer compon
 
 #### CheckboxGroup Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "checkbox-group",
-      description: "Wraps the full field and gives the group its overall spacing and surface."
+      title: "checkbox-group",
+      description: "Root field for a related set of checkbox options.",
+      code: true
     },
     {
-      name: "checkbox-group__items",
-      description: "Holds the checkbox list and separates it from the group heading."
+      title: "checkbox-group__items",
+      description: "Groups the checkbox options under the field heading.",
+      code: true
     },
     {
-      name: "checkbox-group__items--vertical",
-      description: "Stacks items in a column for forms and settings panels."
+      title: "checkbox-group__items--vertical",
+      description: "Use for forms or settings where options should scan top to bottom.",
+      code: true
     },
     {
-      name: "checkbox-group__items--horizontal",
-      description: "Places items in a row when the options should scan side by side."
+      title: "checkbox-group__items--horizontal",
+      description: "Use when related options should scan side by side.",
+      code: true
     }
   ]}
 />

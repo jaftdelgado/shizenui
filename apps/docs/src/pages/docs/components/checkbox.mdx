@@ -10,6 +10,8 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import CheckboxAnatomyCode from "@examples/svelte/checkbox/CheckboxAnatomy.svelte?raw";
 
@@ -109,41 +111,60 @@ To customize the Checkbox component classes, you can use the `@layer components`
 
 #### Checkbox Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "checkbox",
-      description: "Root element. Manages layout, tokens, and interaction states."
+      title: "checkbox",
+      description: "Root control for an independent selectable option.",
+      code: true
     },
-    { name: "checkbox__control", description: "The visible box that changes color when checked." },
     {
-      name: "checkbox__indicator",
-      description: "The check icon that appears inside the box to mark the selected option."
+      title: "checkbox__control",
+      description: "Visible box that represents the checked, unchecked, or mixed state.",
+      code: true
     },
-    { name: "checkbox__content", description: "Stacks label and description next to the control." }
+    {
+      title: "checkbox__indicator",
+      description: "Marks the selected or indeterminate state inside the box.",
+      code: true
+    },
+    {
+      title: "checkbox__content",
+      description: "Groups the label and description beside the control.",
+      code: true
+    }
   ]}
 />
 
 ### Interactive States
 
-<PropsTable
+<InteractiveStatesTable
   props={[
     {
-      name: "data-checked",
+      name: "checked",
       description:
         "Applied when the checkbox is selected. Updates control color and reveals the indicator."
     },
-    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
-    { name: "data-readonly", description: "Prevents selection without visual disabled treatment." },
     {
-      name: "data-invalid",
+      name: "indeterminate",
+      description:
+        "Applied when the checkbox is in a partially-selected state. Shares checked's accent color and reveals the indicator."
+    },
+    { name: "pressed", description: "Shrinks the control slightly while it's being pressed." },
+    { name: "disabled", description: "Disables interaction and applies reduced opacity." },
+    {
+      name: "invalid",
       description: "Marks the control with an error state to signal a validation issue."
     },
     {
-      name: "data-focus-visible",
+      name: "hover",
+      description: "Applies a hover background color to the control when the pointer is over it."
+    },
+    {
+      name: "focus",
       description: "Applies a focus ring to the control when navigating with keyboard."
     },
-    { name: "data-pressed", description: "Shrinks the control slightly while it's being pressed." }
+    { name: "readonly", description: "Prevents selection without visual disabled treatment." }
   ]}
 />
 

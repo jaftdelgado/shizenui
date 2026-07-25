@@ -10,6 +10,7 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
 
 import ChipColors from "@examples/svelte/chip/ChipColors.svelte";
 import ChipContent from "@examples/svelte/chip/ChipContent.svelte";
@@ -68,100 +69,118 @@ To customize the Chip component classes, you can use the `@layer components` dir
 
 #### Base Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "chip",
-      description: "Base chip container for compact metadata."
+      title: "chip",
+      description: "Base chip container for compact metadata.",
+      code: true
     },
     {
-      name: "chip__content",
-      description: "Keeps the chip content grouped as one label."
+      title: "chip__content",
+      description: "Keeps the chip content grouped as one label.",
+      code: true
     },
     {
-      name: "chip__icon",
-      description: "Marks an icon as part of the chip content."
+      title: "chip__icon",
+      description: "Marks an icon as part of the chip content.",
+      code: true
     },
     {
-      name: "chip__icon--start",
-      description: "Identifies an icon placed before the label."
+      title: "chip__icon--start",
+      description: "Identifies an icon placed before the label.",
+      code: true
     },
     {
-      name: "chip__icon--end",
-      description: "Identifies an icon placed after the label."
+      title: "chip__icon--end",
+      description: "Identifies an icon placed after the label.",
+      code: true
     },
     {
-      name: "chip__label",
-      description: "Marks the readable text inside the chip."
+      title: "chip__label",
+      description: "Marks the readable text inside the chip.",
+      code: true
     }
   ]}
 />
 
 #### Variant Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "chip--primary",
-      description: "Most prominent style for important metadata."
+      title: "chip--primary",
+      description: "Most prominent style for important metadata.",
+      code: true
     },
     {
-      name: "chip--secondary",
-      description: "Quieter style for supporting metadata."
+      title: "chip--secondary",
+      description: "Quieter style for supporting metadata.",
+      code: true
     },
     {
-      name: "chip--ghost",
-      description: "Lowest emphasis style for inline metadata."
+      title: "chip--ghost",
+      description: "Lowest emphasis style for inline metadata.",
+      code: true
     },
     {
-      name: "chip--soft",
-      description: "Gentle status style for colored metadata."
+      title: "chip--soft",
+      description: "Gentle status style for colored metadata.",
+      code: true
     }
   ]}
 />
 
 #### Color Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "chip--default",
-      description: "Neutral tone for standard metadata."
+      title: "chip--default",
+      description: "Neutral tone for standard metadata.",
+      code: true
     },
     {
-      name: "chip--accent",
-      description: "Accent tone for highlighted metadata."
+      title: "chip--accent",
+      description: "Accent tone for highlighted metadata.",
+      code: true
     },
     {
-      name: "chip--success",
-      description: "Positive tone for successful status metadata."
+      title: "chip--success",
+      description: "Positive tone for successful status metadata.",
+      code: true
     },
     {
-      name: "chip--warning",
-      description: "Caution tone for metadata that needs attention."
+      title: "chip--warning",
+      description: "Caution tone for metadata that needs attention.",
+      code: true
     },
     {
-      name: "chip--danger",
-      description: "Danger tone for error or rejected status metadata."
+      title: "chip--danger",
+      description: "Danger tone for error or rejected status metadata.",
+      code: true
     }
   ]}
 />
 
 #### Size Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "chip--sm",
-      description: "Small chip for dense interfaces."
+      title: "chip--sm",
+      description: "Small chip for dense interfaces.",
+      code: true
     },
     {
-      name: "chip--md",
-      description: "Default chip size for most metadata."
+      title: "chip--md",
+      description: "Default chip size for most metadata.",
+      code: true
     },
     {
-      name: "chip--lg",
-      description: "Large chip when the metadata needs more presence."
+      title: "chip--lg",
+      description: "Large chip when the metadata needs more presence.",
+      code: true
     }
   ]}
 />

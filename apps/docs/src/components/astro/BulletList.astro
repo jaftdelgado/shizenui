@@ -1,0 +1,37 @@
+---
+interface BulletItem {
+  title: string;
+  description?: string;
+  code?: boolean;
+}
+
+interface Props {
+  items: (string | BulletItem)[];
+}
+
+const { items } = Astro.props;
+
+const normalized = items.map(
+  (item): BulletItem => (typeof item === "string" ? { title: item } : item)
+);
+---
+
+<ul class="marker:text-secondary-text my-8 w-full list-disc space-y-4 tracking-tight">
+  {
+    normalized.map((item) => (
+      <li class="text-sm leading-relaxed">
+        {item.code ? (
+          <code>{item.title}</code>
+        ) : (
+          <span class="text-primary-text">{item.title}</span>
+        )}
+        {item.description && (
+          <>
+            {item.code ? " — " : ": "}
+            <span class="text-primary-text">{item.description}</span>
+          </>
+        )}
+      </li>
+    ))
+  }
+</ul>

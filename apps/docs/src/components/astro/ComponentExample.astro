@@ -29,26 +29,24 @@ if (src) {
 }
 ---
 
-<section
-  class="border-separator my-8 overflow-hidden rounded-3xl border bg-transparent"
-  aria-label="Component Example"
-  data-example-container
->
-  <div class="flex min-h-96 items-center justify-center p-8">
-    <slot />
-  </div>
+<section class="example-container my-8" aria-label="Component Example" data-example-container>
+  <div class="example-container-inner">
+    <div class="flex min-h-96 items-center justify-center p-8">
+      <slot />
+    </div>
 
-  {
-    code && (
-      <div class="border-separator border-t" aria-label="Component Example Code">
-        <CodeBlock
-          code={code}
-          lang={lang}
-          theme={theme}
-          showLineNumbers={showLineNumbers}
-          isContained
-        />
-      </div>
-    )
-  }
+    {
+      code && (
+        <div class="border-separator border-t" aria-label="Component Example Code">
+          <CodeBlock
+            code={code}
+            lang={lang}
+            theme={theme}
+            showLineNumbers={showLineNumbers}
+            isContained
+          />
+        </div>
+      )
+    }
+  </div>
 </section>

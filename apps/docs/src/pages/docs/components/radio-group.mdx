@@ -10,6 +10,8 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import RadioGroupAnatomyCode from "@examples/svelte/radio-group/RadioGroupAnatomy.svelte?raw";
 
@@ -102,58 +104,82 @@ To customize the Radio and RadioGroup component classes, you can use the `@layer
 
 #### Radio Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "radio",
-      description: "Root element. Manages layout, tokens, and interaction states."
+      title: "radio",
+      description: "Root control for a single option inside a radio group.",
+      code: true
     },
-    { name: "radio__control", description: "The visible circle that changes color when selected." },
     {
-      name: "radio__indicator",
-      description: "The dot that appears inside the circle to mark the selected option."
+      title: "radio__control",
+      description: "Visible circle that represents the selected or unselected state.",
+      code: true
     },
-    { name: "radio__content", description: "Stacks label and description next to the control." }
+    {
+      title: "radio__indicator",
+      description: "Marks the option as selected inside the control.",
+      code: true
+    },
+    {
+      title: "radio__content",
+      description: "Groups the label and description beside the control.",
+      code: true
+    }
   ]}
 />
 
 #### RadioGroup Classes
 
-<PropsTable
-  props={[
-    { name: "radio-group", description: "Root wrapper for a group of radio buttons." },
-    { name: "radio-group__items", description: "Container for the radio items. Adds top margin." },
+<BulletList
+  items={[
     {
-      name: "radio-group__items--vertical",
-      description: "Stacks items in a column with equal gap."
+      title: "radio-group",
+      description: "Root field for a set of mutually exclusive radio options.",
+      code: true
     },
     {
-      name: "radio-group__items--horizontal",
-      description: "Lays items in a row, wrapping when needed."
+      title: "radio-group__items",
+      description: "Groups the radio options under the field heading.",
+      code: true
+    },
+    {
+      title: "radio-group__items--vertical",
+      description: "Use when options should scan top to bottom.",
+      code: true
+    },
+    {
+      title: "radio-group__items--horizontal",
+      description: "Use when options should scan side by side.",
+      code: true
     }
   ]}
 />
 
-#### Interactive States
+### Interactive States
 
-<PropsTable
+<InteractiveStatesTable
   props={[
     {
-      name: "data-checked",
+      name: "checked",
       description:
         "Applied when the radio is selected. Updates control color and reveals the indicator."
     },
-    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
-    { name: "data-readonly", description: "Prevents selection without visual disabled treatment." },
+    { name: "pressed", description: "Shrinks the control slightly while it's being pressed." },
+    { name: "disabled", description: "Disables interaction and applies reduced opacity." },
     {
-      name: "data-invalid",
+      name: "invalid",
       description: "Marks the control with an error state to signal a validation issue."
     },
     {
-      name: "data-focus-visible",
+      name: "hover",
+      description: "Applies a hover background color to the control when the pointer is over it."
+    },
+    {
+      name: "focus",
       description: "Applies a focus ring to the control when navigating with keyboard."
     },
-    { name: "data-pressed", description: "Shrinks the control slightly while it's being pressed." }
+    { name: "readonly", description: "Prevents selection without visual disabled treatment." }
   ]}
 />
 

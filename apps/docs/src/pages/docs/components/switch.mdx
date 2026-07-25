@@ -10,6 +10,8 @@ import CodeImport from "@components/astro/CodeImport.astro";
 import CodeBlock from "@components/astro/CodeBlock.astro";
 import ComponentExample from "@components/astro/ComponentExample.astro";
 import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.svelte?raw";
 
@@ -103,56 +105,96 @@ To customize the Switch component classes, you can use the `@layer components` d
 
 #### Switch Classes
 
-<PropsTable
-  props={[
+<BulletList
+  items={[
     {
-      name: "switch",
-      description: "Root element. Manages layout, tokens, and interaction states."
+      title: "switch",
+      description: "Root control for toggling a setting on or off.",
+      code: true
     },
-    { name: "switch__control", description: "The visible track that changes color when toggled." },
-    { name: "switch__thumb", description: "The sliding pill inside the track." },
-    { name: "switch__thumb-content", description: "Centers icon or content inside the thumb." },
-    { name: "switch__input", description: "Visually hidden native input for accessibility." },
-    { name: "switch__content", description: "Stacks label and description next to the control." },
-    { name: "switch--sm", description: "Small size variant. Reduces height and width." },
-    { name: "switch--lg", description: "Large size variant. Increases height and width." }
+    {
+      title: "switch__control",
+      description: "Visible track that shows whether the switch is on or off.",
+      code: true
+    },
+    {
+      title: "switch__thumb",
+      description: "Movable handle that indicates the current switch state.",
+      code: true
+    },
+    {
+      title: "switch__thumb-content",
+      description: "Holds optional icon or content inside the handle.",
+      code: true
+    },
+    {
+      title: "switch__input",
+      description: "Native input used for accessibility and form behavior.",
+      code: true
+    },
+    {
+      title: "switch__content",
+      description: "Groups the label and description beside the control.",
+      code: true
+    },
+    {
+      title: "switch--sm",
+      description: "Compact switch size for dense settings.",
+      code: true
+    },
+    {
+      title: "switch--lg",
+      description: "Larger switch size when the setting needs more presence.",
+      code: true
+    }
   ]}
 />
 
 #### SwitchGroup Classes
 
-<PropsTable
-  props={[
-    { name: "switch-group", description: "Root wrapper for a group of switches." },
+<BulletList
+  items={[
     {
-      name: "switch-group__items",
-      description: "Container for the switch items. Adds top margin."
+      title: "switch-group",
+      description: "Root field for a related set of switches.",
+      code: true
     },
     {
-      name: "switch-group__items--vertical",
-      description: "Stacks switches in a column with equal gap."
+      title: "switch-group__items",
+      description: "Groups the switch controls under the field heading.",
+      code: true
     },
     {
-      name: "switch-group__items--horizontal",
-      description: "Lays switches in a row, wrapping when needed."
+      title: "switch-group__items--vertical",
+      description: "Use when switches should scan top to bottom.",
+      code: true
+    },
+    {
+      title: "switch-group__items--horizontal",
+      description: "Use when related switches should scan side by side.",
+      code: true
     }
   ]}
 />
 
-#### Interactive States
+### Interactive States
 
-<PropsTable
+<InteractiveStatesTable
   props={[
     {
-      name: "data-checked",
+      name: "checked",
       description: "Applied when the switch is on. Updates track and thumb colors to accent."
     },
-    { name: "data-disabled", description: "Disables interaction and applies reduced opacity." },
-    { name: "data-readonly", description: "Prevents toggling without visual disabled treatment." },
+    { name: "disabled", description: "Disables interaction and applies reduced opacity." },
     {
-      name: "data-focus-visible",
+      name: "hover",
+      description: "Applies a hover background color to the control when the pointer is over it."
+    },
+    {
+      name: "focus",
       description: "Applies a focus ring to the control when navigating with keyboard."
-    }
+    },
+    { name: "readonly", description: "Prevents toggling without visual disabled treatment." }
   ]}
 />
 
