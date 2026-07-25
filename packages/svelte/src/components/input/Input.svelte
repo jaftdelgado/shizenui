@@ -1,73 +1,64 @@
 <script lang="ts">
-  import { cn } from "@shizen-ui/styles";
-  import { inputStyles, type InputVariants } from "@shizen-ui/styles";
-  import { useFieldStateContext, useSurfaceContext } from "../../contexts/index.js";
-  import { useInputGroupContext } from "../../contexts/internal/index.js";
-  import type { HTMLInputAttributes } from "svelte/elements";
+  import { inputStyles } from "@shizen-ui/styles";
 
-  interface Props extends Omit<HTMLInputAttributes, "size"> {
-    size?: InputVariants["size"];
-    variant?: InputVariants["variant"];
-    value?: string;
-    invalid?: boolean;
-  }
+  import { cn, createId, presence } from "../../lib/utils";
+  import { useFieldStateContext } from "../../lib/index.js";
+  import { InputState, resolveInputDescribedBy } from "./_internal/index.js";
+  import type { InputProps } from "./_internal/index.js";
+
+  const uid = $props.id();
 
   let {
     class: className,
-    size = "md",
+    size = undefined,
     variant = undefined,
     type = "text",
-    disabled = false,
-    invalid = false,
-    id: propId,
+    disabled = undefined,
+    readonly = undefined,
+    required = undefined,
+    invalid = undefined,
+    id = createId("input", uid),
+    ref = $bindable(null),
     value = $bindable(""),
     ...rest
-  }: Props = $props();
+  }: InputProps = $props();
 
   const fieldContext = useFieldStateContext();
-  const groupContext = useInputGroupContext();
-  const surfaceContext = useSurfaceContext();
 
-  const finalVariant = $derived(variant ?? (surfaceContext.exists ? "secondary" : "default"));
+  const inputState = new InputState({
+    disabled: () => disabled,
+    readonly: () => readonly,
+    required: () => required,
+    invalid: () => invalid,
+    variant: () => variant,
+    size: () => size,
+    id: () => id,
+    fieldContext
+  });
 
-  const finalInvalid = $derived(
-    fieldContext.exists
-      ? fieldContext.invalid
-      : groupContext.exists
-        ? groupContext.invalid || invalid
-        : invalid
+  const styles = $derived(
+    inputStyles({ size: inputState.finalSize, variant: inputState.finalVariant })
   );
 
-  const finalDisabled = $derived(
-    fieldContext.exists
-      ? fieldContext.disabled
-      : groupContext.exists
-        ? groupContext.disabled || disabled
-        : disabled
-  );
-
-  const finalId = $derived(propId ?? (fieldContext.exists ? fieldContext.id : undefined));
-  const activeSize = $derived(groupContext.exists ? groupContext.size : size);
-
-  const descriptionId = $derived(
-    fieldContext.exists && fieldContext.id ? `${fieldContext.id}-description` : undefined
-  );
-  const errorId = $derived(
-    fieldContext.exists && fieldContext.id ? `${fieldContext.id}-error` : undefined
+  const describedByResult = $derived(
+    resolveInputDescribedBy(inputState.fieldCtx, inputState.finalInvalid)
   );
 </script>
 
 <input
-  id={finalId}
-  {type}
-  disabled={finalDisabled}
+  bind:this={ref}
   bind:value
-  class={cn(inputStyles({ size: activeSize, variant: finalVariant }), className)}
-  aria-invalid={finalInvalid}
-  aria-describedby={!finalInvalid ? descriptionId : undefined}
-  aria-errormessage={finalInvalid ? errorId : undefined}
-  data-invalid={finalInvalid}
-  data-in-group={groupContext.inGroup}
-  data-slot={groupContext.inGroup ? "input-group-input" : undefined}
+  {id}
+  {type}
+  disabled={inputState.finalDisabled}
+  readonly={inputState.finalReadonly}
+  required={inputState.finalRequired}
+  aria-invalid={inputState.finalInvalid ? true : undefined}
+  aria-describedby={describedByResult.describedBy}
+  aria-errormessage={describedByResult.errorMessageId}
+  data-invalid={presence(inputState.finalInvalid)}
+  data-disabled={presence(inputState.finalDisabled)}
+  data-readonly={presence(inputState.finalReadonly)}
+  class={cn(styles, className)}
   {...rest}
 />
