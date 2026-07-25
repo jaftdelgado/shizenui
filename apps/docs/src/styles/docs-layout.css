@@ -117,6 +117,82 @@
     @apply text-control-text mb-3 flex items-center gap-2 font-medium;
   }
 
+  .toc-scroll {
+    max-height: 24rem;
+    overflow-y: auto;
+    scroll-behavior: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 48px,
+      black calc(100% - 48px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 48px,
+      black calc(100% - 48px),
+      transparent 100%
+    );
+    transition:
+      mask-image 200ms cubic-bezier(0.4, 0, 0.2, 1),
+      -webkit-mask-image 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &[data-at-top="true"] {
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        black 0,
+        black calc(100% - 48px),
+        transparent 100%
+      );
+      mask-image: linear-gradient(to bottom, black 0, black calc(100% - 48px), transparent 100%);
+    }
+
+    &[data-at-bottom="true"] {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 48px, black 100%);
+      mask-image: linear-gradient(to bottom, transparent 0, black 48px, black 100%);
+    }
+
+    &[data-at-top="true"][data-at-bottom="true"] {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+
+  .toc-h3 {
+    @apply ml-4;
+  }
+
+  .toc-h4 {
+    @apply ml-8;
+  }
+
+  .toc-link {
+    @apply block w-full py-1 leading-normal;
+    transition:
+      color 500ms cubic-bezier(0.22, 1, 0.36, 1),
+      font-weight 500ms cubic-bezier(0.22, 1, 0.36, 1);
+
+    &:hover {
+      @apply text-primary-text;
+    }
+
+    &.active {
+      @apply text-accent font-medium;
+      transition:
+        color 80ms ease-out,
+        font-weight 80ms ease-out;
+    }
+  }
+
   .toc-h3 {
     @apply ml-4;
   }
