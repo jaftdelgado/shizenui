@@ -7,14 +7,15 @@
     children,
     startContent,
     endContent,
-    status = "default",
+    color = "default",
+    size = "md",
     variant = "primary",
     ref = $bindable(null),
     class: className,
     ...rest
   }: ChipProps = $props();
 
-  const styles = $derived(chipStyles({ status, variant }));
+  const styles = $derived(chipStyles({ color, size, variant }));
 </script>
 
 {#snippet renderIcon(content: ChipIconContent | undefined, position: "start" | "end")}

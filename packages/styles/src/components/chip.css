@@ -1,21 +1,20 @@
 @layer components {
   .chip {
-    @apply rounded-full relative inline-flex items-center justify-center gap-(--chip-gap) text-center text-xs leading-none font-medium whitespace-nowrap select-none;
+    @apply relative inline-flex items-center justify-center overflow-hidden rounded-full text-center leading-none font-medium whitespace-nowrap;
 
-    --chip-gap: 0.3125rem;
-    padding-inline: 0.625rem;
-    padding-block: 0.3125rem;
+    /* Default tokens */
+    --chip-bg: transparent;
+    --chip-fg: currentColor;
+    --chip-gap: 0.325rem;
 
     background-color: var(--chip-bg);
     color: var(--chip-fg);
 
-    transition:
-      background-color 200ms ease,
-      color 200ms ease;
+    transition: background-color 200ms ease;
   }
 
   .chip__content {
-    @apply relative flex items-center justify-center gap-(--chip-gap);
+    @apply relative flex h-full w-full items-center justify-center gap-(--chip-gap);
   }
 
   .chip__icon {
@@ -34,49 +33,124 @@
     @apply flex items-center;
   }
 
-  .chip--default {
-    --chip-color: var(--color-control-text);
-    --chip-color-foreground: var(--color-control);
+  .chip--sm {
+    @apply h-5 px-2 text-xs;
+    --chip-gap: 0.25rem;
   }
 
-  .chip--accent {
-    --chip-color: var(--color-accent);
-    --chip-color-foreground: var(--color-accent-foreground);
+  .chip--md {
+    @apply h-6 px-3 text-xs;
+    --chip-gap: 0.325rem;
   }
 
-  .chip--success {
-    --chip-color: var(--color-success);
-    --chip-color-foreground: var(--color-success-foreground);
+  .chip--lg {
+    @apply h-7 px-3 text-sm;
+    --chip-gap: 0.375rem;
   }
 
-  .chip--warning {
-    --chip-color: var(--color-warning);
-    --chip-color-foreground: var(--color-warning-foreground);
+  /* Color: default */
+  .chip--primary.chip--default {
+    --chip-bg: var(--color-surface);
+    --chip-fg: var(--color-control-text);
   }
 
-  .chip--danger {
-    --chip-color: var(--color-danger);
-    --chip-color-foreground: var(--color-danger-foreground);
-  }
-
-  .chip--primary {
-    --chip-bg: var(--chip-color);
-    --chip-fg: var(--chip-color-foreground);
-  }
-
-  .chip--secondary {
+  .chip--secondary.chip--default {
     --chip-bg: var(--color-control);
-    --chip-fg: var(--chip-color);
+    --chip-fg: var(--color-control-text);
   }
 
-  .chip--ghost {
-    --chip-bg: transparent;
-    --chip-fg: var(--chip-color);
+  .chip--soft.chip--default {
+    --chip-bg: var(--color-control);
+    --chip-fg: var(--color-control-text);
   }
 
-  .chip--soft {
-    /* No complete "soft background" token set exists for every status yet. */
-    --chip-bg: color-mix(in srgb, var(--chip-color) 14%, var(--color-control));
-    --chip-fg: var(--chip-color);
+  .chip--ghost.chip--default {
+    --chip-fg: var(--color-control-text);
+  }
+
+  /* Color: accent */
+  .chip--primary.chip--accent {
+    --chip-bg: var(--color-accent);
+    --chip-fg: var(--color-accent-foreground);
+  }
+
+  .chip--secondary.chip--accent {
+    --chip-bg: var(--color-control);
+    --chip-fg: var(--color-accent);
+  }
+
+  .chip--soft.chip--accent {
+    --chip-bg: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    --chip-fg: var(--color-accent);
+  }
+
+  .chip--ghost.chip--accent {
+    --chip-fg: var(--color-accent);
+  }
+
+  /* =====================
+     Color: success
+  ===================== */
+  .chip--primary.chip--success {
+    --chip-bg: var(--color-success);
+    --chip-fg: var(--color-success-foreground);
+  }
+
+  .chip--secondary.chip--success {
+    --chip-bg: var(--color-control);
+    --chip-fg: var(--color-success);
+  }
+
+  .chip--soft.chip--success {
+    --chip-bg: color-mix(in srgb, var(--color-success) 12%, transparent);
+    --chip-fg: var(--color-success);
+  }
+
+  .chip--ghost.chip--success {
+    --chip-fg: var(--color-success);
+  }
+
+  /* =====================
+     Color: warning
+  ===================== */
+  .chip--primary.chip--warning {
+    --chip-bg: var(--color-warning);
+    --chip-fg: var(--color-warning-foreground);
+  }
+
+  .chip--secondary.chip--warning {
+    --chip-bg: var(--color-control);
+    --chip-fg: var(--color-warning);
+  }
+
+  .chip--soft.chip--warning {
+    --chip-bg: color-mix(in srgb, var(--color-warning) 12%, transparent);
+    --chip-fg: var(--color-warning);
+  }
+
+  .chip--ghost.chip--warning {
+    --chip-fg: var(--color-warning);
+  }
+
+  /* =====================
+     Color: danger
+  ===================== */
+  .chip--primary.chip--danger {
+    --chip-bg: var(--color-danger);
+    --chip-fg: var(--color-danger-foreground);
+  }
+
+  .chip--secondary.chip--danger {
+    --chip-bg: var(--color-control);
+    --chip-fg: var(--color-danger);
+  }
+
+  .chip--soft.chip--danger {
+    --chip-bg: color-mix(in srgb, var(--color-danger) 12%, transparent);
+    --chip-fg: var(--color-danger);
+  }
+
+  .chip--ghost.chip--danger {
+    --chip-fg: var(--color-danger);
   }
 }

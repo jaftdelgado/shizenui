@@ -9,7 +9,7 @@ export const chipStyles = tv({
     label: "chip__label"
   },
   variants: {
-    status: {
+    color: {
       default: { base: "chip--default" },
       accent: { base: "chip--accent" },
       success: { base: "chip--success" },
@@ -21,11 +21,17 @@ export const chipStyles = tv({
       secondary: { base: "chip--secondary" },
       ghost: { base: "chip--ghost" },
       soft: { base: "chip--soft" }
+    },
+    size: {
+      sm: { base: "chip--sm" },
+      md: { base: "chip--md" },
+      lg: { base: "chip--lg" }
     }
   },
   defaultVariants: {
-    status: "default",
-    variant: "primary"
+    color: "default",
+    variant: "primary",
+    size: "md"
   }
 });
 
