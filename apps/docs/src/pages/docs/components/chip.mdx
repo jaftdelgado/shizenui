@@ -1,7 +1,7 @@
 ---
 layout: "@layouts/DocsLayout.astro"
 title: Chip
-description: Displays compact, non-interactive metadata with configurable color and visual style.
+description: Compact element that represents information, status, attributes, or actions.
 preview: ChipPreview
 ---
 
@@ -14,7 +14,9 @@ import PropsTable from "@components/astro/PropsTable.astro";
 import ChipColors from "@examples/svelte/chip/ChipColors.svelte";
 import ChipContent from "@examples/svelte/chip/ChipContent.svelte";
 import ChipSizes from "@examples/svelte/chip/ChipSizes.svelte";
+import ChipTwStyling from "@examples/svelte/chip/ChipTwStyling.svelte";
 import ChipVariants from "@examples/svelte/chip/ChipVariants.svelte";
+import ChipCssStylingCode from "@examples/svelte/chip/ChipCssStyling.css?raw";
 
 ## Import
 
@@ -45,3 +47,144 @@ import ChipVariants from "@examples/svelte/chip/ChipVariants.svelte";
 <ComponentExample src="svelte/chip/ChipContent.svelte">
   <ChipContent client:load />
 </ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to Chip.
+
+<ComponentExample src="svelte/chip/ChipTwStyling.svelte">
+  <ChipTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Chip component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={ChipCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Base Classes
+
+<PropsTable
+  props={[
+    {
+      name: "chip",
+      description: "Base chip container for compact metadata."
+    },
+    {
+      name: "chip__content",
+      description: "Keeps the chip content grouped as one label."
+    },
+    {
+      name: "chip__icon",
+      description: "Marks an icon as part of the chip content."
+    },
+    {
+      name: "chip__icon--start",
+      description: "Identifies an icon placed before the label."
+    },
+    {
+      name: "chip__icon--end",
+      description: "Identifies an icon placed after the label."
+    },
+    {
+      name: "chip__label",
+      description: "Marks the readable text inside the chip."
+    }
+  ]}
+/>
+
+#### Variant Classes
+
+<PropsTable
+  props={[
+    {
+      name: "chip--primary",
+      description: "Most prominent style for important metadata."
+    },
+    {
+      name: "chip--secondary",
+      description: "Quieter style for supporting metadata."
+    },
+    {
+      name: "chip--ghost",
+      description: "Lowest emphasis style for inline metadata."
+    },
+    {
+      name: "chip--soft",
+      description: "Gentle status style for colored metadata."
+    }
+  ]}
+/>
+
+#### Color Classes
+
+<PropsTable
+  props={[
+    {
+      name: "chip--default",
+      description: "Neutral tone for standard metadata."
+    },
+    {
+      name: "chip--accent",
+      description: "Accent tone for highlighted metadata."
+    },
+    {
+      name: "chip--success",
+      description: "Positive tone for successful status metadata."
+    },
+    {
+      name: "chip--warning",
+      description: "Caution tone for metadata that needs attention."
+    },
+    {
+      name: "chip--danger",
+      description: "Danger tone for error or rejected status metadata."
+    }
+  ]}
+/>
+
+#### Size Classes
+
+<PropsTable
+  props={[
+    {
+      name: "chip--sm",
+      description: "Small chip for dense interfaces."
+    },
+    {
+      name: "chip--md",
+      description: "Default chip size for most metadata."
+    },
+    {
+      name: "chip--lg",
+      description: "Large chip when the metadata needs more presence."
+    }
+  ]}
+/>
+
+## API Reference
+
+### Chip Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "variant", type: '"primary" | "secondary" | "ghost" | "soft"', default: '"primary"' },
+    {
+      name: "color",
+      type: '"default" | "accent" | "success" | "warning" | "danger"',
+      default: '"default"'
+    },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "startContent", type: "Snippet<[]>", default: "undefined" },
+    { name: "endContent", type: "Snippet<[]>", default: "undefined" },
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
+/>

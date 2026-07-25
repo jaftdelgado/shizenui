@@ -1,14 +1,10 @@
 import type { Snippet } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
-import type { ChipVariants } from "@shizen-ui/styles";
 
-export type { ChipVariants };
-
-export type ChipColor = NonNullable<ChipVariants["color"]>;
-export type ChipSize = NonNullable<ChipVariants["size"]>;
-export type ChipVariant = NonNullable<ChipVariants["variant"]>;
-
-export type ChipIconContent = Snippet<[]> | string;
+export type ChipColor = "default" | "accent" | "success" | "warning" | "danger";
+export type ChipSize = "sm" | "md" | "lg";
+export type ChipVariant = "primary" | "secondary" | "ghost" | "soft";
+export type ChipIconContent = Snippet<[]>;
 
 type ChipBaseProps = Omit<HTMLAttributes<HTMLSpanElement>, "children">;
 

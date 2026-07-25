@@ -19,9 +19,7 @@
 </script>
 
 {#snippet renderIcon(content: ChipIconContent | undefined, position: "start" | "end")}
-  {#if typeof content === "string"}
-    <i class={content}></i>
-  {:else if content}
+  {#if content}
     <span class={position === "start" ? styles.iconStart() : styles.iconEnd()}>
       {@render content()}
     </span>
