@@ -104,7 +104,6 @@
   }
 
   /* ─── Table of contents ───────────────────────────────────── */
-
   .docs-toc {
     @apply text-secondary-text self-start text-sm;
     grid-column: 2;
@@ -139,17 +138,30 @@
   }
 
   /* ─── Component preview ───────────────────────────────────── */
-
   .component-preview {
-    @apply shadow-border overflow-hidden rounded-3xl;
+    @apply shadow-outline overflow-hidden rounded-3xl;
   }
 
   .preview-inner {
     @apply flex min-h-92 items-center justify-center p-8;
   }
 
-  /* ─── Mobile ──────────────────────────────────────────────── */
+  /* ─── Component example ───────────────────────────────────── */
+  .example-container {
+    @apply relative rounded-3xl bg-transparent;
+  }
 
+  .example-container::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 rounded-3xl;
+    box-shadow: var(--shadow-outline);
+  }
+
+  .example-container-inner {
+    @apply overflow-hidden rounded-3xl;
+  }
+
+  /* ─── Mobile ──────────────────────────────────────────────── */
   @media (max-width: 768px) {
     .docs-layout {
       grid-template-columns: 1fr;

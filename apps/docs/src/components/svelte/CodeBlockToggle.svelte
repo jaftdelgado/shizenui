@@ -17,11 +17,6 @@
   }
 </script>
 
-<Button
-  variant="secondary"
-  size="sm"
-  onclick={handleToggle}
-  class="bg-control text-control-foreground text-sm"
->
+<Button variant="tertiary" size="sm" onclick={handleToggle} class="w-28">
   {collapsed ? "Expand code" : "Collapse code"}
 </Button>
