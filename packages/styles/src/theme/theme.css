@@ -15,7 +15,7 @@
 
   /* Radius tokens */
   --radius-control: calc(var(--radius) * 16); /* rounded-full */
-  --radius-field: calc(var(--radius) * 3); /* 0.75rem (12px) */
+  --radius-field: calc(var(--radius) * 16); /* rounded-full */
   --radius-surface: calc(var(--radius) * 6); /* 1.5rem (24px) */
   --radius-card: calc(var(--radius) * 8); /* 1.5rem (24px) */
 
@@ -49,7 +49,9 @@
   --color-control-foreground: var(--control-foreground);
 
   --color-field: var(--field);
-  --color-field-foreground: var(--field-foreground);
+  --color-field-foreground: var(--primary-text);
+  --color-field-placeholder: var(--tertiary-text);
+  --color-field-secondary: var(--field-secondary);
 
   /* Calculated Variables */
 
@@ -88,6 +90,7 @@
     var(--color-field-secondary) 98%,
     var(--color-field-foreground) 2%
   );
+  --color-field-outline-hover: color-mix(in oklab, var(--color-field-foreground) 4%, transparent);
 
   /* Ghost (for transparent-bg elements) state colors */
   --color-ghost-hover: color-mix(in oklab, var(--color-control-foreground) 6%, transparent);

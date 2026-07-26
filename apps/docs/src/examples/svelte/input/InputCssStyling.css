@@ -1,0 +1,19 @@
+@layer components {
+  .input {
+    @apply rounded-t-field rounded-b-none shadow-none;
+    --input-bg: var(--color-field-secondary);
+    --input-bg-hover: var(--color-field-secondary-hover);
+    --input-bg-focus: var(--color-field-secondary-hover);
+
+    border-bottom: 2px solid var(--color-border);
+
+    &:focus {
+      @apply shadow-none ring-0 outline-none;
+      border-bottom-color: var(--color-primary);
+    }
+
+    &[data-invalid] {
+      border-bottom-color: var(--color-invalid);
+    }
+  }
+}

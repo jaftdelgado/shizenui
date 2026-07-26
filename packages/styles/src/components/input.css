@@ -1,30 +1,35 @@
 @layer components {
   .input {
-    @apply rounded-field relative inline-flex w-full items-center transition-all duration-200;
+    @apply rounded-field relative inline-flex w-full items-center;
     @apply placeholder:text-field-placeholder shadow-xs outline-none;
+
+    transition:
+      background-color 200ms ease,
+      box-shadow 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
 
     /* Base tokens */
     --input-bg: var(--color-field);
     --input-bg-hover: var(--color-field-hover);
     --input-bg-focus: var(--color-field-hover);
     --input-fg: var(--color-field-foreground);
-    --input-border: transparent;
 
     background-color: var(--input-bg);
     color: var(--input-fg);
-    border: 1px solid var(--input-border);
 
-    &:hover:not(:disabled, [data-invalid="true"]) {
+    &:hover:not(:disabled) {
       background-color: var(--input-bg-hover);
-      border-color: var(--input-border-hover, var(--input-border));
     }
 
     &:focus {
       @apply status-focused-field;
       background-color: var(--input-bg-focus);
+      &[data-invalid] {
+        @apply status-focused-invalid-field;
+      }
     }
 
-    &[data-invalid="true"] {
+    &[data-invalid] {
       @apply status-invalid-field;
     }
 
@@ -33,7 +38,7 @@
       @apply status-disabled;
     }
 
-    &[data-in-group="true"] {
+    &[data-in-group] {
       @apply h-full border-none bg-transparent shadow-none ring-0;
       &:hover,
       &:focus {
@@ -59,12 +64,11 @@
   }
 
   .input--outline {
+    @apply shadow-border;
     --input-bg: transparent;
-    --input-bg-hover: var(--color-ghost-hover);
-    --input-bg-focus: var(--color-ghost-hover);
+    --input-bg-hover: var(--color-field-outline-hover);
+    --input-bg-focus: var(--color-field-outline-hover);
     --input-fg: var(--color-field-foreground);
-    --input-border: var(--color-separator);
-    --input-border-hover: var(--color-outline-hover);
   }
 
   /* Sizes */
@@ -80,7 +84,7 @@
     @apply h-field-lg px-field-lg text-base;
   }
 
-  .input[data-in-group="true"] {
+  .input[data-in-group] {
     @apply h-full rounded-none py-0;
   }
 }
