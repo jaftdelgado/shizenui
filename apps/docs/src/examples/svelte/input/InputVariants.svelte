@@ -2,7 +2,7 @@
   import { Input, Label } from "@shizen-ui/svelte";
 </script>
 
-<div class="grid w-full max-w-64 gap-5">
+<div class="grid w-full max-w-64 gap-4">
   <div class="flex flex-col gap-2">
     <Label for="input-default">Default</Label>
     <Input id="input-default" variant="default" placeholder="Default input" />

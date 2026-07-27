@@ -14,14 +14,14 @@ import BulletList from "@components/astro/BulletList.astro";
 import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
 import InputTypes from "@examples/svelte/input/InputTypes.svelte";
-import InputBindValue from "@examples/svelte/input/InputBindValue.svelte";
-import InputDisabled from "@examples/svelte/input/InputDisabled.svelte";
-import InputFullyControlled from "@examples/svelte/input/InputFullyControlled.svelte";
-import InputInvalid from "@examples/svelte/input/InputInvalid.svelte";
-import InputSizes from "@examples/svelte/input/InputSizes.svelte";
-import InputTwStyling from "@examples/svelte/input/InputTwStyling.svelte";
-import InputUsage from "@examples/svelte/input/InputUsage.svelte";
 import InputVariants from "@examples/svelte/input/InputVariants.svelte";
+import InputSizes from "@examples/svelte/input/InputSizes.svelte";
+import InputBindValue from "@examples/svelte/input/InputBindValue.svelte";
+import InputFullyControlled from "@examples/svelte/input/InputFullyControlled.svelte";
+import InputDisabled from "@examples/svelte/input/InputDisabled.svelte";
+import InputInvalid from "@examples/svelte/input/InputInvalid.svelte";
+
+import InputTwStyling from "@examples/svelte/input/InputTwStyling.svelte";
 import InputCssStylingCode from "@examples/svelte/input/InputCssStyling.css?raw";
 
 ## Import
@@ -177,7 +177,7 @@ To customize the Input component classes, you can use the `@layer components` di
 
 ### Input Props
 
-Extends `Omit<HTMLInputAttributes, "size">`.
+Accepts all standard HTML `<input>` attributes, in addition to the following:
 
 <PropsTable
   showHeader
