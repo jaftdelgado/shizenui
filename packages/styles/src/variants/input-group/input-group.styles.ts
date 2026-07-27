@@ -1,19 +1,27 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
-export const input-groupStyles = tv({
-  base: "input-group",
+export const inputGroupStyles = tv({
+  slots: {
+    base: "input-group",
+    prefix: "input-group__prefix",
+    suffix: "input-group__suffix",
+    input: "input-group__input",
+    textarea: "input-group__textarea"
+  },
   variants: {
-    invalid: {
-      true: "input-group--invalid"
+    variant: {
+      primary: { base: "input-group--primary" },
+      secondary: { base: "input-group--secondary" }
     },
-    disabled: {
-      true: "input-group--disabled"
+    fullWidth: {
+      true: { base: "w-full" },
+      false: {}
     }
   },
   defaultVariants: {
-    invalid: false,
-    disabled: false
+    variant: "primary",
+    fullWidth: false
   }
 });
 
-export type InputGroupVariants = VariantProps<typeof input-groupStyles>;
+export type InputGroupVariants = VariantProps<typeof inputGroupStyles>;

@@ -1,14 +1,65 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-  import type { HTMLAttributes } from "svelte/elements";
-  import { input-groupStyles, type InputGroupVariants } from "@shizen-ui/styles";
+  import { inputGroupStyles } from "@shizen-ui/styles";
+  import { cn, createId, presence } from "../../lib/utils";
+  import { warnIf } from "../../lib/runes/index.js";
+  import type { InputGroupProps } from "./_internal/index.js";
+  import {
+    InputGroupState,
+    setupInputGroupContexts,
+    useInputGroupContext
+  } from "./_internal/index.js";
 
-  let { children, class: className, ...props }: InputGroupVariants &
-    HTMLAttributes<HTMLDivElement> & {
-      children?: Snippet;
-    } = $props();
+  const uid = $props.id();
+
+  let {
+    class: className,
+    disabled = undefined,
+    invalid = undefined,
+    readonly = undefined,
+    required = undefined,
+    fullWidth = undefined,
+    variant = undefined,
+    id = createId("input-group", uid),
+    ref = $bindable(null),
+    children,
+    ...rest
+  }: InputGroupProps = $props();
+
+  warnIf(
+    () => !children,
+    "InputGroup",
+    "No children provided. Add at least <InputGroup.Input /> or <InputGroup.TextArea />."
+  );
+
+  const state = new InputGroupState({
+    disabled: () => disabled,
+    invalid: () => invalid,
+    readonly: () => readonly,
+    required: () => required,
+    fullWidth: () => fullWidth,
+    variant: () => variant,
+    id: () => id
+  });
+
+  setupInputGroupContexts(state);
+
+  const ctx = useInputGroupContext();
+
+  const styles = $derived(inputGroupStyles({ variant: ctx.variant, fullWidth: ctx.fullWidth }));
 </script>
 
-<div class={input-groupStyles({ ...props, class: className })}>
-  {@render children?.()}
+<div
+  bind:this={ref}
+  role="presentation"
+  {id}
+  data-disabled={presence(ctx.disabled)}
+  data-readonly={presence(ctx.readonly)}
+  data-invalid={presence(ctx.invalid)}
+  data-has-textarea={presence(ctx.kind === "textarea")}
+  class={cn(styles.base(), className)}
+  {...rest}
+>
+  {#if children}
+    {@render children()}
+  {/if}
 </div>

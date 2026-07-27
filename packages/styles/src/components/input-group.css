@@ -1,3 +1,94 @@
-.input-group {
-  display: block;
+@layer components {
+  .input-group {
+    @apply rounded-field relative inline-flex items-center overflow-hidden shadow-xs;
+
+    transition:
+      background-color 200ms ease,
+      box-shadow 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+
+    --input-group-bg: var(--color-field);
+    --input-group-bg-hover: var(--color-field-hover);
+    --input-group-bg-focus: var(--color-field-hover);
+    --input-group-fg: var(--color-field-foreground);
+    --input-group-addon-fg: var(--color-field-placeholder);
+
+    background-color: var(--input-group-bg);
+    color: var(--input-group-fg);
+
+    &:hover:not([data-disabled]) {
+      background-color: var(--input-group-bg-hover);
+    }
+
+    &:focus-within {
+      @apply status-focused-field;
+      background-color: var(--input-group-bg-focus);
+
+      &[data-invalid] {
+        @apply status-focused-invalid-field;
+      }
+    }
+
+    &[data-invalid] {
+      @apply status-invalid-field;
+    }
+
+    &[data-disabled] {
+      @apply status-disabled;
+    }
+
+    &[data-has-textarea] {
+      @apply items-start;
+    }
+  }
+
+  .input-group--primary {
+    --input-group-bg: var(--color-field);
+    --input-group-bg-hover: var(--color-field-hover);
+    --input-group-bg-focus: var(--color-field-hover);
+    --input-group-fg: var(--color-field-foreground);
+  }
+
+  .input-group--secondary {
+    @apply shadow-none;
+    --input-group-bg: var(--color-field-secondary);
+    --input-group-bg-hover: var(--color-field-secondary-hover);
+    --input-group-bg-focus: var(--color-field-secondary-hover);
+    --input-group-fg: var(--color-field-foreground);
+  }
+
+  .input-group__prefix,
+  .input-group__suffix {
+    @apply px-field-md flex shrink-0 items-center gap-2 text-sm whitespace-nowrap;
+    color: var(--input-group-addon-fg);
+
+    &[data-disabled] {
+      @apply status-disabled;
+    }
+  }
+
+  .input-group[data-has-textarea] .input-group__prefix,
+  .input-group[data-has-textarea] .input-group__suffix {
+    @apply py-2;
+  }
+
+  .input-group__input,
+  .input-group__textarea {
+    @apply px-field-md min-w-0 flex-1 border-none bg-transparent text-sm outline-none;
+    @apply placeholder:text-field-placeholder;
+    color: var(--input-group-fg);
+  }
+
+  .input-group__input {
+    @apply h-field-md;
+  }
+
+  .input-group__textarea {
+    @apply min-h-field-md resize-y py-2;
+  }
+
+  .input-group__input:disabled,
+  .input-group__textarea:disabled {
+    @apply cursor-inherit;
+  }
 }
