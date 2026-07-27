@@ -1,13 +1,13 @@
 import { createContext } from "svelte";
-import type { InputGroupKind, InputGroupVariant } from "./input-group.types.js";
+import type { InputGroupKind, InputGroupSize, InputGroupVariant } from "./input-group.types.js";
 
 export interface InputGroupContextValue {
   readonly disabled: boolean;
   readonly readonly: boolean;
   readonly invalid: boolean;
   readonly required: boolean;
-  readonly fullWidth: boolean;
   readonly variant: InputGroupVariant;
+  readonly size: InputGroupSize;
   readonly kind: InputGroupKind | null;
   readonly id: string | undefined;
   setKind(kind: InputGroupKind | null): void;
@@ -46,11 +46,11 @@ export function useInputGroupContext(): InputGroupContextResult {
       get required() {
         return false;
       },
-      get fullWidth() {
-        return false;
-      },
       get variant(): InputGroupVariant {
-        return "primary";
+        return "default";
+      },
+      get size(): InputGroupSize {
+        return "md";
       },
       get kind() {
         return null;
@@ -78,11 +78,11 @@ export function useInputGroupContext(): InputGroupContextResult {
     get required() {
       return context.required;
     },
-    get fullWidth() {
-      return context.fullWidth;
-    },
     get variant() {
       return context.variant;
+    },
+    get size() {
+      return context.size;
     },
     get kind() {
       return context.kind;

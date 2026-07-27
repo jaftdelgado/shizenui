@@ -11,7 +11,7 @@
     --input-group-bg-hover: var(--color-field-hover);
     --input-group-bg-focus: var(--color-field-hover);
     --input-group-fg: var(--color-field-foreground);
-    --input-group-addon-fg: var(--color-field-placeholder);
+    --input-group-addon-fg: var(--color-control-text);
 
     background-color: var(--input-group-bg);
     color: var(--input-group-fg);
@@ -42,7 +42,7 @@
     }
   }
 
-  .input-group--primary {
+  .input-group--default {
     --input-group-bg: var(--color-field);
     --input-group-bg-hover: var(--color-field-hover);
     --input-group-bg-focus: var(--color-field-hover);
@@ -57,6 +57,14 @@
     --input-group-fg: var(--color-field-foreground);
   }
 
+  .input-group--outline {
+    @apply shadow-border;
+    --input-group-bg: transparent;
+    --input-group-bg-hover: var(--color-field-outline-hover);
+    --input-group-bg-focus: var(--color-field-outline-hover);
+    --input-group-fg: var(--color-field-foreground);
+  }
+
   .input-group__prefix,
   .input-group__suffix {
     @apply px-field-md flex shrink-0 items-center gap-2 text-sm whitespace-nowrap;
@@ -65,6 +73,21 @@
     &[data-disabled] {
       @apply status-disabled;
     }
+  }
+
+  .input-group--sm .input-group__prefix,
+  .input-group--sm .input-group__suffix {
+    @apply px-field-sm text-sm;
+  }
+
+  .input-group--md .input-group__prefix,
+  .input-group--md .input-group__suffix {
+    @apply px-field-md text-sm;
+  }
+
+  .input-group--lg .input-group__prefix,
+  .input-group--lg .input-group__suffix {
+    @apply px-field-lg text-base;
   }
 
   .input-group[data-has-textarea] .input-group__prefix,
@@ -87,8 +110,32 @@
     @apply min-h-field-md resize-y py-2;
   }
 
+  .input-group--sm .input-group__input {
+    @apply h-field-sm px-field-sm text-sm;
+  }
+
+  .input-group--md .input-group__input {
+    @apply h-field-md px-field-md text-sm;
+  }
+
+  .input-group--lg .input-group__input {
+    @apply h-field-lg px-field-lg text-base;
+  }
+
+  .input-group--sm .input-group__textarea {
+    @apply min-h-field-sm px-field-sm text-sm;
+  }
+
+  .input-group--md .input-group__textarea {
+    @apply min-h-field-md px-field-md text-sm;
+  }
+
+  .input-group--lg .input-group__textarea {
+    @apply min-h-field-lg px-field-lg text-base;
+  }
+
   .input-group__input:disabled,
   .input-group__textarea:disabled {
-    @apply cursor-inherit;
+    cursor: inherit;
   }
 }

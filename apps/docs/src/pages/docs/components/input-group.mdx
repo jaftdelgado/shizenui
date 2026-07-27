@@ -1,0 +1,292 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Input Group
+description: Composed field wrapper for inputs with prefixes, suffixes, and multiline content.
+preview: InputGroupPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
+
+import InputGroupVariants from "@examples/svelte/input-group/InputGroupVariants.svelte";
+import InputGroupSizes from "@examples/svelte/input-group/InputGroupSizes.svelte";
+import InputGroupBindValue from "@examples/svelte/input-group/InputGroupBindValue.svelte";
+import InputGroupFullyControlled from "@examples/svelte/input-group/InputGroupFullyControlled.svelte";
+import InputGroupDisabled from "@examples/svelte/input-group/InputGroupDisabled.svelte";
+import InputGroupInvalid from "@examples/svelte/input-group/InputGroupInvalid.svelte";
+import InputGroupTextArea from "@examples/svelte/input-group/InputGroupTextArea.svelte";
+
+import InputGroupTwStyling from "@examples/svelte/input-group/InputGroupTwStyling.svelte";
+import InputGroupCssStylingCode from "@examples/svelte/input-group/InputGroupCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { InputGroup } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/input-group/InputGroupVariants.svelte">
+  <InputGroupVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/input-group/InputGroupSizes.svelte">
+  <InputGroupSizes client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` on `InputGroup.Input` or `InputGroup.TextArea` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/input-group/InputGroupBindValue.svelte">
+  <InputGroupBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding when every write needs to be validated or normalized before it reaches state.
+
+<ComponentExample src="svelte/input-group/InputGroupFullyControlled.svelte">
+  <InputGroupFullyControlled client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/input-group/InputGroupDisabled.svelte">
+  <InputGroupDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/input-group/InputGroupInvalid.svelte">
+  <InputGroupInvalid client:load />
+</ComponentExample>
+
+### TextArea
+
+<ComponentExample src="svelte/input-group/InputGroupTextArea.svelte">
+  <InputGroupTextArea client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to InputGroup and its parts.
+
+<ComponentExample src="svelte/input-group/InputGroupTwStyling.svelte">
+  <InputGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the InputGroup component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={InputGroupCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Base & Part Classes
+
+<BulletList
+  items={[
+    {
+      title: "input-group",
+      description: "Root wrapper for a field with leading or trailing content.",
+      code: true
+    },
+    {
+      title: "input-group__prefix",
+      description: "Area for content placed before the field value.",
+      code: true
+    },
+    {
+      title: "input-group__suffix",
+      description: "Area for content placed after the field value.",
+      code: true
+    },
+    {
+      title: "input-group__input",
+      description: "Single-line field inside the group.",
+      code: true
+    },
+    {
+      title: "input-group__textarea",
+      description: "Multiline field inside the group.",
+      code: true
+    }
+  ]}
+/>
+
+#### Variant Classes
+
+<BulletList
+  items={[
+    {
+      title: "input-group--default",
+      description: "Standard grouped field style for most forms.",
+      code: true
+    },
+    {
+      title: "input-group--secondary",
+      description: "Quieter grouped field style for secondary form areas.",
+      code: true
+    },
+    {
+      title: "input-group--outline",
+      description: "Bordered grouped field style for low-emphasis layouts.",
+      code: true
+    }
+  ]}
+/>
+
+#### Size Classes
+
+<BulletList
+  items={[
+    {
+      title: "input-group--sm",
+      description: "Compact group size for dense forms.",
+      code: true
+    },
+    {
+      title: "input-group--md",
+      description: "Default group size for most fields.",
+      code: true
+    },
+    {
+      title: "input-group--lg",
+      description: "Larger group size for more prominent fields.",
+      code: true
+    }
+  ]}
+/>
+
+#### State & Layout Classes
+
+<BulletList
+  items={[
+    {
+      title: "data-disabled",
+      description: "Marks the grouped field as unavailable.",
+      code: true
+    },
+    {
+      title: "data-readonly",
+      description: "Marks the grouped field as view-only.",
+      code: true
+    },
+    {
+      title: "data-invalid",
+      description: "Marks the grouped field with an error state.",
+      code: true
+    },
+    {
+      title: "data-has-textarea",
+      description: "Aligns the group for multiline fields.",
+      code: true
+    }
+  ]}
+/>
+
+### Interactive States
+
+<InteractiveStatesTable
+  props={[
+    {
+      name: "hover",
+      description: "Applies a hover background color to the group when the pointer is over it."
+    },
+    {
+      name: "focus",
+      description: "Applies a focus ring to the group when the inner field receives focus."
+    },
+    {
+      name: "invalid",
+      description:
+        "Marks the group with an error state to signal a validation issue. Combines with focus to show a distinct focused-invalid ring."
+    },
+    {
+      name: "disabled",
+      description: "Disables the inner field and applies reduced opacity to the group."
+    },
+    {
+      name: "readonly",
+      description: "Prevents editing the inner field without visual disabled treatment."
+    },
+    {
+      name: "required",
+      description: "Marks the inner field as required for native form validation."
+    }
+  ]}
+/>
+
+## API Reference
+
+### InputGroup Props
+
+Accepts all standard HTML `<div>` attributes except `children` and `role`, in addition to the following:
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "variant", type: '"default" | "secondary" | "outline"', default: '"default"' },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "—" }
+  ]}
+/>
+
+### Prefix and Suffix Props
+
+`InputGroup.Prefix` and `InputGroup.Suffix` accept all standard HTML `<div>` attributes, in addition to the following:
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "—" }
+  ]}
+/>
+
+### Input Props
+
+`InputGroup.Input` accepts all standard HTML `<input>` attributes except `disabled`, `readonly`, `required`, `id`, and `children`. The group owns `disabled`, `readonly`, `required`, and `invalid`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "id", type: "string", default: "undefined" },
+    { name: "value", type: "HTMLInputAttributes['value']", default: "undefined" },
+    { name: "type", type: "HTMLInputAttributes['type']", default: '"text"' },
+    { name: "ref", type: "HTMLInputElement | null", default: "null" }
+  ]}
+/>
+
+### TextArea Props
+
+`InputGroup.TextArea` accepts all standard HTML `<textarea>` attributes except `disabled`, `readonly`, `required`, `id`, and `children`. The group owns `disabled`, `readonly`, `required`, and `invalid`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "id", type: "string", default: "undefined" },
+    { name: "value", type: "HTMLTextareaAttributes['value']", default: "undefined" },
+    { name: "ref", type: "HTMLTextAreaElement | null", default: "null" }
+  ]}
+/>

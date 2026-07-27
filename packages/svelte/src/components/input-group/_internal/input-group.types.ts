@@ -1,7 +1,8 @@
 import type { Snippet } from "svelte";
 import type { HTMLAttributes, HTMLInputAttributes, HTMLTextareaAttributes } from "svelte/elements";
 
-export type InputGroupVariant = "primary" | "secondary";
+export type InputGroupVariant = "default" | "secondary" | "outline";
+export type InputGroupSize = "sm" | "md" | "lg";
 export type InputGroupKind = "input" | "textarea";
 
 type InputGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "role">;
@@ -12,8 +13,8 @@ export interface InputGroupProps extends InputGroupBaseProps {
   invalid?: boolean;
   readonly?: boolean;
   required?: boolean;
-  fullWidth?: boolean;
   variant?: InputGroupVariant;
+  size?: InputGroupSize;
   id?: string;
   ref?: HTMLDivElement | null;
 }

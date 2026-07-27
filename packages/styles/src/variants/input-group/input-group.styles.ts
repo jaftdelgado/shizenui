@@ -10,17 +10,19 @@ export const inputGroupStyles = tv({
   },
   variants: {
     variant: {
-      primary: { base: "input-group--primary" },
-      secondary: { base: "input-group--secondary" }
+      default: { base: "input-group--default" },
+      secondary: { base: "input-group--secondary" },
+      outline: { base: "input-group--outline" }
     },
-    fullWidth: {
-      true: { base: "w-full" },
-      false: {}
+    size: {
+      sm: { base: "input-group--sm" },
+      md: { base: "input-group--md" },
+      lg: { base: "input-group--lg" }
     }
   },
   defaultVariants: {
-    variant: "primary",
-    fullWidth: false
+    variant: "default",
+    size: "md"
   }
 });
 

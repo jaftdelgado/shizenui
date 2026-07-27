@@ -18,11 +18,11 @@ export function setupInputGroupContexts(state: InputGroupStateInstance): void {
     get required() {
       return state.finalRequired;
     },
-    get fullWidth() {
-      return state.finalFullWidth;
-    },
     get variant() {
       return state.finalVariant;
+    },
+    get size() {
+      return state.finalSize;
     },
     get kind() {
       return kind;

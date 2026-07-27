@@ -1,12 +1,12 @@
-import type { InputGroupVariant } from "./input-group.types.js";
+import type { InputGroupSize, InputGroupVariant } from "./input-group.types.js";
 
 export class InputGroupState {
   #disabled: () => boolean | undefined;
   #invalid: () => boolean | undefined;
   #readonly: () => boolean | undefined;
   #required: () => boolean | undefined;
-  #fullWidth: () => boolean | undefined;
   #variant: () => InputGroupVariant | undefined;
+  #size: () => InputGroupSize | undefined;
   #id: () => string;
 
   get finalDisabled(): boolean {
@@ -33,12 +33,12 @@ export class InputGroupState {
     return this.#required() ?? false;
   }
 
-  get finalFullWidth(): boolean {
-    return this.#fullWidth() ?? false;
+  get finalVariant(): InputGroupVariant {
+    return this.#variant() ?? "default";
   }
 
-  get finalVariant(): InputGroupVariant {
-    return this.#variant() ?? "primary";
+  get finalSize(): InputGroupSize {
+    return this.#size() ?? "md";
   }
 
   get id(): string {
@@ -50,16 +50,16 @@ export class InputGroupState {
     invalid: () => boolean | undefined;
     readonly: () => boolean | undefined;
     required: () => boolean | undefined;
-    fullWidth: () => boolean | undefined;
     variant: () => InputGroupVariant | undefined;
+    size: () => InputGroupSize | undefined;
     id: () => string;
   }) {
     this.#disabled = props.disabled;
     this.#invalid = props.invalid;
     this.#readonly = props.readonly;
     this.#required = props.required;
-    this.#fullWidth = props.fullWidth;
     this.#variant = props.variant;
+    this.#size = props.size;
     this.#id = props.id;
   }
 }

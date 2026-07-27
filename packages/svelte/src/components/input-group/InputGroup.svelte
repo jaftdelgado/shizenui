@@ -17,8 +17,8 @@
     invalid = undefined,
     readonly = undefined,
     required = undefined,
-    fullWidth = undefined,
     variant = undefined,
+    size = undefined,
     id = createId("input-group", uid),
     ref = $bindable(null),
     children,
@@ -36,8 +36,8 @@
     invalid: () => invalid,
     readonly: () => readonly,
     required: () => required,
-    fullWidth: () => fullWidth,
     variant: () => variant,
+    size: () => size,
     id: () => id
   });
 
@@ -45,7 +45,7 @@
 
   const ctx = useInputGroupContext();
 
-  const styles = $derived(inputGroupStyles({ variant: ctx.variant, fullWidth: ctx.fullWidth }));
+  const styles = $derived(inputGroupStyles({ variant: ctx.variant, size: ctx.size }));
 </script>
 
 <div

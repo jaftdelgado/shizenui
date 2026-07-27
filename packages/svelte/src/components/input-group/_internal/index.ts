@@ -1,6 +1,7 @@
 export type {
   InputGroupProps,
   InputGroupVariant,
+  InputGroupSize,
   InputGroupKind,
   InputGroupPrefixProps,
   InputGroupSuffixProps,

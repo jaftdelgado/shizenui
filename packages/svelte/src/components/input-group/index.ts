@@ -7,6 +7,7 @@ import TextArea from "./compound/TextArea.svelte";
 export type {
   InputGroupProps,
   InputGroupVariant,
+  InputGroupSize,
   InputGroupKind,
   InputGroupPrefixProps,
   InputGroupSuffixProps,
