@@ -1,0 +1,196 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Input
+description: Primitive text field for collecting short user-entered values.
+preview: InputPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
+
+import InputTypes from "@examples/svelte/input/InputTypes.svelte";
+import InputVariants from "@examples/svelte/input/InputVariants.svelte";
+import InputSizes from "@examples/svelte/input/InputSizes.svelte";
+import InputBindValue from "@examples/svelte/input/InputBindValue.svelte";
+import InputFullyControlled from "@examples/svelte/input/InputFullyControlled.svelte";
+import InputDisabled from "@examples/svelte/input/InputDisabled.svelte";
+import InputInvalid from "@examples/svelte/input/InputInvalid.svelte";
+
+import InputTwStyling from "@examples/svelte/input/InputTwStyling.svelte";
+import InputCssStylingCode from "@examples/svelte/input/InputCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { Input } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Input Types
+
+<ComponentExample src="svelte/input/InputTypes.svelte">
+  <InputTypes client:load />
+</ComponentExample>
+
+### Variants
+
+<ComponentExample src="svelte/input/InputVariants.svelte">
+  <InputVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/input/InputSizes.svelte">
+  <InputSizes client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/input/InputBindValue.svelte">
+  <InputBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/input/InputFullyControlled.svelte">
+  <InputFullyControlled client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/input/InputDisabled.svelte">
+  <InputDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/input/InputInvalid.svelte">
+  <InputInvalid client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to Input.
+
+<ComponentExample src="svelte/input/InputTwStyling.svelte">
+  <InputTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Input component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={InputCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Base & Size Classes
+
+<BulletList
+  items={[
+    {
+      title: "input",
+      description: "Root field for short text entry.",
+      code: true
+    },
+    {
+      title: "input--sm",
+      description: "Compact input for dense forms.",
+      code: true
+    },
+    {
+      title: "input--md",
+      description: "Default input size for most fields.",
+      code: true
+    },
+    {
+      title: "input--lg",
+      description: "Larger input for more prominent fields.",
+      code: true
+    }
+  ]}
+/>
+
+#### Variant Classes
+
+<BulletList
+  items={[
+    {
+      title: "input--default",
+      description: "Standard field style for most forms.",
+      code: true
+    },
+    {
+      title: "input--secondary",
+      description: "Quieter field style for secondary form areas.",
+      code: true
+    },
+    {
+      title: "input--outline",
+      description: "Bordered field style for low-emphasis layouts.",
+      code: true
+    }
+  ]}
+/>
+
+### Interactive States
+
+<InteractiveStatesTable
+  props={[
+    {
+      name: "hover",
+      description: "Applies a hover background color to the control when the pointer is over it."
+    },
+    {
+      name: "focus",
+      description: "Applies a focus ring to the control when navigating with keyboard."
+    },
+    {
+      name: "invalid",
+      description:
+        "Marks the control with an error state to signal a validation issue. Combines with focus to show a distinct focused-invalid ring."
+    },
+    {
+      name: "disabled",
+      description: "Disables interaction and applies reduced opacity."
+    },
+    {
+      name: "readonly",
+      description: "Prevents editing without visual disabled treatment."
+    }
+  ]}
+/>
+
+## API Reference
+
+### Input Props
+
+Accepts all standard HTML `<input>` attributes, in addition to the following:
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "variant", type: '"default" | "secondary" | "outline"', default: '"default"' },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "type", type: "HTMLInputAttributes['type']", default: '"text"' },
+    { name: "value", type: "HTMLInputAttributes['value']", default: '""' },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLInputElement | null", default: "null" }
+  ]}
+/>

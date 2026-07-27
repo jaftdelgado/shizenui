@@ -8,7 +8,7 @@
 }
 
 @utility invalid-field-ring {
-  @apply ring-danger outline-none;
+  @apply ring-danger ring-1 outline-none;
 }
 
 @utility focus-invalid-field-ring {
