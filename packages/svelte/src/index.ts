@@ -5,6 +5,7 @@ export * from "./components/checkbox/index.ts";
 export * from "./components/chip/index.ts";
 export * from "./components/description/index.js";
 export * from "./components/field-error/index.ts";
+export * from "./components/input-group/index.ts";
 export * from "./components/input/index.ts";
 export * from "./components/label/index.js";
 export * from "./components/radio-group/index.ts";
