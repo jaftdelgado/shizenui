@@ -13,13 +13,15 @@ import PropsTable from "@components/astro/PropsTable.astro";
 import BulletList from "@components/astro/BulletList.astro";
 import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
+import InputGroupAnatomyCode from "@examples/svelte/input-group/InputGroupAnatomy.svelte?raw";
+
+import InputGroupTextArea from "@examples/svelte/input-group/InputGroupTextArea.svelte";
 import InputGroupVariants from "@examples/svelte/input-group/InputGroupVariants.svelte";
 import InputGroupSizes from "@examples/svelte/input-group/InputGroupSizes.svelte";
 import InputGroupBindValue from "@examples/svelte/input-group/InputGroupBindValue.svelte";
 import InputGroupFullyControlled from "@examples/svelte/input-group/InputGroupFullyControlled.svelte";
 import InputGroupDisabled from "@examples/svelte/input-group/InputGroupDisabled.svelte";
 import InputGroupInvalid from "@examples/svelte/input-group/InputGroupInvalid.svelte";
-import InputGroupTextArea from "@examples/svelte/input-group/InputGroupTextArea.svelte";
 
 import InputGroupTwStyling from "@examples/svelte/input-group/InputGroupTwStyling.svelte";
 import InputGroupCssStylingCode from "@examples/svelte/input-group/InputGroupCssStyling.css?raw";
@@ -28,7 +30,17 @@ import InputGroupCssStylingCode from "@examples/svelte/input-group/InputGroupCss
 
 <CodeImport code={`import { InputGroup } from "@shizen-ui/svelte";`} />
 
+## Anatomy
+
+<CodeBlock code={InputGroupAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
+
 ## Examples
+
+### With TextArea
+
+<ComponentExample src="svelte/input-group/InputGroupTextArea.svelte">
+  <InputGroupTextArea client:load />
+</ComponentExample>
 
 ### Variants
 
@@ -46,7 +58,7 @@ import InputGroupCssStylingCode from "@examples/svelte/input-group/InputGroupCss
 
 #### Two-Way Binding
 
-Use `bind:value` on `InputGroup.Input` or `InputGroup.TextArea` for simple, automatic state synchronization:
+Use `bind:value` for simple, automatic state synchronization:
 
 <ComponentExample src="svelte/input-group/InputGroupBindValue.svelte">
   <InputGroupBindValue client:load />
@@ -54,7 +66,7 @@ Use `bind:value` on `InputGroup.Input` or `InputGroup.TextArea` for simple, auto
 
 #### Fully Controlled
 
-Use a Function Binding when every write needs to be validated or normalized before it reaches state.
+Use a Function Binding for complete control over the state's reads and writes.
 
 <ComponentExample src="svelte/input-group/InputGroupFullyControlled.svelte">
   <InputGroupFullyControlled client:load />
@@ -70,12 +82,6 @@ Use a Function Binding when every write needs to be validated or normalized befo
 
 <ComponentExample src="svelte/input-group/InputGroupInvalid.svelte">
   <InputGroupInvalid client:load />
-</ComponentExample>
-
-### TextArea
-
-<ComponentExample src="svelte/input-group/InputGroupTextArea.svelte">
-  <InputGroupTextArea client:load />
 </ComponentExample>
 
 ## Styling
@@ -204,6 +210,15 @@ To customize the InputGroup component classes, you can use the `@layer component
 <InteractiveStatesTable
   props={[
     {
+      name: "disabled",
+      description: "Disables the inner field and applies reduced opacity to the group."
+    },
+    {
+      name: "invalid",
+      description:
+        "Marks the group with an error state to signal a validation issue. Combines with focus to show a distinct focused-invalid ring."
+    },
+    {
       name: "hover",
       description: "Applies a hover background color to the group when the pointer is over it."
     },
@@ -212,21 +227,8 @@ To customize the InputGroup component classes, you can use the `@layer component
       description: "Applies a focus ring to the group when the inner field receives focus."
     },
     {
-      name: "invalid",
-      description:
-        "Marks the group with an error state to signal a validation issue. Combines with focus to show a distinct focused-invalid ring."
-    },
-    {
-      name: "disabled",
-      description: "Disables the inner field and applies reduced opacity to the group."
-    },
-    {
       name: "readonly",
       description: "Prevents editing the inner field without visual disabled treatment."
-    },
-    {
-      name: "required",
-      description: "Marks the inner field as required for native form validation."
     }
   ]}
 />

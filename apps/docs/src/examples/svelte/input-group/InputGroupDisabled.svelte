@@ -1,15 +1,24 @@
 <script lang="ts">
-  import { InputGroup } from "@shizen-ui/svelte";
+  import { InputGroup, Label, Description } from "@shizen-ui/svelte";
   import Icon from "@components/svelte/Icon.svelte";
-  import { Globe02Icon } from "@hugeicons/core-free-icons";
+  import { SquareLock02Icon } from "@hugeicons/core-free-icons";
+
+  let repoName = $state("acme-corp/dashboard-app");
 </script>
 
-<div class="w-full max-w-64 flex-col gap-2">
+<div class="flex w-full max-w-64 flex-col gap-2">
+  <Label for="repo-name">Repository name</Label>
   <InputGroup disabled>
     <InputGroup.Prefix>
-      <Icon icon={Globe02Icon} />
+      <Icon icon={SquareLock02Icon} />
     </InputGroup.Prefix>
-    <InputGroup.Input value="workspace.shizen.dev" />
-    <InputGroup.Suffix>Locked</InputGroup.Suffix>
+    <InputGroup.Input
+      id="repo-name"
+      bind:value={repoName}
+      type="text"
+      aria-describedby="repo-name-hint"
+      readonly
+    />
   </InputGroup>
+  <Description id="repo-name-hint">Repository name can't be changed after deployment</Description>
 </div>

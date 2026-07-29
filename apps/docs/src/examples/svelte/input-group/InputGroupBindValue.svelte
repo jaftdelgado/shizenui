@@ -1,20 +1,24 @@
 <script lang="ts">
-  import { InputGroup } from "@shizen-ui/svelte";
+  import { InputGroup, Label, Description } from "@shizen-ui/svelte";
   import Icon from "@components/svelte/Icon.svelte";
-  import { Search01Icon } from "@hugeicons/core-free-icons";
+  import { Image02Icon } from "@hugeicons/core-free-icons";
 
-  let query = $state("");
+  let fileName = $state("banner");
 </script>
 
-<div class="flex w-full max-w-md flex-col gap-3">
+<div class="flex w-full max-w-64 flex-col gap-2">
+  <Label for="export-name">Export file name</Label>
   <InputGroup>
     <InputGroup.Prefix>
-      <Icon icon={Search01Icon} />
+      <Icon icon={Image02Icon} />
     </InputGroup.Prefix>
-    <InputGroup.Input bind:value={query} type="search" placeholder="Search transactions" />
+    <InputGroup.Input id="export-name" bind:value={fileName} placeholder="untitled" />
+    <InputGroup.Suffix>.png</InputGroup.Suffix>
   </InputGroup>
-
-  <p class="text-muted-foreground text-sm">
-    {query ? `Filtering results for "${query}"` : "All transactions are visible."}
-  </p>
+  <Description>
+    Your file will be exported as
+    <Description class="font-medium">
+      {fileName || "untitled"}.png
+    </Description>
+  </Description>
 </div>
