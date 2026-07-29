@@ -55,7 +55,6 @@
   data-disabled={presence(ctx.disabled)}
   data-readonly={presence(ctx.readonly)}
   data-invalid={presence(ctx.invalid)}
-  data-has-textarea={presence(ctx.kind === "textarea")}
   class={cn(styles.base(), className)}
   {...rest}
 >

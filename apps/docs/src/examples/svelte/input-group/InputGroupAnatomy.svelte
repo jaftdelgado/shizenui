@@ -4,7 +4,7 @@
 
 <InputGroup>
   <InputGroup.Prefix />
-  <!-- or use TextArea for multiline -->
+  <!-- or use Input.TextArea for multiline -->
   <InputGroup.Input />
   <InputGroup.Suffix />
 </InputGroup>

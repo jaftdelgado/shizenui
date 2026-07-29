@@ -1,6 +1,6 @@
 @layer components {
   .input-group {
-    @apply rounded-field relative inline-flex items-center overflow-hidden shadow-xs;
+    @apply rounded-field shadow-field relative inline-flex items-center overflow-hidden;
 
     transition:
       background-color 200ms ease,
@@ -19,7 +19,8 @@
       background-color: var(--input-group-bg-hover);
     }
 
-    &:focus-within {
+    &:has(.input-group__input:focus),
+    &:has(.input-group__textarea:focus) {
       @apply status-focused-field;
       background-color: var(--input-group-bg-hover);
 
@@ -36,7 +37,7 @@
       @apply status-disabled;
     }
 
-    &[data-has-textarea] {
+    &:has(.input-group__textarea) {
       @apply flex-col items-stretch;
     }
   }
@@ -86,8 +87,8 @@
     @apply px-field-lg text-base;
   }
 
-  .input-group[data-has-textarea] .input-group__prefix,
-  .input-group[data-has-textarea] .input-group__suffix {
+  .input-group:has(.input-group__textarea) .input-group__prefix,
+  .input-group:has(.input-group__textarea) .input-group__suffix {
     @apply w-full py-2;
   }
 

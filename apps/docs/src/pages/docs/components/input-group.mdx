@@ -15,6 +15,7 @@ import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.ast
 
 import InputGroupAnatomyCode from "@examples/svelte/input-group/InputGroupAnatomy.svelte?raw";
 
+import InputGroupPrefixSuffix from "@examples/svelte/input-group/InputGroupPrefixSuffix.svelte";
 import InputGroupTextArea from "@examples/svelte/input-group/InputGroupTextArea.svelte";
 import InputGroupVariants from "@examples/svelte/input-group/InputGroupVariants.svelte";
 import InputGroupSizes from "@examples/svelte/input-group/InputGroupSizes.svelte";
@@ -35,6 +36,12 @@ import InputGroupCssStylingCode from "@examples/svelte/input-group/InputGroupCss
 <CodeBlock code={InputGroupAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
 
 ## Examples
+
+### Prefix and Suffix
+
+<ComponentExample src="svelte/input-group/InputGroupPrefixSuffix.svelte">
+  <InputGroupPrefixSuffix client:load />
+</ComponentExample>
 
 ### With TextArea
 

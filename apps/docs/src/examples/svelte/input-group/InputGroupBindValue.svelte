@@ -1,24 +1,28 @@
 <script lang="ts">
   import { InputGroup, Label, Description } from "@shizen-ui/svelte";
   import Icon from "@components/svelte/Icon.svelte";
-  import { Image02Icon } from "@hugeicons/core-free-icons";
+  import { UserIcon } from "@hugeicons/core-free-icons";
 
-  let fileName = $state("banner");
+  const MAX_LENGTH = 16;
+  let username = $state("shizenui");
+
+  function isOverLimit() {
+    return username.length > MAX_LENGTH;
+  }
 </script>
 
 <div class="flex w-full max-w-64 flex-col gap-2">
-  <Label for="export-name">Export file name</Label>
+  <Label for="username">Username</Label>
   <InputGroup>
     <InputGroup.Prefix>
-      <Icon icon={Image02Icon} />
+      <Icon icon={UserIcon} />
     </InputGroup.Prefix>
-    <InputGroup.Input id="export-name" bind:value={fileName} placeholder="untitled" />
-    <InputGroup.Suffix>.png</InputGroup.Suffix>
+    <InputGroup.Input id="username" bind:value={username} placeholder="Choose a username" />
+    <InputGroup.Suffix>
+      <Description class="tabular-nums {isOverLimit() ? 'text-danger' : 'text-secondary-text'}">
+        {username.length}/{MAX_LENGTH}
+      </Description>
+    </InputGroup.Suffix>
   </InputGroup>
-  <Description>
-    Your file will be exported as
-    <Description class="font-medium">
-      {fileName || "untitled"}.png
-    </Description>
-  </Description>
+  <Description>Usernames should be 16 characters or fewer.</Description>
 </div>
