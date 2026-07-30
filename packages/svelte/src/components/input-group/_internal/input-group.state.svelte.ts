@@ -7,7 +7,7 @@ export class InputGroupState {
   #required: () => boolean | undefined;
   #variant: () => InputGroupVariant | undefined;
   #size: () => InputGroupSize | undefined;
-  #id: () => string;
+  #id: () => string | undefined;
 
   get finalDisabled(): boolean {
     // TODO: once <TextField> exists and produces FieldStateContext, extend this to the standard
@@ -41,7 +41,7 @@ export class InputGroupState {
     return this.#size() ?? "md";
   }
 
-  get id(): string {
+  get id(): string | undefined {
     return this.#id();
   }
 
@@ -52,7 +52,7 @@ export class InputGroupState {
     required: () => boolean | undefined;
     variant: () => InputGroupVariant | undefined;
     size: () => InputGroupSize | undefined;
-    id: () => string;
+    id: () => string | undefined;
   }) {
     this.#disabled = props.disabled;
     this.#invalid = props.invalid;

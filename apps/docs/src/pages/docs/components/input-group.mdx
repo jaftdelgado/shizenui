@@ -221,7 +221,7 @@ The `disabled`, `readonly`, and `required` props are set on `<InputGroup>` and p
     { name: "readonly", type: "boolean", default: "undefined" },
     { name: "required", type: "boolean", default: "undefined" },
     { name: "invalid", type: "boolean", default: "undefined" },
-    { name: "id", type: "string", default: "auto-generated" },
+    { name: "id", type: "string", default: "undefined" },
     { name: "ref", type: "HTMLDivElement | null", default: "null" },
     { name: "children", type: "Snippet", default: "—" }
   ]}
@@ -246,7 +246,7 @@ Accepts all standard HTML `<input>` attributes except `disabled`, `readonly`, `r
 <PropsTable
   showHeader
   props={[
-    { name: "id", type: "string", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
     { name: "value", type: "HTMLInputAttributes['value']", default: "undefined" },
     { name: "type", type: "HTMLInputAttributes['type']", default: '"text"' },
     { name: "ref", type: "HTMLInputElement | null", default: "null" }
@@ -260,7 +260,7 @@ Accepts all standard HTML `<textarea>` attributes except `disabled`, `readonly`,
 <PropsTable
   showHeader
   props={[
-    { name: "id", type: "string", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
     { name: "value", type: "HTMLTextareaAttributes['value']", default: "undefined" },
     { name: "ref", type: "HTMLTextAreaElement | null", default: "null" }
   ]}

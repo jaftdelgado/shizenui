@@ -17,12 +17,20 @@
     <InputGroup.Prefix>
       <Icon icon={UserIcon} />
     </InputGroup.Prefix>
-    <InputGroup.Input id="username" bind:value={username} placeholder="Choose a username" />
+    <InputGroup.Input
+      id="username"
+      bind:value={username}
+      placeholder="Choose a username"
+      aria-describedby="username-count username-hint"
+    />
     <InputGroup.Suffix>
-      <Description class="tabular-nums {isOverLimit() ? 'text-danger' : 'text-secondary-text'}">
+      <Description
+        id="username-count"
+        class="tabular-nums {isOverLimit() ? 'text-danger' : 'text-secondary-text'}"
+      >
         {username.length}/{MAX_LENGTH}
       </Description>
     </InputGroup.Suffix>
   </InputGroup>
-  <Description>Usernames should be 16 characters or fewer.</Description>
+  <Description id="username-hint">Usernames should be 16 characters or fewer.</Description>
 </div>

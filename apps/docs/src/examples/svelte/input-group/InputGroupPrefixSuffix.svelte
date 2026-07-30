@@ -12,8 +12,13 @@
     <InputGroup.Prefix>
       <Icon icon={Image02Icon} />
     </InputGroup.Prefix>
-    <InputGroup.Input id="export-name" bind:value={fileName} placeholder="untitled" />
+    <InputGroup.Input
+      id="export-name"
+      bind:value={fileName}
+      placeholder="untitled"
+      aria-describedby="export-name-hint"
+    />
     <InputGroup.Suffix>.png</InputGroup.Suffix>
   </InputGroup>
-  <Description>Choose a name for the exported image file.</Description>
+  <Description id="export-name-hint">Choose a name for the exported image file.</Description>
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { inputGroupStyles } from "@shizen-ui/styles";
-  import { cn, createId, presence } from "../../lib/utils";
+  import { cn, presence } from "../../lib/utils";
   import { warnIf } from "../../lib/runes/index.js";
   import type { InputGroupProps } from "./_internal/index.js";
   import {
@@ -10,8 +10,6 @@
     createInputGroupHandlers
   } from "./_internal/index.js";
 
-  const uid = $props.id();
-
   let {
     class: className,
     disabled = undefined,
@@ -20,7 +18,7 @@
     required = undefined,
     variant = undefined,
     size = undefined,
-    id = createId("input-group", uid),
+    id = undefined,
     ref = $bindable(null),
     children,
     ...rest

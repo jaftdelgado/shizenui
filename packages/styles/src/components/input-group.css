@@ -14,7 +14,6 @@
 
     background-color: var(--input-group-bg);
     color: var(--input-group-fg);
-
     cursor: text;
 
     &:hover:not([data-disabled]) {

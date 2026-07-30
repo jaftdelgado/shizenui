@@ -20,7 +20,14 @@
     <InputGroup.Prefix>
       <Icon icon={CouponPercentIcon} />
     </InputGroup.Prefix>
-    <InputGroup.Input id="coupon-code" placeholder="SAVE20" bind:value={getValue, setValue} />
+    <InputGroup.Input
+      id="coupon-code"
+      placeholder="SAVE20"
+      bind:value={getValue, setValue}
+      aria-describedby="coupon-code-hint"
+    />
   </InputGroup>
-  <Description>Codes are automatically formatted to uppercase, max 12 characters.</Description>
+  <Description id="coupon-code-hint">
+    Codes are automatically formatted to uppercase, max 12 characters.
+  </Description>
 </div>
