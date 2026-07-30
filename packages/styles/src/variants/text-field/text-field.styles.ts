@@ -1,6 +1,6 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
-export const text-fieldStyles = tv({
+export const textFieldStyles = tv({
   base: "text-field",
   variants: {
     invalid: {
@@ -16,4 +16,4 @@ export const text-fieldStyles = tv({
   }
 });
 
-export type TextFieldVariants = VariantProps<typeof text-fieldStyles>;
+export type TextFieldVariants = VariantProps<typeof textFieldStyles>;

@@ -54,6 +54,10 @@ export class InputState {
     return this.#id();
   }
 
+  get finalId(): string {
+    return this.fieldCtx.exists ? (this.fieldCtx.inputId ?? this.#id()) : this.#id();
+  }
+
   constructor(props: {
     disabled: () => boolean | undefined;
     readonly: () => boolean | undefined;
@@ -94,14 +98,15 @@ export type InputStateInstance = InstanceType<typeof InputState>;
  */
 export function resolveInputDescribedBy(
   ctx: FieldStateContextResult,
-  finalInvalid: boolean
+  finalInvalid: boolean,
+  slots?: { hasDescription: boolean; hasError: boolean }
 ): { describedBy: string | undefined; errorMessageId: string | undefined } {
   if (!ctx.exists) {
     return { describedBy: undefined, errorMessageId: undefined };
   }
 
   return {
-    describedBy: !finalInvalid ? ctx.descriptionId : undefined,
-    errorMessageId: finalInvalid ? ctx.errorId : undefined
+    describedBy: !finalInvalid && (!slots || slots.hasDescription) ? ctx.descriptionId : undefined,
+    errorMessageId: finalInvalid && (!slots || slots.hasError) ? ctx.errorId : undefined
   };
 }

@@ -12,7 +12,11 @@ export type {
   InputGroupPrefixProps,
   InputGroupSuffixProps,
   InputGroupInputProps,
-  InputGroupTextAreaProps
+  InputGroupTextAreaProps,
+  InputGroupInputEvent,
+  InputGroupInputInvalidEvent,
+  InputGroupTextAreaEvent,
+  InputGroupTextAreaInvalidEvent
 } from "./_internal/index.js";
 
 export const InputGroup = Object.assign(Root, {

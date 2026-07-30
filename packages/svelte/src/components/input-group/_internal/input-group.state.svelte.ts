@@ -1,4 +1,6 @@
 import type { InputGroupSize, InputGroupVariant } from "./input-group.types.js";
+import { useFieldStateContext } from "../../../lib/index.js";
+import type { FieldStateContextResult } from "../../../lib/index.js";
 
 export class InputGroupState {
   #disabled: () => boolean | undefined;
@@ -9,28 +11,22 @@ export class InputGroupState {
   #size: () => InputGroupSize | undefined;
   #id: () => string | undefined;
 
+  readonly fieldCtx: FieldStateContextResult;
+
   get finalDisabled(): boolean {
-    // TODO: once <TextField> exists and produces FieldStateContext, extend this to the standard
-    // cascade `local ?? parentFieldCtx.disabled ?? false`, mirroring CheckboxState.finalDisabled.
-    return this.#disabled() ?? false;
+    return this.fieldCtx.exists ? this.fieldCtx.disabled : (this.#disabled() ?? false);
   }
 
   get finalInvalid(): boolean {
-    // TODO: once <TextField> exists and produces FieldStateContext, extend this to the standard
-    // cascade `local ?? parentFieldCtx.invalid ?? false`, mirroring CheckboxState.finalInvalid.
-    return this.#invalid() ?? false;
+    return this.fieldCtx.exists ? this.fieldCtx.invalid : (this.#invalid() ?? false);
   }
 
   get finalReadonly(): boolean {
-    // TODO: once <TextField> exists and produces FieldStateContext, extend this to the standard
-    // cascade `local ?? parentFieldCtx.readonly ?? false`, mirroring CheckboxState.finalReadonly.
-    return this.#readonly() ?? false;
+    return this.fieldCtx.exists ? this.fieldCtx.readonly : (this.#readonly() ?? false);
   }
 
   get finalRequired(): boolean {
-    // TODO: once <TextField> exists and produces FieldStateContext, extend this to the standard
-    // cascade `local ?? parentFieldCtx.required ?? false`, mirroring CheckboxState.finalRequired.
-    return this.#required() ?? false;
+    return this.fieldCtx.exists ? this.fieldCtx.required : (this.#required() ?? false);
   }
 
   get finalVariant(): InputGroupVariant {
@@ -45,6 +41,10 @@ export class InputGroupState {
     return this.#id();
   }
 
+  get inputId(): string | undefined {
+    return this.fieldCtx.exists ? this.fieldCtx.inputId : undefined;
+  }
+
   constructor(props: {
     disabled: () => boolean | undefined;
     invalid: () => boolean | undefined;
@@ -53,6 +53,7 @@ export class InputGroupState {
     variant: () => InputGroupVariant | undefined;
     size: () => InputGroupSize | undefined;
     id: () => string | undefined;
+    fieldContext?: FieldStateContextResult;
   }) {
     this.#disabled = props.disabled;
     this.#invalid = props.invalid;
@@ -61,7 +62,24 @@ export class InputGroupState {
     this.#variant = props.variant;
     this.#size = props.size;
     this.#id = props.id;
+
+    this.fieldCtx = props.fieldContext ?? useFieldStateContext();
   }
 }
 
 export type InputGroupStateInstance = InstanceType<typeof InputGroupState>;
+
+export function resolveInputGroupDescribedBy(
+  ctx: FieldStateContextResult,
+  finalInvalid: boolean,
+  slots?: { hasDescription: boolean; hasError: boolean }
+): { describedBy: string | undefined; errorMessageId: string | undefined } {
+  if (!ctx.exists) {
+    return { describedBy: undefined, errorMessageId: undefined };
+  }
+
+  return {
+    describedBy: !finalInvalid && (!slots || slots.hasDescription) ? ctx.descriptionId : undefined,
+    errorMessageId: finalInvalid && (!slots || slots.hasError) ? ctx.errorId : undefined
+  };
+}

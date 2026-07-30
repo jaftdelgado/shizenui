@@ -3,7 +3,8 @@
 
   import { cn, createId, presence } from "../../lib/utils";
   import { useFieldStateContext } from "../../lib/index.js";
-  import { InputState, resolveInputDescribedBy } from "./_internal/index.js";
+  import { useTextFieldContext } from "../text-field/_internal/index.js";
+  import { InputState, createInputHandlers, resolveInputDescribedBy } from "./_internal/index.js";
   import type { InputProps } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -20,10 +21,13 @@
     id = createId("input", uid),
     ref = $bindable(null),
     value = $bindable(""),
+    oninput,
+    oninvalid,
     ...rest
   }: InputProps = $props();
 
   const fieldContext = useFieldStateContext();
+  const textFieldCtx = useTextFieldContext();
 
   const inputState = new InputState({
     disabled: () => disabled,
@@ -41,14 +45,47 @@
   );
 
   const describedByResult = $derived(
-    resolveInputDescribedBy(inputState.fieldCtx, inputState.finalInvalid)
+    resolveInputDescribedBy(
+      inputState.fieldCtx,
+      inputState.finalInvalid,
+      textFieldCtx.exists ? textFieldCtx : undefined
+    )
   );
+
+  const handlers = createInputHandlers({
+    textFieldCtx,
+    getOnInput: () => oninput,
+    getOnInvalid: () => oninvalid
+  });
+
+  function getValue(): string {
+    return textFieldCtx.exists ? textFieldCtx.value : value;
+  }
+
+  function setValue(next: string): void {
+    if (textFieldCtx.exists) {
+      textFieldCtx.setValue(next);
+      return;
+    }
+
+    value = next;
+  }
+
+  $effect(() => {
+    if (!textFieldCtx.exists) return;
+
+    textFieldCtx.setControl(ref);
+
+    return () => {
+      if (textFieldCtx.control === ref) textFieldCtx.setControl(null);
+    };
+  });
 </script>
 
 <input
   bind:this={ref}
-  bind:value
-  {id}
+  bind:value={getValue, setValue}
+  id={inputState.finalId}
   {type}
   disabled={inputState.finalDisabled}
   readonly={inputState.finalReadonly}
@@ -60,5 +97,7 @@
   data-disabled={presence(inputState.finalDisabled)}
   data-readonly={presence(inputState.finalReadonly)}
   class={cn(styles, className)}
+  oninput={handlers.handleInput}
+  oninvalid={handlers.handleInvalid}
   {...rest}
 />

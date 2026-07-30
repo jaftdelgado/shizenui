@@ -31,6 +31,9 @@ export function setupInputGroupContexts(state: InputGroupStateInstance): void {
     get id() {
       return state.id;
     },
+    get inputId() {
+      return state.inputId;
+    },
     get inputRef() {
       return inputRef;
     },

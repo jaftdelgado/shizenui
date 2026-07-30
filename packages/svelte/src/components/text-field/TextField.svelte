@@ -1,14 +1,75 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-  import type { HTMLAttributes } from "svelte/elements";
-  import { text-fieldStyles, type TextFieldVariants } from "@shizen-ui/styles";
+  import { textFieldStyles } from "@shizen-ui/styles";
 
-  let { children, class: className, ...props }: TextFieldVariants &
-    HTMLAttributes<HTMLDivElement> & {
-      children?: Snippet;
-    } = $props();
+  import { syncFormReset, warnIf } from "../../lib/runes/index.js";
+  import type { SubmissionInvalidState } from "../../lib/runes/index.js";
+  import { cn, createId, presence } from "../../lib/utils";
+  import type { TextFieldProps } from "./_internal/index.js";
+  import {
+    TextFieldState,
+    setupTextFieldContexts,
+    setupTextFieldSubmissionInvalid,
+    useTextFieldContext
+  } from "./_internal/index.js";
+
+  const uid = $props.id();
+
+  let {
+    class: className,
+    disabled = undefined,
+    invalid = undefined,
+    readonly = undefined,
+    required = undefined,
+    value = $bindable(""),
+    id = createId("text-field", uid),
+    ref = $bindable(null),
+    children,
+    ...rest
+  }: TextFieldProps = $props();
+
+  warnIf(
+    () => !children,
+    "TextField",
+    "No children provided. Add a <Label /> and either <Input /> or <InputGroup />."
+  );
+
+  let submissionInvalid: SubmissionInvalidState;
+
+  const state = new TextFieldState({
+    disabled: () => disabled,
+    invalid: () => invalid,
+    readonly: () => readonly,
+    required: () => required,
+    value: () => value,
+    setValue: (next) => (value = next),
+    id: () => id,
+    submissionInvalid: () => submissionInvalid.value,
+    setSubmissionInvalid: (next) => submissionInvalid.set(next)
+  });
+
+  submissionInvalid = setupTextFieldSubmissionInvalid(state);
+
+  setupTextFieldContexts(state);
+
+  const ctx = useTextFieldContext();
+  const styles = $derived(
+    textFieldStyles({ invalid: state.finalInvalid, disabled: state.finalDisabled })
+  );
+
+  syncFormReset({
+    getRef: () => ctx.control,
+    onReset: () => state.resetValidation()
+  });
 </script>
 
-<div class={text-fieldStyles({ ...props, class: className })}>
+<div
+  bind:this={ref}
+  data-disabled={presence(state.finalDisabled)}
+  data-readonly={presence(state.finalReadonly)}
+  data-invalid={presence(state.finalInvalid)}
+  data-required={presence(state.finalRequired)}
+  class={cn(styles, className)}
+  {...rest}
+>
   {@render children?.()}
 </div>
