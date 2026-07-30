@@ -26,6 +26,7 @@
   <div
     bind:this={ref}
     class={cn(styles.prefix(), className)}
+    inert={ctx.disabled}
     data-disabled={presence(ctx.disabled)}
     data-readonly={presence(ctx.readonly)}
     data-invalid={presence(ctx.invalid)}

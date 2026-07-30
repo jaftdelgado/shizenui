@@ -8,7 +8,7 @@
 
 <div class="flex w-full max-w-64 flex-col gap-2">
   <Label for="repo-name">Repository name</Label>
-  <InputGroup disabled>
+  <InputGroup readonly>
     <InputGroup.Prefix>
       <Icon icon={SquareLock02Icon} />
     </InputGroup.Prefix>
@@ -17,7 +17,6 @@
       bind:value={repoName}
       type="text"
       aria-describedby="repo-name-hint"
-      readonly
     />
   </InputGroup>
   <Description id="repo-name-hint">Repository name can't be changed after deployment</Description>

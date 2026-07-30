@@ -95,7 +95,7 @@ Use a Function Binding for complete control over the state's reads and writes.
 
 ### Tailwind CSS classes
 
-Use the `class` prop to apply Tailwind utility classes directly to InputGroup and its parts.
+Use the `class` prop to apply Tailwind utility classes directly to InputGroup.
 
 <ComponentExample src="svelte/input-group/InputGroupTwStyling.svelte">
   <InputGroupTwStyling client:load />
@@ -109,7 +109,7 @@ To customize the InputGroup component classes, you can use the `@layer component
 
 ### CSS Classes
 
-#### Base & Part Classes
+#### Base & Size Classes
 
 <BulletList
   items={[
@@ -137,6 +137,21 @@ To customize the InputGroup component classes, you can use the `@layer component
       title: "input-group__textarea",
       description: "Multiline field inside the group.",
       code: true
+    },
+    {
+      title: "input-group--sm",
+      description: "Compact group size for dense forms.",
+      code: true
+    },
+    {
+      title: "input-group--md",
+      description: "Default group size for most fields.",
+      code: true
+    },
+    {
+      title: "input-group--lg",
+      description: "Larger group size for more prominent fields.",
+      code: true
     }
   ]}
 />
@@ -158,55 +173,6 @@ To customize the InputGroup component classes, you can use the `@layer component
     {
       title: "input-group--outline",
       description: "Bordered grouped field style for low-emphasis layouts.",
-      code: true
-    }
-  ]}
-/>
-
-#### Size Classes
-
-<BulletList
-  items={[
-    {
-      title: "input-group--sm",
-      description: "Compact group size for dense forms.",
-      code: true
-    },
-    {
-      title: "input-group--md",
-      description: "Default group size for most fields.",
-      code: true
-    },
-    {
-      title: "input-group--lg",
-      description: "Larger group size for more prominent fields.",
-      code: true
-    }
-  ]}
-/>
-
-#### State & Layout Classes
-
-<BulletList
-  items={[
-    {
-      title: "data-disabled",
-      description: "Marks the grouped field as unavailable.",
-      code: true
-    },
-    {
-      title: "data-readonly",
-      description: "Marks the grouped field as view-only.",
-      code: true
-    },
-    {
-      title: "data-invalid",
-      description: "Marks the grouped field with an error state.",
-      code: true
-    },
-    {
-      title: "data-has-textarea",
-      description: "Aligns the group for multiline fields.",
       code: true
     }
   ]}
@@ -244,7 +210,7 @@ To customize the InputGroup component classes, you can use the `@layer component
 
 ### InputGroup Props
 
-Accepts all standard HTML `<div>` attributes except `children` and `role`, in addition to the following:
+The `disabled`, `readonly`, and `required` props are set on `<InputGroup>` and propagated to `Input`/`TextArea`.
 
 <PropsTable
   showHeader
@@ -261,9 +227,9 @@ Accepts all standard HTML `<div>` attributes except `children` and `role`, in ad
   ]}
 />
 
-### Prefix and Suffix Props
+#### Prefix and Suffix Props
 
-`InputGroup.Prefix` and `InputGroup.Suffix` accept all standard HTML `<div>` attributes, in addition to the following:
+Extends `HTMLAttributes<HTMLDivElement>`.
 
 <PropsTable
   showHeader
@@ -273,9 +239,9 @@ Accepts all standard HTML `<div>` attributes except `children` and `role`, in ad
   ]}
 />
 
-### Input Props
+#### Input Props
 
-`InputGroup.Input` accepts all standard HTML `<input>` attributes except `disabled`, `readonly`, `required`, `id`, and `children`. The group owns `disabled`, `readonly`, `required`, and `invalid`.
+Accepts all standard HTML `<input>` attributes except `disabled`, `readonly`, `required` and `children`.
 
 <PropsTable
   showHeader
@@ -287,9 +253,9 @@ Accepts all standard HTML `<div>` attributes except `children` and `role`, in ad
   ]}
 />
 
-### TextArea Props
+#### TextArea Props
 
-`InputGroup.TextArea` accepts all standard HTML `<textarea>` attributes except `disabled`, `readonly`, `required`, `id`, and `children`. The group owns `disabled`, `readonly`, `required`, and `invalid`.
+Accepts all standard HTML `<textarea>` attributes except `disabled`, `readonly`, `required` and `children`.
 
 <PropsTable
   showHeader

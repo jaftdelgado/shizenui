@@ -11,7 +11,7 @@
   let message = $state("");
 </script>
 
-<div class="flex w-full max-w-sm flex-col gap-2">
+<div class="flex w-full max-w-xs flex-col gap-2">
   <InputGroup>
     <InputGroup.Prefix>
       <Chip variant="secondary" size="sm">

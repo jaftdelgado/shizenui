@@ -1,19 +1,26 @@
 <script lang="ts">
-  import { InputGroup } from "@shizen-ui/svelte";
+  import { InputGroup, Button } from "@shizen-ui/svelte";
   import Icon from "@components/svelte/Icon.svelte";
-  import { Search01Icon } from "@hugeicons/core-free-icons";
+  import { SmileIcon } from "@hugeicons/core-free-icons";
+
+  let message = $state("");
 </script>
 
-<InputGroup
-  class="w-full max-w-md rounded-full bg-neutral-900 text-white shadow-lg focus-within:ring-2 focus-within:ring-emerald-400"
->
-  <InputGroup.Prefix class="text-emerald-300">
-    <Icon icon={Search01Icon} />
-  </InputGroup.Prefix>
-  <InputGroup.Input
-    class="placeholder:text-neutral-400"
-    type="search"
-    placeholder="Search deployments"
-  />
-  <InputGroup.Suffix class="text-xs text-neutral-400">⌘K</InputGroup.Suffix>
-</InputGroup>
+<div class="flex w-full max-w-xs flex-col gap-2">
+  <InputGroup
+    class="border-secondary-text bg-field-secondary focus-within:border-accent flex-row items-end rounded-t-lg rounded-b-none border-b-2 shadow-none transition-colors focus-within:shadow-none focus-within:ring-0"
+  >
+    <InputGroup.TextArea
+      bind:value={message}
+      placeholder="Type a message..."
+      rows={2}
+      class="resize-none pt-2 pb-1.5"
+    />
+
+    <InputGroup.Suffix class="w-auto shrink-0 gap-1 px-1 py-1">
+      <Button variant="ghost" size="sm" iconOnly aria-label="Add emoji">
+        <Icon icon={SmileIcon} />
+      </Button>
+    </InputGroup.Suffix>
+  </InputGroup>
+</div>

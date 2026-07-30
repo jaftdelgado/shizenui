@@ -24,7 +24,11 @@
 
   $effect(() => {
     ctx.setKind("textarea");
-    return () => ctx.setKind(null);
+    ctx.setInputRef(ref);
+    return () => {
+      ctx.setKind(null);
+      ctx.setInputRef(null);
+    };
   });
 </script>
 

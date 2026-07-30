@@ -6,7 +6,8 @@
   import {
     InputGroupState,
     setupInputGroupContexts,
-    useInputGroupContext
+    useInputGroupContext,
+    createInputGroupHandlers
   } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -45,6 +46,11 @@
 
   const ctx = useInputGroupContext();
 
+  const handlers = createInputGroupHandlers({
+    getInputRef: () => ctx.inputRef,
+    getDisabled: () => ctx.disabled
+  });
+
   const styles = $derived(inputGroupStyles({ variant: ctx.variant, size: ctx.size }));
 </script>
 
@@ -56,6 +62,7 @@
   data-readonly={presence(ctx.readonly)}
   data-invalid={presence(ctx.invalid)}
   class={cn(styles.base(), className)}
+  onclick={handlers.handleContainerClick}
   {...rest}
 >
   {#if children}

@@ -4,6 +4,7 @@ import { setInputGroupContext, type InputGroupContextValue } from "./input-group
 
 export function setupInputGroupContexts(state: InputGroupStateInstance): void {
   let kind = $state<InputGroupKind | null>(null);
+  let inputRef = $state<HTMLInputElement | HTMLTextAreaElement | null>(null);
 
   setInputGroupContext({
     get disabled() {
@@ -30,8 +31,14 @@ export function setupInputGroupContexts(state: InputGroupStateInstance): void {
     get id() {
       return state.id;
     },
+    get inputRef() {
+      return inputRef;
+    },
     setKind(next: InputGroupKind | null) {
       kind = next;
+    },
+    setInputRef(next: HTMLInputElement | HTMLTextAreaElement | null) {
+      inputRef = next;
     }
   } satisfies InputGroupContextValue);
 }

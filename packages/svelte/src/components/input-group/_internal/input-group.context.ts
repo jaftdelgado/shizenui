@@ -10,7 +10,9 @@ export interface InputGroupContextValue {
   readonly size: InputGroupSize;
   readonly kind: InputGroupKind | null;
   readonly id: string | undefined;
+  readonly inputRef: HTMLInputElement | HTMLTextAreaElement | null;
   setKind(kind: InputGroupKind | null): void;
+  setInputRef(el: HTMLInputElement | HTMLTextAreaElement | null): void;
 }
 
 export interface InputGroupContextResult extends InputGroupContextValue {
@@ -58,7 +60,11 @@ export function useInputGroupContext(): InputGroupContextResult {
       get id() {
         return undefined;
       },
+      get inputRef() {
+        return null;
+      },
       setKind() {},
+      setInputRef() {},
       get exists() {
         return false;
       }
@@ -90,8 +96,14 @@ export function useInputGroupContext(): InputGroupContextResult {
     get id() {
       return context.id;
     },
+    get inputRef() {
+      return context.inputRef;
+    },
     setKind(kind) {
       context.setKind(kind);
+    },
+    setInputRef(el) {
+      context.setInputRef(el);
     },
     get exists() {
       return true;
