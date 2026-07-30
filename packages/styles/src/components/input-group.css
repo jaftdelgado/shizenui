@@ -1,0 +1,154 @@
+@layer components {
+  .input-group {
+    @apply rounded-field shadow-field relative inline-flex items-center overflow-hidden;
+
+    transition:
+      background-color 200ms ease,
+      box-shadow 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+
+    --input-group-bg: var(--color-field);
+    --input-group-bg-hover: var(--color-field-hover);
+    --input-group-fg: var(--color-field-foreground);
+    --input-group-addon-fg: var(--color-control-text);
+
+    background-color: var(--input-group-bg);
+    color: var(--input-group-fg);
+    cursor: text;
+
+    &:hover:not([data-disabled]) {
+      background-color: var(--input-group-bg-hover);
+    }
+
+    &:has(.input-group__input:focus),
+    &:has(.input-group__textarea:focus) {
+      @apply status-focused-field;
+      background-color: var(--input-group-bg-hover);
+
+      &[data-invalid] {
+        @apply status-focused-invalid-field;
+      }
+    }
+
+    &[data-invalid] {
+      @apply status-invalid-field;
+    }
+
+    &[data-disabled] {
+      @apply status-disabled;
+    }
+
+    &:has(.input-group__textarea) {
+      @apply flex-col items-stretch;
+    }
+  }
+
+  /* Prefix and Suffix */
+  .input-group__prefix,
+  .input-group__suffix {
+    @apply px-field-md flex shrink-0 items-center gap-2 text-sm whitespace-nowrap;
+    color: var(--input-group-addon-fg);
+
+    &[data-disabled] {
+      @apply status-disabled;
+    }
+  }
+
+  /* Variants */
+  .input-group--default {
+    --input-group-bg: var(--color-field);
+    --input-group-bg-hover: var(--color-field-hover);
+    --input-group-fg: var(--color-field-foreground);
+  }
+
+  .input-group--secondary {
+    @apply shadow-none;
+    --input-group-bg: var(--color-field-secondary);
+    --input-group-bg-hover: var(--color-field-secondary-hover);
+  }
+
+  .input-group--outline {
+    @apply shadow-border;
+    --input-group-bg: transparent;
+    --input-group-bg-hover: var(--color-field-outline-hover);
+  }
+
+  .input-group--sm .input-group__prefix,
+  .input-group--sm .input-group__suffix {
+    @apply px-field-sm text-sm;
+  }
+
+  .input-group--md .input-group__prefix,
+  .input-group--md .input-group__suffix {
+    @apply px-field-md text-sm;
+  }
+
+  .input-group--lg .input-group__prefix,
+  .input-group--lg .input-group__suffix {
+    @apply px-field-lg text-base;
+  }
+
+  .input-group:has(.input-group__textarea) .input-group__prefix,
+  .input-group:has(.input-group__textarea) .input-group__suffix {
+    @apply w-full py-2;
+  }
+
+  .input-group:has(.input-group__textarea) .input-group__prefix {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+
+  .input-group:has(.input-group__textarea) .input-group__suffix {
+    border-bottom-right-radius: inherit;
+    border-bottom-left-radius: inherit;
+  }
+
+  .input-group__input,
+  .input-group__textarea {
+    @apply min-w-0 flex-1 border-none text-sm outline-none;
+    @apply placeholder:text-field-placeholder;
+    color: var(--input-group-fg);
+  }
+
+  .input-group__input {
+    .input-group--sm & {
+      @apply h-field-sm px-field-sm text-sm;
+    }
+
+    .input-group--md & {
+      @apply h-field-md px-field-md text-sm;
+    }
+
+    .input-group--lg & {
+      @apply h-field-lg px-field-lg text-base;
+    }
+  }
+
+  .input-group__textarea {
+    @apply min-h-field-md resize-y py-2;
+
+    .input-group--sm & {
+      @apply min-h-field-sm px-field-sm text-sm;
+    }
+
+    .input-group--md & {
+      @apply min-h-field-md px-field-md text-sm;
+    }
+
+    .input-group--lg & {
+      @apply min-h-field-lg px-field-lg text-base;
+    }
+  }
+
+  .input-group:has(.input-group__prefix) .input-group__input {
+    @apply pl-0;
+  }
+  .input-group:has(.input-group__suffix) .input-group__input {
+    @apply pr-0;
+  }
+
+  .input-group__input:disabled,
+  .input-group__textarea:disabled {
+    cursor: var(--cursor-disabled);
+  }
+}

@@ -1,0 +1,18 @@
+@layer components {
+  .input-group {
+    @apply rounded-full shadow-none;
+    --input-group-bg: var(--color-neutral-900);
+    --input-group-bg-hover: var(--color-neutral-800);
+    --input-group-bg-focus: var(--color-neutral-800);
+    --input-group-fg: var(--color-white);
+    --input-group-addon-fg: var(--color-emerald-300);
+  }
+
+  .input-group__input {
+    @apply placeholder:text-neutral-400;
+  }
+
+  .input-group__suffix {
+    @apply text-xs text-neutral-400;
+  }
+}
