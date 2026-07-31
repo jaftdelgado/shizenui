@@ -13,8 +13,63 @@ import PropsTable from "@components/astro/PropsTable.astro";
 import BulletList from "@components/astro/BulletList.astro";
 import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
 
+import TextFieldAnatomyCode from "@examples/svelte/text-field/TextFieldAnatomy.svelte?raw";
+
+import TextFieldRequired from "@examples/svelte/text-field/TextFieldRequired.svelte";
+import TextFieldBindValue from "@examples/svelte/text-field/TextFieldBindValue.svelte";
+import TextFieldFullyControlled from "@examples/svelte/text-field/TextFieldFullyControlled.svelte";
+import TextFieldDisabled from "@examples/svelte/text-field/TextFieldDisabled.svelte";
+import TextFieldInvalid from "@examples/svelte/text-field/TextFieldInvalid.svelte";
+import TextFieldForm from "@examples/svelte/text-field/TextFieldForm.svelte";
+
 ## Import
 
 <CodeImport code={`import { TextField } from "@shizen-ui/svelte";`} />
 
+## Anatomy
+
+<CodeBlock code={TextFieldAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
+
 ## Examples
+
+### Required Field
+
+<ComponentExample src="svelte/text-field/TextFieldRequired.svelte">
+  <TextFieldRequired client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/text-field/TextFieldBindValue.svelte">
+  <TextFieldBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the field's reads and writes.
+
+<ComponentExample src="svelte/text-field/TextFieldFullyControlled.svelte">
+  <TextFieldFullyControlled client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/text-field/TextFieldDisabled.svelte">
+  <TextFieldDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/text-field/TextFieldInvalid.svelte">
+  <TextFieldInvalid client:load />
+</ComponentExample>
+
+### Form Integration
+
+<ComponentExample src="svelte/text-field/TextFieldForm.svelte">
+  <TextFieldForm client:load />
+</ComponentExample>

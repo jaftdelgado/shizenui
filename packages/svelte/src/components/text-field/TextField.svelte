@@ -70,6 +70,7 @@
   data-required={presence(state.finalRequired)}
   class={cn(styles, className)}
   {...rest}
+  data-slot="field"
 >
   {@render children?.()}
 </div>
