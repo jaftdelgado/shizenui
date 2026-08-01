@@ -1,6 +1,8 @@
 import { useFieldStateContext } from "../../../lib/index.js";
+import { useTextFieldContext } from "../../text-field/_internal/text-field.context.js";
 import type { FieldStateContextResult } from "../../../lib/index.js";
 import type { InputSize, InputVariant } from "./input.types.js";
+import type { TextFieldContextResult } from "../../text-field/_internal/text-field.context.js";
 
 export class InputState {
   #disabled: () => boolean | undefined;
@@ -12,6 +14,7 @@ export class InputState {
   #id: () => string;
 
   readonly fieldCtx: FieldStateContextResult;
+  readonly textFieldCtx: TextFieldContextResult;
 
   // Intentional asymmetry vs. the standard `local ?? group ?? field ?? default`
   // cascade (see architecture doc, section 6): when Input is used inside a
@@ -35,19 +38,12 @@ export class InputState {
     return this.fieldCtx.exists ? this.fieldCtx.invalid : (this.#invalid() ?? false);
   }
 
-  // TODO(input-group): once InputGroupContext is implemented, cascade through
-  // it here (local ?? group ?? default), mirroring how Checkbox/CheckboxGroup
-  // resolve final* values (section 6 of the architecture doc). Do not add
-  // groupCtx reads until that context actually exists.
   get finalVariant(): InputVariant {
-    return this.#variant() ?? "default";
+    return this.textFieldCtx.exists ? this.textFieldCtx.variant : (this.#variant() ?? "default");
   }
 
-  // TODO(input-group): once InputGroupContext is implemented, cascade through
-  // it here (local ?? group ?? default) — group-level `size` should be able
-  // to drive every Input inside it, same idea as CheckboxGroup today.
   get finalSize(): InputSize {
-    return this.#size() ?? "md";
+    return this.textFieldCtx.exists ? this.textFieldCtx.size : (this.#size() ?? "md");
   }
 
   get id(): string {
@@ -67,6 +63,7 @@ export class InputState {
     size: () => InputSize | undefined;
     id: () => string;
     fieldContext?: FieldStateContextResult;
+    textFieldContext?: TextFieldContextResult;
   }) {
     this.#disabled = props.disabled;
     this.#readonly = props.readonly;
@@ -77,6 +74,7 @@ export class InputState {
     this.#id = props.id;
 
     this.fieldCtx = props.fieldContext ?? useFieldStateContext();
+    this.textFieldCtx = props.textFieldContext ?? useTextFieldContext();
   }
 }
 

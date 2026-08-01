@@ -1,4 +1,4 @@
-export type { TextFieldProps } from "./text-field.types.js";
+export type { TextFieldProps, TextFieldSize, TextFieldVariant } from "./text-field.types.js";
 
 export { TextFieldState } from "./text-field.state.svelte.js";
 export type { TextFieldStateInstance } from "./text-field.state.svelte.js";

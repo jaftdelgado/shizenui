@@ -1,3 +1,5 @@
+import type { TextFieldSize, TextFieldVariant } from "./text-field.types.js";
+
 export class TextFieldState {
   #disabled: () => boolean | undefined;
   #invalid: () => boolean | undefined;
@@ -5,6 +7,8 @@ export class TextFieldState {
   #required: () => boolean | undefined;
   #value: () => string;
   #setValue: (value: string) => void;
+  #size: () => TextFieldSize | undefined;
+  #variant: () => TextFieldVariant | undefined;
   #id: () => string;
   #submissionInvalid: () => boolean;
   #setSubmissionInvalid: (invalid: boolean) => void;
@@ -34,6 +38,14 @@ export class TextFieldState {
     return this.#value();
   }
 
+  get finalSize(): TextFieldSize {
+    return this.#size() ?? "md";
+  }
+
+  get finalVariant(): TextFieldVariant {
+    return this.#variant() ?? "default";
+  }
+
   get id(): string {
     return this.#id();
   }
@@ -45,6 +57,8 @@ export class TextFieldState {
     required: () => boolean | undefined;
     value: () => string;
     setValue: (value: string) => void;
+    size: () => TextFieldSize | undefined;
+    variant: () => TextFieldVariant | undefined;
     id: () => string;
     submissionInvalid: () => boolean;
     setSubmissionInvalid: (invalid: boolean) => void;
@@ -55,6 +69,8 @@ export class TextFieldState {
     this.#required = props.required;
     this.#value = props.value;
     this.#setValue = props.setValue;
+    this.#size = props.size;
+    this.#variant = props.variant;
     this.#id = props.id;
     this.#submissionInvalid = props.submissionInvalid;
     this.#setSubmissionInvalid = props.setSubmissionInvalid;

@@ -15,12 +15,20 @@ import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.ast
 
 import TextFieldAnatomyCode from "@examples/svelte/text-field/TextFieldAnatomy.svelte?raw";
 
+import TextFieldVariants from "@examples/svelte/text-field/TextFieldVariants.svelte";
+import TextFieldSizes from "@examples/svelte/text-field/TextFieldSizes.svelte";
 import TextFieldRequired from "@examples/svelte/text-field/TextFieldRequired.svelte";
 import TextFieldBindValue from "@examples/svelte/text-field/TextFieldBindValue.svelte";
 import TextFieldFullyControlled from "@examples/svelte/text-field/TextFieldFullyControlled.svelte";
 import TextFieldDisabled from "@examples/svelte/text-field/TextFieldDisabled.svelte";
 import TextFieldInvalid from "@examples/svelte/text-field/TextFieldInvalid.svelte";
 import TextFieldForm from "@examples/svelte/text-field/TextFieldForm.svelte";
+
+import TextFieldInput from "@examples/svelte/text-field/TextFieldInput.svelte";
+import TextFieldInputGroup from "@examples/svelte/text-field/TextFieldInputGroup.svelte";
+
+import TextFieldTwStyling from "@examples/svelte/text-field/TextFieldTwStyling.svelte";
+import TextFieldCssStylingCode from "@examples/svelte/text-field/TextFieldCssStyling.css?raw";
 
 ## Import
 
@@ -31,6 +39,18 @@ import TextFieldForm from "@examples/svelte/text-field/TextFieldForm.svelte";
 <CodeBlock code={TextFieldAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
 
 ## Examples
+
+### Variants
+
+<ComponentExample src="svelte/text-field/TextFieldVariants.svelte">
+  <TextFieldVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/text-field/TextFieldSizes.svelte">
+  <TextFieldSizes client:load />
+</ComponentExample>
 
 ### Required Field
 
@@ -73,3 +93,87 @@ Use a Function Binding for complete control over the field's reads and writes.
 <ComponentExample src="svelte/text-field/TextFieldForm.svelte">
   <TextFieldForm client:load />
 </ComponentExample>
+
+## Context Integration
+
+### Input
+
+<ComponentExample src="svelte/text-field/TextFieldInput.svelte">
+  <TextFieldInput client:load />
+</ComponentExample>
+
+### Input Group
+
+<ComponentExample src="svelte/text-field/TextFieldInputGroup.svelte">
+  <TextFieldInputGroup client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to TextField.
+
+<ComponentExample src="svelte/text-field/TextFieldTwStyling.svelte">
+  <TextFieldTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the TextField component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={TextFieldCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### TextField Classes
+
+Child components (`Label`, `Input`, `InputGroup`, `TextArea`, `Description`, and `FieldError`) have their own styles — see their docs to customize each one.
+
+<BulletList
+  items={[
+    {
+      title: "text-field",
+      description: "Root wrapper that groups the label, input, description, and error message.",
+      code: true
+    }
+  ]}
+/>
+
+### Interactive States
+
+<InteractiveStatesTable
+  props={[
+    { name: "disabled", description: "Disables interaction and applies reduced opacity." },
+    {
+      name: "invalid",
+      description: "Marks the field with an error state to signal a validation issue."
+    },
+    {
+      name: "readonly",
+      description: "Prevents editing the value without applying disabled styling."
+    }
+  ]}
+/>
+
+## API Reference
+
+### TextField Props
+
+The `disabled`, `readonly`, `required`, and `invalid` props are set on `<TextField>` and propagated to its `Input` or `InputGroup` child.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string", default: '\"\"' },
+    { name: "variant", type: '"default" | "secondary" | "outline"', default: '"default"' },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "—" }
+  ]}
+/>

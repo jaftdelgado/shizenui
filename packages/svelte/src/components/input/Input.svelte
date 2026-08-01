@@ -37,7 +37,8 @@
     variant: () => variant,
     size: () => size,
     id: () => id,
-    fieldContext
+    fieldContext,
+    textFieldContext: textFieldCtx
   });
 
   const styles = $derived(

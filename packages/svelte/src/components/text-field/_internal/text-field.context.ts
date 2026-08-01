@@ -1,10 +1,13 @@
 import { createContext } from "svelte";
+import type { TextFieldSize, TextFieldVariant } from "./text-field.types.js";
 
 export type TextFieldControl = HTMLInputElement | HTMLTextAreaElement;
 
 export interface TextFieldContextValue {
   readonly control: TextFieldControl | null;
   readonly value: string;
+  readonly size: TextFieldSize;
+  readonly variant: TextFieldVariant;
   readonly hasLabel: boolean;
   readonly hasDescription: boolean;
   readonly hasError: boolean;
@@ -41,6 +44,12 @@ export function useTextFieldContext(): TextFieldContextResult {
       get value() {
         return "";
       },
+      get size(): TextFieldSize {
+        return "md";
+      },
+      get variant(): TextFieldVariant {
+        return "default";
+      },
       get hasLabel() {
         return false;
       },
@@ -66,6 +75,12 @@ export function useTextFieldContext(): TextFieldContextResult {
     },
     get value() {
       return context.value;
+    },
+    get size() {
+      return context.size;
+    },
+    get variant() {
+      return context.variant;
     },
     get hasLabel() {
       return context.hasLabel;

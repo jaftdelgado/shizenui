@@ -21,6 +21,8 @@
     readonly = undefined,
     required = undefined,
     value = $bindable(""),
+    size = undefined,
+    variant = undefined,
     id = createId("text-field", uid),
     ref = $bindable(null),
     children,
@@ -42,6 +44,8 @@
     required: () => required,
     value: () => value,
     setValue: (next) => (value = next),
+    size: () => size,
+    variant: () => variant,
     id: () => id,
     submissionInvalid: () => submissionInvalid.value,
     setSubmissionInvalid: (next) => submissionInvalid.set(next)
@@ -52,9 +56,7 @@
   setupTextFieldContexts(state);
 
   const ctx = useTextFieldContext();
-  const styles = $derived(
-    textFieldStyles({ invalid: state.finalInvalid, disabled: state.finalDisabled })
-  );
+  const styles = $derived(textFieldStyles());
 
   syncFormReset({
     getRef: () => ctx.control,
@@ -68,7 +70,7 @@
   data-readonly={presence(state.finalReadonly)}
   data-invalid={presence(state.finalInvalid)}
   data-required={presence(state.finalRequired)}
-  class={cn(styles, className)}
+  class={cn(styles.base(), className)}
   {...rest}
   data-slot="field"
 >

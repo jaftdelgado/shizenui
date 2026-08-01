@@ -1,6 +1,8 @@
 import type { InputGroupSize, InputGroupVariant } from "./input-group.types.js";
 import { useFieldStateContext } from "../../../lib/index.js";
 import type { FieldStateContextResult } from "../../../lib/index.js";
+import { useTextFieldContext } from "../../text-field/_internal/text-field.context.js";
+import type { TextFieldContextResult } from "../../text-field/_internal/text-field.context.js";
 
 export class InputGroupState {
   #disabled: () => boolean | undefined;
@@ -12,6 +14,7 @@ export class InputGroupState {
   #id: () => string | undefined;
 
   readonly fieldCtx: FieldStateContextResult;
+  readonly textFieldCtx: TextFieldContextResult;
 
   get finalDisabled(): boolean {
     return this.fieldCtx.exists ? this.fieldCtx.disabled : (this.#disabled() ?? false);
@@ -30,11 +33,11 @@ export class InputGroupState {
   }
 
   get finalVariant(): InputGroupVariant {
-    return this.#variant() ?? "default";
+    return this.textFieldCtx.exists ? this.textFieldCtx.variant : (this.#variant() ?? "default");
   }
 
   get finalSize(): InputGroupSize {
-    return this.#size() ?? "md";
+    return this.textFieldCtx.exists ? this.textFieldCtx.size : (this.#size() ?? "md");
   }
 
   get id(): string | undefined {
@@ -54,6 +57,7 @@ export class InputGroupState {
     size: () => InputGroupSize | undefined;
     id: () => string | undefined;
     fieldContext?: FieldStateContextResult;
+    textFieldContext?: TextFieldContextResult;
   }) {
     this.#disabled = props.disabled;
     this.#invalid = props.invalid;
@@ -64,6 +68,7 @@ export class InputGroupState {
     this.#id = props.id;
 
     this.fieldCtx = props.fieldContext ?? useFieldStateContext();
+    this.textFieldCtx = props.textFieldContext ?? useTextFieldContext();
   }
 }
 

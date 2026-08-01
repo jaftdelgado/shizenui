@@ -19,6 +19,12 @@ export function setupTextFieldContexts(state: TextFieldStateInstance): void {
     get value() {
       return state.value;
     },
+    get size() {
+      return state.finalSize;
+    },
+    get variant() {
+      return state.finalVariant;
+    },
     get hasLabel() {
       return labelIds.size > 0;
     },
