@@ -13,6 +13,7 @@ export class InputGroupState {
   #size: () => InputGroupSize | undefined;
   #id: () => string | undefined;
   #submissionInvalid: () => boolean;
+  #setSubmissionInvalid: (invalid: boolean) => void;
   #nativeValid = $state(true);
 
   readonly fieldCtx: FieldStateContextResult;
@@ -22,13 +23,10 @@ export class InputGroupState {
     return this.fieldCtx.exists ? this.fieldCtx.disabled : (this.#disabled() ?? false);
   }
 
-  // Standalone branch now tracks native validation failures too, mirroring
-  // TextFieldState.finalInvalid. When fieldCtx.exists (InputGroup sits inside
-  // a <TextField>), TextField already owns this signal — do not double up.
   get finalInvalid(): boolean {
     return this.fieldCtx.exists
       ? this.fieldCtx.invalid
-      : (this.#invalid() ?? false) || this.#submissionInvalid() || !this.#nativeValid;
+      : (this.#invalid() ?? false) || this.#submissionInvalid();
   }
 
   get finalReadonly(): boolean {
@@ -68,6 +66,7 @@ export class InputGroupState {
     size: () => InputGroupSize | undefined;
     id: () => string | undefined;
     submissionInvalid: () => boolean;
+    setSubmissionInvalid: (invalid: boolean) => void;
     fieldContext?: FieldStateContextResult;
     textFieldContext?: TextFieldContextResult;
   }) {
@@ -79,6 +78,7 @@ export class InputGroupState {
     this.#size = props.size;
     this.#id = props.id;
     this.#submissionInvalid = props.submissionInvalid;
+    this.#setSubmissionInvalid = props.setSubmissionInvalid;
 
     this.fieldCtx = props.fieldContext ?? useFieldStateContext();
     this.textFieldCtx = props.textFieldContext ?? useTextFieldContext();
@@ -86,6 +86,7 @@ export class InputGroupState {
 
   reportInvalid(): void {
     this.#nativeValid = false;
+    this.#setSubmissionInvalid(true);
   }
 
   reportValidity(valid: boolean): void {
@@ -94,6 +95,7 @@ export class InputGroupState {
 
   resetValidation(): void {
     this.#nativeValid = true;
+    this.#setSubmissionInvalid(false);
   }
 }
 

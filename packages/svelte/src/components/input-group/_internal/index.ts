@@ -17,6 +17,8 @@ export { InputGroupState } from "./input-group.state.svelte.js";
 export type { InputGroupStateInstance } from "./input-group.state.svelte.js";
 
 export { setupInputGroupContexts } from "./input-group.setup.svelte.js";
+
+export { setupInputGroupSubmissionInvalid } from "./input-group.form.js";
 export { createInputGroupHandlers } from "./input-group.handlers.js";
 export type { InputGroupHandlers } from "./input-group.handlers.js";
 

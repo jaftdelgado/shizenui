@@ -17,7 +17,7 @@
     class: className,
     id = createId("input-group-textarea", uid),
     ref = $bindable(null),
-    value = $bindable(),
+    value = $bindable(""),
     oninput,
     oninvalid,
     ...rest
@@ -41,13 +41,13 @@
     getOnInvalid: () => oninvalid
   });
 
-  function getValue(): string | undefined {
+  function getValue(): string {
     return textFieldCtx.exists ? textFieldCtx.value : value;
   }
 
-  function setValue(next: string | undefined): void {
+  function setValue(next: string): void {
     if (textFieldCtx.exists) {
-      textFieldCtx.setValue(next ?? "");
+      textFieldCtx.setValue(next);
       return;
     }
 

@@ -1,11 +1,13 @@
 <script lang="ts">
   import { inputGroupStyles } from "@shizen-ui/styles";
+  import { syncFormReset, warnIf } from "../../lib/runes/index.js";
+  import type { SubmissionInvalidState } from "../../lib/runes/index.js";
   import { cn, presence } from "../../lib/utils";
-  import { warnIf, syncFormReset, SubmissionInvalidState } from "../../lib/runes/index.js";
   import type { InputGroupProps } from "./_internal/index.js";
   import {
     InputGroupState,
     setupInputGroupContexts,
+    setupInputGroupSubmissionInvalid,
     useInputGroupContext,
     createInputGroupHandlers
   } from "./_internal/index.js";
@@ -30,7 +32,7 @@
     "No children provided. Add at least <InputGroup.Input /> or <InputGroup.TextArea />."
   );
 
-  const submissionInvalid = new SubmissionInvalidState(() => false);
+  let submissionInvalid: SubmissionInvalidState;
 
   const state = new InputGroupState({
     disabled: () => disabled,
@@ -40,8 +42,11 @@
     variant: () => variant,
     size: () => size,
     id: () => id,
-    submissionInvalid: () => submissionInvalid.value
+    submissionInvalid: () => submissionInvalid.value,
+    setSubmissionInvalid: (next) => submissionInvalid.set(next)
   });
+
+  submissionInvalid = setupInputGroupSubmissionInvalid(state);
 
   setupInputGroupContexts(state);
 
@@ -56,10 +61,7 @@
 
   syncFormReset({
     getRef: () => ctx.inputRef,
-    onReset: () => {
-      submissionInvalid.clear();
-      state.resetValidation();
-    }
+    onReset: () => state.resetValidation()
   });
 </script>
 

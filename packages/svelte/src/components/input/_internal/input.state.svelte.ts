@@ -17,12 +17,6 @@ export class InputState {
   readonly fieldCtx: FieldStateContextResult;
   readonly textFieldCtx: TextFieldContextResult;
 
-  // Intentional asymmetry vs. the standard `local ?? group ?? field ?? default`
-  // cascade (see architecture doc, section 6): when Input is used inside a
-  // <TextField> (fieldCtx.exists), the field is the single source of truth —
-  // the local prop is not read at all, not even combined. This differs from
-  // Checkbox, where a defined local value always wins. Do not "fix" this to
-  // match Checkbox without re-confirming the TextField ownership model.
   get finalDisabled(): boolean {
     return this.fieldCtx.exists ? this.fieldCtx.disabled : (this.#disabled() ?? false);
   }
@@ -35,9 +29,6 @@ export class InputState {
     return this.fieldCtx.exists ? this.fieldCtx.required : (this.#required() ?? false);
   }
 
-  // Standalone branch now tracks native validation failures too, mirroring
-  // TextFieldState.finalInvalid. When fieldCtx.exists, TextField already owns
-  // this signal via its own submissionInvalid — do not double up here.
   get finalInvalid(): boolean {
     return this.fieldCtx.exists
       ? this.fieldCtx.invalid
