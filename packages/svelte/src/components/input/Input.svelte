@@ -1,10 +1,15 @@
 <script lang="ts">
   import { inputStyles } from "@shizen-ui/styles";
 
-  import { cn, createId, presence } from "../../lib/utils";
   import { useFieldStateContext } from "../../lib/index.js";
+  import { syncFormReset, SubmissionInvalidState } from "../../lib/runes/index.js";
+  import { cn, createId, presence } from "../../lib/utils";
   import { useTextFieldContext } from "../text-field/_internal/index.js";
-  import { InputState, createInputHandlers, resolveInputDescribedBy } from "./_internal/index.js";
+  import {
+    createTextFieldControlHandlers,
+    resolveTextFieldControlDescribedBy
+  } from "../text-field/_internal/index.js";
+  import { InputState } from "./_internal/index.js";
   import type { InputProps } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -29,6 +34,8 @@
   const fieldContext = useFieldStateContext();
   const textFieldCtx = useTextFieldContext();
 
+  const submissionInvalid = new SubmissionInvalidState(() => false);
+
   const inputState = new InputState({
     disabled: () => disabled,
     readonly: () => readonly,
@@ -37,6 +44,7 @@
     variant: () => variant,
     size: () => size,
     id: () => id,
+    submissionInvalid: () => submissionInvalid.value,
     fieldContext,
     textFieldContext: textFieldCtx
   });
@@ -46,15 +54,16 @@
   );
 
   const describedByResult = $derived(
-    resolveInputDescribedBy(
+    resolveTextFieldControlDescribedBy(
       inputState.fieldCtx,
       inputState.finalInvalid,
       textFieldCtx.exists ? textFieldCtx : undefined
     )
   );
 
-  const handlers = createInputHandlers({
-    textFieldCtx,
+  const handlers = createTextFieldControlHandlers<HTMLInputElement>({
+    reporters: [textFieldCtx],
+    submissionInvalid,
     getOnInput: () => oninput,
     getOnInvalid: () => oninvalid
   });
@@ -80,6 +89,11 @@
     return () => {
       if (textFieldCtx.control === ref) textFieldCtx.setControl(null);
     };
+  });
+
+  syncFormReset({
+    getRef: () => ref,
+    onReset: () => submissionInvalid.clear()
   });
 </script>
 

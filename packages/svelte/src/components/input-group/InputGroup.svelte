@@ -1,7 +1,7 @@
 <script lang="ts">
   import { inputGroupStyles } from "@shizen-ui/styles";
   import { cn, presence } from "../../lib/utils";
-  import { warnIf } from "../../lib/runes/index.js";
+  import { warnIf, syncFormReset, SubmissionInvalidState } from "../../lib/runes/index.js";
   import type { InputGroupProps } from "./_internal/index.js";
   import {
     InputGroupState,
@@ -30,6 +30,8 @@
     "No children provided. Add at least <InputGroup.Input /> or <InputGroup.TextArea />."
   );
 
+  const submissionInvalid = new SubmissionInvalidState(() => false);
+
   const state = new InputGroupState({
     disabled: () => disabled,
     invalid: () => invalid,
@@ -37,7 +39,8 @@
     required: () => required,
     variant: () => variant,
     size: () => size,
-    id: () => id
+    id: () => id,
+    submissionInvalid: () => submissionInvalid.value
   });
 
   setupInputGroupContexts(state);
@@ -50,6 +53,14 @@
   });
 
   const styles = $derived(inputGroupStyles({ variant: ctx.variant, size: ctx.size }));
+
+  syncFormReset({
+    getRef: () => ctx.inputRef,
+    onReset: () => {
+      submissionInvalid.clear();
+      state.resetValidation();
+    }
+  });
 </script>
 
 <div

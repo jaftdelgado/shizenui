@@ -42,6 +42,12 @@ export function setupInputGroupContexts(state: InputGroupStateInstance): void {
     },
     setInputRef(next: HTMLInputElement | HTMLTextAreaElement | null) {
       inputRef = next;
+    },
+    reportInvalid() {
+      state.reportInvalid();
+    },
+    reportValidity(valid: boolean) {
+      state.reportValidity(valid);
     }
   } satisfies InputGroupContextValue);
 }

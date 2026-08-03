@@ -15,7 +15,6 @@ export interface TextFieldProps extends TextFieldBaseProps {
   invalid?: boolean;
   readonly?: boolean;
   required?: boolean;
-  /** The id assigned to the native control, not the wrapper element. */
   id?: string;
   ref?: HTMLDivElement | null;
 }

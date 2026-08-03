@@ -1,8 +1,8 @@
 import { useFieldStateContext } from "../../../lib/index.js";
-import { useTextFieldContext } from "../../text-field/_internal/text-field.context.js";
 import type { FieldStateContextResult } from "../../../lib/index.js";
-import type { InputSize, InputVariant } from "./input.types.js";
+import { useTextFieldContext } from "../../text-field/_internal/text-field.context.js";
 import type { TextFieldContextResult } from "../../text-field/_internal/text-field.context.js";
+import type { InputSize, InputVariant } from "./input.types.js";
 
 export class InputState {
   #disabled: () => boolean | undefined;
@@ -12,6 +12,7 @@ export class InputState {
   #variant: () => InputVariant | undefined;
   #size: () => InputSize | undefined;
   #id: () => string;
+  #submissionInvalid: () => boolean;
 
   readonly fieldCtx: FieldStateContextResult;
   readonly textFieldCtx: TextFieldContextResult;
@@ -34,8 +35,13 @@ export class InputState {
     return this.fieldCtx.exists ? this.fieldCtx.required : (this.#required() ?? false);
   }
 
+  // Standalone branch now tracks native validation failures too, mirroring
+  // TextFieldState.finalInvalid. When fieldCtx.exists, TextField already owns
+  // this signal via its own submissionInvalid — do not double up here.
   get finalInvalid(): boolean {
-    return this.fieldCtx.exists ? this.fieldCtx.invalid : (this.#invalid() ?? false);
+    return this.fieldCtx.exists
+      ? this.fieldCtx.invalid
+      : (this.#invalid() ?? false) || this.#submissionInvalid();
   }
 
   get finalVariant(): InputVariant {
@@ -62,6 +68,7 @@ export class InputState {
     variant: () => InputVariant | undefined;
     size: () => InputSize | undefined;
     id: () => string;
+    submissionInvalid: () => boolean;
     fieldContext?: FieldStateContextResult;
     textFieldContext?: TextFieldContextResult;
   }) {
@@ -72,6 +79,7 @@ export class InputState {
     this.#variant = props.variant;
     this.#size = props.size;
     this.#id = props.id;
+    this.#submissionInvalid = props.submissionInvalid;
 
     this.fieldCtx = props.fieldContext ?? useFieldStateContext();
     this.textFieldCtx = props.textFieldContext ?? useTextFieldContext();
@@ -79,32 +87,3 @@ export class InputState {
 }
 
 export type InputStateInstance = InstanceType<typeof InputState>;
-
-/**
- * Resolves aria-describedby / aria-errormessage for Input.
- *
- * Deviation from the legacy component, noted explicitly: the legacy version
- * reconstructed `${fieldContext.id}-description` / `-error` by hand. This
- * reads `fieldCtx.descriptionId` / `fieldCtx.errorId` directly instead —
- * FieldStateContext already exposes those ids (computed by whoever produces
- * the context, e.g. TextField), so Input shouldn't re-derive the naming
- * convention itself. Same principle as Checkbox reading ids off its own
- * context in section 3.3, applied here to an externally-produced context.
- *
- * Precedence matches the legacy behavior: error message wins over
- * description when the field is invalid, description otherwise.
- */
-export function resolveInputDescribedBy(
-  ctx: FieldStateContextResult,
-  finalInvalid: boolean,
-  slots?: { hasDescription: boolean; hasError: boolean }
-): { describedBy: string | undefined; errorMessageId: string | undefined } {
-  if (!ctx.exists) {
-    return { describedBy: undefined, errorMessageId: undefined };
-  }
-
-  return {
-    describedBy: !finalInvalid && (!slots || slots.hasDescription) ? ctx.descriptionId : undefined,
-    errorMessageId: finalInvalid && (!slots || slots.hasError) ? ctx.errorId : undefined
-  };
-}

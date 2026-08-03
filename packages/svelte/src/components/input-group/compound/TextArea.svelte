@@ -5,10 +5,10 @@
   import { useFieldStateContext } from "../../../lib/index.js";
   import { useTextFieldContext } from "../../text-field/_internal/index.js";
   import {
-    createInputGroupControlHandlers,
-    resolveInputGroupDescribedBy,
-    useInputGroupContext
-  } from "../_internal/index.js";
+    createTextFieldControlHandlers,
+    resolveTextFieldControlDescribedBy
+  } from "../../text-field/_internal/index.js";
+  import { useInputGroupContext } from "../_internal/index.js";
   import type { InputGroupTextAreaProps } from "../_internal/index.js";
 
   const uid = $props.id();
@@ -28,15 +28,15 @@
   const textFieldCtx = useTextFieldContext();
   const styles = $derived(inputGroupStyles());
   const describedByResult = $derived(
-    resolveInputGroupDescribedBy(
+    resolveTextFieldControlDescribedBy(
       fieldCtx,
       ctx.invalid,
       textFieldCtx.exists ? textFieldCtx : undefined
     )
   );
 
-  const handlers = createInputGroupControlHandlers<HTMLTextAreaElement>({
-    textFieldCtx,
+  const handlers = createTextFieldControlHandlers<HTMLTextAreaElement>({
+    reporters: [ctx, textFieldCtx],
     getOnInput: () => oninput,
     getOnInvalid: () => oninvalid
   });

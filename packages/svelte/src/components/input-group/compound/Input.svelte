@@ -5,10 +5,10 @@
   import { useFieldStateContext } from "../../../lib/index.js";
   import { useTextFieldContext } from "../../text-field/_internal/index.js";
   import {
-    createInputGroupControlHandlers,
-    resolveInputGroupDescribedBy,
-    useInputGroupContext
-  } from "../_internal/index.js";
+    createTextFieldControlHandlers,
+    resolveTextFieldControlDescribedBy
+  } from "../../text-field/_internal/index.js";
+  import { useInputGroupContext } from "../_internal/index.js";
   import type { InputGroupInputProps } from "../_internal/index.js";
 
   const uid = $props.id();
@@ -28,24 +28,24 @@
   const textFieldCtx = useTextFieldContext();
   const styles = $derived(inputGroupStyles());
   const describedByResult = $derived(
-    resolveInputGroupDescribedBy(
+    resolveTextFieldControlDescribedBy(
       fieldCtx,
       ctx.invalid,
       textFieldCtx.exists ? textFieldCtx : undefined
     )
   );
 
-  const handlers = createInputGroupControlHandlers<HTMLInputElement>({
-    textFieldCtx,
+  const handlers = createTextFieldControlHandlers<HTMLInputElement>({
+    reporters: [ctx, textFieldCtx],
     getOnInput: () => oninput,
     getOnInvalid: () => oninvalid
   });
 
-  function getValue(): string | number | undefined {
+  function getValue(): string | undefined {
     return textFieldCtx.exists ? textFieldCtx.value : value;
   }
 
-  function setValue(next: string | number | undefined): void {
+  function setValue(next: string | undefined): void {
     if (textFieldCtx.exists) {
       textFieldCtx.setValue(String(next ?? ""));
       return;

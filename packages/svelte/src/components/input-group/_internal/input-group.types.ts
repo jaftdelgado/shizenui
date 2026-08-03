@@ -31,7 +31,7 @@ export interface InputGroupSuffixProps extends HTMLAttributes<HTMLDivElement> {
 
 type InputGroupInputBaseProps = Omit<
   HTMLInputAttributes,
-  "disabled" | "readonly" | "required" | "id" | "children" | "oninput" | "oninvalid"
+  "disabled" | "readonly" | "required" | "id" | "value" | "children" | "oninput" | "oninvalid"
 >;
 
 export type InputGroupInputEvent = InputEvent & { currentTarget: HTMLInputElement };
@@ -39,6 +39,7 @@ export type InputGroupInputInvalidEvent = Event & { currentTarget: HTMLInputElem
 
 export interface InputGroupInputProps extends InputGroupInputBaseProps {
   id?: string;
+  value?: string;
   ref?: HTMLInputElement | null;
   oninput?: (event: InputGroupInputEvent) => void;
   oninvalid?: (event: InputGroupInputInvalidEvent) => void;
@@ -46,7 +47,7 @@ export interface InputGroupInputProps extends InputGroupInputBaseProps {
 
 type InputGroupTextAreaBaseProps = Omit<
   HTMLTextareaAttributes,
-  "disabled" | "readonly" | "required" | "id" | "children" | "oninput" | "oninvalid"
+  "disabled" | "readonly" | "required" | "id" | "value" | "children" | "oninput" | "oninvalid"
 >;
 
 export type InputGroupTextAreaEvent = InputEvent & { currentTarget: HTMLTextAreaElement };
@@ -54,6 +55,7 @@ export type InputGroupTextAreaInvalidEvent = Event & { currentTarget: HTMLTextAr
 
 export interface InputGroupTextAreaProps extends InputGroupTextAreaBaseProps {
   id?: string;
+  value?: string;
   ref?: HTMLTextAreaElement | null;
   oninput?: (event: InputGroupTextAreaEvent) => void;
   oninvalid?: (event: InputGroupTextAreaInvalidEvent) => void;

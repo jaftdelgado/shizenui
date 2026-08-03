@@ -1,3 +1,4 @@
+import type { FieldStateContextResult } from "../../../lib/index.js";
 import type { TextFieldSize, TextFieldVariant } from "./text-field.types.js";
 
 export class TextFieldState {
@@ -96,3 +97,29 @@ export class TextFieldState {
 }
 
 export type TextFieldStateInstance = InstanceType<typeof TextFieldState>;
+
+/**
+ * Resolves aria-describedby / aria-errormessage for any native control wired
+ * to a FieldStateContext (Input, InputGroup.Input, InputGroup.TextArea).
+ * Consolidated here — was duplicated verbatim as resolveInputDescribedBy
+ * (input.state.svelte.ts) and resolveInputGroupDescribedBy
+ * (input-group.state.svelte.ts). Both call sites now import this instead.
+ *
+ * Precedence: error message wins over description when the field is invalid,
+ * description otherwise. `slots` narrows by actual registered Label/Description/
+ * FieldError presence (e.g. from TextFieldContext) when available.
+ */
+export function resolveTextFieldControlDescribedBy(
+  ctx: FieldStateContextResult,
+  finalInvalid: boolean,
+  slots?: { hasDescription: boolean; hasError: boolean }
+): { describedBy: string | undefined; errorMessageId: string | undefined } {
+  if (!ctx.exists) {
+    return { describedBy: undefined, errorMessageId: undefined };
+  }
+
+  return {
+    describedBy: !finalInvalid && (!slots || slots.hasDescription) ? ctx.descriptionId : undefined,
+    errorMessageId: finalInvalid && (!slots || slots.hasError) ? ctx.errorId : undefined
+  };
+}

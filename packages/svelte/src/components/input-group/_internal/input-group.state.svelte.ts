@@ -1,8 +1,8 @@
-import type { InputGroupSize, InputGroupVariant } from "./input-group.types.js";
 import { useFieldStateContext } from "../../../lib/index.js";
 import type { FieldStateContextResult } from "../../../lib/index.js";
 import { useTextFieldContext } from "../../text-field/_internal/text-field.context.js";
 import type { TextFieldContextResult } from "../../text-field/_internal/text-field.context.js";
+import type { InputGroupSize, InputGroupVariant } from "./input-group.types.js";
 
 export class InputGroupState {
   #disabled: () => boolean | undefined;
@@ -12,6 +12,8 @@ export class InputGroupState {
   #variant: () => InputGroupVariant | undefined;
   #size: () => InputGroupSize | undefined;
   #id: () => string | undefined;
+  #submissionInvalid: () => boolean;
+  #nativeValid = $state(true);
 
   readonly fieldCtx: FieldStateContextResult;
   readonly textFieldCtx: TextFieldContextResult;
@@ -20,8 +22,13 @@ export class InputGroupState {
     return this.fieldCtx.exists ? this.fieldCtx.disabled : (this.#disabled() ?? false);
   }
 
+  // Standalone branch now tracks native validation failures too, mirroring
+  // TextFieldState.finalInvalid. When fieldCtx.exists (InputGroup sits inside
+  // a <TextField>), TextField already owns this signal — do not double up.
   get finalInvalid(): boolean {
-    return this.fieldCtx.exists ? this.fieldCtx.invalid : (this.#invalid() ?? false);
+    return this.fieldCtx.exists
+      ? this.fieldCtx.invalid
+      : (this.#invalid() ?? false) || this.#submissionInvalid() || !this.#nativeValid;
   }
 
   get finalReadonly(): boolean {
@@ -48,6 +55,10 @@ export class InputGroupState {
     return this.fieldCtx.exists ? this.fieldCtx.inputId : undefined;
   }
 
+  get isNativeValid(): boolean {
+    return this.#nativeValid;
+  }
+
   constructor(props: {
     disabled: () => boolean | undefined;
     invalid: () => boolean | undefined;
@@ -56,6 +67,7 @@ export class InputGroupState {
     variant: () => InputGroupVariant | undefined;
     size: () => InputGroupSize | undefined;
     id: () => string | undefined;
+    submissionInvalid: () => boolean;
     fieldContext?: FieldStateContextResult;
     textFieldContext?: TextFieldContextResult;
   }) {
@@ -66,25 +78,23 @@ export class InputGroupState {
     this.#variant = props.variant;
     this.#size = props.size;
     this.#id = props.id;
+    this.#submissionInvalid = props.submissionInvalid;
 
     this.fieldCtx = props.fieldContext ?? useFieldStateContext();
     this.textFieldCtx = props.textFieldContext ?? useTextFieldContext();
   }
+
+  reportInvalid(): void {
+    this.#nativeValid = false;
+  }
+
+  reportValidity(valid: boolean): void {
+    this.#nativeValid = valid;
+  }
+
+  resetValidation(): void {
+    this.#nativeValid = true;
+  }
 }
 
 export type InputGroupStateInstance = InstanceType<typeof InputGroupState>;
-
-export function resolveInputGroupDescribedBy(
-  ctx: FieldStateContextResult,
-  finalInvalid: boolean,
-  slots?: { hasDescription: boolean; hasError: boolean }
-): { describedBy: string | undefined; errorMessageId: string | undefined } {
-  if (!ctx.exists) {
-    return { describedBy: undefined, errorMessageId: undefined };
-  }
-
-  return {
-    describedBy: !finalInvalid && (!slots || slots.hasDescription) ? ctx.descriptionId : undefined,
-    errorMessageId: finalInvalid && (!slots || slots.hasError) ? ctx.errorId : undefined
-  };
-}

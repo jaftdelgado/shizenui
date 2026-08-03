@@ -14,6 +14,8 @@ export interface InputGroupContextValue {
   readonly inputRef: HTMLInputElement | HTMLTextAreaElement | null;
   setKind(kind: InputGroupKind | null): void;
   setInputRef(el: HTMLInputElement | HTMLTextAreaElement | null): void;
+  reportInvalid(): void;
+  reportValidity(valid: boolean): void;
 }
 
 export interface InputGroupContextResult extends InputGroupContextValue {
@@ -69,6 +71,8 @@ export function useInputGroupContext(): InputGroupContextResult {
       },
       setKind() {},
       setInputRef() {},
+      reportInvalid() {},
+      reportValidity(_valid: boolean) {},
       get exists() {
         return false;
       }
@@ -111,6 +115,12 @@ export function useInputGroupContext(): InputGroupContextResult {
     },
     setInputRef(el) {
       context.setInputRef(el);
+    },
+    reportInvalid() {
+      context.reportInvalid();
+    },
+    reportValidity(valid) {
+      context.reportValidity(valid);
     },
     get exists() {
       return true;
