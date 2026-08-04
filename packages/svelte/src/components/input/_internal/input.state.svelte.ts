@@ -13,6 +13,7 @@ export class InputState {
   #size: () => InputSize | undefined;
   #id: () => string;
   #submissionInvalid: () => boolean;
+  #nativeValid = $state(true);
 
   readonly fieldCtx: FieldStateContextResult;
   readonly textFieldCtx: TextFieldContextResult;
@@ -43,12 +44,12 @@ export class InputState {
     return this.textFieldCtx.exists ? this.textFieldCtx.size : (this.#size() ?? "md");
   }
 
-  get id(): string {
-    return this.#id();
-  }
-
   get finalId(): string {
     return this.fieldCtx.exists ? (this.fieldCtx.inputId ?? this.#id()) : this.#id();
+  }
+
+  get isNativeValid(): boolean {
+    return this.#nativeValid;
   }
 
   constructor(props: {
@@ -74,6 +75,18 @@ export class InputState {
 
     this.fieldCtx = props.fieldContext ?? useFieldStateContext();
     this.textFieldCtx = props.textFieldContext ?? useTextFieldContext();
+  }
+
+  reportInvalid(): void {
+    this.#nativeValid = false;
+  }
+
+  reportValidity(valid: boolean): void {
+    this.#nativeValid = valid;
+  }
+
+  resetValidation(): void {
+    this.#nativeValid = true;
   }
 }
 

@@ -6,7 +6,8 @@
   import { useTextFieldContext } from "../../text-field/_internal/index.js";
   import {
     createTextFieldControlHandlers,
-    resolveTextFieldControlDescribedBy
+    resolveTextFieldControlDescribedBy,
+    syncNativeValidity
   } from "../../text-field/_internal/index.js";
   import { useInputGroupContext } from "../_internal/index.js";
   import type { InputGroupTextAreaProps } from "../_internal/index.js";
@@ -26,7 +27,7 @@
   const ctx = useInputGroupContext();
   const fieldCtx = useFieldStateContext();
   const textFieldCtx = useTextFieldContext();
-  const styles = $derived(inputGroupStyles());
+  const styles = inputGroupStyles();
   const describedByResult = $derived(
     resolveTextFieldControlDescribedBy(
       fieldCtx,
@@ -39,6 +40,19 @@
     reporters: [ctx, textFieldCtx],
     getOnInput: () => oninput,
     getOnInvalid: () => oninvalid
+  });
+
+  syncNativeValidity({
+    getRef: () => ref,
+    getValue: () => getValue(),
+    getConstraints: () => ({
+      required: ctx.required,
+      disabled: ctx.disabled,
+      readonly: ctx.readonly,
+      minLength: rest.minlength ?? undefined,
+      maxLength: rest.maxlength ?? undefined
+    }),
+    reporters: [ctx, textFieldCtx]
   });
 
   function getValue(): string {
@@ -61,21 +75,19 @@
   );
 
   $effect(() => {
-    ctx.setKind("textarea");
-    ctx.setInputRef(ref);
+    ctx.registerControl(uid, ref);
     return () => {
-      ctx.setKind(null);
-      ctx.setInputRef(null);
+      ctx.unregisterControl(uid);
     };
   });
 
   $effect(() => {
     if (!textFieldCtx.exists) return;
 
-    textFieldCtx.setControl(ref);
+    textFieldCtx.registerControl(uid, ref);
 
     return () => {
-      if (textFieldCtx.control === ref) textFieldCtx.setControl(null);
+      textFieldCtx.unregisterControl(uid);
     };
   });
 </script>
@@ -84,6 +96,7 @@
   <textarea
     bind:this={ref}
     id={ctx.inputId ?? id}
+    {...rest}
     bind:value={getValue, setValue}
     disabled={ctx.disabled}
     readonly={ctx.readonly}
@@ -96,6 +109,5 @@
     class={cn(styles.textarea(), className)}
     oninput={handlers.handleInput}
     oninvalid={handlers.handleInvalid}
-    {...rest}
   ></textarea>
 {/if}

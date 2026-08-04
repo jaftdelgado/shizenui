@@ -1,3 +1,19 @@
+const INTERACTIVE_SELECTOR = [
+  "button",
+  "a",
+  "input",
+  "textarea",
+  "select",
+  "summary",
+  "[contenteditable='true']",
+  "[tabindex]:not([tabindex='-1'])",
+  "[role='button']",
+  "[role='link']",
+  "[role='checkbox']",
+  "[role='switch']",
+  "[role='menuitem']"
+].join(", ");
+
 export function createInputGroupHandlers(options: {
   getInputRef: () => HTMLInputElement | HTMLTextAreaElement | null;
   getDisabled: () => boolean;
@@ -10,23 +26,7 @@ export function createInputGroupHandlers(options: {
     const target = e.target;
     if (!(target instanceof Element)) return;
 
-    const isInteractive = target.closest(
-      [
-        "button",
-        "a",
-        "input",
-        "textarea",
-        "select",
-        "summary",
-        "[contenteditable='true']",
-        "[tabindex]:not([tabindex='-1'])",
-        "[role='button']",
-        "[role='link']",
-        "[role='checkbox']",
-        "[role='switch']",
-        "[role='menuitem']"
-      ].join(", ")
-    );
+    const isInteractive = target.closest(INTERACTIVE_SELECTOR);
 
     if (isInteractive) return;
 

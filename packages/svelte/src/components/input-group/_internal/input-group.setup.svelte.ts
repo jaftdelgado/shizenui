@@ -1,10 +1,15 @@
-import type { InputGroupKind } from "./input-group.types.js";
 import type { InputGroupStateInstance } from "./input-group.state.svelte.js";
 import { setInputGroupContext, type InputGroupContextValue } from "./input-group.context.js";
+import { createInputGroupControlRegistration } from "./input-group.registration.js";
 
 export function setupInputGroupContexts(state: InputGroupStateInstance): void {
-  let kind = $state<InputGroupKind | null>(null);
   let inputRef = $state<HTMLInputElement | HTMLTextAreaElement | null>(null);
+
+  const controlRegistration = createInputGroupControlRegistration({
+    onControlChange(next) {
+      inputRef = next;
+    }
+  });
 
   setInputGroupContext({
     get disabled() {
@@ -25,9 +30,6 @@ export function setupInputGroupContexts(state: InputGroupStateInstance): void {
     get size() {
       return state.finalSize;
     },
-    get kind() {
-      return kind;
-    },
     get id() {
       return state.id;
     },
@@ -37,11 +39,11 @@ export function setupInputGroupContexts(state: InputGroupStateInstance): void {
     get inputRef() {
       return inputRef;
     },
-    setKind(next: InputGroupKind | null) {
-      kind = next;
+    registerControl(ownerId: string, next: HTMLInputElement | HTMLTextAreaElement | null) {
+      controlRegistration.register(ownerId, next);
     },
-    setInputRef(next: HTMLInputElement | HTMLTextAreaElement | null) {
-      inputRef = next;
+    unregisterControl(ownerId: string) {
+      controlRegistration.unregister(ownerId);
     },
     reportInvalid() {
       state.reportInvalid();

@@ -3,6 +3,10 @@
   import { syncFormReset, warnIf } from "../../lib/runes/index.js";
   import type { SubmissionInvalidState } from "../../lib/runes/index.js";
   import { cn, presence } from "../../lib/utils";
+  import {
+    useTextFieldContext,
+    warnIfTextFieldPropsOverride
+  } from "../text-field/_internal/index.js";
   import type { InputGroupProps } from "./_internal/index.js";
   import {
     InputGroupState,
@@ -51,6 +55,20 @@
   setupInputGroupContexts(state);
 
   const ctx = useInputGroupContext();
+  const textFieldCtx = useTextFieldContext();
+
+  warnIfTextFieldPropsOverride({
+    component: "InputGroup",
+    context: textFieldCtx,
+    props: {
+      disabled: () => disabled,
+      invalid: () => invalid,
+      readonly: () => readonly,
+      required: () => required,
+      size: () => size,
+      variant: () => variant
+    }
+  });
 
   const handlers = createInputGroupHandlers({
     getInputRef: () => ctx.inputRef,

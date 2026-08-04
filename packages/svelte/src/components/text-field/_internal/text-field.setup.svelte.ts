@@ -4,6 +4,7 @@ import {
   type TextFieldContextValue,
   type TextFieldControl
 } from "./text-field.context.js";
+import { createTextFieldControlRegistration } from "./text-field.registration.js";
 import type { TextFieldStateInstance } from "./text-field.state.svelte.js";
 
 export function setupTextFieldContexts(state: TextFieldStateInstance): void {
@@ -11,10 +12,23 @@ export function setupTextFieldContexts(state: TextFieldStateInstance): void {
   let labelIds = $state(new Set<string>());
   let descriptionIds = $state(new Set<string>());
   let errorIds = $state(new Set<string>());
+  let hasAccessibleName = $state(false);
+
+  const controlRegistration = createTextFieldControlRegistration({
+    onControlChange(next) {
+      control = next;
+    },
+    onAccessibleNameChange(next) {
+      hasAccessibleName = next;
+    }
+  });
 
   setTextFieldContext({
     get control() {
       return control;
+    },
+    get hasAccessibleName() {
+      return hasAccessibleName;
     },
     get value() {
       return state.value;
@@ -25,6 +39,24 @@ export function setupTextFieldContexts(state: TextFieldStateInstance): void {
     get variant() {
       return state.finalVariant;
     },
+    get rawDisabled() {
+      return state.rawDisabled;
+    },
+    get rawInvalid() {
+      return state.rawInvalid;
+    },
+    get rawReadonly() {
+      return state.rawReadonly;
+    },
+    get rawRequired() {
+      return state.rawRequired;
+    },
+    get rawSize() {
+      return state.rawSize;
+    },
+    get rawVariant() {
+      return state.rawVariant;
+    },
     get hasLabel() {
       return labelIds.size > 0;
     },
@@ -34,8 +66,11 @@ export function setupTextFieldContexts(state: TextFieldStateInstance): void {
     get hasError() {
       return errorIds.size > 0;
     },
-    setControl(next: TextFieldControl | null) {
-      control = next;
+    registerControl(ownerId: string, next: TextFieldControl | null) {
+      controlRegistration.register(ownerId, next);
+    },
+    unregisterControl(ownerId: string) {
+      controlRegistration.unregister(ownerId);
     },
     setValue(value: string) {
       state.setValue(value);

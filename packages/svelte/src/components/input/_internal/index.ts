@@ -8,3 +8,5 @@ export type {
 
 export { InputState } from "./input.state.svelte.js";
 export type { InputStateInstance } from "./input.state.svelte.js";
+
+export { setupInputForm } from "./input.form.svelte.js";

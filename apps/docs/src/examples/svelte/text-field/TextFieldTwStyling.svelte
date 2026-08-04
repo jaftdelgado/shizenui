@@ -22,7 +22,7 @@
   >
     <Label class="ml-3 w-14 shrink-0">Phone:</Label>
     <Input
-      type="phone"
+      type="tel"
       placeholder="+1 (404) 957-8068"
       class="h-full w-full rounded-none bg-transparent px-3 shadow-none focus:shadow-none focus:ring-0"
     />

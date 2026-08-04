@@ -9,7 +9,8 @@
     TextFieldState,
     setupTextFieldContexts,
     setupTextFieldSubmissionInvalid,
-    useTextFieldContext
+    useTextFieldContext,
+    warnIfTextFieldHasNoAccessibleName
   } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -56,7 +57,9 @@
   setupTextFieldContexts(state);
 
   const ctx = useTextFieldContext();
-  const styles = $derived(textFieldStyles());
+  const styles = textFieldStyles();
+
+  warnIfTextFieldHasNoAccessibleName(ctx);
 
   syncFormReset({
     getRef: () => ctx.control,
@@ -70,7 +73,7 @@
   data-readonly={presence(state.finalReadonly)}
   data-invalid={presence(state.finalInvalid)}
   data-required={presence(state.finalRequired)}
-  class={cn(styles.base(), className)}
+  class={cn(styles, className)}
   {...rest}
   data-slot="field"
 >

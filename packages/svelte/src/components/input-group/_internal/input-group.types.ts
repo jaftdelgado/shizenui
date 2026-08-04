@@ -1,9 +1,12 @@
 import type { Snippet } from "svelte";
 import type { HTMLAttributes, HTMLInputAttributes, HTMLTextareaAttributes } from "svelte/elements";
+import type {
+  TextFieldControlType,
+  TextFieldControlValue
+} from "../../text-field/_internal/text-field.types.js";
 
 export type InputGroupVariant = "default" | "secondary" | "outline";
 export type InputGroupSize = "sm" | "md" | "lg";
-export type InputGroupKind = "input" | "textarea";
 
 type InputGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "role" | "onclick">;
 
@@ -31,7 +34,15 @@ export interface InputGroupSuffixProps extends HTMLAttributes<HTMLDivElement> {
 
 type InputGroupInputBaseProps = Omit<
   HTMLInputAttributes,
-  "disabled" | "readonly" | "required" | "id" | "value" | "children" | "oninput" | "oninvalid"
+  | "disabled"
+  | "readonly"
+  | "required"
+  | "id"
+  | "type"
+  | "value"
+  | "children"
+  | "oninput"
+  | "oninvalid"
 >;
 
 export type InputGroupInputEvent = InputEvent & { currentTarget: HTMLInputElement };
@@ -39,7 +50,8 @@ export type InputGroupInputInvalidEvent = Event & { currentTarget: HTMLInputElem
 
 export interface InputGroupInputProps extends InputGroupInputBaseProps {
   id?: string;
-  value?: string;
+  value?: TextFieldControlValue;
+  type?: TextFieldControlType;
   ref?: HTMLInputElement | null;
   oninput?: (event: InputGroupInputEvent) => void;
   oninvalid?: (event: InputGroupInputInvalidEvent) => void;

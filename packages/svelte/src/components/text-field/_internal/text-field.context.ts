@@ -5,13 +5,21 @@ export type TextFieldControl = HTMLInputElement | HTMLTextAreaElement;
 
 export interface TextFieldContextValue {
   readonly control: TextFieldControl | null;
+  readonly hasAccessibleName: boolean;
   readonly value: string;
   readonly size: TextFieldSize;
   readonly variant: TextFieldVariant;
+  readonly rawDisabled: boolean | undefined;
+  readonly rawInvalid: boolean | undefined;
+  readonly rawReadonly: boolean | undefined;
+  readonly rawRequired: boolean | undefined;
+  readonly rawSize: TextFieldSize | undefined;
+  readonly rawVariant: TextFieldVariant | undefined;
   readonly hasLabel: boolean;
   readonly hasDescription: boolean;
   readonly hasError: boolean;
-  setControl(control: TextFieldControl | null): void;
+  registerControl(ownerId: string, control: TextFieldControl | null): void;
+  unregisterControl(ownerId: string): void;
   setValue(value: string): void;
   reportInvalid(): void;
   reportValidity(valid: boolean): void;
@@ -41,6 +49,9 @@ export function useTextFieldContext(): TextFieldContextResult {
       get control() {
         return null;
       },
+      get hasAccessibleName() {
+        return false;
+      },
       get value() {
         return "";
       },
@@ -49,6 +60,24 @@ export function useTextFieldContext(): TextFieldContextResult {
       },
       get variant(): TextFieldVariant {
         return "default";
+      },
+      get rawDisabled() {
+        return undefined;
+      },
+      get rawInvalid() {
+        return undefined;
+      },
+      get rawReadonly() {
+        return undefined;
+      },
+      get rawRequired() {
+        return undefined;
+      },
+      get rawSize() {
+        return undefined;
+      },
+      get rawVariant() {
+        return undefined;
       },
       get hasLabel() {
         return false;
@@ -59,7 +88,8 @@ export function useTextFieldContext(): TextFieldContextResult {
       get hasError() {
         return false;
       },
-      setControl(_control: TextFieldControl | null) {},
+      registerControl(_ownerId: string, _control: TextFieldControl | null) {},
+      unregisterControl(_ownerId: string) {},
       setValue(_value: string) {},
       reportInvalid() {},
       reportValidity(_valid: boolean) {},
@@ -73,6 +103,9 @@ export function useTextFieldContext(): TextFieldContextResult {
     get control() {
       return context.control;
     },
+    get hasAccessibleName() {
+      return context.hasAccessibleName;
+    },
     get value() {
       return context.value;
     },
@@ -81,6 +114,24 @@ export function useTextFieldContext(): TextFieldContextResult {
     },
     get variant() {
       return context.variant;
+    },
+    get rawDisabled() {
+      return context.rawDisabled;
+    },
+    get rawInvalid() {
+      return context.rawInvalid;
+    },
+    get rawReadonly() {
+      return context.rawReadonly;
+    },
+    get rawRequired() {
+      return context.rawRequired;
+    },
+    get rawSize() {
+      return context.rawSize;
+    },
+    get rawVariant() {
+      return context.rawVariant;
     },
     get hasLabel() {
       return context.hasLabel;
@@ -91,8 +142,11 @@ export function useTextFieldContext(): TextFieldContextResult {
     get hasError() {
       return context.hasError;
     },
-    setControl(control: TextFieldControl | null) {
-      context.setControl(control);
+    registerControl(ownerId: string, control: TextFieldControl | null) {
+      context.registerControl(ownerId, control);
+    },
+    unregisterControl(ownerId: string) {
+      context.unregisterControl(ownerId);
     },
     setValue(value: string) {
       context.setValue(value);

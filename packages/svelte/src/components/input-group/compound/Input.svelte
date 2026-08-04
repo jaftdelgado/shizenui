@@ -6,7 +6,11 @@
   import { useTextFieldContext } from "../../text-field/_internal/index.js";
   import {
     createTextFieldControlHandlers,
-    resolveTextFieldControlDescribedBy
+    normalizeTextFieldControlValue,
+    resolveTextFieldControlDescribedBy,
+    resolveTextFieldControlType,
+    syncNativeValidity,
+    warnIfUnsupportedTextFieldControlType
   } from "../../text-field/_internal/index.js";
   import { useInputGroupContext } from "../_internal/index.js";
   import type { InputGroupInputProps } from "../_internal/index.js";
@@ -18,6 +22,7 @@
     id = createId("input-group-input", uid),
     ref = $bindable(null),
     value = $bindable(""),
+    type = "text",
     oninput,
     oninvalid,
     ...rest
@@ -26,7 +31,8 @@
   const ctx = useInputGroupContext();
   const fieldCtx = useFieldStateContext();
   const textFieldCtx = useTextFieldContext();
-  const styles = $derived(inputGroupStyles());
+  const resolvedType = $derived(resolveTextFieldControlType(type));
+  const styles = inputGroupStyles();
   const describedByResult = $derived(
     resolveTextFieldControlDescribedBy(
       fieldCtx,
@@ -41,17 +47,38 @@
     getOnInvalid: () => oninvalid
   });
 
+  warnIfUnsupportedTextFieldControlType(() => type, "InputGroup.Input");
+
+  syncNativeValidity({
+    getRef: () => ref,
+    getValue: () => getValue(),
+    getConstraints: () => ({
+      required: ctx.required,
+      disabled: ctx.disabled,
+      readonly: ctx.readonly,
+      type: resolvedType,
+      pattern: rest.pattern ?? undefined,
+      min: rest.min ?? undefined,
+      max: rest.max ?? undefined,
+      step: rest.step ?? undefined,
+      minLength: rest.minlength ?? undefined,
+      maxLength: rest.maxlength ?? undefined
+    }),
+    reporters: [ctx, textFieldCtx]
+  });
+
   function getValue(): string {
-    return textFieldCtx.exists ? textFieldCtx.value : value;
+    return textFieldCtx.exists ? textFieldCtx.value : normalizeTextFieldControlValue(value);
   }
 
-  function setValue(next: string): void {
+  function setValue(next: string | number | null | undefined): void {
+    const normalized = normalizeTextFieldControlValue(next);
     if (textFieldCtx.exists) {
-      textFieldCtx.setValue(next);
+      textFieldCtx.setValue(normalized);
       return;
     }
 
-    value = next;
+    value = normalized;
   }
 
   const { shouldRender } = assertContext(
@@ -61,21 +88,19 @@
   );
 
   $effect(() => {
-    ctx.setKind("input");
-    ctx.setInputRef(ref);
+    ctx.registerControl(uid, ref);
     return () => {
-      ctx.setKind(null);
-      ctx.setInputRef(null);
+      ctx.unregisterControl(uid);
     };
   });
 
   $effect(() => {
     if (!textFieldCtx.exists) return;
 
-    textFieldCtx.setControl(ref);
+    textFieldCtx.registerControl(uid, ref);
 
     return () => {
-      if (textFieldCtx.control === ref) textFieldCtx.setControl(null);
+      textFieldCtx.unregisterControl(uid);
     };
   });
 </script>
@@ -84,7 +109,8 @@
   <input
     bind:this={ref}
     id={ctx.inputId ?? id}
-    type="text"
+    {...rest}
+    type={resolvedType}
     bind:value={getValue, setValue}
     disabled={ctx.disabled}
     readonly={ctx.readonly}
@@ -97,6 +123,5 @@
     class={cn(styles.input(), className)}
     oninput={handlers.handleInput}
     oninvalid={handlers.handleInvalid}
-    {...rest}
   />
 {/if}

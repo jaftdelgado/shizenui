@@ -10,9 +10,14 @@
  * warnIf(() => !children, "Switch", "No children provided. Add at least <Switch.Control /> as a child.");
  */
 export function warnIf(condition: () => boolean, component: string, message: string): void {
+  let hasWarned = false;
+
   $effect(() => {
-    if (import.meta.env.DEV && condition()) {
+    if (!import.meta.env.DEV) return;
+
+    if (condition() && !hasWarned) {
       console.warn(`[shizen-ui] <${component}>: ${message}`);
+      hasWarned = true;
     }
   });
 }

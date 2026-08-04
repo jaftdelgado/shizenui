@@ -19,16 +19,32 @@ export class TextFieldState {
     return this.#disabled() ?? false;
   }
 
+  get rawDisabled(): boolean | undefined {
+    return this.#disabled();
+  }
+
   get finalReadonly(): boolean {
     return this.#readonly() ?? false;
+  }
+
+  get rawReadonly(): boolean | undefined {
+    return this.#readonly();
   }
 
   get finalRequired(): boolean {
     return this.#required() ?? false;
   }
 
+  get rawRequired(): boolean | undefined {
+    return this.#required();
+  }
+
   get finalInvalid(): boolean {
     return (this.#invalid() ?? false) || this.#submissionInvalid();
+  }
+
+  get rawInvalid(): boolean | undefined {
+    return this.#invalid();
   }
 
   get isNativeValid(): boolean {
@@ -43,8 +59,16 @@ export class TextFieldState {
     return this.#size() ?? "md";
   }
 
+  get rawSize(): TextFieldSize | undefined {
+    return this.#size();
+  }
+
   get finalVariant(): TextFieldVariant {
     return this.#variant() ?? "default";
+  }
+
+  get rawVariant(): TextFieldVariant | undefined {
+    return this.#variant();
   }
 
   get id(): string {
@@ -98,17 +122,6 @@ export class TextFieldState {
 
 export type TextFieldStateInstance = InstanceType<typeof TextFieldState>;
 
-/**
- * Resolves aria-describedby / aria-errormessage for any native control wired
- * to a FieldStateContext (Input, InputGroup.Input, InputGroup.TextArea).
- * Consolidated here — was duplicated verbatim as resolveInputDescribedBy
- * (input.state.svelte.ts) and resolveInputGroupDescribedBy
- * (input-group.state.svelte.ts). Both call sites now import this instead.
- *
- * Precedence: error message wins over description when the field is invalid,
- * description otherwise. `slots` narrows by actual registered Label/Description/
- * FieldError presence (e.g. from TextFieldContext) when available.
- */
 export function resolveTextFieldControlDescribedBy(
   ctx: FieldStateContextResult,
   finalInvalid: boolean,
