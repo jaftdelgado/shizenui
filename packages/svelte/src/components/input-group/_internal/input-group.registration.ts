@@ -1,5 +1,6 @@
 export interface InputGroupControlRegistrationOptions {
   readonly onControlChange: (control: HTMLInputElement | HTMLTextAreaElement | null) => void;
+  readonly onMultipleControl: () => void;
 }
 
 export function createInputGroupControlRegistration(
@@ -11,6 +12,11 @@ export function createInputGroupControlRegistration(
   let activeOwnerId: string | null = null;
 
   function register(ownerId: string, control: HTMLInputElement | HTMLTextAreaElement | null): void {
+    if (activeOwnerId !== null && activeOwnerId !== ownerId) {
+      options.onMultipleControl();
+      return;
+    }
+
     activeOwnerId = ownerId;
     options.onControlChange(control);
   }

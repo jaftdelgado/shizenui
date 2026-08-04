@@ -3,6 +3,7 @@ import type { TextFieldControl } from "./text-field.context.js";
 export interface TextFieldControlRegistrationOptions {
   readonly onControlChange: (control: TextFieldControl | null) => void;
   readonly onAccessibleNameChange: (hasAccessibleName: boolean) => void;
+  readonly onMultipleControl: () => void;
 }
 
 function hasAccessibleName(control: TextFieldControl | null): boolean {
@@ -19,6 +20,11 @@ export function createTextFieldControlRegistration(options: TextFieldControlRegi
   let activeOwnerId: string | null = null;
 
   function register(ownerId: string, control: TextFieldControl | null): void {
+    if (activeOwnerId !== null && activeOwnerId !== ownerId) {
+      options.onMultipleControl();
+      return;
+    }
+
     activeOwnerId = ownerId;
     options.onControlChange(control);
     options.onAccessibleNameChange(hasAccessibleName(control));

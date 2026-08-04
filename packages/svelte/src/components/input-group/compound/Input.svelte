@@ -9,10 +9,9 @@
     normalizeTextFieldControlValue,
     resolveTextFieldControlDescribedBy,
     resolveTextFieldControlType,
-    syncNativeValidity,
     warnIfUnsupportedTextFieldControlType
   } from "../../text-field/_internal/index.js";
-  import { useInputGroupContext } from "../_internal/index.js";
+  import { syncInputGroupControlValidity, useInputGroupContext } from "../_internal/index.js";
   import type { InputGroupInputProps } from "../_internal/index.js";
 
   const uid = $props.id();
@@ -49,7 +48,7 @@
 
   warnIfUnsupportedTextFieldControlType(() => type, "InputGroup.Input");
 
-  syncNativeValidity({
+  syncInputGroupControlValidity({
     getRef: () => ref,
     getValue: () => getValue(),
     getConstraints: () => ({
@@ -64,7 +63,8 @@
       minLength: rest.minlength ?? undefined,
       maxLength: rest.maxlength ?? undefined
     }),
-    reporters: [ctx, textFieldCtx]
+    inputGroupContext: ctx,
+    textFieldContext: textFieldCtx
   });
 
   function getValue(): string {

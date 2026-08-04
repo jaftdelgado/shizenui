@@ -1,4 +1,5 @@
 import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
+import { warnIf } from "../../../lib/runes/index.js";
 import {
   setTextFieldContext,
   type TextFieldContextValue,
@@ -13,6 +14,7 @@ export function setupTextFieldContexts(state: TextFieldStateInstance): void {
   let descriptionIds = $state(new Set<string>());
   let errorIds = $state(new Set<string>());
   let hasAccessibleName = $state(false);
+  let hasMultipleControls = $state(false);
 
   const controlRegistration = createTextFieldControlRegistration({
     onControlChange(next) {
@@ -20,8 +22,17 @@ export function setupTextFieldContexts(state: TextFieldStateInstance): void {
     },
     onAccessibleNameChange(next) {
       hasAccessibleName = next;
+    },
+    onMultipleControl() {
+      hasMultipleControls = true;
     }
   });
+
+  warnIf(
+    () => hasMultipleControls,
+    "TextField",
+    "Multiple native controls were registered. Only one <Input> or <InputGroup> control should be used inside a <TextField>."
+  );
 
   setTextFieldContext({
     get control() {

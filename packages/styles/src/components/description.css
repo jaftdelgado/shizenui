@@ -8,6 +8,6 @@
   }
 
   [data-slot="field"] .description {
-    @apply ml-0.5;
+    @apply px-0.5;
   }
 }

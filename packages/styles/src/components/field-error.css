@@ -8,6 +8,6 @@
   }
 
   [data-slot="field"] .field-error {
-    @apply ml-0.5;
+    @apply px-0.5;
   }
 }

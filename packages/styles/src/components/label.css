@@ -16,6 +16,6 @@
   }
 
   [data-slot="field"] .label {
-    @apply ml-0.5;
+    @apply px-0.5;
   }
 }
