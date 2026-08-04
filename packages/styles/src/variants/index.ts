@@ -11,6 +11,7 @@ export * from "./input-group";
 export * from "./label";
 export * from "./radio";
 export * from "./radio-group";
+export * from "./surface";
 export * from "./switch";
 export * from "./switch-group";
 export * from "./text-field";
