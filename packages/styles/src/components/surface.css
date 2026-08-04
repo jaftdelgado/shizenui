@@ -1,6 +1,6 @@
 @layer components {
   .surface {
-    @apply text-primary-text rounded-surface relative p-5;
+    @apply text-primary-text rounded-surface shadow-surface relative p-5;
   }
 
   .surface--default {
@@ -8,6 +8,7 @@
   }
 
   .surface--secondary {
+    @apply shadow-none;
     background-color: var(--color-surface-secondary);
   }
 

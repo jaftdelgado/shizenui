@@ -2,7 +2,7 @@
   import { Surface, Label, Description } from "@shizen-ui/svelte";
 </script>
 
-<div class="flex w-full max-w-72 flex-col gap-6">
+<div class="flex w-full max-w-80 flex-col gap-6">
   <Surface variant="default" class="flex flex-col">
     <Label>Default Surface</Label>
     <Description>Standard background with subtle elevation.</Description>

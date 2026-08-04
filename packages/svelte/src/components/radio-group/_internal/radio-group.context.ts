@@ -1,5 +1,6 @@
 import { createContext } from "svelte";
 import type { RadioGroupOrientation } from "./radio-group.types.js";
+import type { RadioVariant } from "../../radio/_internal/radio.types.js";
 
 export interface RadioGroupRegistration {
   getDisabled: () => boolean;
@@ -14,6 +15,7 @@ export interface RadioGroupContextValue {
   readonly readonly: boolean;
   readonly invalid: boolean;
   readonly orientation: RadioGroupOrientation;
+  readonly variant: RadioVariant;
   readonly labelId: string | undefined;
   readonly descriptionId: string | undefined;
   readonly errorId: string | undefined;
@@ -72,6 +74,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       },
       get orientation() {
         return "vertical" as RadioGroupOrientation;
+      },
+      get variant() {
+        return "default" as RadioVariant;
       },
       get labelId() {
         return undefined;
@@ -133,6 +138,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     },
     get orientation() {
       return context.orientation;
+    },
+    get variant() {
+      return context.variant;
     },
     get labelId() {
       return context.labelId;

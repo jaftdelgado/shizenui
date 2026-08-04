@@ -1,5 +1,6 @@
 import type { Snippet } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
+import type { RadioVariant } from "../../radio/_internal/radio.types.js";
 
 export type RadioGroupOrientation = "horizontal" | "vertical";
 
@@ -15,6 +16,7 @@ export interface RadioGroupProps extends RadioGroupBaseProps {
   disabled?: boolean;
   readonly?: boolean;
   required?: boolean;
+  variant?: RadioVariant;
   id?: string;
   ref?: HTMLDivElement | null;
 }

@@ -16,12 +16,14 @@ import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.ast
 import RadioGroupAnatomyCode from "@examples/svelte/radio-group/RadioGroupAnatomy.svelte?raw";
 
 import RadioGroupIndicator from "@examples/svelte/radio-group/RadioGroupIndicator.svelte";
+import RadioGroupVariants from "@examples/svelte/radio-group/RadioGroupVariants.svelte";
 import RadioGroupWithoutDescription from "@examples/svelte/radio-group/RadioGroupWithoutDescription.svelte";
 import RadioGroupOrientation from "@examples/svelte/radio-group/RadioGroupOrientation.svelte";
 import RadioGroupBindValue from "@examples/svelte/radio-group/RadioGroupBindValue.svelte";
 import RadioGroupFullyControlled from "@examples/svelte/radio-group/RadioGroupFullyControlled.svelte";
 import RadioGroupDisabled from "@examples/svelte/radio-group/RadioGroupDisabled.svelte";
 import RadioGroupInvalid from "@examples/svelte/radio-group/RadioGroupInvalid.svelte";
+import RadioGroupSurface from "@examples/svelte/radio-group/RadioGroupSurface.svelte";
 
 import RadioGroupTwStyling from "@examples/svelte/radio-group/RadioGroupTwStyling.svelte";
 import RadioGroupCssStylingCode from "@examples/svelte/radio-group/RadioGroupCssStyling.css?raw";
@@ -35,6 +37,12 @@ import RadioGroupCssStylingCode from "@examples/svelte/radio-group/RadioGroupCss
 <CodeBlock code={RadioGroupAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
 
 ## Examples
+
+### Variants
+
+<ComponentExample src="svelte/radio-group/RadioGroupVariants.svelte">
+  <RadioGroupVariants client:load />
+</ComponentExample>
 
 ### Custom Indicator
 
@@ -84,6 +92,14 @@ Use a Function Binding for complete control over the state's reads and writes.
   <RadioGroupInvalid client:load />
 </ComponentExample>
 
+### In Surface
+
+When used inside a `Surface`, a Checkbox without an explicit variant automatically uses the `secondary` variant.
+
+<ComponentExample src="svelte/radio-group/RadioGroupSurface.svelte">
+  <RadioGroupSurface client:load />
+</ComponentExample>
+
 ## Styling
 
 ### Tailwind CSS classes
@@ -124,6 +140,16 @@ To customize the Radio and RadioGroup component classes, you can use the `@layer
     {
       title: "radio__content",
       description: "Groups the label and description beside the control.",
+      code: true
+    },
+    {
+      title: "radio--default",
+      description: "Default radio variant using the standard field tokens.",
+      code: true
+    },
+    {
+      title: "radio--secondary",
+      description: "Secondary radio variant using the secondary field tokens.",
       code: true
     }
   ]}
@@ -194,6 +220,7 @@ To customize the Radio and RadioGroup component classes, you can use the `@layer
     { name: "onValueChange", type: "(value: string) => void", default: "undefined" },
     { name: "name", type: "string", default: "undefined" },
     { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "variant", type: '"default" | "secondary"', default: '"default"' },
     { name: "invalid", type: "boolean", default: "undefined" },
     { name: "disabled", type: "boolean", default: "undefined" },
     { name: "readonly", type: "boolean", default: "undefined" },
@@ -223,6 +250,11 @@ Extends `HTMLAttributes<HTMLDivElement>`.
   props={[
     { name: "value", type: "string" },
     { name: "disabled", type: "boolean", default: "undefined" },
+    {
+      name: "variant",
+      type: '"default" | "secondary"',
+      default: '"default" (or inherited from RadioGroup)'
+    },
     { name: "id", type: "string", default: "auto-generated" },
     { name: "ref", type: "HTMLButtonElement | null", default: "null" },
     { name: "children", type: "Snippet", default: "undefined" }

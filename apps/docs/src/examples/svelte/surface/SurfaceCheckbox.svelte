@@ -10,7 +10,7 @@
   ];
 </script>
 
-<div class="flex w-full max-w-72 flex-col gap-6">
+<div class="flex w-full max-w-80 flex-col gap-6">
   <Surface>
     <CheckboxGroup bind:value={selectedSettings}>
       <Label>Editor Settings</Label>

@@ -5,7 +5,7 @@
   let featurePost = $state(false);
 </script>
 
-<div class="flex w-full max-w-72 flex-col">
+<div class="grid w-full max-w-80">
   <Surface class="flex flex-col gap-2">
     <Checkbox bind:checked={allowComments}>
       <Checkbox.Control />

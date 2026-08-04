@@ -1,14 +1,27 @@
 import { useRadioGroupContext } from "../../radio-group/_internal/radio-group.context.js";
 import type { RadioGroupContextResult } from "../../radio-group/_internal/radio-group.context.js";
-import { useFieldStateContext, type FieldStateContextResult } from "../../../lib/index.js";
+import {
+  useFieldStateContext,
+  useSurfaceContext,
+  type FieldStateContextResult
+} from "../../../lib/index.js";
+import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
+import type { RadioProps, RadioVariant } from "./radio.types.js";
 
 export class RadioState {
   #disabled: () => boolean | undefined;
+  #variant: () => RadioProps["variant"];
   #id: () => string;
   #value: () => string;
 
   readonly groupCtx: RadioGroupContextResult;
   readonly parentFieldCtx: FieldStateContextResult;
+  readonly surfaceCtx: SurfaceContextResult;
+
+  get finalVariant(): RadioVariant {
+    if (this.groupCtx.exists) return this.groupCtx.variant;
+    return this.#variant() ?? (this.surfaceCtx.exists ? "secondary" : "default");
+  }
 
   get finalDisabled(): boolean {
     const local = this.#disabled();
@@ -51,16 +64,20 @@ export class RadioState {
   constructor(props: {
     value: () => string;
     disabled: () => boolean | undefined;
+    variant: () => RadioProps["variant"];
     id: () => string;
     groupContext?: RadioGroupContextResult;
     fieldContext?: FieldStateContextResult;
+    surfaceContext?: SurfaceContextResult;
   }) {
     this.#value = props.value;
     this.#disabled = props.disabled;
+    this.#variant = props.variant;
     this.#id = props.id;
 
     this.groupCtx = props.groupContext ?? useRadioGroupContext();
     this.parentFieldCtx = props.fieldContext ?? useFieldStateContext();
+    this.surfaceCtx = props.surfaceContext ?? useSurfaceContext();
   }
 }
 

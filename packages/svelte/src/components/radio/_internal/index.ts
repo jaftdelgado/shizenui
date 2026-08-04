@@ -1,5 +1,6 @@
 export type {
   RadioProps,
+  RadioVariant,
   RadioClickEvent,
   RadioControlProps,
   RadioContentProps,

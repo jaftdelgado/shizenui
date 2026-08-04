@@ -22,6 +22,7 @@
     readonly = undefined,
     invalid = undefined,
     required = undefined,
+    variant = undefined,
     orientation = "vertical",
     id = createId("radio-group", uid),
     ref = $bindable(null),
@@ -42,6 +43,7 @@
     readonly: () => readonly,
     invalid: () => invalid,
     required: () => required,
+    variant: () => variant,
     orientation: () => orientation,
     id: () => id,
     setValue: (v) => {

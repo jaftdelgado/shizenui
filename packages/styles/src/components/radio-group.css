@@ -8,7 +8,7 @@
   }
 
   .radio-group__items--vertical {
-    @apply flex-col gap-4;
+    @apply flex-col gap-3;
   }
 
   .radio-group__items--horizontal {
