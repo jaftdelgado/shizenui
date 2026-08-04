@@ -60,6 +60,7 @@
     data-disabled={presence(finalDisabled)}
     data-required={presence(finalRequired)}
     {...rest}
+    data-slot="label"
   >
     {@render children?.()}
 

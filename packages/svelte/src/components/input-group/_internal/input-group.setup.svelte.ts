@@ -1,10 +1,26 @@
-import type { InputGroupKind } from "./input-group.types.js";
 import type { InputGroupStateInstance } from "./input-group.state.svelte.js";
 import { setInputGroupContext, type InputGroupContextValue } from "./input-group.context.js";
+import { createInputGroupControlRegistration } from "./input-group.registration.js";
+import { warnIf } from "../../../lib/runes/index.js";
 
 export function setupInputGroupContexts(state: InputGroupStateInstance): void {
-  let kind = $state<InputGroupKind | null>(null);
   let inputRef = $state<HTMLInputElement | HTMLTextAreaElement | null>(null);
+  let hasMultipleControls = $state(false);
+
+  const controlRegistration = createInputGroupControlRegistration({
+    onControlChange(next) {
+      inputRef = next;
+    },
+    onMultipleControl() {
+      hasMultipleControls = true;
+    }
+  });
+
+  warnIf(
+    () => hasMultipleControls,
+    "InputGroup",
+    "Multiple native controls were registered. Only one <InputGroup.Input> or <InputGroup.TextArea> control should be used inside an <InputGroup>."
+  );
 
   setInputGroupContext({
     get disabled() {
@@ -25,20 +41,26 @@ export function setupInputGroupContexts(state: InputGroupStateInstance): void {
     get size() {
       return state.finalSize;
     },
-    get kind() {
-      return kind;
-    },
     get id() {
       return state.id;
+    },
+    get inputId() {
+      return state.inputId;
     },
     get inputRef() {
       return inputRef;
     },
-    setKind(next: InputGroupKind | null) {
-      kind = next;
+    registerControl(ownerId: string, next: HTMLInputElement | HTMLTextAreaElement | null) {
+      controlRegistration.register(ownerId, next);
     },
-    setInputRef(next: HTMLInputElement | HTMLTextAreaElement | null) {
-      inputRef = next;
+    unregisterControl(ownerId: string) {
+      controlRegistration.unregister(ownerId);
+    },
+    reportInvalid() {
+      state.reportInvalid();
+    },
+    reportValidity(valid: boolean) {
+      state.reportValidity(valid);
     }
   } satisfies InputGroupContextValue);
 }

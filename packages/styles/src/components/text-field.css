@@ -1,0 +1,5 @@
+@layer components {
+  .text-field {
+    @apply relative flex w-full max-w-full min-w-0 flex-col gap-1.5;
+  }
+}

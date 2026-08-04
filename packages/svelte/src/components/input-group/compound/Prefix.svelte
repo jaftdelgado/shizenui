@@ -13,7 +13,7 @@
   }: InputGroupPrefixProps = $props();
 
   const ctx = useInputGroupContext();
-  const styles = $derived(inputGroupStyles());
+  const styles = inputGroupStyles();
 
   const { shouldRender } = assertContext(
     () => !ctx.exists,

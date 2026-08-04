@@ -13,5 +13,6 @@ export * from "./radio";
 export * from "./radio-group";
 export * from "./switch";
 export * from "./switch-group";
+export * from "./text-field";
 export * from "./toggle";
 export * from "./toggle-group";

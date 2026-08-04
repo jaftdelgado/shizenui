@@ -1,0 +1,9 @@
+@layer components {
+  .text-field {
+    @apply flex w-full max-w-full min-w-0 flex-row items-center gap-2;
+  }
+
+  [data-slot="label"] {
+    @apply px-1 text-base;
+  }
+}

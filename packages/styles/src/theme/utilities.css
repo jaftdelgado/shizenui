@@ -12,10 +12,10 @@
 }
 
 @utility focus-invalid-field-ring {
-  @apply ring-danger/30 ring-offset-danger ring-3 ring-offset-1 outline-none;
+  @apply ring-danger ring-2 outline-none;
 }
 
-/* Statuses utilities*/
+/* Statuses utilities */
 @utility status-disabled {
   opacity: var(--disabled-opacity);
   cursor: var(--cursor-disabled);

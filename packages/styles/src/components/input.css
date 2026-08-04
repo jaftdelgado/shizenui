@@ -37,14 +37,6 @@
     &[aria-disabled="true"] {
       @apply status-disabled;
     }
-
-    &[data-in-group] {
-      @apply h-full border-none bg-transparent shadow-none ring-0;
-      &:hover,
-      &:focus {
-        @apply bg-transparent shadow-none ring-0 outline-none;
-      }
-    }
   }
 
   /* Variants */
@@ -82,9 +74,5 @@
 
   .input--lg {
     @apply h-field-lg px-field-lg text-base;
-  }
-
-  .input[data-in-group] {
-    @apply h-full rounded-none py-0;
   }
 }

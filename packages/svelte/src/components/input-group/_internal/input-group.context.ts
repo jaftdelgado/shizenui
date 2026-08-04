@@ -1,5 +1,5 @@
 import { createContext } from "svelte";
-import type { InputGroupKind, InputGroupSize, InputGroupVariant } from "./input-group.types.js";
+import type { InputGroupSize, InputGroupVariant } from "./input-group.types.js";
 
 export interface InputGroupContextValue {
   readonly disabled: boolean;
@@ -8,11 +8,13 @@ export interface InputGroupContextValue {
   readonly required: boolean;
   readonly variant: InputGroupVariant;
   readonly size: InputGroupSize;
-  readonly kind: InputGroupKind | null;
   readonly id: string | undefined;
+  readonly inputId: string | undefined;
   readonly inputRef: HTMLInputElement | HTMLTextAreaElement | null;
-  setKind(kind: InputGroupKind | null): void;
-  setInputRef(el: HTMLInputElement | HTMLTextAreaElement | null): void;
+  registerControl(ownerId: string, el: HTMLInputElement | HTMLTextAreaElement | null): void;
+  unregisterControl(ownerId: string): void;
+  reportInvalid(): void;
+  reportValidity(valid: boolean): void;
 }
 
 export interface InputGroupContextResult extends InputGroupContextValue {
@@ -54,17 +56,19 @@ export function useInputGroupContext(): InputGroupContextResult {
       get size(): InputGroupSize {
         return "md";
       },
-      get kind() {
-        return null;
-      },
       get id() {
+        return undefined;
+      },
+      get inputId() {
         return undefined;
       },
       get inputRef() {
         return null;
       },
-      setKind() {},
-      setInputRef() {},
+      registerControl() {},
+      unregisterControl() {},
+      reportInvalid() {},
+      reportValidity(_valid: boolean) {},
       get exists() {
         return false;
       }
@@ -90,20 +94,26 @@ export function useInputGroupContext(): InputGroupContextResult {
     get size() {
       return context.size;
     },
-    get kind() {
-      return context.kind;
-    },
     get id() {
       return context.id;
+    },
+    get inputId() {
+      return context.inputId;
     },
     get inputRef() {
       return context.inputRef;
     },
-    setKind(kind) {
-      context.setKind(kind);
+    registerControl(ownerId, el) {
+      context.registerControl(ownerId, el);
     },
-    setInputRef(el) {
-      context.setInputRef(el);
+    unregisterControl(ownerId) {
+      context.unregisterControl(ownerId);
+    },
+    reportInvalid() {
+      context.reportInvalid();
+    },
+    reportValidity(valid) {
+      context.reportValidity(valid);
     },
     get exists() {
       return true;

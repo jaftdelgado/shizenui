@@ -1,4 +1,12 @@
-export type { InputProps, InputSize, InputVariant } from "./input.types.js";
+export type {
+  InputProps,
+  InputSize,
+  InputVariant,
+  InputInputEvent,
+  InputInvalidEvent
+} from "./input.types.js";
 
-export { InputState, resolveInputDescribedBy } from "./input.state.svelte.js";
+export { InputState } from "./input.state.svelte.js";
 export type { InputStateInstance } from "./input.state.svelte.js";
+
+export { setupInputForm } from "./input.form.svelte.js";
