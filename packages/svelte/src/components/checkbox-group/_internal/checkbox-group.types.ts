@@ -1,5 +1,6 @@
 import type { Snippet } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
+import type { CheckboxVariant } from "../../checkbox/_internal/checkbox.types.js";
 
 export type CheckboxGroupOrientation = "horizontal" | "vertical";
 
@@ -15,6 +16,7 @@ export interface CheckboxGroupProps extends CheckboxGroupBaseProps {
   disabled?: boolean;
   readonly?: boolean;
   required?: boolean;
+  variant?: CheckboxVariant;
   id?: string;
   ref?: HTMLDivElement | null;
 }

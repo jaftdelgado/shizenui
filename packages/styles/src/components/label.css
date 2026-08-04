@@ -1,6 +1,6 @@
 @layer components {
   .label {
-    @apply inline-flex items-center;
+    @apply inline-flex items-center text-left;
     @apply text-primary-text text-sm font-medium;
 
     transition: color 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));

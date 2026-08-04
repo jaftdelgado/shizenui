@@ -30,6 +30,9 @@ export function setupCheckboxGroupContexts(state: CheckboxGroupState): void {
     get orientation() {
       return state.finalOrientation;
     },
+    get variant() {
+      return state.finalVariant;
+    },
     get labelId() {
       return `${state.id}-label`;
     },

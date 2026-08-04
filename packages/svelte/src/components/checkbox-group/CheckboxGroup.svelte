@@ -23,6 +23,7 @@
     readonly = undefined,
     invalid = undefined,
     required = undefined,
+    variant = undefined,
     orientation = "vertical",
     id = createId("checkbox-group", uid),
     ref = $bindable(null),
@@ -59,6 +60,7 @@
     invalid: () => invalid,
     submissionInvalid: () => submissionInvalid.value,
     required: () => required,
+    variant: () => variant,
     orientation: () => orientation,
     id: () => id,
     setValue: (v) => {

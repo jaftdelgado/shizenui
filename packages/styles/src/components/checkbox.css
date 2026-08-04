@@ -36,9 +36,6 @@
     }
 
     &[data-invalid] {
-      --checkbox-bg: var(--color-field);
-      --checkbox-bg-hover: var(--color-field-hover);
-
       & .checkbox__control {
         @apply status-invalid-field ring-1;
       }
@@ -55,6 +52,21 @@
   .checkbox__control,
   .checkbox .label {
     cursor: var(--cursor-interactive);
+  }
+
+  /* Variants */
+  .checkbox--default {
+    --checkbox-bg: var(--color-field);
+    --checkbox-bg-hover: var(--color-field-hover);
+
+    .checkbox__control {
+      @apply shadow-field;
+    }
+  }
+
+  .checkbox--secondary {
+    --checkbox-bg: var(--color-field-secondary);
+    --checkbox-bg-hover: var(--color-field-secondary-hover);
   }
 
   .checkbox__control {
@@ -125,7 +137,7 @@
   }
 
   .checkbox__content {
-    @apply flex flex-col;
+    @apply flex min-w-0 flex-1 flex-col items-start;
   }
 
   .checkbox__input {

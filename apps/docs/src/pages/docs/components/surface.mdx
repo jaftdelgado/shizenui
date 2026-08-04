@@ -15,6 +15,8 @@ import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.ast
 
 import SurfaceVariants from "@examples/svelte/surface/SurfaceVariants.svelte";
 
+import SurfaceCheckbox from "@examples/svelte/surface/SurfaceCheckbox.svelte";
+
 ## Import
 
 <CodeImport code={`import { Surface } from "@shizen-ui/svelte";`} />
@@ -28,3 +30,9 @@ import SurfaceVariants from "@examples/svelte/surface/SurfaceVariants.svelte";
 </ComponentExample>
 
 ## Context Integration
+
+### Checkbox
+
+<ComponentExample src="svelte/surface/SurfaceCheckbox.svelte">
+  <SurfaceCheckbox client:load />
+</ComponentExample>

@@ -1,9 +1,6 @@
 @layer components {
   .surface {
-    corner-shape: squircle;
-    border-radius: 3.25rem;
-
-    @apply text-primary-text relative p-4;
+    @apply text-primary-text rounded-surface relative p-5;
   }
 
   .surface--default {

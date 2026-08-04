@@ -21,6 +21,7 @@ import CheckboxGroupIndeterminate from "@examples/svelte/checkbox-group/Checkbox
 import CheckboxGroupDisabled from "@examples/svelte/checkbox-group/CheckboxGroupDisabled.svelte";
 import CheckboxGroupInvalid from "@examples/svelte/checkbox-group/CheckboxGroupInvalid.svelte";
 import CheckboxGroupForm from "@examples/svelte/checkbox-group/CheckboxGroupForm.svelte";
+import CheckboxGroupSurface from "@examples/svelte/checkbox-group/CheckboxGroupSurface.svelte";
 
 import CheckboxGroupTwStyling from "@examples/svelte/checkbox-group/CheckboxGroupTwStyling.svelte";
 import CheckboxGroupCssStylingCode from "@examples/svelte/checkbox-group/CheckboxGroupCssStyling.css?raw";
@@ -88,6 +89,14 @@ Use a Function Binding for complete control over the state's reads and writes.
   <CheckboxGroupForm client:load />
 </ComponentExample>
 
+### In Surface
+
+When used inside a Surface, uses the `secondary` variant for its Checkbox children unless another group variant is explicitly provided.
+
+<ComponentExample src="svelte/checkbox-group/CheckboxGroupSurface.svelte">
+  <CheckboxGroupSurface client:load />
+</ComponentExample>
+
 ## Styling
 
 ### Tailwind CSS Classes
@@ -148,6 +157,7 @@ To customize the CheckboxGroup component classes, you can use the `@layer compon
     { name: "value", type: "string[]", default: "undefined" },
     { name: "onValueChange", type: "(value: string[]) => void", default: "undefined" },
     { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "variant", type: '"default" | "secondary"', default: '"default"' },
     { name: "disabled", type: "boolean", default: "undefined" },
     { name: "invalid", type: "boolean", default: "undefined" },
     { name: "required", type: "boolean", default: "undefined" },
