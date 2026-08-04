@@ -1,3 +1,20 @@
-.surface {
-  display: block;
+@layer components {
+  .surface {
+    corner-shape: squircle;
+    border-radius: 3.25rem;
+
+    @apply text-primary-text relative p-4;
+  }
+
+  .surface--default {
+    background-color: var(--color-surface);
+  }
+
+  .surface--secondary {
+    background-color: var(--color-surface-secondary);
+  }
+
+  .surface--outline {
+    box-shadow: var(--shadow-border);
+  }
 }

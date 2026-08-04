@@ -28,6 +28,7 @@
     /* Base Colors */
     --background: #f2f2f6;
     --surface: var(--white);
+    --surface-secondary: var(--control);
     --overlay: var(--white);
     --separator: #e2e2e3;
     --focus: var(--accent);
@@ -68,6 +69,7 @@
     /* Base Colors */
     --background: #0a0a0a;
     --surface: #1c1c1e;
+    --surface-secondary: var(--control);
     --overlay: var(--surface);
     --separator: #151515;
 

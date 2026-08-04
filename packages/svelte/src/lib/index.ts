@@ -13,3 +13,11 @@ export {
   type ContentSlotContextValue,
   type ContentSlotContextResult
 } from "./contexts/content-slot.context.js";
+
+//Surface Context
+export {
+  setSurfaceContext,
+  useSurfaceContext,
+  type SurfaceContextValue,
+  type SurfaceContextResult
+} from "./contexts/surface.context.js";

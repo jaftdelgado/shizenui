@@ -22,6 +22,7 @@
   /* Base Colors */
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
   --color-overlay: var(--overlay);
   --color-separator: var(--separator);
   --color-focus: var(--focus);

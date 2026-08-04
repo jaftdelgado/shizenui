@@ -3,16 +3,14 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const surfaceStyles = tv({
   base: "surface",
   variants: {
-    invalid: {
-      true: "surface--invalid"
-    },
-    disabled: {
-      true: "surface--disabled"
+    variant: {
+      default: "surface--default",
+      secondary: "surface--secondary",
+      outline: "surface--outline"
     }
   },
   defaultVariants: {
-    invalid: false,
-    disabled: false
+    variant: "default"
   }
 });
 

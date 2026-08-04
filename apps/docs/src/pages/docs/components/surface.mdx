@@ -1,0 +1,30 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Surface
+description: Container component that provides surface-level styling and context for child components.
+preview: SurfacePreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
+
+import SurfaceVariants from "@examples/svelte/surface/SurfaceVariants.svelte";
+
+## Import
+
+<CodeImport code={`import { Surface } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/surface/SurfaceVariants.svelte">
+  <SurfaceVariants client:load />
+</ComponentExample>
+
+## Context Integration

@@ -1,14 +1,20 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
-  import type { HTMLAttributes } from "svelte/elements";
-  import { surfaceStyles, type SurfaceVariants } from "@shizen-ui/styles";
+  import { surfaceStyles } from "@shizen-ui/styles";
+  import { cn } from "../../lib/utils/index.js";
+  import { setupSurfaceContext } from "./_internal/index.js";
+  import type { SurfaceProps } from "./_internal/index.js";
 
-  let { children, class: className, ...props }: SurfaceVariants &
-    HTMLAttributes<HTMLDivElement> & {
-      children?: Snippet;
-    } = $props();
+  let {
+    children,
+    class: className,
+    variant = "default",
+    ref = $bindable(null),
+    ...rest
+  }: SurfaceProps = $props();
+
+  setupSurfaceContext();
 </script>
 
-<div class={surfaceStyles({ ...props, class: className })}>
+<div bind:this={ref} class={cn(surfaceStyles({ variant }), className)} {...rest}>
   {@render children?.()}
 </div>
