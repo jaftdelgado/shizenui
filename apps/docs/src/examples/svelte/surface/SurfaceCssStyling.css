@@ -1,0 +1,13 @@
+@layer components {
+  .surface {
+    @apply rounded-2xl p-4 text-sm shadow-xs;
+  }
+
+  .surface--default {
+    --surface-bg: var(--color-violet-50);
+  }
+
+  .surface--secondary {
+    --surface-bg: var(--color-violet-100);
+  }
+}

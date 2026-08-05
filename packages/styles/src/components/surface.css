@@ -1,15 +1,21 @@
 @layer components {
   .surface {
     @apply text-primary-text rounded-surface shadow-surface relative p-5;
+
+    /* Base tokens */
+    --surface-bg: transparent;
+
+    background-color: var(--surface-bg);
   }
 
   .surface--default {
-    background-color: var(--color-surface);
+    --surface-bg: var(--color-surface);
   }
 
   .surface--secondary {
     @apply shadow-none;
-    background-color: var(--color-surface-secondary);
+
+    --surface-bg: var(--color-surface-secondary);
   }
 
   .surface--outline {
