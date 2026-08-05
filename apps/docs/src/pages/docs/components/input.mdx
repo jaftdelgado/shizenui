@@ -20,6 +20,7 @@ import InputBindValue from "@examples/svelte/input/InputBindValue.svelte";
 import InputFullyControlled from "@examples/svelte/input/InputFullyControlled.svelte";
 import InputDisabled from "@examples/svelte/input/InputDisabled.svelte";
 import InputInvalid from "@examples/svelte/input/InputInvalid.svelte";
+import InputSurface from "@examples/svelte/input/InputSurface.svelte";
 
 import InputTwStyling from "@examples/svelte/input/InputTwStyling.svelte";
 import InputCssStylingCode from "@examples/svelte/input/InputCssStyling.css?raw";
@@ -76,6 +77,14 @@ Use a Function Binding for complete control over the state's reads and writes.
 
 <ComponentExample src="svelte/input/InputInvalid.svelte">
   <InputInvalid client:load />
+</ComponentExample>
+
+### In Surface
+
+When used inside a `Surface`, use `variant="secondary"` to apply the lower-emphasis style appropriate for surface backgrounds.
+
+<ComponentExample src="svelte/input/InputSurface.svelte">
+  <InputSurface client:load />
 </ComponentExample>
 
 ## Styling

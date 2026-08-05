@@ -15,6 +15,7 @@ import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.ast
 
 import SurfaceVariants from "@examples/svelte/surface/SurfaceVariants.svelte";
 
+import SurfaceInput from "@examples/svelte/surface/SurfaceInput.svelte";
 import SurfaceCheckbox from "@examples/svelte/surface/SurfaceCheckbox.svelte";
 import SurfaceRadioGroup from "@examples/svelte/surface/SurfaceRadioGroup.svelte";
 
@@ -32,13 +33,27 @@ import SurfaceRadioGroup from "@examples/svelte/surface/SurfaceRadioGroup.svelte
 
 ## Context Integration
 
+### Input & InputGroup
+
+When wrapping `Input` or `InputGroup`, the `variant="secondary"` is applied automatically unless variant is explicitly set.
+
+<ComponentExample src="svelte/surface/SurfaceInput.svelte">
+  <SurfaceInput client:load />
+</ComponentExample>
+
 ### Checkbox
+
+When wrapping `Checkbox` or `CheckboxGroup`, the `variant="secondary"` is applied automatically
+unless a variant is explicitly set on a standalone Checkbox or on the group.
 
 <ComponentExample src="svelte/surface/SurfaceCheckbox.svelte">
   <SurfaceCheckbox client:load />
 </ComponentExample>
 
 ### Radio Group
+
+When wrapping `RadioGroup`, the `variant="secondary"` is passed to its Radio children
+automatically unless a group variant is explicitly set.
 
 <ComponentExample src="svelte/surface/SurfaceRadioGroup.svelte">
   <SurfaceRadioGroup client:load />

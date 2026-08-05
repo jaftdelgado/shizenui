@@ -8,6 +8,15 @@ export interface SurfaceContextResult {
   readonly exists: boolean;
 }
 
+export function resolveSurfaceVariant<T extends string>(
+  localVariant: T | undefined,
+  surfaceContext: SurfaceContextResult,
+  defaultVariant: T,
+  surfaceVariant: T
+): T {
+  return localVariant ?? (surfaceContext.exists ? surfaceVariant : defaultVariant);
+}
+
 const [getSurfaceContext, setSurfaceContext] = createContext<SurfaceContextValue>();
 
 function tryGetSurfaceContext(): SurfaceContextValue | undefined {

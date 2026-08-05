@@ -18,6 +18,7 @@ export {
 export {
   setSurfaceContext,
   useSurfaceContext,
+  resolveSurfaceVariant,
   type SurfaceContextValue,
   type SurfaceContextResult
 } from "./contexts/surface.context.js";

@@ -23,6 +23,7 @@ import TextFieldFullyControlled from "@examples/svelte/text-field/TextFieldFully
 import TextFieldDisabled from "@examples/svelte/text-field/TextFieldDisabled.svelte";
 import TextFieldInvalid from "@examples/svelte/text-field/TextFieldInvalid.svelte";
 import TextFieldForm from "@examples/svelte/text-field/TextFieldForm.svelte";
+import TextFieldSurface from "@examples/svelte/text-field/TextFieldSurface.svelte";
 
 import TextFieldInput from "@examples/svelte/text-field/TextFieldInput.svelte";
 import TextFieldInputGroup from "@examples/svelte/text-field/TextFieldInputGroup.svelte";
@@ -92,6 +93,14 @@ Use a Function Binding for complete control over the field's reads and writes.
 
 <ComponentExample src="svelte/text-field/TextFieldForm.svelte">
   <TextFieldForm client:load />
+</ComponentExample>
+
+### In Surface
+
+When used inside a `Surface`, use `variant="secondary"` to apply the lower-emphasis style appropriate for surface backgrounds.
+
+<ComponentExample src="svelte/text-field/TextFieldSurface.svelte">
+  <TextFieldSurface client:load />
 </ComponentExample>
 
 ## Context Integration

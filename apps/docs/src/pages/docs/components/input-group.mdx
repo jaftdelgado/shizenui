@@ -23,6 +23,7 @@ import InputGroupBindValue from "@examples/svelte/input-group/InputGroupBindValu
 import InputGroupFullyControlled from "@examples/svelte/input-group/InputGroupFullyControlled.svelte";
 import InputGroupDisabled from "@examples/svelte/input-group/InputGroupDisabled.svelte";
 import InputGroupInvalid from "@examples/svelte/input-group/InputGroupInvalid.svelte";
+import InputGroupSurface from "@examples/svelte/input-group/InputGroupSurface.svelte";
 
 import InputGroupTwStyling from "@examples/svelte/input-group/InputGroupTwStyling.svelte";
 import InputGroupCssStylingCode from "@examples/svelte/input-group/InputGroupCssStyling.css?raw";
@@ -89,6 +90,14 @@ Use a Function Binding for complete control over the state's reads and writes.
 
 <ComponentExample src="svelte/input-group/InputGroupInvalid.svelte">
   <InputGroupInvalid client:load />
+</ComponentExample>
+
+### In Surface
+
+When used inside a `Surface`, use `variant="secondary"` to apply the lower-emphasis style appropriate for surface backgrounds.
+
+<ComponentExample src="svelte/input-group/InputGroupSurface.svelte">
+  <InputGroupSurface client:load />
 </ComponentExample>
 
 ## Styling

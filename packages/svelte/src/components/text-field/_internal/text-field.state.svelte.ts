@@ -1,4 +1,5 @@
-import type { FieldStateContextResult } from "../../../lib/index.js";
+import { useSurfaceContext, resolveSurfaceVariant } from "../../../lib/index.js";
+import type { FieldStateContextResult, SurfaceContextResult } from "../../../lib/index.js";
 import type { TextFieldSize, TextFieldVariant } from "./text-field.types.js";
 
 export class TextFieldState {
@@ -14,6 +15,7 @@ export class TextFieldState {
   #submissionInvalid: () => boolean;
   #setSubmissionInvalid: (invalid: boolean) => void;
   #nativeValid = $state(true);
+  readonly surfaceCtx: SurfaceContextResult;
 
   get finalDisabled(): boolean {
     return this.#disabled() ?? false;
@@ -64,7 +66,7 @@ export class TextFieldState {
   }
 
   get finalVariant(): TextFieldVariant {
-    return this.#variant() ?? "default";
+    return resolveSurfaceVariant(this.#variant(), this.surfaceCtx, "default", "secondary");
   }
 
   get rawVariant(): TextFieldVariant | undefined {
@@ -87,6 +89,7 @@ export class TextFieldState {
     id: () => string;
     submissionInvalid: () => boolean;
     setSubmissionInvalid: (invalid: boolean) => void;
+    surfaceContext?: SurfaceContextResult;
   }) {
     this.#disabled = props.disabled;
     this.#invalid = props.invalid;
@@ -99,6 +102,7 @@ export class TextFieldState {
     this.#id = props.id;
     this.#submissionInvalid = props.submissionInvalid;
     this.#setSubmissionInvalid = props.setSubmissionInvalid;
+    this.surfaceCtx = props.surfaceContext ?? useSurfaceContext();
   }
 
   reportInvalid(): void {
