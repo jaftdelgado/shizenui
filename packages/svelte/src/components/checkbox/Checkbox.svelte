@@ -23,6 +23,7 @@
     invalid = undefined,
     readonly = undefined,
     required = undefined,
+    variant = undefined,
     id = createId("checkbox", uid),
     ref = $bindable(null),
     checked = $bindable(false),
@@ -64,6 +65,7 @@
     invalid: () => invalid,
     readonly: () => readonly,
     required: () => required,
+    variant: () => variant,
     submissionInvalid: () => submissionInvalid.value,
     value: () => value,
     name: () => name,
@@ -83,6 +85,12 @@
     () => checkboxState.groupCtx.exists && value === undefined,
     "Checkbox",
     "A Checkbox inside Checkbox.Group requires the `value` prop."
+  );
+
+  warnIf(
+    () => checkboxState.groupCtx.exists && variant !== undefined,
+    "Checkbox",
+    "The local `variant` is ignored inside a CheckboxGroup. Set `variant` on CheckboxGroup instead."
   );
 
   warnIf(
@@ -113,7 +121,7 @@
     getOnClick: () => onclick
   });
 
-  const styles = $derived(checkboxStyles());
+  const styles = $derived(checkboxStyles({ variant: checkboxState.finalVariant }));
 
   const describedBy = $derived(resolveCheckboxDescribedBy(checkboxState, ctx, id));
 

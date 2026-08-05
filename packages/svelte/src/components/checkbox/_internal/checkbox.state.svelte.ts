@@ -1,8 +1,10 @@
 import { useCheckboxGroupContext } from "../../checkbox-group/_internal/checkbox-group.context.js";
 import type { CheckboxGroupContextResult } from "../../checkbox-group/_internal/checkbox-group.context.js";
-import { useFieldStateContext } from "../../../lib/index.js";
+import { useFieldStateContext, useSurfaceContext } from "../../../lib/index.js";
 import type { FieldStateContextResult } from "../../../lib/index.js";
 import type { CheckboxContextResult } from "./checkbox.context.js";
+import type { CheckboxVariant, CheckboxProps } from "./checkbox.types.js";
+import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
 
 export class CheckboxState {
   #checked: () => boolean;
@@ -11,6 +13,7 @@ export class CheckboxState {
   #invalid: () => boolean | undefined;
   #readonly: () => boolean | undefined;
   #required: () => boolean | undefined;
+  #variant: () => CheckboxProps["variant"];
   #submissionInvalid: () => boolean;
   #value: () => string | undefined;
   #name: () => string | undefined;
@@ -18,6 +21,12 @@ export class CheckboxState {
 
   readonly groupCtx: CheckboxGroupContextResult;
   readonly parentFieldCtx: FieldStateContextResult;
+  readonly surfaceCtx: SurfaceContextResult;
+
+  get finalVariant(): CheckboxVariant {
+    if (this.groupCtx.exists) return this.groupCtx.variant;
+    return this.#variant() ?? (this.surfaceCtx.exists ? "secondary" : "default");
+  }
 
   get finalDisabled(): boolean {
     const local = this.#disabled();
@@ -97,12 +106,14 @@ export class CheckboxState {
     invalid: () => boolean | undefined;
     readonly: () => boolean | undefined;
     required: () => boolean | undefined;
+    variant: () => CheckboxProps["variant"];
     submissionInvalid: () => boolean;
     value: () => string | undefined;
     name: () => string | undefined;
     id: () => string;
     groupContext?: CheckboxGroupContextResult;
     fieldContext?: FieldStateContextResult;
+    surfaceContext?: SurfaceContextResult;
   }) {
     this.#checked = props.checked;
     this.#indeterminate = props.indeterminate;
@@ -110,6 +121,7 @@ export class CheckboxState {
     this.#invalid = props.invalid;
     this.#readonly = props.readonly;
     this.#required = props.required;
+    this.#variant = props.variant;
     this.#submissionInvalid = props.submissionInvalid;
     this.#value = props.value;
     this.#name = props.name;
@@ -117,6 +129,7 @@ export class CheckboxState {
 
     this.groupCtx = props.groupContext ?? useCheckboxGroupContext();
     this.parentFieldCtx = props.fieldContext ?? useFieldStateContext();
+    this.surfaceCtx = props.surfaceContext ?? useSurfaceContext();
   }
 }
 

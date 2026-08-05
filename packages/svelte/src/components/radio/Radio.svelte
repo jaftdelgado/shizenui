@@ -18,6 +18,7 @@
     class: className,
     value,
     disabled = undefined,
+    variant = undefined,
     id = createId("radio", uid),
     ref = $bindable(null),
     onclick,
@@ -34,6 +35,7 @@
   const state = new RadioState({
     value: () => value,
     disabled: () => disabled,
+    variant: () => variant,
     id: () => id
   });
 
@@ -48,6 +50,12 @@
     "No Label found. Add a <Label> (typically inside <Radio.Content>), or pass aria-label directly."
   );
 
+  warnIf(
+    () => state.groupCtx.exists && variant !== undefined,
+    "Radio",
+    "The local `variant` is ignored inside a RadioGroup. Set `variant` on RadioGroup instead."
+  );
+
   const handlers = createRadioHandlers({
     state,
     getOnClick: () => onclick
@@ -55,7 +63,7 @@
 
   const focus = createFocusVisible();
 
-  const styles = $derived(radioStyles());
+  const styles = $derived(radioStyles({ variant: state.finalVariant }));
 
   const describedBy = $derived(
     [

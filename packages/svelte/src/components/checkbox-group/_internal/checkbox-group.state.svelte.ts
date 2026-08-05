@@ -1,5 +1,7 @@
 import type { CheckboxGroupOrientation, CheckboxGroupProps } from "./checkbox-group.types.js";
 import type { CheckboxGroupContextResult } from "./checkbox-group.context.js";
+import { useSurfaceContext } from "../../../lib/index.js";
+import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
 
 export class CheckboxGroupState {
   #value: () => CheckboxGroupProps["value"];
@@ -11,9 +13,11 @@ export class CheckboxGroupState {
   #submissionInvalid: () => boolean;
   #required: () => boolean | undefined;
   #orientation: () => CheckboxGroupOrientation | undefined;
+  #variant: () => CheckboxGroupProps["variant"];
   #id: () => string;
   #setValue: (value: string[]) => void;
   #selectedSet = $derived(new Set(this.finalValue));
+  readonly surfaceCtx: SurfaceContextResult;
 
   get finalValue(): string[] {
     return this.#value() ?? [];
@@ -44,6 +48,10 @@ export class CheckboxGroupState {
     return this.#orientation() ?? "vertical";
   }
 
+  get finalVariant(): NonNullable<CheckboxGroupProps["variant"]> {
+    return this.#variant() ?? (this.surfaceCtx.exists ? "secondary" : "default");
+  }
+
   get id(): string {
     return this.#id();
   }
@@ -54,9 +62,7 @@ export class CheckboxGroupState {
 
   toggleValue(value: string): void {
     const current = this.finalValue;
-    const next = current.includes(value)
-      ? current.filter((v) => v !== value)
-      : [...current, value];
+    const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
 
     this.#setValue(next);
     this.#onValueChange()?.(next);
@@ -72,8 +78,10 @@ export class CheckboxGroupState {
     submissionInvalid: () => boolean;
     required: () => boolean | undefined;
     orientation: () => CheckboxGroupOrientation | undefined;
+    variant: () => CheckboxGroupProps["variant"];
     id: () => string;
     setValue: (value: string[]) => void;
+    surfaceContext?: SurfaceContextResult;
   }) {
     this.#value = props.value;
     this.#onValueChange = props.onValueChange;
@@ -84,8 +92,10 @@ export class CheckboxGroupState {
     this.#submissionInvalid = props.submissionInvalid;
     this.#required = props.required;
     this.#orientation = props.orientation;
+    this.#variant = props.variant;
     this.#id = props.id;
     this.#setValue = props.setValue;
+    this.surfaceCtx = props.surfaceContext ?? useSurfaceContext();
   }
 }
 

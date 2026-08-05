@@ -13,4 +13,7 @@ export type { CheckboxGroupStateInstance } from "./checkbox-group.state.svelte.j
 export { setupCheckboxGroupContexts } from "./checkbox-group.setup.svelte.js";
 
 export { setCheckboxGroupContext, useCheckboxGroupContext } from "./checkbox-group.context.js";
-export type { CheckboxGroupContextValue, CheckboxGroupContextResult } from "./checkbox-group.context.js";
+export type {
+  CheckboxGroupContextValue,
+  CheckboxGroupContextResult
+} from "./checkbox-group.context.js";

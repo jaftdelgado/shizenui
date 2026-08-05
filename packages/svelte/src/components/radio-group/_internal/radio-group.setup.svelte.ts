@@ -31,6 +31,9 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     get orientation() {
       return state.finalOrientation;
     },
+    get variant() {
+      return state.finalVariant;
+    },
     get labelId() {
       return `${state.id}-label`;
     },

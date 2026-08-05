@@ -1,5 +1,8 @@
 import type { RadioGroupRegistration } from "./radio-group.context.js";
 import type { RadioGroupOrientation, RadioGroupProps } from "./radio-group.types.js";
+import { useSurfaceContext } from "../../../lib/index.js";
+import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
+import type { RadioVariant } from "../../radio/_internal/radio.types.js";
 
 export class RadioGroupState {
   #value: () => RadioGroupProps["value"];
@@ -10,6 +13,7 @@ export class RadioGroupState {
   #invalid: () => boolean | undefined;
   #required: () => boolean | undefined;
   #orientation: () => RadioGroupOrientation | undefined;
+  #variant: () => RadioGroupProps["variant"];
   #id: () => string;
   #setValue: (value: string) => void;
 
@@ -17,6 +21,7 @@ export class RadioGroupState {
   #itemMap = new Map<string, RadioGroupRegistration>();
   #activeId: string | undefined = $state(undefined);
   #activeValueSnapshot: string | undefined;
+  readonly surfaceCtx: SurfaceContextResult;
 
   get finalValue(): string | undefined {
     return this.#value();
@@ -48,6 +53,10 @@ export class RadioGroupState {
 
   get finalOrientation(): RadioGroupOrientation {
     return this.#orientation() ?? "vertical";
+  }
+
+  get finalVariant(): RadioVariant {
+    return this.#variant() ?? (this.surfaceCtx.exists ? "secondary" : "default");
   }
 
   get finalValueIsValid(): boolean {
@@ -112,8 +121,10 @@ export class RadioGroupState {
     invalid: () => boolean | undefined;
     required: () => boolean | undefined;
     orientation: () => RadioGroupOrientation | undefined;
+    variant: () => RadioGroupProps["variant"];
     id: () => string;
     setValue: (value: string) => void;
+    surfaceContext?: SurfaceContextResult;
   }) {
     this.#value = props.value;
     this.#onValueChange = props.onValueChange;
@@ -123,8 +134,10 @@ export class RadioGroupState {
     this.#invalid = props.invalid;
     this.#required = props.required;
     this.#orientation = props.orientation;
+    this.#variant = props.variant;
     this.#id = props.id;
     this.#setValue = props.setValue;
+    this.surfaceCtx = props.surfaceContext ?? useSurfaceContext();
   }
 
   #resolvedActiveId(): string | undefined {

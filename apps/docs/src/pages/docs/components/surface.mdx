@@ -1,0 +1,127 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Surface
+description: Container component that provides surface-level styling and context for child components.
+preview: SurfacePreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+
+import SurfaceVariants from "@examples/svelte/surface/SurfaceVariants.svelte";
+import SurfaceTwStyling from "@examples/svelte/surface/SurfaceTwStyling.svelte";
+import SurfaceCssStylingCode from "@examples/svelte/surface/SurfaceCssStyling.css?raw";
+
+import SurfaceInput from "@examples/svelte/surface/SurfaceInput.svelte";
+import SurfaceCheckbox from "@examples/svelte/surface/SurfaceCheckbox.svelte";
+import SurfaceRadioGroup from "@examples/svelte/surface/SurfaceRadioGroup.svelte";
+
+## Import
+
+<CodeImport code={`import { Surface } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/surface/SurfaceVariants.svelte">
+  <SurfaceVariants client:load />
+</ComponentExample>
+
+## Context Integration
+
+### Input & InputGroup
+
+When wrapping `Input` or `InputGroup`, the `variant="secondary"` is applied automatically unless variant is explicitly set.
+
+<ComponentExample src="svelte/surface/SurfaceInput.svelte">
+  <SurfaceInput client:load />
+</ComponentExample>
+
+### Checkbox
+
+When wrapping `Checkbox` or `CheckboxGroup`, the `variant="secondary"` is applied automatically
+unless a variant is explicitly set on a standalone Checkbox or on the group.
+
+<ComponentExample src="svelte/surface/SurfaceCheckbox.svelte">
+  <SurfaceCheckbox client:load />
+</ComponentExample>
+
+### Radio Group
+
+When wrapping `RadioGroup`, the `variant="secondary"` is passed to its Radio children
+automatically unless a group variant is explicitly set.
+
+<ComponentExample src="svelte/surface/SurfaceRadioGroup.svelte">
+  <SurfaceRadioGroup client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to Surface.
+
+<ComponentExample src="svelte/surface/SurfaceTwStyling.svelte">
+  <SurfaceTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Surface component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={SurfaceCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Base and Variant Classes
+
+<BulletList
+  items={[
+    {
+      title: "surface",
+      description: "Base container class applied to every Surface.",
+      code: true
+    },
+    {
+      title: "surface--default",
+      description: "Default surface using the primary surface background and standard shadow.",
+      code: true
+    },
+    {
+      title: "surface--secondary",
+      description:
+        "Secondary surface using the secondary surface background without the standard shadow.",
+      code: true
+    },
+    {
+      title: "surface--outline",
+      description: "Transparent surface treatment using the shared border shadow.",
+      code: true
+    }
+  ]}
+/>
+
+## API Reference
+
+### Surface Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    {
+      name: "variant",
+      type: '"default" | "secondary" | "outline"',
+      default: '"default"'
+    },
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "class", type: "string", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>

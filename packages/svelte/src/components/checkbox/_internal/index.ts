@@ -1,5 +1,6 @@
 export type {
   CheckboxProps,
+  CheckboxVariant,
   CheckboxClickEvent,
   CheckboxControlProps,
   CheckboxContentProps,

@@ -1,0 +1,24 @@
+@layer components {
+  .surface {
+    @apply text-primary-text rounded-surface shadow-surface relative p-5;
+
+    /* Base tokens */
+    --surface-bg: transparent;
+
+    background-color: var(--surface-bg);
+  }
+
+  .surface--default {
+    --surface-bg: var(--color-surface);
+  }
+
+  .surface--secondary {
+    @apply shadow-none;
+
+    --surface-bg: var(--color-surface-secondary);
+  }
+
+  .surface--outline {
+    box-shadow: var(--shadow-border);
+  }
+}

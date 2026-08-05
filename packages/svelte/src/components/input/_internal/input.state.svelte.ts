@@ -1,5 +1,9 @@
-import { useFieldStateContext } from "../../../lib/index.js";
-import type { FieldStateContextResult } from "../../../lib/index.js";
+import {
+  resolveSurfaceVariant,
+  useFieldStateContext,
+  useSurfaceContext
+} from "../../../lib/index.js";
+import type { FieldStateContextResult, SurfaceContextResult } from "../../../lib/index.js";
 import { useTextFieldContext } from "../../text-field/_internal/text-field.context.js";
 import type { TextFieldContextResult } from "../../text-field/_internal/text-field.context.js";
 import type { InputSize, InputVariant } from "./input.types.js";
@@ -17,6 +21,7 @@ export class InputState {
 
   readonly fieldCtx: FieldStateContextResult;
   readonly textFieldCtx: TextFieldContextResult;
+  readonly surfaceCtx: SurfaceContextResult;
 
   get finalDisabled(): boolean {
     return this.fieldCtx.exists ? this.fieldCtx.disabled : (this.#disabled() ?? false);
@@ -37,7 +42,9 @@ export class InputState {
   }
 
   get finalVariant(): InputVariant {
-    return this.textFieldCtx.exists ? this.textFieldCtx.variant : (this.#variant() ?? "default");
+    return this.textFieldCtx.exists
+      ? this.textFieldCtx.variant
+      : resolveSurfaceVariant(this.#variant(), this.surfaceCtx, "default", "secondary");
   }
 
   get finalSize(): InputSize {
@@ -63,6 +70,7 @@ export class InputState {
     submissionInvalid: () => boolean;
     fieldContext?: FieldStateContextResult;
     textFieldContext?: TextFieldContextResult;
+    surfaceContext?: SurfaceContextResult;
   }) {
     this.#disabled = props.disabled;
     this.#readonly = props.readonly;
@@ -75,6 +83,7 @@ export class InputState {
 
     this.fieldCtx = props.fieldContext ?? useFieldStateContext();
     this.textFieldCtx = props.textFieldContext ?? useTextFieldContext();
+    this.surfaceCtx = props.surfaceContext ?? useSurfaceContext();
   }
 
   reportInvalid(): void {

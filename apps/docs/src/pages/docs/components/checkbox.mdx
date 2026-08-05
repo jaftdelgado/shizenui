@@ -15,6 +15,7 @@ import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.ast
 
 import CheckboxAnatomyCode from "@examples/svelte/checkbox/CheckboxAnatomy.svelte?raw";
 
+import CheckboxVariants from "@examples/svelte/checkbox/CheckboxVariants.svelte";
 import CheckboxIndicator from "@examples/svelte/checkbox/CheckboxIndicator.svelte";
 import CheckboxWithoutDescription from "@examples/svelte/checkbox/CheckboxWithoutDescription.svelte";
 import CheckboxBindChecked from "@examples/svelte/checkbox/CheckboxBindChecked.svelte";
@@ -23,6 +24,7 @@ import CheckboxIndeterminate from "@examples/svelte/checkbox/CheckboxIndetermina
 import CheckboxDisabled from "@examples/svelte/checkbox/CheckboxDisabled.svelte";
 import CheckboxInvalid from "@examples/svelte/checkbox/CheckboxInvalid.svelte";
 import CheckboxForm from "@examples/svelte/checkbox/CheckboxForm.svelte";
+import CheckboxSurface from "@examples/svelte/checkbox/CheckboxSurface.svelte";
 
 import CheckboxTwStyling from "@examples/svelte/checkbox/CheckboxTwStyling.svelte";
 import CheckboxCssStylingCode from "@examples/svelte/checkbox/CheckboxCssStyling.css?raw";
@@ -36,6 +38,12 @@ import CheckboxCssStylingCode from "@examples/svelte/checkbox/CheckboxCssStyling
 <CodeBlock code={CheckboxAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
 
 ## Examples
+
+### Variants
+
+<ComponentExample src="svelte/checkbox/CheckboxVariants.svelte">
+  <CheckboxVariants client:load />
+</ComponentExample>
 
 ### Custom Indicator
 
@@ -91,6 +99,14 @@ Use a Function Binding for complete control over the state's reads and writes.
   <CheckboxForm client:load />
 </ComponentExample>
 
+### In Surface
+
+When used inside a `Surface`, a Checkbox without an explicit variant automatically uses the `secondary` variant.
+
+<ComponentExample src="svelte/checkbox/CheckboxSurface.svelte">
+  <CheckboxSurface client:load />
+</ComponentExample>
+
 ## Styling
 
 ### Tailwind CSS classes
@@ -131,6 +147,16 @@ To customize the Checkbox component classes, you can use the `@layer components`
     {
       title: "checkbox__content",
       description: "Groups the label and description beside the control.",
+      code: true
+    },
+    {
+      title: "checkbox--default",
+      description: "Default checkbox variant using the standard field tokens.",
+      code: true
+    },
+    {
+      title: "checkbox--secondary",
+      description: "Secondary checkbox variant using the secondary field tokens.",
       code: true
     }
   ]}
@@ -179,6 +205,7 @@ To customize the Checkbox component classes, you can use the `@layer components`
     { name: "onCheckedChange", type: "(checked: boolean) => void", default: "undefined" },
     { name: "indeterminate", type: "boolean", default: "false" },
     { name: "onIndeterminateChange", type: "(indeterminate: boolean) => void", default: "undefined" },
+    { name: "variant", type: '"default" | "secondary"', default: '"default"' },
     { name: "disabled", type: "boolean", default: "undefined" },
     { name: "invalid", type: "boolean", default: "undefined" },
     { name: "required", type: "boolean", default: "undefined" },

@@ -1,6 +1,8 @@
 import type { HTMLButtonAttributes, HTMLAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
 
+export type RadioVariant = "default" | "secondary";
+
 type RadioBaseProps = Omit<
   HTMLButtonAttributes,
   | "checked"
@@ -21,6 +23,7 @@ export type RadioClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLBu
 export interface RadioProps extends RadioBaseProps {
   value: string;
   disabled?: boolean;
+  variant?: RadioVariant;
   id?: string;
   ref?: HTMLButtonElement | null;
   onclick?: (e: RadioClickEvent) => void;

@@ -1,5 +1,6 @@
 import { createContext } from "svelte";
 import type { CheckboxGroupOrientation } from "./checkbox-group.types.js";
+import type { CheckboxVariant } from "../../checkbox/_internal/checkbox.types.js";
 
 export interface CheckboxGroupContextValue {
   readonly value: string[];
@@ -9,6 +10,7 @@ export interface CheckboxGroupContextValue {
   readonly invalid: boolean;
   readonly required: boolean;
   readonly orientation: CheckboxGroupOrientation;
+  readonly variant: CheckboxVariant;
   readonly labelId: string | undefined;
   readonly descriptionId: string | undefined;
   readonly errorId: string | undefined;
@@ -62,6 +64,9 @@ export function useCheckboxGroupContext(): CheckboxGroupContextResult {
       get orientation() {
         return "vertical" as CheckboxGroupOrientation;
       },
+      get variant() {
+        return "default" as CheckboxVariant;
+      },
       get labelId() {
         return undefined;
       },
@@ -111,6 +116,9 @@ export function useCheckboxGroupContext(): CheckboxGroupContextResult {
     },
     get orientation() {
       return context.orientation;
+    },
+    get variant() {
+      return context.variant;
     },
     get labelId() {
       return context.labelId;

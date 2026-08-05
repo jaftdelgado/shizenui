@@ -22,6 +22,7 @@
   /* Base Colors */
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
   --color-overlay: var(--overlay);
   --color-separator: var(--separator);
   --color-focus: var(--focus);
@@ -134,4 +135,5 @@
 
   --shadow-border: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.08), var(--shadow-border-halo);
   --shadow-field: 0px 1px 2px -1px rgba(0, 0, 0, 0.04), 0px 2px 4px 0px rgba(0, 0, 0, 0.02);
+  --shadow-surface: 0px 1px 2px -1px rgba(0, 0, 0, 0.04), 0px 2px 4px 0px rgba(0, 0, 0, 0.02);
 }

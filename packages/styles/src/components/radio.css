@@ -53,6 +53,17 @@
     cursor: var(--cursor-interactive);
   }
 
+  /* Variants reuse the same field tokens as Input. */
+  .radio--default {
+    --radio-bg: var(--color-field);
+    --radio-bg-hover: var(--color-field-hover);
+  }
+
+  .radio--secondary {
+    --radio-bg: var(--color-field-secondary);
+    --radio-bg-hover: var(--color-field-secondary-hover);
+  }
+
   .radio__control {
     @apply relative flex shrink-0 items-center justify-center;
     @apply mt-0.5 size-4 rounded-full;

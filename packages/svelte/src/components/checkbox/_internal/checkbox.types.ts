@@ -1,6 +1,8 @@
 import type { HTMLButtonAttributes, HTMLAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
 
+export type CheckboxVariant = "default" | "secondary";
+
 type CheckboxBaseProps = Omit<
   HTMLButtonAttributes,
   | "checked"
@@ -28,6 +30,7 @@ export interface CheckboxProps extends CheckboxBaseProps {
   readonly?: boolean;
   invalid?: boolean;
   required?: boolean;
+  variant?: CheckboxVariant;
   checked?: boolean;
   indeterminate?: boolean;
   onCheckedChange?: (checked: boolean) => void;
