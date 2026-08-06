@@ -40,7 +40,7 @@
 
       &[data-checked] {
         & .radio__control {
-          @apply status-invalid-field ring-1;
+          @apply status-invalid-field;
           background-color: var(--color-danger);
         }
       }

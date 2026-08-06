@@ -88,10 +88,6 @@
       @apply status-focused;
     }
 
-    .checkbox[data-invalid][data-focus-visible] & {
-      @apply status-focused-invalid-field;
-    }
-
     .checkbox[data-pressed] & {
       @apply scale-95;
     }

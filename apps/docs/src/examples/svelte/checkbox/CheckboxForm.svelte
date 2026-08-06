@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Checkbox, Label, Button } from "@shizen-ui/svelte";
+  import { Checkbox, Label, FieldError, Button } from "@shizen-ui/svelte";
 
   let notifications = $state(false);
   let newsletter = $state(false);
@@ -37,6 +37,7 @@
       <Checkbox.Control />
       <Checkbox.Content>
         <Label>I agree to the Terms of Service</Label>
+        <FieldError>This field is required</FieldError>
       </Checkbox.Content>
     </Checkbox>
   </div>

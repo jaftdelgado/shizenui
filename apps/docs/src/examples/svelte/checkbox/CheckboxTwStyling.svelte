@@ -14,8 +14,7 @@
 <div class="flex flex-col gap-5">
   {#each items as item (item.id)}
     <Checkbox bind:checked={item.checked} class="gap-4">
-      <Checkbox.Control
-        class="rounded-sm bg-zinc-200 data-checked:bg-purple-600"
+      <Checkbox.Control class="rounded-sm bg-zinc-200 hover:bg-zinc-300 data-checked:bg-purple-600"
       ></Checkbox.Control>
       <Checkbox.Content>
         <Label>{item.label}</Label>
