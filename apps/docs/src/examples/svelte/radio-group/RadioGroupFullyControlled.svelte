@@ -36,21 +36,18 @@
   }
 </script>
 
-<div class="flex max-w-sm flex-col">
-  <RadioGroup bind:value={getRole, setRole} name="member-role">
-    <Label>Member Role</Label>
-    <Description>Choose the access level for this team member.</Description>
-
-    <RadioGroup.Items>
-      {#each roles as role}
-        <Radio value={role.value}>
-          <Radio.Control />
-          <Radio.Content>
-            <Label>{role.label}</Label>
-            <Description>{role.description}</Description>
-          </Radio.Content>
-        </Radio>
-      {/each}
-    </RadioGroup.Items>
-  </RadioGroup>
-</div>
+<RadioGroup bind:value={getRole, setRole}>
+  <Label>Member Role</Label>
+  <Description>Choose the access level for this team member.</Description>
+  <RadioGroup.Items>
+    {#each roles as role}
+      <Radio value={role.value}>
+        <Radio.Control />
+        <Radio.Content>
+          <Label>{role.label}</Label>
+          <Description>{role.description}</Description>
+        </Radio.Content>
+      </Radio>
+    {/each}
+  </RadioGroup.Items>
+</RadioGroup>

@@ -22,21 +22,18 @@
   ];
 </script>
 
-<div class="flex-center justify-center">
-  <RadioGroup bind:value={selectedTheme} name="theme">
-    <Label>Appearance</Label>
-    <Description>Choose your preferred theme.</Description>
-
-    <RadioGroup.Items>
-      {#each themes as theme}
-        <Radio value={theme.value}>
-          <Radio.Control />
-          <Radio.Content>
-            <Label>{theme.label}</Label>
-            <Description>{theme.description}</Description>
-          </Radio.Content>
-        </Radio>
-      {/each}
-    </RadioGroup.Items>
-  </RadioGroup>
-</div>
+<RadioGroup bind:value={selectedTheme}>
+  <Label>Appearance</Label>
+  <Description>Choose your preferred theme.</Description>
+  <RadioGroup.Items>
+    {#each themes as theme}
+      <Radio value={theme.value}>
+        <Radio.Control />
+        <Radio.Content>
+          <Label>{theme.label}</Label>
+          <Description>{theme.description}</Description>
+        </Radio.Content>
+      </Radio>
+    {/each}
+  </RadioGroup.Items>
+</RadioGroup>

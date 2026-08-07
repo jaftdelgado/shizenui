@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cn } from "../../../lib/utils";
+  import { mergeProps } from "../../../lib/utils";
   import { radioStyles } from "@shizen-ui/styles";
   import { assertContext, warnIf } from "../../../lib/runes/index.js";
   import { useRadioContext } from "../_internal/index.js";
@@ -9,6 +9,10 @@
 
   const ctx = useRadioContext();
   const styles = $derived(radioStyles());
+
+  const contentProps = $derived(
+    mergeProps({ class: styles.content() }, { ...rest, class: className })
+  );
 
   const { shouldRender } = assertContext(
     () => !ctx.exists,
@@ -24,7 +28,7 @@
 </script>
 
 {#if shouldRender}
-  <div bind:this={ref} class={cn(styles.content(), className)} {...rest}>
+  <div bind:this={ref} {...contentProps}>
     {#if children}
       {@render children()}
     {/if}

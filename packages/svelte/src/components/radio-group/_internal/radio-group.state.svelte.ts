@@ -1,4 +1,7 @@
-import type { RadioGroupRegistration } from "./radio-group.context.js";
+import type {
+  RadioGroupContextResult,
+  RadioGroupRegistration
+} from "./radio-group.context.js";
 import type { RadioGroupOrientation, RadioGroupProps } from "./radio-group.types.js";
 import { useSurfaceContext } from "../../../lib/index.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
@@ -6,16 +9,18 @@ import type { RadioVariant } from "../../radio/_internal/radio.types.js";
 
 export class RadioGroupState {
   #value: () => RadioGroupProps["value"];
-  #onValueChange: () => ((value: string) => void) | undefined;
+  #onValueChange: () => ((value: string | undefined) => void) | undefined;
   #name: () => string | undefined;
   #disabled: () => boolean | undefined;
   #readonly: () => boolean | undefined;
   #invalid: () => boolean | undefined;
+  #submissionInvalid: () => boolean;
   #required: () => boolean | undefined;
   #orientation: () => RadioGroupOrientation | undefined;
   #variant: () => RadioGroupProps["variant"];
   #id: () => string;
   #setValue: (value: string) => void;
+  #setSubmissionInvalid: (next: boolean) => void;
 
   #itemIds: Set<string> = $state(new Set());
   #itemMap = new Map<string, RadioGroupRegistration>();
@@ -44,7 +49,7 @@ export class RadioGroupState {
   }
 
   get finalInvalid(): boolean {
-    return this.#invalid() ?? false;
+    return (this.#invalid() ?? false) || this.#submissionInvalid();
   }
 
   get finalRequired(): boolean {
@@ -75,6 +80,10 @@ export class RadioGroupState {
 
     const matchingId = this.#findIdByValue(value);
     this.setActiveId(matchingId);
+  }
+
+  setSubmissionInvalid(next: boolean): void {
+    this.#setSubmissionInvalid(next);
   }
 
   register(id: string, entry: RadioGroupRegistration): void {
@@ -114,16 +123,18 @@ export class RadioGroupState {
 
   constructor(props: {
     value: () => RadioGroupProps["value"];
-    onValueChange: () => ((value: string) => void) | undefined;
+    onValueChange: () => ((value: string | undefined) => void) | undefined;
     name: () => string | undefined;
     disabled: () => boolean | undefined;
     readonly: () => boolean | undefined;
     invalid: () => boolean | undefined;
+    submissionInvalid: () => boolean;
     required: () => boolean | undefined;
     orientation: () => RadioGroupOrientation | undefined;
     variant: () => RadioGroupProps["variant"];
     id: () => string;
     setValue: (value: string) => void;
+    setSubmissionInvalid: (next: boolean) => void;
     surfaceContext?: SurfaceContextResult;
   }) {
     this.#value = props.value;
@@ -132,11 +143,13 @@ export class RadioGroupState {
     this.#disabled = props.disabled;
     this.#readonly = props.readonly;
     this.#invalid = props.invalid;
+    this.#submissionInvalid = props.submissionInvalid;
     this.#required = props.required;
     this.#orientation = props.orientation;
     this.#variant = props.variant;
     this.#id = props.id;
     this.#setValue = props.setValue;
+    this.#setSubmissionInvalid = props.setSubmissionInvalid;
     this.surfaceCtx = props.surfaceContext ?? useSurfaceContext();
   }
 
@@ -186,3 +199,16 @@ export class RadioGroupState {
 }
 
 export type RadioGroupStateInstance = InstanceType<typeof RadioGroupState>;
+
+export function resolveRadioGroupDescribedBy(
+  ctx: RadioGroupContextResult
+): string | undefined {
+  return (
+    [
+      ctx.hasError ? ctx.errorId : null,
+      !ctx.hasError && ctx.hasDescription ? ctx.descriptionId : null
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
+}

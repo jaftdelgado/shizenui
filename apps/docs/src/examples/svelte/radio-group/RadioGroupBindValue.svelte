@@ -23,10 +23,9 @@
 </script>
 
 <div class="flex flex-col gap-6">
-  <RadioGroup bind:value={quality} name="video-quality">
+  <RadioGroup bind:value={quality}>
     <Label>Video Quality</Label>
     <Description>Choose the streaming resolution for playback.</Description>
-
     <RadioGroup.Items>
       {#each qualities as option}
         <Radio value={option.value}>

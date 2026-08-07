@@ -9,7 +9,7 @@ type RadioGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "ro
 export interface RadioGroupProps extends RadioGroupBaseProps {
   children?: Snippet;
   value?: string;
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: string | undefined) => void;
   name?: string;
   orientation?: RadioGroupOrientation;
   invalid?: boolean;
@@ -21,7 +21,12 @@ export interface RadioGroupProps extends RadioGroupBaseProps {
   ref?: HTMLDivElement | null;
 }
 
-export interface RadioGroupItemsProps extends HTMLAttributes<HTMLDivElement> {
+type RadioGroupItemsBaseProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "onfocusin" | "onkeydown"
+>;
+
+export interface RadioGroupItemsProps extends RadioGroupItemsBaseProps {
   children?: Snippet;
   ref?: HTMLDivElement | null;
 }

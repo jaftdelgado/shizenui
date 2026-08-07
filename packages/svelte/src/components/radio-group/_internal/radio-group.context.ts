@@ -14,6 +14,7 @@ export interface RadioGroupContextValue {
   readonly disabled: boolean;
   readonly readonly: boolean;
   readonly invalid: boolean;
+  readonly required: boolean;
   readonly orientation: RadioGroupOrientation;
   readonly variant: RadioVariant;
   readonly labelId: string | undefined;
@@ -23,6 +24,7 @@ export interface RadioGroupContextValue {
   readonly hasLabel: boolean;
   readonly hasDescription: boolean;
   readonly hasError: boolean;
+  readonly setSubmissionInvalid: (next: boolean) => void;
   readonly setValue: (value: string) => void;
   readonly register: (id: string, entry: RadioGroupRegistration) => void;
   readonly unregister: (id: string) => void;
@@ -72,6 +74,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       get invalid() {
         return false;
       },
+      get required() {
+        return false;
+      },
       get orientation() {
         return "vertical" as RadioGroupOrientation;
       },
@@ -99,6 +104,7 @@ export function useRadioGroupContext(): RadioGroupContextResult {
       get hasError() {
         return false;
       },
+      setSubmissionInvalid(_next: boolean) {},
       setValue(_value: string) {},
       register(_id: string, _entry: RadioGroupRegistration) {},
       unregister(_id: string) {},
@@ -136,6 +142,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     get invalid() {
       return context.invalid;
     },
+    get required() {
+      return context.required;
+    },
     get orientation() {
       return context.orientation;
     },
@@ -162,6 +171,9 @@ export function useRadioGroupContext(): RadioGroupContextResult {
     },
     get hasError() {
       return context.hasError;
+    },
+    setSubmissionInvalid(next: boolean) {
+      return context.setSubmissionInvalid(next);
     },
     setValue(value: string) {
       return context.setValue(value);

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { radioStyles } from "@shizen-ui/styles";
 
-  import { cn, presence } from "../../../lib/utils";
+  import { mergeProps, presence } from "../../../lib/utils";
   import { assertContext } from "../../../lib/runes/index.js";
   import { useRadioContext } from "../_internal/index.js";
   import type { RadioControlProps } from "../_internal/index.js";
@@ -13,6 +13,19 @@
   const ctx = useRadioContext();
   const styles = $derived(radioStyles());
 
+  const controlProps = $derived(
+    mergeProps(
+      {
+        class: styles.control(),
+        "data-checked": presence(ctx.checked),
+        "data-disabled": presence(ctx.disabled),
+        "data-readonly": presence(ctx.readonly),
+        "data-invalid": presence(ctx.invalid)
+      },
+      { ...rest, class: className }
+    )
+  );
+
   const { shouldRender } = assertContext(
     () => !ctx.exists,
     "Radio.Control",
@@ -21,15 +34,7 @@
 </script>
 
 {#if shouldRender}
-  <div
-    bind:this={ref}
-    class={cn(styles.control(), className)}
-    data-checked={presence(ctx.checked)}
-    data-disabled={presence(ctx.disabled)}
-    data-readonly={presence(ctx.readonly)}
-    data-invalid={presence(ctx.invalid)}
-    {...rest}
-  >
+  <div bind:this={ref} {...controlProps}>
     {#if children}
       {@render children()}
     {:else}

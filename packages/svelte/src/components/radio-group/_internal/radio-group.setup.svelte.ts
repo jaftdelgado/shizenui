@@ -28,6 +28,9 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     get invalid() {
       return state.finalInvalid;
     },
+    get required() {
+      return state.finalRequired;
+    },
     get orientation() {
       return state.finalOrientation;
     },
@@ -54,6 +57,9 @@ export function setupRadioGroupContexts(state: RadioGroupState): void {
     },
     get hasError() {
       return errorIds.size > 0;
+    },
+    setSubmissionInvalid(next: boolean) {
+      state.setSubmissionInvalid(next);
     },
     setValue(value: string) {
       state.setValue(value);

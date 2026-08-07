@@ -14,4 +14,8 @@
   .radio-group__items--horizontal {
     @apply flex-row flex-wrap gap-6;
   }
+
+  .radio-group__input {
+    @apply sr-only;
+  }
 }

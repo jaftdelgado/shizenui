@@ -1,5 +1,6 @@
 import { useRadioGroupContext } from "../../radio-group/_internal/radio-group.context.js";
 import type { RadioGroupContextResult } from "../../radio-group/_internal/radio-group.context.js";
+import type { RadioContextResult } from "./radio.context.js";
 import {
   useFieldStateContext,
   useSurfaceContext,
@@ -82,3 +83,24 @@ export class RadioState {
 }
 
 export type RadioStateInstance = InstanceType<typeof RadioState>;
+
+export function resolveRadioDescribedBy(
+  state: RadioStateInstance,
+  ctx: RadioContextResult,
+  id: string
+): string | undefined {
+  return (
+    [
+      ctx.hasDescription ? `${id}-description` : null,
+      state.groupCtx.exists
+        ? state.groupCtx.hasError
+          ? state.groupCtx.errorId
+          : state.groupCtx.hasDescription
+            ? state.groupCtx.descriptionId
+            : null
+        : null
+    ]
+      .filter(Boolean)
+      .join(" ") || undefined
+  );
+}

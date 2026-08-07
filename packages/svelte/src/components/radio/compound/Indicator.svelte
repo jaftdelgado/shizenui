@@ -1,7 +1,7 @@
 <script lang="ts">
   import { radioStyles } from "@shizen-ui/styles";
 
-  import { cn, presence } from "../../../lib/utils";
+  import { mergeProps, presence } from "../../../lib/utils";
   import { assertContext } from "../../../lib/runes/index.js";
   import { useRadioContext } from "../_internal/index.js";
   import type { RadioIndicatorProps } from "../_internal/index.js";
@@ -18,6 +18,18 @@
 
   const isCustom = $derived(!!children);
 
+  const indicatorProps = $derived(
+    mergeProps(
+      {
+        class: styles.indicator(),
+        "data-checked": presence(ctx.checked),
+        "data-readonly": presence(ctx.readonly),
+        "data-custom": presence(isCustom)
+      },
+      { ...rest, class: className }
+    )
+  );
+
   const { shouldRender } = assertContext(
     () => !ctx.exists,
     "Radio.Indicator",
@@ -26,14 +38,7 @@
 </script>
 
 {#if shouldRender}
-  <span
-    bind:this={ref}
-    class={cn(styles.indicator(), className)}
-    data-checked={presence(ctx.checked)}
-    data-readonly={presence(ctx.readonly)}
-    data-custom={presence(isCustom)}
-    {...rest}
-  >
+  <span bind:this={ref} {...indicatorProps}>
     {#if children}
       {@render children()}
     {/if}

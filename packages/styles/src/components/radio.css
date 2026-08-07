@@ -129,4 +129,8 @@
   .radio__content {
     @apply flex flex-col items-start;
   }
+
+  .radio__input {
+    @apply sr-only;
+  }
 }

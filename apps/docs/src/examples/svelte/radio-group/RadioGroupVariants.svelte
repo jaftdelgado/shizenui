@@ -20,7 +20,7 @@
 </script>
 
 <div class="flex flex-col gap-6">
-  <RadioGroup bind:value={defaultValue} aria-label="Default radio variant">
+  <RadioGroup bind:value={defaultValue}>
     <Label>Default</Label>
     <RadioGroup.Items>
       {#each defaultOptions as option}
@@ -35,7 +35,7 @@
     </RadioGroup.Items>
   </RadioGroup>
 
-  <RadioGroup variant="secondary" bind:value={secondaryValue} aria-label="Secondary radio variant">
+  <RadioGroup variant="secondary" bind:value={secondaryValue}>
     <Label>Secondary</Label>
     <RadioGroup.Items>
       {#each secondaryOptions as option}
