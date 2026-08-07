@@ -1,10 +1,9 @@
 <script lang="ts">
   import { buttonStyles } from "@shizen-ui/styles";
-  import { cn } from "../../lib/utils";
+  import { mergeProps } from "../../lib/utils/index.js";
 
-  import { warnIf } from "../../lib/runes/index.js";
   import type { ButtonProps, IconContent } from "./_internal/index.js";
-  import { ButtonState } from "./_internal/index.js";
+  import { ButtonState, createButtonHandlers, setupButtonWarnings } from "./_internal/index.js";
 
   let {
     children,
@@ -22,53 +21,60 @@
     ...rest
   }: ButtonProps = $props();
 
-  warnIf(
-    () => iconOnly && !rest["aria-label"],
-    "Button",
-    "No 'aria-label' provided with 'iconOnly=true'. The button will have no accessible name."
-  );
-
-  warnIf(
-    () => loading === true && disabled === true,
-    "Button",
-    "'loading' and 'disabled' are both set. Use only 'loading' to represent a pending state."
-  );
-
-  const state = new ButtonState({
+  const buttonState = new ButtonState({
     variant: () => variant,
     size: () => size,
     disabled: () => disabled,
     loading: () => loading
   });
 
+  setupButtonWarnings({
+    isIconOnly: () => iconOnly,
+    hasAccessibleName: () => Boolean(rest["aria-label"] || rest["aria-labelledby"])
+  });
+
+  const handlers = createButtonHandlers({
+    getDisabled: () => buttonState.finalDisabled
+  });
+
   const styles = $derived(
     buttonStyles({
-      variant: state.finalVariant,
-      size: state.finalSize,
+      variant: buttonState.finalVariant,
+      size: buttonState.finalSize,
       iconOnly
     })
+  );
+
+  const buttonProps = $derived(
+    mergeProps(
+      {
+        type,
+        onclick,
+        disabled: buttonState.finalDisabled,
+        "aria-busy": loading || undefined,
+        "data-slot": "button",
+        onkeydown: handlers.handleKeydown,
+        onkeyup: handlers.handleKeyup,
+        onmousedown: handlers.handleMouseDown,
+        onmouseup: handlers.handleMouseUp,
+        onmouseleave: handlers.handleMouseLeave,
+        onblur: handlers.handleBlur,
+        class: styles.base()
+      },
+      { ...rest, class: className }
+    )
   );
 </script>
 
 {#snippet renderIcon(content: IconContent | undefined, position: "start" | "end")}
-  {#if typeof content === "string"}
-    <i class={content}></i>
-  {:else if content}
+  {#if content}
     <span class={position === "start" ? styles.iconStart() : styles.iconEnd()}>
       {@render content()}
     </span>
   {/if}
 {/snippet}
 
-<button
-  bind:this={ref}
-  {type}
-  {onclick}
-  disabled={state.finalDisabled}
-  aria-busy={loading || undefined}
-  class={cn(styles.base(), className)}
-  {...rest}
->
+<button bind:this={ref} {...buttonProps}>
   <span class={styles.content()}>
     {#if iconOnly}
       <span class={styles.icon()}>

@@ -23,7 +23,7 @@ import ButtonGroupCssStylingCode from "@examples/svelte/button-group/ButtonGroup
 
 ## Import
 
-<CodeImport code={`import { ButtonGroup } from "@shizen-ui/svelte";`} />
+<CodeImport code={`import { ButtonGroup, Button } from "@shizen-ui/svelte";`} />
 
 ## Examples
 
@@ -152,6 +152,7 @@ Groups multiple buttons and propagates `variant`, `size`, and `disabled` to all 
     { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"' },
     { name: "hideSeparator", type: "boolean", default: "false" },
     { name: "disabled", type: "boolean", default: "undefined" },
-    { name: "children", type: "Snippet", default: "—" }
+    { name: "children", type: "Snippet", default: "—" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
   ]}
 />

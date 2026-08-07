@@ -1,4 +1,4 @@
-import { getContext, setContext } from "svelte";
+import { createContext } from "svelte";
 import type { ButtonVariants } from "@shizen-ui/styles";
 
 export interface ButtonGroupContextValue {
@@ -14,14 +14,20 @@ export interface ButtonGroupContextResult {
   readonly exists: boolean;
 }
 
-const BUTTON_GROUP_CONTEXT_KEY = Symbol("shizen:button-group");
+const [getButtonGroupContext, setButtonGroupContext] = createContext<ButtonGroupContextValue>();
 
-export function setButtonGroupContext(value: ButtonGroupContextValue): void {
-  setContext(BUTTON_GROUP_CONTEXT_KEY, value);
+function tryGetButtonGroupContext(): ButtonGroupContextValue | undefined {
+  try {
+    return getButtonGroupContext();
+  } catch {
+    return undefined;
+  }
 }
 
+export { setButtonGroupContext };
+
 export function useButtonGroupContext(): ButtonGroupContextResult {
-  const context = getContext<ButtonGroupContextValue | undefined>(BUTTON_GROUP_CONTEXT_KEY);
+  const context = tryGetButtonGroupContext();
 
   if (!context) {
     return {

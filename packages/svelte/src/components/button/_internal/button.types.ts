@@ -7,9 +7,19 @@ export type { ButtonVariants };
 export type ButtonSize = NonNullable<ButtonVariants["size"]>;
 export type ButtonVariant = NonNullable<ButtonVariants["variant"]>;
 
-export type IconContent = Snippet<[]> | string;
+export type IconContent = Snippet<[]>;
 
-type ButtonBaseProps = Omit<HTMLButtonAttributes, "children" | "disabled">;
+type ButtonBaseProps = Omit<
+  HTMLButtonAttributes,
+  | "children"
+  | "disabled"
+  | "onkeydown"
+  | "onkeyup"
+  | "onmousedown"
+  | "onmouseup"
+  | "onmouseleave"
+  | "onblur"
+>;
 
 interface NormalButtonProps extends ButtonBaseProps {
   iconOnly?: false;
