@@ -34,9 +34,7 @@
   <span class={styles.content()}>
     {@render renderIcon(startContent, "start")}
     {#if children}
-      <span class={styles.label()}>
-        {@render children()}
-      </span>
+      {@render children()}
     {/if}
     {@render renderIcon(endContent, "end")}
   </span>

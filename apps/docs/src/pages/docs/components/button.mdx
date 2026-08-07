@@ -94,7 +94,7 @@ To customize the Button component classes, you can use the `@layer components` d
     },
     {
       title: "button__content",
-      description: "Container that aligns the icon and label together.",
+      description: "Container that aligns the button's internal content.",
       code: true
     },
     {
@@ -104,17 +104,12 @@ To customize the Button component classes, you can use the `@layer components` d
     },
     {
       title: "button__icon--start",
-      description: "Aligns an icon placed before the label.",
+      description: "Aligns an icon placed before the button content.",
       code: true
     },
     {
       title: "button__icon--end",
-      description: "Aligns an icon placed after the label.",
-      code: true
-    },
-    {
-      title: "button__label",
-      description: "Wraps the button text and keeps it centered.",
+      description: "Aligns an icon placed after the button content.",
       code: true
     }
   ]}
@@ -141,7 +136,7 @@ To customize the Button component classes, you can use the `@layer components` d
     },
     {
       title: "button--icon-only",
-      description: "Square button with just an icon, no label.",
+      description: "Square button with icon content and no visible text.",
       code: true
     },
     {
@@ -230,8 +225,8 @@ To customize the Button component classes, you can use the `@layer components` d
     { name: "loading", type: "boolean", default: "false" },
     { name: "iconOnly", type: "boolean", default: "false" },
     { name: "type", type: '"button" | "submit" | "reset"', default: '"button"' },
-    { name: "startContent", type: "Snippet<[]> | string", default: "undefined" },
-    { name: "endContent", type: "Snippet<[]> | string", default: "undefined" },
+    { name: "startContent", type: "Snippet<[]>", default: "undefined" },
+    { name: "endContent", type: "Snippet<[]>", default: "undefined" },
     { name: "children", type: "Snippet", default: "undefined" },
     { name: "onclick", type: "MouseEventHandler<HTMLButtonElement>", default: "undefined" },
     { name: "ref", type: "HTMLButtonElement | null", default: "null" }

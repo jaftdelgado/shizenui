@@ -26,10 +26,6 @@
     margin-inline-end: -0.25rem;
   }
 
-  .chip__label {
-    @apply flex items-center;
-  }
-
   /* Sizes */
   .chip--sm {
     @apply h-5 px-2 text-xs;

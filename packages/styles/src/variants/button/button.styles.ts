@@ -6,8 +6,7 @@ export const buttonStyles = tv({
     content: "button__content",
     icon: "button__icon",
     iconStart: "button__icon button__icon--start",
-    iconEnd: "button__icon button__icon--end",
-    label: "button__label"
+    iconEnd: "button__icon button__icon--end"
   },
   variants: {
     variant: {

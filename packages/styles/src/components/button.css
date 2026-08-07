@@ -61,10 +61,6 @@
     margin-inline-end: var(--btn-icon-inset);
   }
 
-  .button__label {
-    @apply flex items-center;
-  }
-
   .button--primary {
     --btn-bg: var(--color-accent);
     --btn-fg: var(--color-accent-foreground);
