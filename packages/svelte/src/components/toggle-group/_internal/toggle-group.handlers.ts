@@ -1,33 +1,50 @@
-import type { ToggleGroupState } from "./toggle-group.state.svelte.js";
+import type { ToggleGroupContextResult } from "./toggle-group.context.js";
 import type { ToggleGroupOrientation } from "./toggle-group.types.js";
 
 export function createToggleGroupHandlers(options: {
-  state: ToggleGroupState;
+  getContainer: () => HTMLDivElement | null;
+  groupCtx: ToggleGroupContextResult;
   getOrientation: () => ToggleGroupOrientation;
 }) {
-  const { state, getOrientation } = options;
+  const { getContainer, groupCtx, getOrientation } = options;
 
   function handleKeydown(e: KeyboardEvent): void {
+    const container = getContainer();
+    if (!container) return;
+
+    const candidates = Array.from(
+      container.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]:not(:disabled)')
+    );
+    if (candidates.length === 0) return;
+
+    const current = e.target as HTMLButtonElement;
+    const currentIndex = candidates.indexOf(current);
+    if (currentIndex === -1) return;
+
     const orientation = getOrientation();
+    let targetIndex: number | undefined;
 
     if (orientation === "horizontal") {
       if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        state.moveFocus("prev");
+        targetIndex = currentIndex - 1;
       } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        state.moveFocus("next");
+        targetIndex = currentIndex + 1;
       }
-      return;
+    } else if (e.key === "ArrowUp") {
+      targetIndex = currentIndex - 1;
+    } else if (e.key === "ArrowDown") {
+      targetIndex = currentIndex + 1;
     }
 
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      state.moveFocus("prev");
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      state.moveFocus("next");
-    }
+    if (targetIndex === undefined) return;
+
+    e.preventDefault();
+
+    const nextCandidate = candidates[targetIndex];
+    if (!nextCandidate) return;
+
+    nextCandidate.focus();
+    groupCtx.setActiveId(nextCandidate.id);
   }
 
   return { handleKeydown };

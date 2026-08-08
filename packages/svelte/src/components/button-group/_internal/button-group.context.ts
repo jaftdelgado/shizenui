@@ -1,15 +1,15 @@
 import { createContext } from "svelte";
-import type { ButtonVariants } from "@shizen-ui/styles";
+import type { ButtonSize, ButtonVariant } from "../../button/_internal/button.types.js";
 
 export interface ButtonGroupContextValue {
-  readonly variant: NonNullable<ButtonVariants["variant"]>;
-  readonly size: NonNullable<ButtonVariants["size"]>;
+  readonly variant: ButtonVariant;
+  readonly size: ButtonSize;
   readonly disabled: boolean;
 }
 
 export interface ButtonGroupContextResult {
-  readonly variant: NonNullable<ButtonVariants["variant"]>;
-  readonly size: NonNullable<ButtonVariants["size"]>;
+  readonly variant: ButtonVariant;
+  readonly size: ButtonSize;
   readonly disabled: boolean;
   readonly exists: boolean;
 }
@@ -32,10 +32,10 @@ export function useButtonGroupContext(): ButtonGroupContextResult {
   if (!context) {
     return {
       get variant() {
-        return "primary" as NonNullable<ButtonVariants["variant"]>;
+        return "primary" as ButtonVariant;
       },
       get size() {
-        return "md" as NonNullable<ButtonVariants["size"]>;
+        return "md" as ButtonSize;
       },
       get disabled() {
         return false;

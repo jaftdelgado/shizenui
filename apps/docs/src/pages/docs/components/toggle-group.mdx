@@ -65,13 +65,19 @@ import ToggleGroupCssStylingCode from "@examples/svelte/toggle-group/ToggleGroup
   <ToggleGroupSelectionMode client:load />
 </ComponentExample>
 
-### Two-Way Binding
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
 
 <ComponentExample src="svelte/toggle-group/ToggleGroupBindValue.svelte">
   <ToggleGroupBindValue client:load />
 </ComponentExample>
 
-### Fully Controlled
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
 
 <ComponentExample src="svelte/toggle-group/ToggleGroupFullyControlled.svelte">
   <ToggleGroupFullyControlled client:load />
@@ -180,7 +186,8 @@ Groups multiple toggles and propagates `variant`, `size`, and `disabled` to all 
     { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"' },
     { name: "hideSeparators", type: "boolean", default: "false" },
     { name: "disabled", type: "boolean", default: "undefined" },
-    { name: "children", type: "Snippet", default: "—" }
+    { name: "children", type: "Snippet", default: "—" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
   ]}
 />
 

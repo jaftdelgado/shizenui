@@ -2,7 +2,7 @@
   import { buttonStyles } from "@shizen-ui/styles";
   import { mergeProps } from "../../lib/utils/index.js";
 
-  import type { ButtonProps, IconContent } from "./_internal/index.js";
+  import type { ButtonProps, ButtonIconContent } from "./_internal/index.js";
   import { ButtonState, createButtonHandlers, setupButtonWarnings } from "./_internal/index.js";
 
   let {
@@ -66,7 +66,7 @@
   );
 </script>
 
-{#snippet renderIcon(content: IconContent | undefined, position: "start" | "end")}
+{#snippet renderIcon(content: ButtonIconContent | undefined, position: "start" | "end")}
   {#if content}
     <span class={position === "start" ? styles.iconStart() : styles.iconEnd()}>
       {@render content()}

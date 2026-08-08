@@ -3,7 +3,6 @@ import type { ToggleVariant, ToggleSize } from "../../toggle/_internal/index.js"
 import type { ToggleGroupSelectionMode } from "./toggle-group.types.js";
 
 export interface ToggleGroupRegistration {
-  getRef: () => HTMLButtonElement | null;
   getDisabled: () => boolean;
 }
 
@@ -18,7 +17,7 @@ export interface ToggleGroupContextValue {
   readonly register: (id: string, entry: ToggleGroupRegistration) => void;
   readonly unregister: (id: string) => void;
   readonly isActive: (id: string) => boolean;
-  readonly setActive: (id: string) => void;
+  readonly setActiveId: (id: string) => void;
 }
 
 export interface ToggleGroupContextResult extends ToggleGroupContextValue {
@@ -42,18 +41,34 @@ export function useToggleGroupContext(): ToggleGroupContextResult {
 
   if (!context) {
     return {
-      variant: "default" as ToggleVariant,
-      size: "md" as ToggleSize,
-      disabled: false,
-      selectionMode: "single" as ToggleGroupSelectionMode, // irrelevant because exists is false
-      selectedValues: new Set<string>(),
-      isSelected: () => false,
-      onToggle: () => {},
-      register: () => {},
-      unregister: () => {},
-      isActive: () => false,
-      setActive: () => {},
-      exists: false
+      get variant() {
+        return "default" as ToggleVariant;
+      },
+      get size() {
+        return "md" as ToggleSize;
+      },
+      get disabled() {
+        return false;
+      },
+      get selectionMode() {
+        return "single" as ToggleGroupSelectionMode;
+      },
+      get selectedValues() {
+        return new Set<string>();
+      },
+      isSelected(_value: string) {
+        return false;
+      },
+      onToggle(_value: string) {},
+      register(_id: string, _entry: ToggleGroupRegistration) {},
+      unregister(_id: string) {},
+      isActive(_id: string) {
+        return false;
+      },
+      setActiveId(_id: string) {},
+      get exists() {
+        return false;
+      }
     } satisfies ToggleGroupContextResult;
   }
 
@@ -73,23 +88,23 @@ export function useToggleGroupContext(): ToggleGroupContextResult {
     get selectedValues() {
       return context.selectedValues;
     },
-    get isSelected() {
-      return context.isSelected;
+    isSelected(value: string) {
+      return context.isSelected(value);
     },
-    get onToggle() {
-      return context.onToggle;
+    onToggle(value: string) {
+      return context.onToggle(value);
     },
-    get register() {
-      return context.register;
+    register(id: string, entry: ToggleGroupRegistration) {
+      return context.register(id, entry);
     },
-    get unregister() {
-      return context.unregister;
+    unregister(id: string) {
+      return context.unregister(id);
     },
-    get isActive() {
-      return context.isActive;
+    isActive(id: string) {
+      return context.isActive(id);
     },
-    get setActive() {
-      return context.setActive;
+    setActiveId(id: string) {
+      return context.setActiveId(id);
     },
     get exists() {
       return true;

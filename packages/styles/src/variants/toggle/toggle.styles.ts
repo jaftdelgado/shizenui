@@ -6,8 +6,7 @@ export const toggleStyles = tv({
     content: "toggle__content",
     icon: "toggle__icon",
     iconStart: "toggle__icon toggle__icon--start",
-    iconEnd: "toggle__icon toggle__icon--end",
-    label: "toggle__label"
+    iconEnd: "toggle__icon toggle__icon--end"
   },
   variants: {
     variant: {

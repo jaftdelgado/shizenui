@@ -1,12 +1,12 @@
 <script lang="ts">
   import { toggleStyles } from "@shizen-ui/styles";
-  import { cn, createId } from "../../lib/utils";
-  import { warnIf } from "../../lib/runes/index.js";
-  import type { ToggleProps, IconContent } from "./_internal/index.js";
+  import { createId, mergeProps } from "../../lib/utils/index.js";
+  import type { ToggleProps, ToggleIconContent } from "./_internal/index.js";
   import {
     ToggleState,
     createToggleHandlers,
-    setupToggleGroupRegistration
+    registerToggleInGroup,
+    setupToggleWarnings
   } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -18,6 +18,7 @@
     class: className,
     variant,
     size,
+    id = createId("toggle", uid),
     disabled,
     value = undefined,
     iconOnly = false,
@@ -28,13 +29,7 @@
     ...rest
   }: ToggleProps = $props();
 
-  warnIf(
-    () => iconOnly && !rest["aria-label"],
-    "Toggle",
-    "No 'aria-label' provided with 'iconOnly=true'. The toggle will have no accessible name."
-  );
-
-  const state = new ToggleState({
+  const toggleState = new ToggleState({
     variant: () => variant,
     size: () => size,
     disabled: () => disabled,
@@ -45,66 +40,66 @@
     },
     onPressedChange: (val) => onPressedChange?.(val)
   });
-  const groupCtx = state.groupCtx;
-  const toggleId = createId("toggle", uid);
-  setupToggleGroupRegistration({
+  const groupCtx = toggleState.groupCtx;
+  const toggleId = id;
+  registerToggleInGroup({
     groupCtx,
     id: toggleId,
-    getRef: () => ref,
-    getDisabled: () => state.finalDisabled
+    getDisabled: () => toggleState.finalDisabled
   });
 
-  warnIf(
-    () => groupCtx.exists && !value,
-    "Toggle",
-    "Toggle inside a ToggleGroup requires a 'value' prop to participate in selection."
-  );
-
-  warnIf(
-    () => groupCtx.exists && pressed !== false,
-    "Toggle",
-    "Toggle inside a ToggleGroup: 'pressed' prop is ignored. Use ToggleGroup's value instead."
-  );
+  setupToggleWarnings({
+    isIconOnly: () => iconOnly,
+    hasAccessibleName: () => Boolean(rest["aria-label"] || rest["aria-labelledby"]),
+    isInGroup: () => groupCtx.exists,
+    hasValue: () => Boolean(value),
+    hasExplicitPressed: () => pressed !== false
+  });
 
   const handlers = createToggleHandlers({
-    state,
+    state: toggleState,
     getValue: () => value,
     getOnClick: () => onclick
   });
 
   const styles = $derived(
     toggleStyles({
-      variant: state.finalVariant,
-      size: state.finalSize,
+      variant: toggleState.finalVariant,
+      size: toggleState.finalSize,
       iconOnly
     })
   );
+
+  const toggleProps = $derived(
+    mergeProps(
+      {
+        type: "button",
+        id: toggleId,
+        disabled: toggleState.finalDisabled,
+        "aria-pressed": toggleState.finalPressed,
+        tabindex: groupCtx.exists ? (groupCtx.isActive(toggleId) ? 0 : -1) : undefined,
+        "data-slot": "toggle",
+        onclick: handlers.handleClick,
+        onkeydown: handlers.handleKeydown,
+        onkeyup: handlers.handleKeyup,
+        onblur: handlers.handleBlur,
+        onfocus: () => groupCtx.setActiveId(toggleId),
+        class: styles.base()
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
-{#snippet renderIcon(content: IconContent | undefined, position: "start" | "end")}
-  {#if typeof content === "string"}
-    <i class={content}></i>
-  {:else if content}
+{#snippet renderIcon(content: ToggleIconContent | undefined, position: "start" | "end")}
+  {#if content}
     <span class={position === "start" ? styles.iconStart() : styles.iconEnd()}>
       {@render content()}
     </span>
   {/if}
 {/snippet}
 
-<button
-  bind:this={ref}
-  type="button"
-  disabled={state.finalDisabled}
-  aria-pressed={state.finalPressed}
-  tabindex={groupCtx.exists ? (groupCtx.isActive(toggleId) ? 0 : -1) : undefined}
-  onclick={handlers.handleClick}
-  onkeydown={handlers.handleKey}
-  onkeyup={handlers.handleKey}
-  onblur={handlers.handleBlur}
-  onfocus={() => groupCtx.setActive(toggleId)}
-  class={cn(styles.base(), className)}
-  {...rest}
->
+<button bind:this={ref} {...toggleProps}>
   <span class={styles.content()}>
     {#if iconOnly}
       <span class={styles.icon()}>
@@ -114,9 +109,7 @@
       {@render renderIcon(startContent, "start")}
 
       {#if children}
-        <span class={styles.label()}>
-          {@render children()}
-        </span>
+        {@render children()}
       {/if}
 
       {@render renderIcon(endContent, "end")}

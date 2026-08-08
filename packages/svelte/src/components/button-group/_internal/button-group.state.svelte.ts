@@ -1,18 +1,18 @@
-import type { ButtonVariants } from "@shizen-ui/styles";
+import type { ButtonSize, ButtonVariant } from "../../button/_internal/button.types.js";
 import type { ButtonGroupOrientation } from "./button-group.types.js";
 
 export class ButtonGroupState {
-  #variant: () => NonNullable<ButtonVariants["variant"]>;
-  #size: () => NonNullable<ButtonVariants["size"]>;
+  #variant: () => ButtonVariant;
+  #size: () => ButtonSize;
   #disabled: () => boolean | undefined;
   #orientation: () => ButtonGroupOrientation;
   #hideSeparator: () => boolean;
 
-  get finalVariant(): NonNullable<ButtonVariants["variant"]> {
+  get finalVariant(): ButtonVariant {
     return this.#variant();
   }
 
-  get finalSize(): NonNullable<ButtonVariants["size"]> {
+  get finalSize(): ButtonSize {
     return this.#size();
   }
 
@@ -29,8 +29,8 @@ export class ButtonGroupState {
   }
 
   constructor(props: {
-    variant: () => NonNullable<ButtonVariants["variant"]>;
-    size: () => NonNullable<ButtonVariants["size"]>;
+    variant: () => ButtonVariant;
+    size: () => ButtonSize;
     disabled: () => boolean | undefined;
     orientation: () => ButtonGroupOrientation;
     hideSeparator: () => boolean;

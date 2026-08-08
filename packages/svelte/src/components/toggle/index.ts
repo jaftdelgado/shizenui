@@ -3,5 +3,6 @@ export type {
   ToggleProps,
   ToggleVariant,
   ToggleSize,
-  IconContent
+  ToggleIconContent,
+  ToggleClickEvent
 } from "./_internal/index.js";

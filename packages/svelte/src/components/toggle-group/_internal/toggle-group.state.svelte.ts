@@ -16,9 +16,9 @@ export class ToggleGroupState {
     | ((value: string | undefined) => void)
     | ((value: string[]) => void)
     | undefined;
-  #toggleIds: string[] = $state([]);
+  #toggleIds: Set<string> = $state(new Set());
   #toggleMap = new Map<string, ToggleGroupRegistration>();
-  #activeIndex = $state(0);
+  #activeId: string | undefined = $state(undefined);
 
   get finalVariant(): ToggleVariant {
     return this.#variant();
@@ -54,78 +54,34 @@ export class ToggleGroupState {
 
   register(id: string, entry: ToggleGroupRegistration): void {
     this.#toggleMap.set(id, entry);
-    if (this.#toggleIds.includes(id)) return;
+    if (this.#toggleIds.has(id)) return;
 
-    this.#toggleIds = [...this.#toggleIds, id];
-
-    const resolvedActiveIndex = this.#resolveActiveIndex();
-    if (resolvedActiveIndex === -1) {
-      const firstEnabledIndex = this.#findEnabledIndex(0, 1);
-      if (firstEnabledIndex !== -1) {
-        this.#activeIndex = firstEnabledIndex;
-      }
-    }
+    const next = new Set(this.#toggleIds);
+    next.add(id);
+    this.#toggleIds = next;
   }
 
   unregister(id: string): void {
-    const entryIndex = this.#toggleIds.indexOf(id);
-    if (entryIndex === -1) return;
+    if (!this.#toggleIds.has(id)) return;
 
-    const activeIndex = this.#resolveActiveIndex();
-    const wasActive = activeIndex === entryIndex;
-
-    this.#toggleIds = this.#toggleIds.filter((toggleId) => toggleId !== id);
+    const next = new Set(this.#toggleIds);
+    next.delete(id);
+    this.#toggleIds = next;
     this.#toggleMap.delete(id);
 
-    if (this.#toggleIds.length === 0) {
-      this.#activeIndex = 0;
-      return;
-    }
-
-    if (wasActive) {
-      const nextIndex = this.#findEnabledIndex(entryIndex, 1);
-      if (nextIndex !== -1) {
-        this.#activeIndex = nextIndex;
-        return;
-      }
-
-      const previousIndex = this.#findEnabledIndex(entryIndex - 1, -1);
-      this.#activeIndex = previousIndex !== -1 ? previousIndex : 0;
-      return;
-    }
-
-    if (activeIndex > entryIndex) {
-      this.#activeIndex = activeIndex - 1;
+    if (this.#activeId === id) {
+      this.#activeId = undefined;
     }
   }
 
-  setActive(id: string): void {
-    const entryIndex = this.#toggleIds.indexOf(id);
-    if (entryIndex === -1 || this.#getEntryByIndex(entryIndex)?.getDisabled()) return;
+  setActiveId(id: string): void {
+    if (!this.#toggleIds.has(id) || this.#toggleMap.get(id)?.getDisabled()) return;
 
-    this.#activeIndex = entryIndex;
+    this.#activeId = id;
   }
 
   isActive(id: string): boolean {
-    const entryIndex = this.#toggleIds.indexOf(id);
-    if (entryIndex === -1 || this.#getEntryByIndex(entryIndex)?.getDisabled()) return false;
-
-    return entryIndex === this.#resolveActiveIndex();
-  }
-
-  moveFocus(direction: "next" | "prev"): void {
-    const activeIndex = this.#resolveActiveIndex();
-    if (activeIndex === -1) return;
-
-    const nextIndex =
-      direction === "next"
-        ? this.#findEnabledIndex(activeIndex + 1, 1)
-        : this.#findEnabledIndex(activeIndex - 1, -1);
-
-    if (nextIndex === -1) return;
-
-    this.#activeIndex = nextIndex;
-    this.#getEntryByIndex(nextIndex)?.getRef()?.focus();
+    return id === this.#resolvedActiveId();
   }
 
   toggle(value: string): void {
@@ -177,15 +133,6 @@ export class ToggleGroupState {
     this.#onValueChange = props.onValueChange;
   }
 
-  #resolveActiveIndex(): number {
-    const activeEntry = this.#getEntryByIndex(this.#activeIndex);
-    if (activeEntry && !activeEntry.getDisabled()) {
-      return this.#activeIndex;
-    }
-
-    return this.#findEnabledIndex(0, 1);
-  }
-
   #currentValues(): string[] {
     const external = this.#value();
     if (external !== undefined) {
@@ -194,18 +141,18 @@ export class ToggleGroupState {
     return this.#internalValues;
   }
 
-  #findEnabledIndex(startIndex: number, direction: 1 | -1): number {
-    for (let index = startIndex; index >= 0 && index < this.#toggleIds.length; index += direction) {
-      if (!this.#getEntryByIndex(index)?.getDisabled()) {
-        return index;
+  #resolvedActiveId(): string | undefined {
+    if (this.#activeId !== undefined) {
+      const activeEntry = this.#toggleMap.get(this.#activeId);
+      if (this.#toggleIds.has(this.#activeId) && activeEntry && !activeEntry.getDisabled()) {
+        return this.#activeId;
       }
     }
 
-    return -1;
-  }
+    for (const id of this.#toggleIds) {
+      if (!this.#toggleMap.get(id)?.getDisabled()) return id;
+    }
 
-  #getEntryByIndex(index: number): ToggleGroupRegistration | undefined {
-    const id = this.#toggleIds[index];
-    return id ? this.#toggleMap.get(id) : undefined;
+    return undefined;
   }
 }

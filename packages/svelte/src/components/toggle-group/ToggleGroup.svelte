@@ -1,12 +1,13 @@
 <script lang="ts">
   import { toggleGroupStyles } from "@shizen-ui/styles";
   import { warnIf } from "../../lib/runes/index.js";
-  import { cn, presence } from "../../lib/utils";
+  import { mergeProps, presence } from "../../lib/utils/index.js";
   import type { ToggleGroupProps } from "./_internal/index.js";
   import {
     ToggleGroupState,
     createToggleGroupHandlers,
-    setupToggleGroupContext
+    setupToggleGroupContext,
+    useToggleGroupContext
   } from "./_internal/index.js";
 
   let {
@@ -20,6 +21,7 @@
     selectionMode = "single",
     value = $bindable(undefined),
     onValueChange = undefined,
+    ref = $bindable(null),
     ...rest
   }: ToggleGroupProps = $props();
 
@@ -45,8 +47,11 @@
 
   setupToggleGroupContext(toggleGroupState);
 
+  const groupCtx = useToggleGroupContext();
+
   const handlers = createToggleGroupHandlers({
-    state: toggleGroupState,
+    getContainer: () => ref,
+    groupCtx,
     getOrientation: () => toggleGroupState.finalOrientation
   });
 
@@ -57,15 +62,20 @@
       hideSeparators: toggleGroupState.finalHideSeparators
     })
   );
+
+  const groupProps = $derived(
+    mergeProps(
+      {
+        class: styles,
+        "data-disabled": presence(toggleGroupState.finalDisabled),
+        "data-orientation": toggleGroupState.finalOrientation,
+        onkeydown: handlers.handleKeydown
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
-<div
-  role="group"
-  class={cn(styles, className)}
-  data-disabled={presence(toggleGroupState.finalDisabled)}
-  data-orientation={toggleGroupState.finalOrientation}
-  onkeydown={handlers.handleKeydown}
-  {...rest}
->
+<div bind:this={ref} {...groupProps}>
   {@render children?.()}
 </div>

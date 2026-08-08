@@ -1,13 +1,17 @@
 import type { HTMLButtonAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
-import type { ButtonVariants } from "@shizen-ui/styles";
 
-export type { ButtonVariants };
+export type ButtonSize = "sm" | "md" | "lg";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "danger"
+  | "ghost"
+  | "outline"
+  | "soft-danger";
 
-export type ButtonSize = NonNullable<ButtonVariants["size"]>;
-export type ButtonVariant = NonNullable<ButtonVariants["variant"]>;
-
-export type IconContent = Snippet<[]>;
+export type ButtonIconContent = Snippet<[]>;
 
 type ButtonBaseProps = Omit<
   HTMLButtonAttributes,
@@ -21,7 +25,7 @@ type ButtonBaseProps = Omit<
   | "onblur"
 >;
 
-interface NormalButtonProps extends ButtonBaseProps {
+interface ButtonNormalProps extends ButtonBaseProps {
   iconOnly?: false;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -29,11 +33,11 @@ interface NormalButtonProps extends ButtonBaseProps {
   loading?: boolean;
   ref?: HTMLButtonElement | null;
   children?: Snippet;
-  startContent?: IconContent;
-  endContent?: IconContent;
+  startContent?: ButtonIconContent;
+  endContent?: ButtonIconContent;
 }
 
-interface IconOnlyButtonProps extends ButtonBaseProps {
+interface ButtonIconOnlyProps extends ButtonBaseProps {
   iconOnly: true;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -45,4 +49,4 @@ interface IconOnlyButtonProps extends ButtonBaseProps {
   endContent?: never;
 }
 
-export type ButtonProps = NormalButtonProps | IconOnlyButtonProps;
+export type ButtonProps = ButtonNormalProps | ButtonIconOnlyProps;
