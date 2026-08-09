@@ -3,7 +3,8 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const switchGroupStyles = tv({
   slots: {
     base: "switch-group",
-    items: "switch-group__items"
+    items: "switch-group__items",
+    input: "switch-group__input"
   },
   variants: {
     orientation: {

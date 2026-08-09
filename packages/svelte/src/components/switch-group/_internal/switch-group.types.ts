@@ -1,20 +1,29 @@
 import type { HTMLAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
-import type { SwitchSize } from "../../switch/_internal/index.js";
+import type { SwitchSize } from "../../switch/_internal/switch.types.js";
 
 export type SwitchGroupOrientation = "horizontal" | "vertical";
 
-export interface SwitchGroupProps extends HTMLAttributes<HTMLDivElement> {
+type SwitchGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "role">;
+
+export interface SwitchGroupProps extends SwitchGroupBaseProps {
   children?: Snippet;
+  value?: string[];
+  onValueChange?: (value: string[]) => void;
+  name?: string;
   disabled?: boolean;
   readonly?: boolean;
+  invalid?: boolean;
+  required?: boolean;
   size?: SwitchSize;
   orientation?: SwitchGroupOrientation;
   id?: string;
   ref?: HTMLDivElement | null;
 }
 
-export interface SwitchGroupItemsProps extends HTMLAttributes<HTMLDivElement> {
+type SwitchGroupItemsBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children">;
+
+export interface SwitchGroupItemsProps extends SwitchGroupItemsBaseProps {
   ref?: HTMLDivElement | null;
   children: Snippet;
 }

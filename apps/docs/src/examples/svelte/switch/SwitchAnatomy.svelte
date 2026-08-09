@@ -2,12 +2,12 @@
   import { Switch, SwitchGroup, Label, Description } from "@shizen-ui/svelte";
 </script>
 
-<SwitchGroup>
+<SwitchGroup value={["email"]}>
   <Label>Group Label</Label>
   <Description>Group description text</Description>
 
   <SwitchGroup.Items>
-    <Switch>
+    <Switch value="email">
       <Switch.Control>
         <!-- Optional -->
         <Switch.Thumb />

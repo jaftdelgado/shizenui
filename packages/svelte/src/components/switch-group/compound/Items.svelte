@@ -1,11 +1,16 @@
 <script lang="ts">
-  import { cn } from "../../../lib/utils";
+  import { mergeProps } from "../../../lib/utils";
   import { assertContext } from "../../../lib/runes/index.js";
   import { switchGroupStyles } from "@shizen-ui/styles";
   import { useSwitchGroupContext } from "../_internal/index.js";
   import type { SwitchGroupItemsProps } from "../_internal/index.js";
 
-  let { children, class: className, ref = $bindable(null), ...rest }: SwitchGroupItemsProps = $props();
+  let {
+    children,
+    class: className,
+    ref = $bindable(null),
+    ...rest
+  }: SwitchGroupItemsProps = $props();
 
   const groupCtx = useSwitchGroupContext();
   const { shouldRender } = assertContext(
@@ -16,10 +21,12 @@
   const orientation = $derived(groupCtx.orientation);
 
   const styles = $derived(switchGroupStyles({ orientation }));
+
+  const itemsProps = $derived(mergeProps({ class: styles.items() }, { ...rest, class: className }));
 </script>
 
 {#if shouldRender}
-  <div bind:this={ref} class={cn(styles.items(), className)} {...rest}>
+  <div bind:this={ref} {...itemsProps}>
     {@render children()}
   </div>
 {/if}

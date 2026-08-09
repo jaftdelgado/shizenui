@@ -1,129 +1,178 @@
 <script lang="ts">
   import { switchStyles } from "@shizen-ui/styles";
 
-  import { cn, createId, presence } from "../../lib/utils";
+  import { createId, mergeProps, presence } from "../../lib/utils";
+  import { createFocusVisible, syncFormReset } from "../../lib/runes/index.js";
+  import type { SubmissionInvalidState } from "../../lib/runes/index.js";
   import type { SwitchProps } from "./_internal/index.js";
   import {
     SwitchState,
     createSwitchHandlers,
+    resolveSwitchDescribedBy,
     setupSwitchContexts,
+    setupSwitchForm,
+    setupSwitchWarnings,
     useSwitchContext
   } from "./_internal/index.js";
-  import { createFocusVisible, warnIf } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
   let {
     class: className,
+    checked = $bindable(false),
     disabled = undefined,
     readonly = undefined,
+    invalid = undefined,
+    required = undefined,
     name,
     value,
     id = createId("switch", uid),
-    checked = $bindable(false),
     ref = $bindable(null),
     size = "md",
     onCheckedChange,
+    onclick,
     children,
     ...rest
   }: SwitchProps = $props();
 
-  warnIf(
-    () => !children,
-    "Switch",
-    "No children provided. Add at least <Switch.Control /> as a child."
-  );
+  let isInternalWrite = false;
+  let baselineChecked = $state(checked);
+  let submissionInvalid: SubmissionInvalidState;
 
-  warnIf(
-    () => !!value && !name,
-    "Switch",
-    "A 'value' prop was provided without a 'name' prop. The switch won't be included in form submissions."
-  );
+  $effect(() => {
+    const currentChecked = checked;
 
-  const switchState = new SwitchState({
-    disabled: () => disabled,
-    readonly: () => readonly,
-    size: () => size
+    if (isInternalWrite) {
+      isInternalWrite = false;
+      return;
+    }
+
+    baselineChecked = currentChecked;
   });
 
-  setupSwitchContexts(switchState, {
+  const switchState = new SwitchState({
     checked: () => checked,
+    disabled: () => disabled,
+    readonly: () => readonly,
+    invalid: () => invalid,
+    required: () => required,
+    size: () => size,
+    submissionInvalid: () => submissionInvalid.value,
+    name: () => name,
+    value: () => value,
     id: () => id
   });
 
+  submissionInvalid = setupSwitchForm({
+    state: switchState,
+    getRef: () => ref
+  });
+
+  setupSwitchContexts(switchState, { id: () => id });
+
   const ctx = useSwitchContext();
 
-  warnIf(
-    () => !!children && !ctx.hasLabel && !rest["aria-label"],
-    "Switch",
-    "No Label found. Add a <Label> (typically inside <Switch.Content>), or pass aria-label directly."
-  );
+  setupSwitchWarnings({
+    state: switchState,
+    context: ctx,
+    hasChildren: () => Boolean(children),
+    getValue: () => value,
+    hasAccessibleName: () => Boolean(rest["aria-label"] || rest["aria-labelledby"])
+  });
+
+  function setChecked(next: boolean): void {
+    isInternalWrite = true;
+    checked = next;
+    onCheckedChange?.(next);
+  }
+
+  const focus = createFocusVisible();
 
   const handlers = createSwitchHandlers({
     state: switchState,
-    getChecked: () => checked,
-    setChecked: (val) => {
-      checked = val;
-    },
-    onCheckedChange: (val) => onCheckedChange?.(val),
-    getInputRef: () => ref
+    setChecked,
+    focus,
+    getValue: () => value,
+    getOnClick: () => onclick
   });
-
-  const focus = createFocusVisible();
 
   const styles = $derived(switchStyles({ size: switchState.finalSize }));
 
   const describedBy = $derived(
-    [
-      ctx.hasDescription ? `${id}-description` : null,
-      switchState.groupCtx.exists && switchState.groupCtx.hasDescription
-        ? switchState.groupCtx.descriptionId
-        : null
-    ]
-      .filter(Boolean)
-      .join(" ") || undefined
+    resolveSwitchDescribedBy(switchState, ctx, id, rest["aria-describedby"])
   );
+
+  const buttonProps = $derived(
+    mergeProps(
+      {
+        type: "button" as const,
+        role: "switch",
+        id,
+        disabled: switchState.finalDisabled,
+        "aria-checked": switchState.finalChecked,
+        "aria-disabled": switchState.finalDisabled ? true : undefined,
+        "aria-invalid": switchState.finalInvalid ? true : undefined,
+        "aria-readonly": switchState.finalReadonly ? true : undefined,
+        "aria-required": switchState.finalRequired ? true : undefined,
+        ...(ctx.hasLabel ? { "aria-labelledby": `${id}-label` } : {}),
+        ...(describedBy ? { "aria-describedby": describedBy } : {}),
+        tabindex: !switchState.finalDisabled ? 0 : -1,
+        "data-slot": "switch",
+        "data-checked": presence(switchState.finalChecked),
+        "data-disabled": presence(switchState.finalDisabled),
+        "data-readonly": presence(switchState.finalReadonly),
+        "data-invalid": presence(switchState.finalInvalid),
+        "data-focus-visible": presence(focus.isFocusVisible),
+        onclick: handlers.handleClick,
+        onkeydown: handlers.handleKeydown,
+        onkeyup: handlers.handleKeyup,
+        onmousedown: handlers.handleMouseDown,
+        onmouseup: handlers.handleMouseUp,
+        onmouseleave: handlers.handleMouseLeave,
+        onfocus: focus.onFocus,
+        onblur: handlers.handleBlur,
+        class: styles.base()
+      },
+      { ...rest, class: className }
+    )
+  );
+
+  syncFormReset({
+    getRef: () => ref,
+    onReset: () => {
+      submissionInvalid.clear();
+      if (switchState.groupCtx.exists) return;
+      checked = baselineChecked;
+    }
+  });
 </script>
 
-<div
-  role="none"
-  class={cn(styles.base(), className)}
-  data-disabled={presence(switchState.finalDisabled)}
-  data-readonly={presence(switchState.finalReadonly)}
-  data-checked={presence(checked)}
-  data-focus-visible={presence(focus.isFocusVisible)}
-  onmousedown={focus.onMouseDown}
-  onclick={handlers.handleContainerClick}
->
+<button bind:this={ref} {...buttonProps}>
+  {#if children}
+    {@render children({
+      isChecked: switchState.finalChecked,
+      isDisabled: switchState.finalDisabled,
+      isReadonly: switchState.finalReadonly,
+      isFocusVisible: focus.isFocusVisible
+    })}
+  {/if}
+</button>
+
+{#if switchState.finalName || switchState.finalRequired}
   <input
-    bind:this={ref}
     type="checkbox"
-    role="switch"
-    {name}
-    {value}
-    {id}
-    {checked}
-    disabled={switchState.finalDisabled}
     class={styles.input()}
-    tabindex={!switchState.finalDisabled ? 0 : -1}
-    aria-checked={checked}
-    aria-readonly={switchState.finalReadonly ? true : undefined}
-    aria-labelledby={ctx.hasLabel ? `${id}-label` : undefined}
-    aria-describedby={describedBy}
-    onchange={handlers.handleToggle}
-    onkeydown={(e) => {
-      focus.onKeyDown();
-      handlers.handleKey(e);
+    tabindex={-1}
+    aria-hidden="true"
+    name={switchState.finalName}
+    value={switchState.value ?? "on"}
+    checked={switchState.finalChecked}
+    disabled={switchState.finalDisabled}
+    required={switchState.finalRequired}
+    oninvalid={(event) => {
+      event.preventDefault();
+      submissionInvalid.set(true);
+      ref?.focus();
     }}
-    onkeyup={handlers.handleKey}
-    onfocus={focus.onFocus}
-    onblur={focus.onBlur}
-    {...rest}
   />
-  {@render children?.({
-    isChecked: checked,
-    isDisabled: switchState.finalDisabled,
-    isReadonly: switchState.finalReadonly,
-    isFocusVisible: focus.isFocusVisible
-  })}
-</div>
+{/if}

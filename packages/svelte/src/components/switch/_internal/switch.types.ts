@@ -1,37 +1,43 @@
-import type { HTMLInputAttributes, HTMLAttributes } from "svelte/elements";
+import type { HTMLAttributes, HTMLButtonAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
 
 export type SwitchSize = "sm" | "md" | "lg";
 
 type SwitchBaseProps = Omit<
-  HTMLInputAttributes,
+  HTMLButtonAttributes,
   | "checked"
-  | "size"
   | "type"
-  | "role"
-  | "tabindex"
   | "onclick"
-  | "disabled"
-  | "value"
-  | "name"
-  | "id"
-  | "onchange"
   | "onkeydown"
+  | "disabled"
+  | "name"
+  | "value"
+  | "id"
   | "onkeyup"
+  | "onmousedown"
+  | "onmouseup"
+  | "onmouseleave"
   | "onfocus"
   | "onblur"
+  | "role"
+  | "tabindex"
   | "children"
 >;
+
+export type SwitchClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
 
 export interface SwitchProps extends SwitchBaseProps {
   checked?: boolean;
   disabled?: boolean;
   readonly?: boolean;
+  invalid?: boolean;
+  required?: boolean;
   name?: string;
   value?: string;
   id?: string;
-  ref?: HTMLInputElement | null;
+  ref?: HTMLButtonElement | null;
   size?: SwitchSize;
+  onclick?: (event: SwitchClickEvent) => void;
   onCheckedChange?: (checked: boolean) => void;
   children?: Snippet<[SwitchRenderState]>;
 }
@@ -43,17 +49,17 @@ export interface SwitchRenderState {
   isFocusVisible: boolean;
 }
 
-export interface SwitchControlProps extends HTMLAttributes<HTMLDivElement> {
-  ref?: HTMLDivElement | null;
+export interface SwitchControlProps extends HTMLAttributes<HTMLSpanElement> {
+  ref?: HTMLSpanElement | null;
   children?: Snippet;
 }
 
-export interface SwitchThumbProps extends HTMLAttributes<HTMLDivElement> {
-  ref?: HTMLDivElement | null;
+export interface SwitchThumbProps extends HTMLAttributes<HTMLSpanElement> {
+  ref?: HTMLSpanElement | null;
   children?: Snippet;
 }
 
-export interface SwitchContentProps extends HTMLAttributes<HTMLDivElement> {
-  ref?: HTMLDivElement | null;
+export interface SwitchContentProps extends HTMLAttributes<HTMLSpanElement> {
+  ref?: HTMLSpanElement | null;
   children: Snippet;
 }

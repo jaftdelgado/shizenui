@@ -9,22 +9,17 @@
       description: "Allow search engines to index you."
     }
   ];
-
-  let checked = $state<Record<string, boolean>>({
-    public_profile: true,
-    search_indexing: false
-  });
 </script>
 
 <div class="flex flex-col gap-6">
-  <SwitchGroup>
+  <SwitchGroup value={["public_profile"]}>
     <Label>Privacy</Label>
     <Description>Control who can find and see your account.</Description>
 
     <SwitchGroup.Items>
       {#each permissions as item}
         <Switch
-          bind:checked={checked[item.id]}
+          value={item.id}
           class="
             [--switch-padding:0.125rem]
             [--switch-thumb-ratio:1]

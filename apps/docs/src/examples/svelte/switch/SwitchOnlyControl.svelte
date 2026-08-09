@@ -1,7 +1,7 @@
 <script>
   import { Switch } from "@shizen-ui/svelte";
 
-  let selected = true;
+  let selected = $state(true);
 </script>
 
 <div class="flex flex-col">

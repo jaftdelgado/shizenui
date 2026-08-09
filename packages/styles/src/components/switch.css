@@ -21,7 +21,10 @@
       var(--switch-width) - var(--switch-thumb-width) - var(--switch-padding) * 2
     );
 
-    transition: opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    transition:
+      opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+      scale 100ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+
     @apply motion-reduce:transition-none;
 
     &[data-disabled] {
@@ -46,6 +49,23 @@
       --switch-bg: var(--color-accent);
       --switch-bg-hover: var(--color-accent-hover);
       --switch-thumb-bg: var(--color-accent-foreground);
+    }
+
+    &[data-invalid] {
+      & .switch__control {
+        @apply status-invalid-field ring-1;
+      }
+
+      &[data-checked] {
+        --switch-bg: var(--color-danger);
+        --switch-bg-hover: var(--color-danger-hover);
+      }
+    }
+
+    &[data-pressed] {
+      & .switch__thumb {
+        @apply scale-98;
+      }
     }
 
     &.switch--sm {
@@ -75,7 +95,8 @@
 
     transition:
       background-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
-      box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+      box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+      scale 100ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
 
     &:hover:not([data-disabled]):not([data-readonly]) {
@@ -83,12 +104,8 @@
     }
 
     .switch[data-focus-visible] & {
-      @apply status-focused ring-offset-0;
+      @apply status-focused;
     }
-  }
-
-  .switch__input {
-    @apply sr-only;
   }
 
   .switch__thumb {
@@ -117,5 +134,9 @@
 
   .switch__content {
     @apply flex flex-col;
+  }
+
+  .switch__input {
+    @apply sr-only;
   }
 }

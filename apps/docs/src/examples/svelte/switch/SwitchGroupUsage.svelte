@@ -7,28 +7,19 @@
     { id: "push", label: "Push", description: "Enable browser notifications." }
   ];
 
-  let checked = $state<Record<string, boolean>>({
-    email: false,
-    sms: true,
-    push: true
-  });
+  let enabledChannels = $state(["sms", "push"]);
 
-  const activeChannels = $derived(
-    Object.entries(checked)
-      .filter(([_, v]) => v)
-      .map(([k]) => k)
-      .join(", ") || "None"
-  );
+  const activeChannels = $derived(enabledChannels.join(", ") || "None");
 </script>
 
 <div class="flex flex-col gap-6">
-  <SwitchGroup>
+  <SwitchGroup bind:value={enabledChannels}>
     <Label>Notification Channels</Label>
     <Description>Choose how you want to be notified.</Description>
 
     <SwitchGroup.Items>
       {#each notifications as channel}
-        <Switch bind:checked={checked[channel.id]}>
+        <Switch value={channel.id}>
           <Switch.Control />
           <Switch.Content>
             <Label>{channel.label}</Label>

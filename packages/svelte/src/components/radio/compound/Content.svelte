@@ -28,9 +28,9 @@
 </script>
 
 {#if shouldRender}
-  <div bind:this={ref} {...contentProps}>
+  <span bind:this={ref} {...contentProps}>
     {#if children}
       {@render children()}
     {/if}
-  </div>
+  </span>
 {/if}

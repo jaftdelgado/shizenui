@@ -9,13 +9,13 @@
 </script>
 
 <div class="flex flex-col">
-  <SwitchGroup orientation="horizontal">
+  <SwitchGroup orientation="horizontal" value={["read"]}>
     <Label>Access Permissions</Label>
     <Description>Set what this role can do.</Description>
 
     <SwitchGroup.Items>
       {#each permissions as permission}
-        <Switch>
+        <Switch value={permission.id}>
           <Switch.Control />
           <Switch.Content>
             <Label>{permission.label}</Label>

@@ -1,13 +1,18 @@
 <script lang="ts">
   import { switchGroupStyles } from "@shizen-ui/styles";
 
-  import { cn, createId, presence } from "../../lib/utils";
-  import { warnIf } from "../../lib/runes/index.js";
+  import { createId, mergeProps, presence } from "../../lib/utils";
+  import { syncFormReset } from "../../lib/runes/index.js";
+  import type { SubmissionInvalidState } from "../../lib/runes/index.js";
   import type { SwitchGroupProps } from "./_internal/index.js";
   import {
     SwitchGroupState,
+    resolveSwitchGroupDescribedBy,
     setupSwitchGroupContexts,
-    useSwitchGroupContext
+    setupSwitchGroupForm,
+    setupSwitchGroupWarnings,
+    useSwitchGroupContext,
+    focusFirstSwitch
   } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -15,8 +20,13 @@
   let {
     children,
     class: className,
+    value = $bindable(),
+    onValueChange,
+    name = undefined,
     disabled = undefined,
     readonly = undefined,
+    invalid = undefined,
+    required = undefined,
     size = "md",
     orientation = "vertical",
     id = createId("switch-group", uid),
@@ -24,45 +34,115 @@
     ...rest
   }: SwitchGroupProps = $props();
 
-  warnIf(
-    () => !children,
-    "SwitchGroup",
-    "No children provided. Add at least one <Switch> as a child."
-  );
+  let isInternalWrite = false;
+  let baselineValue = $state<string[]>([...(value ?? [])]);
+  let submissionInvalid: SubmissionInvalidState;
 
-  const switchGroupState = new SwitchGroupState({
-    disabled: () => disabled,
-    readonly: () => readonly,
-    size: () => size,
-    orientation: () => orientation
+  $effect(() => {
+    const currentValue = value;
+
+    if (isInternalWrite) {
+      isInternalWrite = false;
+      return;
+    }
+
+    baselineValue = [...(currentValue ?? [])];
   });
 
-  setupSwitchGroupContexts(switchGroupState, {
+  const switchGroupState = new SwitchGroupState({
+    value: () => value,
+    onValueChange: () => onValueChange,
+    name: () => name,
+    disabled: () => disabled,
+    readonly: () => readonly,
+    invalid: () => invalid,
+    required: () => required,
+    size: () => size,
+    orientation: () => orientation,
+    submissionInvalid: () => submissionInvalid.value,
+    setValue: (nextValue) => {
+      isInternalWrite = true;
+      value = nextValue;
+    },
     id: () => id
   });
 
+  submissionInvalid = setupSwitchGroupForm({
+    state: switchGroupState,
+    getRef: () => ref
+  });
+
+  setupSwitchGroupContexts(switchGroupState, { id: () => id });
+
   const ctx = useSwitchGroupContext();
 
-  warnIf(
-    () => !ctx.hasLabel && !rest["aria-label"],
-    "SwitchGroup",
-    "No Label found. Add a <Label> as a child, or pass aria-label directly."
-  );
+  setupSwitchGroupWarnings({
+    context: ctx,
+    hasChildren: () => Boolean(children),
+    hasAccessibleName: () => Boolean(rest["aria-label"] || rest["aria-labelledby"])
+  });
 
   const styles = $derived(switchGroupStyles({ orientation: switchGroupState.finalOrientation }));
+
+  const describedBy = $derived(resolveSwitchGroupDescribedBy(ctx, rest["aria-describedby"]));
+
+  const groupProps = $derived(
+    mergeProps(
+      {
+        id,
+        role: "group",
+        class: styles.base(),
+        ...(ctx.hasLabel ? { "aria-labelledby": ctx.labelId } : {}),
+        ...(describedBy ? { "aria-describedby": describedBy } : {}),
+        "aria-disabled": switchGroupState.finalDisabled ? true : undefined,
+        "aria-required": switchGroupState.finalRequired ? true : undefined,
+        "aria-invalid": switchGroupState.finalInvalid ? true : undefined,
+        "aria-readonly": switchGroupState.finalReadonly ? true : undefined,
+        "data-slot": "switch-group",
+        "data-invalid": presence(switchGroupState.finalInvalid),
+        "data-disabled": presence(switchGroupState.finalDisabled),
+        "data-readonly": presence(switchGroupState.finalReadonly),
+        "data-orientation": switchGroupState.finalOrientation
+      },
+      { ...rest, class: className }
+    )
+  );
+
+  syncFormReset({
+    getRef: () => ref,
+    onReset: () => {
+      submissionInvalid.clear();
+      isInternalWrite = true;
+      value = [...baselineValue];
+      onValueChange?.(value);
+    }
+  });
 </script>
 
-<div
-  bind:this={ref}
-  role="group"
-  {id}
-  class={cn(styles.base(), className)}
-  aria-labelledby={ctx.hasLabel ? ctx.labelId : undefined}
-  aria-describedby={ctx.hasDescription ? ctx.descriptionId : undefined}
-  data-disabled={presence(switchGroupState.finalDisabled)}
-  data-readonly={presence(switchGroupState.finalReadonly)}
-  data-orientation={switchGroupState.finalOrientation}
-  {...rest}
->
-  {@render children?.()}
+<!--
+  role="group" has no checkbox/switch-specific ARIA equivalent. The group-level state remains
+  intentional because it communicates relational form state to assistive technology.
+-->
+<!-- svelte-ignore a11y_role_supports_aria_props -->
+<div bind:this={ref} {...groupProps}>
+  {#if children}
+    {@render children()}
+  {/if}
+
+  {#if switchGroupState.finalRequired}
+    <input
+      type="checkbox"
+      class={styles.input()}
+      tabindex={-1}
+      aria-hidden="true"
+      checked={switchGroupState.hasSelection}
+      disabled={switchGroupState.finalDisabled}
+      required
+      oninvalid={(event) => {
+        event.preventDefault();
+        submissionInvalid.set(true);
+        focusFirstSwitch(ref);
+      }}
+    />
+  {/if}
 </div>

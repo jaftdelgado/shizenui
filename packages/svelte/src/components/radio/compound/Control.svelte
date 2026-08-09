@@ -34,11 +34,11 @@
 </script>
 
 {#if shouldRender}
-  <div bind:this={ref} {...controlProps}>
+  <span bind:this={ref} {...controlProps}>
     {#if children}
       {@render children()}
     {:else}
       <Indicator />
     {/if}
-  </div>
+  </span>
 {/if}
