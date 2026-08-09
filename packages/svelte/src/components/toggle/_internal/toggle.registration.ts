@@ -1,23 +1,16 @@
 import { onDestroy } from "svelte";
-import type {
-  ToggleGroupContextResult,
-  ToggleGroupRegistration
-} from "../../toggle-group/_internal/index.js";
+import type { ToggleStateInstance } from "./toggle.state.svelte.js";
 
-export function registerToggleInGroup(options: {
-  groupCtx: ToggleGroupContextResult;
-  id: string;
-  getDisabled: () => boolean;
-}): void {
-  const { groupCtx, id, getDisabled } = options;
+export function setupToggleGroupRegistration(state: ToggleStateInstance): void {
+  const { groupCtx } = state;
 
-  const entry: ToggleGroupRegistration = {
-    getDisabled
+  const entry = {
+    getDisabled: () => state.finalDisabled
   };
 
-  groupCtx.register(id, entry);
+  groupCtx.register(state.id, entry);
 
   onDestroy(() => {
-    groupCtx.unregister(id);
+    groupCtx.unregister(state.id);
   });
 }

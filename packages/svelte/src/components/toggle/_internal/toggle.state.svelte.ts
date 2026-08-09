@@ -7,6 +7,7 @@ export class ToggleState {
   #size: () => ToggleSize | undefined;
   #disabled: () => boolean | undefined;
   #value: () => string | undefined;
+  #id: () => string;
   #pressed: () => boolean;
   #setPressed: (value: boolean) => void;
   #onPressedChange?: (value: boolean) => void;
@@ -28,6 +29,10 @@ export class ToggleState {
 
   get groupCtx(): ToggleGroupContextResult {
     return this.#groupCtx;
+  }
+
+  get id(): string {
+    return this.#id();
   }
 
   get finalPressed(): boolean {
@@ -59,6 +64,7 @@ export class ToggleState {
     size: () => ToggleSize | undefined;
     disabled: () => boolean | undefined;
     value: () => string | undefined;
+    id: () => string;
     getPressed: () => boolean;
     setPressed: (value: boolean) => void;
     onPressedChange?: (value: boolean) => void;
@@ -68,9 +74,12 @@ export class ToggleState {
     this.#size = props.size;
     this.#disabled = props.disabled;
     this.#value = props.value;
+    this.#id = props.id;
     this.#pressed = props.getPressed;
     this.#setPressed = props.setPressed;
     this.#onPressedChange = props.onPressedChange;
     this.#groupCtx = props.groupContext ?? useToggleGroupContext();
   }
 }
+
+export type ToggleStateInstance = InstanceType<typeof ToggleState>;

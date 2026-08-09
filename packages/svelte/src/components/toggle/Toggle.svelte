@@ -5,7 +5,7 @@
   import {
     ToggleState,
     createToggleHandlers,
-    registerToggleInGroup,
+    setupToggleGroupRegistration,
     setupToggleWarnings
   } from "./_internal/index.js";
 
@@ -34,6 +34,7 @@
     size: () => size,
     disabled: () => disabled,
     value: () => value,
+    id: () => id,
     getPressed: () => pressed,
     setPressed: (val) => {
       pressed = val;
@@ -41,12 +42,7 @@
     onPressedChange: (val) => onPressedChange?.(val)
   });
   const groupCtx = toggleState.groupCtx;
-  const toggleId = id;
-  registerToggleInGroup({
-    groupCtx,
-    id: toggleId,
-    getDisabled: () => toggleState.finalDisabled
-  });
+  setupToggleGroupRegistration(toggleState);
 
   setupToggleWarnings({
     isIconOnly: () => iconOnly,
@@ -73,17 +69,17 @@
   const toggleProps = $derived(
     mergeProps(
       {
-        type: "button",
-        id: toggleId,
+        type: "button" as const,
+        id,
         disabled: toggleState.finalDisabled,
         "aria-pressed": toggleState.finalPressed,
-        tabindex: groupCtx.exists ? (groupCtx.isActive(toggleId) ? 0 : -1) : undefined,
+        tabindex: groupCtx.exists ? (groupCtx.isActive(id) ? 0 : -1) : undefined,
         "data-slot": "toggle",
         onclick: handlers.handleClick,
         onkeydown: handlers.handleKeydown,
         onkeyup: handlers.handleKeyup,
         onblur: handlers.handleBlur,
-        onfocus: () => groupCtx.setActiveId(toggleId),
+        onfocus: () => groupCtx.setActiveId(id),
         class: styles.base()
       },
       { ...rest, class: className }
