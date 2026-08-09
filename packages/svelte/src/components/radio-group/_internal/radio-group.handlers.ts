@@ -1,10 +1,9 @@
 import type { RadioGroupContextResult } from "./radio-group.context.js";
-
-function getRovingCandidates(container: HTMLElement): HTMLButtonElement[] {
-  return Array.from(
-    container.querySelectorAll<HTMLButtonElement>('[role="radio"]:not([data-disabled])')
-  );
-}
+import {
+  getRovingCandidates,
+  isRovingFocusKey,
+  resolveRovingFocusIndex
+} from "../../../lib/utils/index.js";
 
 export function createRadioGroupItemsHandlers(options: {
   getContainer: () => HTMLDivElement | null;
@@ -25,7 +24,10 @@ export function createRadioGroupItemsHandlers(options: {
       relatedTarget !== null &&
       Boolean(container.compareDocumentPosition(relatedTarget) & Node.DOCUMENT_POSITION_FOLLOWING);
 
-    const candidates = getRovingCandidates(container);
+    const candidates = getRovingCandidates<HTMLButtonElement>(
+      container,
+      '[role="radio"]:not([data-disabled])'
+    );
     if (candidates.length === 0) return;
 
     const target = isShiftTab ? candidates[candidates.length - 1] : candidates[0];
@@ -36,36 +38,40 @@ export function createRadioGroupItemsHandlers(options: {
   }
 
   function handleKeydown(e: KeyboardEvent): void {
+    const orientation = groupCtx.orientation;
+    const navigationOptions = {
+      orientation,
+      allowCrossAxis: true,
+      includeHomeEnd: true
+    } as const;
+
+    if (!isRovingFocusKey(e.key, navigationOptions)) return;
+
     const container = getContainer();
     if (!container) return;
 
-    const candidates = getRovingCandidates(container);
+    const candidates = getRovingCandidates<HTMLButtonElement>(
+      container,
+      '[role="radio"]:not([data-disabled])'
+    );
     if (candidates.length === 0) return;
 
     const target = e.target as HTMLButtonElement;
     const currentIndex = candidates.indexOf(target);
     if (currentIndex === -1) return;
 
-    const key = e.key;
-    let targetIndex: number | undefined;
-
-    if (key === "ArrowDown" || key === "ArrowRight") {
-      targetIndex = currentIndex + 1;
-    } else if (key === "ArrowUp" || key === "ArrowLeft") {
-      targetIndex = currentIndex - 1;
-    } else if (key === "Home") {
-      targetIndex = 0;
-    } else if (key === "End") {
-      targetIndex = candidates.length - 1;
-    } else {
-      return;
-    }
-
     e.preventDefault();
 
-    const total = candidates.length;
-    const wrappedIndex = ((targetIndex % total) + total) % total;
-    const nextCandidate = candidates[wrappedIndex];
+    const targetIndex = resolveRovingFocusIndex({
+      key: e.key,
+      currentIndex,
+      itemCount: candidates.length,
+      ...navigationOptions,
+      wrapAround: true
+    });
+    if (targetIndex === undefined) return;
+
+    const nextCandidate = candidates[targetIndex];
     if (!nextCandidate) return;
 
     nextCandidate.focus();
