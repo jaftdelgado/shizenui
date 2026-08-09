@@ -1,6 +1,6 @@
 <script lang="ts">
   import { inputGroupStyles } from "@shizen-ui/styles";
-  import { cn, createId } from "../../../lib/utils";
+  import { mergeProps, createId } from "../../../lib/utils/index.js";
   import { assertContext } from "../../../lib/runes/index.js";
   import { useFieldStateContext } from "../../../lib/index.js";
   import { useTextFieldContext } from "../../text-field/_internal/index.js";
@@ -20,6 +20,8 @@
     value = $bindable(""),
     oninput,
     oninvalid,
+    "aria-describedby": externalDescribedBy,
+    "aria-errormessage": externalErrorMessageId,
     ...rest
   }: InputGroupTextAreaProps = $props();
 
@@ -31,7 +33,9 @@
     resolveTextFieldControlDescribedBy(
       fieldCtx,
       ctx.invalid,
-      textFieldCtx.exists ? textFieldCtx : undefined
+      textFieldCtx.exists ? textFieldCtx : undefined,
+      externalDescribedBy,
+      externalErrorMessageId
     )
   );
 
@@ -90,23 +94,35 @@
       textFieldCtx.unregisterControl(uid);
     };
   });
+
+  const textAreaProps = $derived(
+    mergeProps(
+      {
+        id: ctx.inputId ?? id,
+        disabled: ctx.disabled,
+        readonly: ctx.readonly,
+        required: ctx.required,
+        "aria-invalid": ctx.invalid ? true : undefined,
+        "aria-disabled": ctx.disabled ? true : undefined,
+        "aria-readonly": ctx.readonly ? true : undefined,
+        ...(describedByResult.describedBy
+          ? { "aria-describedby": describedByResult.describedBy }
+          : {}),
+        ...(describedByResult.errorMessageId
+          ? { "aria-errormessage": describedByResult.errorMessageId }
+          : {}),
+        class: styles.textarea()
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
 {#if shouldRender}
   <textarea
     bind:this={ref}
-    id={ctx.inputId ?? id}
-    {...rest}
     bind:value={getValue, setValue}
-    disabled={ctx.disabled}
-    readonly={ctx.readonly}
-    required={ctx.required}
-    aria-invalid={ctx.invalid ? true : undefined}
-    aria-disabled={ctx.disabled ? true : undefined}
-    aria-readonly={ctx.readonly ? true : undefined}
-    aria-describedby={describedByResult.describedBy}
-    aria-errormessage={describedByResult.errorMessageId}
-    class={cn(styles.textarea(), className)}
+    {...textAreaProps}
     oninput={handlers.handleInput}
     oninvalid={handlers.handleInvalid}
   ></textarea>

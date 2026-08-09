@@ -8,7 +8,7 @@ import type {
 export type InputGroupVariant = "default" | "secondary" | "outline";
 export type InputGroupSize = "sm" | "md" | "lg";
 
-type InputGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "role" | "onclick">;
+type InputGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onclick">;
 
 export interface InputGroupProps extends InputGroupBaseProps {
   children?: Snippet;

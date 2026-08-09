@@ -6,6 +6,12 @@
 
 <div class="flex w-full max-w-64 flex-col gap-2">
   <Label for="coupon">Coupon code</Label>
-  <Input id="coupon" bind:value={couponCode} invalid placeholder="Enter coupon code" />
-  <FieldError invalid>This coupon code has expired or is invalid.</FieldError>
+  <Input
+    id="coupon"
+    bind:value={couponCode}
+    invalid
+    placeholder="Enter coupon code"
+    aria-describedby="coupon-error"
+  />
+  <FieldError id="coupon-error" invalid>This coupon code has expired or is invalid.</FieldError>
 </div>

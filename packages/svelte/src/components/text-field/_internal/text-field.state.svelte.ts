@@ -129,14 +129,26 @@ export type TextFieldStateInstance = InstanceType<typeof TextFieldState>;
 export function resolveTextFieldControlDescribedBy(
   ctx: FieldStateContextResult,
   finalInvalid: boolean,
-  slots?: { hasDescription: boolean; hasError: boolean }
+  slots?: { hasDescription: boolean; hasError: boolean },
+  externalDescribedBy?: string | null,
+  externalErrorMessageId?: string | null
 ): { describedBy: string | undefined; errorMessageId: string | undefined } {
-  if (!ctx.exists) {
-    return { describedBy: undefined, errorMessageId: undefined };
-  }
+  const describedBy = joinAriaIds(
+    externalDescribedBy,
+    ctx.exists && !finalInvalid && (!slots || slots.hasDescription) ? ctx.descriptionId : undefined
+  );
 
-  return {
-    describedBy: !finalInvalid && (!slots || slots.hasDescription) ? ctx.descriptionId : undefined,
-    errorMessageId: finalInvalid && (!slots || slots.hasError) ? ctx.errorId : undefined
-  };
+  const errorMessageId = ctx.exists
+    ? finalInvalid && (!slots || slots.hasError)
+      ? ctx.errorId
+      : undefined
+    : externalErrorMessageId?.trim() || undefined;
+
+  return { describedBy, errorMessageId };
+}
+
+function joinAriaIds(...values: (string | null | undefined)[]): string | undefined {
+  const ids = values.flatMap((value) => value?.trim().split(/\s+/) ?? []).filter(Boolean);
+
+  return ids.length > 0 ? [...new Set(ids)].join(" ") : undefined;
 }

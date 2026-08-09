@@ -2,7 +2,7 @@
   import { inputGroupStyles } from "@shizen-ui/styles";
   import { syncFormReset, warnIf } from "../../lib/runes/index.js";
   import type { SubmissionInvalidState } from "../../lib/runes/index.js";
-  import { cn, presence } from "../../lib/utils";
+  import { mergeProps, presence } from "../../lib/utils/index.js";
   import {
     useTextFieldContext,
     warnIfTextFieldPropsOverride
@@ -77,23 +77,27 @@
 
   const styles = $derived(inputGroupStyles({ variant: ctx.variant, size: ctx.size }));
 
+  const groupProps = $derived(
+    mergeProps(
+      {
+        id,
+        class: styles.base(),
+        "data-disabled": presence(ctx.disabled),
+        "data-readonly": presence(ctx.readonly),
+        "data-invalid": presence(ctx.invalid),
+        onclick: handlers.handleContainerClick
+      },
+      { ...rest, class: className }
+    )
+  );
+
   syncFormReset({
     getRef: () => ctx.inputRef,
     onReset: () => state.resetValidation()
   });
 </script>
 
-<div
-  bind:this={ref}
-  role="presentation"
-  {id}
-  data-disabled={presence(ctx.disabled)}
-  data-readonly={presence(ctx.readonly)}
-  data-invalid={presence(ctx.invalid)}
-  class={cn(styles.base(), className)}
-  onclick={handlers.handleContainerClick}
-  {...rest}
->
+<div bind:this={ref} {...groupProps}>
   {#if children}
     {@render children()}
   {/if}

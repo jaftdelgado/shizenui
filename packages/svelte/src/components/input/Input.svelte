@@ -4,7 +4,7 @@
   import { useFieldStateContext } from "../../lib/index.js";
   import { syncFormReset } from "../../lib/runes/index.js";
   import type { SubmissionInvalidState } from "../../lib/runes/index.js";
-  import { cn, createId, presence } from "../../lib/utils";
+  import { createId, mergeProps, presence } from "../../lib/utils/index.js";
   import { useTextFieldContext } from "../text-field/_internal/index.js";
   import {
     createTextFieldControlHandlers,
@@ -33,6 +33,9 @@
     value = $bindable(""),
     oninput,
     oninvalid,
+    "aria-describedby": externalDescribedBy,
+    "aria-errormessage": externalErrorMessageId,
+    "aria-invalid": externalAriaInvalid,
     ...rest
   }: InputProps = $props();
 
@@ -62,7 +65,9 @@
     resolveTextFieldControlDescribedBy(
       inputState.fieldCtx,
       inputState.finalInvalid,
-      textFieldCtx.exists ? textFieldCtx : undefined
+      textFieldCtx.exists ? textFieldCtx : undefined,
+      externalDescribedBy,
+      externalErrorMessageId
     )
   );
 
@@ -137,24 +142,39 @@
       submissionInvalid.clear();
     }
   });
+
+  const inputProps = $derived(
+    mergeProps(
+      {
+        id: inputState.finalId,
+        type: resolvedType,
+        disabled: inputState.finalDisabled,
+        readonly: inputState.finalReadonly,
+        required: inputState.finalRequired,
+        ...(inputState.finalInvalid || inputState.fieldCtx.exists || invalid !== undefined
+          ? { "aria-invalid": inputState.finalInvalid ? true : undefined }
+          : { "aria-invalid": externalAriaInvalid }),
+        ...(describedByResult.describedBy
+          ? { "aria-describedby": describedByResult.describedBy }
+          : {}),
+        ...(describedByResult.errorMessageId
+          ? { "aria-errormessage": describedByResult.errorMessageId }
+          : {}),
+        "data-slot": "input",
+        "data-invalid": presence(inputState.finalInvalid),
+        "data-disabled": presence(inputState.finalDisabled),
+        "data-readonly": presence(inputState.finalReadonly),
+        class: styles
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
 <input
   bind:this={ref}
   bind:value={getValue, setValue}
-  id={inputState.finalId}
-  {...rest}
-  type={resolvedType}
-  disabled={inputState.finalDisabled}
-  readonly={inputState.finalReadonly}
-  required={inputState.finalRequired}
-  aria-invalid={inputState.finalInvalid ? true : undefined}
-  aria-describedby={describedByResult.describedBy}
-  aria-errormessage={describedByResult.errorMessageId}
-  data-invalid={presence(inputState.finalInvalid)}
-  data-disabled={presence(inputState.finalDisabled)}
-  data-readonly={presence(inputState.finalReadonly)}
-  class={cn(styles, className)}
+  {...inputProps}
   oninput={handlers.handleInput}
   oninvalid={handlers.handleInvalid}
 />
