@@ -21,8 +21,8 @@ import SwitchGroupInvalid from "@examples/svelte/switch-group/SwitchGroupInvalid
 import SwitchGroupDisabled from "@examples/svelte/switch-group/SwitchGroupDisabled.svelte";
 import SwitchGroupForm from "@examples/svelte/switch-group/SwitchGroupForm.svelte";
 
-import SwitchTwStyling from "@examples/svelte/switch/SwitchTwStyling.svelte";
-import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?raw";
+import SwitchGroupTwStyling from "@examples/svelte/switch-group/SwitchGroupTwStyling.svelte";
+import SwitchGroupCssStylingCode from "@examples/svelte/switch-group/SwitchGroupCssStyling.css?raw";
 
 ## Import
 
@@ -85,21 +85,26 @@ Use a Function Binding for complete control over the group's reads and writes.
 
 ### Tailwind CSS classes
 
-Use the `class` prop to customize the Switch controls inside the group.
+Use the `class` prop to apply Tailwind utility classes directly to the SwitchGroup.
 
-<ComponentExample src="svelte/switch/SwitchTwStyling.svelte">
-  <SwitchTwStyling client:load />
+<ComponentExample src="svelte/switch-group/SwitchGroupTwStyling.svelte">
+  <SwitchGroupTwStyling client:load />
 </ComponentExample>
 
 ### Custom CSS
 
-To customize the Switch and SwitchGroup classes, use the `@layer components` directive.
+To customize the SwitchGroup component classes, you can use the `@layer components` directive.
 
-<CodeBlock code={SwitchCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+<CodeBlock
+  code={SwitchGroupCssStylingCode}
+  lang="css"
+  showLineNumbers={false}
+  collapsible={false}
+/>
 
 ### CSS Classes
 
-#### SwitchGroup Classes
+#### Base & Orientation Classes
 
 <BulletList
   items={[
@@ -130,29 +135,27 @@ To customize the Switch and SwitchGroup classes, use the `@layer components` dir
 
 ### SwitchGroup Props
 
-Groups multiple switches, propagating `disabled`, `readonly`, `invalid`, and `size` to all children
-through context. Individual switches can override `disabled`, `readonly`, `invalid`, and `required`
-locally. Each child must provide a `value`.
+Groups multiple switches, propagating `disabled`, `readonly`, `invalid`, and `size` through context. Each `Switch` can override these locally and must provide a `value`.
 
 <PropsTable
   showHeader
   props={[
-    { name: "children", type: "Snippet", default: "undefined" },
     { name: "value", type: "string[]", default: "undefined" },
     { name: "onValueChange", type: "(value: string[]) => void", default: "undefined" },
-    { name: "name", type: "string", default: "undefined" },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
     { name: "disabled", type: "boolean", default: "undefined" },
-    { name: "readonly", type: "boolean", default: "undefined" },
     { name: "invalid", type: "boolean", default: "undefined" },
     { name: "required", type: "boolean", default: "undefined" },
-    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
-    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
     { name: "id", type: "string", default: "auto-generated" },
-    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
   ]}
 />
 
-#### SwitchGroup.Items Props
+#### Items Props
 
 Extends `HTMLAttributes<HTMLDivElement>`.
 

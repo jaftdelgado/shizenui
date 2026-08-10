@@ -11,7 +11,11 @@
 
   function handleSubmit(event: SubmitEvent): void {
     event.preventDefault();
-    alert(`Playback settings saved!\n\nQuality: ${audioQuality || "None"}`);
+
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const selectedQuality = formData.get("audio-quality")?.toString() || "None";
+
+    alert(`Playback settings saved!\n\nQuality: ${selectedQuality}`);
   }
 </script>
 

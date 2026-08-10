@@ -5,7 +5,11 @@
 
   function handleSubmit(event: SubmitEvent): void {
     event.preventDefault();
-    alert(`Invitation prepared for ${inviteeEmail}.`);
+
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const submittedEmail = formData.get("invitee-email")?.toString() || "None";
+
+    alert(`Invitation prepared for ${submittedEmail}.`);
   }
 </script>
 

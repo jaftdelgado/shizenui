@@ -8,11 +8,13 @@
   function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
 
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+
     alert(
       `Preferences saved successfully!\n\n` +
-        `Email notifications: ${notifications ? "Yes" : "No"}\n` +
-        `Newsletter: ${newsletter ? "Yes" : "No"}\n` +
-        `Terms accepted: ${acceptTerms ? "Yes" : "No"}`
+        `Email notifications: ${formData.has("notifications") ? "Yes" : "No"}\n` +
+        `Newsletter: ${formData.has("newsletter") ? "Yes" : "No"}\n` +
+        `Terms accepted: ${formData.has("acceptTerms") ? "Yes" : "No"}`
     );
   }
 </script>

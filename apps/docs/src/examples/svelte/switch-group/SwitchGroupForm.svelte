@@ -18,7 +18,7 @@
   }
 </script>
 
-<form class="flex w-full max-w-72 flex-col gap-6" onsubmit={handleSubmit}>
+<form class="flex flex-col gap-6" onsubmit={handleSubmit}>
   <SwitchGroup required name="paymentTools" bind:value={paymentTools}>
     <Label>Payment tools</Label>
     <Description>Select at least one payment provider.</Description>

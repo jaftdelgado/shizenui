@@ -19,7 +19,11 @@
 
   function handleSubmit(event: SubmitEvent): void {
     event.preventDefault();
-    alert(`Webhook saved!\n\nEvents: ${events.length > 0 ? events.join(", ") : "None"}`);
+
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const selectedEvents = formData.getAll("events").join(", ") || "None";
+
+    alert(`Webhook saved!\n\nEvents: ${selectedEvents}`);
   }
 </script>
 

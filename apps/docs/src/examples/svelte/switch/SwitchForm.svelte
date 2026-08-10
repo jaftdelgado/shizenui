@@ -7,14 +7,16 @@
   function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget as HTMLFormElement);
-    const values = Object.fromEntries(formData);
+    const values = {
+      conversationView: formData.has("conversationView"),
+      smartCompose: formData.has("smartCompose")
+    };
 
     const summary = Object.entries(values)
-      .map(([key, value]) => `${key}: ${value === "on" ? "enabled" : "disabled"}`)
+      .map(([key, value]) => `${key}: ${value ? "enabled" : "disabled"}`)
       .join("\n");
 
     alert(`Settings saved:\n\n${summary}`);
-    console.log(values);
   }
 </script>
 

@@ -13,7 +13,8 @@
   import {
     SubmissionInvalidState,
     syncFormReset,
-    syncNativeCheckedReset
+    syncNativeCheckedReset,
+    syncNativeGroupSelectionReset
   } from "../../lib/runes/index.js";
 
   const uid = $props.id();
@@ -116,6 +117,7 @@
       const resetValue = [...baselineValue];
 
       syncNativeCheckedReset(nativeInputRef, resetValue.length > 0);
+      syncNativeGroupSelectionReset(ref, resetValue);
 
       isInternalWrite = true;
       value = resetValue;
@@ -123,6 +125,7 @@
     },
     onResetComplete: () => {
       syncNativeCheckedReset(nativeInputRef, baselineValue.length > 0);
+      syncNativeGroupSelectionReset(ref, baselineValue);
     }
   });
 </script>

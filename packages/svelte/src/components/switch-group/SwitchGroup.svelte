@@ -2,7 +2,11 @@
   import { switchGroupStyles } from "@shizen-ui/styles";
 
   import { createId, mergeProps, presence } from "../../lib/utils";
-  import { syncFormReset, syncNativeCheckedReset } from "../../lib/runes/index.js";
+  import {
+    syncFormReset,
+    syncNativeCheckedReset,
+    syncNativeGroupSelectionReset
+  } from "../../lib/runes/index.js";
   import type { SubmissionInvalidState } from "../../lib/runes/index.js";
   import type { SwitchGroupProps } from "./_internal/index.js";
   import {
@@ -116,6 +120,7 @@
       const resetValue = [...baselineValue];
 
       syncNativeCheckedReset(nativeInputRef, resetValue.length > 0);
+      syncNativeGroupSelectionReset(ref, resetValue);
 
       isInternalWrite = true;
       value = resetValue;
@@ -123,6 +128,7 @@
     },
     onResetComplete: () => {
       syncNativeCheckedReset(nativeInputRef, baselineValue.length > 0);
+      syncNativeGroupSelectionReset(ref, baselineValue);
     }
   });
 </script>

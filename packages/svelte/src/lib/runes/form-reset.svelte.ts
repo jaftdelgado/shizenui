@@ -1,3 +1,5 @@
+import { tick } from "svelte";
+
 /**
  * Synchronizes reactive state with a native <form> `reset` event.
  * Uses $effect internally, so it must be called at the top level of a Svelte component.
@@ -32,7 +34,7 @@ export function syncFormReset(options: {
       options.onReset();
 
       if (options.onResetComplete) {
-        queueMicrotask(() => {
+        void tick().then(() => {
           if (isActive) options.onResetComplete?.();
         });
       }
@@ -65,4 +67,25 @@ export function syncNativeCheckedReset(
   input.defaultChecked = checked;
   input.checked = checked;
   input.indeterminate = indeterminate;
+}
+
+/**
+ * Synchronizes the native checkbox/radio mirrors rendered by a selectable group.
+ *
+ * Group children derive their checked state through context, so their native
+ * inputs can otherwise lag behind the group's controlled value during reset.
+ */
+export function syncNativeGroupSelectionReset(
+  container: HTMLElement | null,
+  selectedValues: readonly string[]
+): void {
+  if (!container) return;
+
+  const selected = new Set(selectedValues);
+
+  for (const input of container.querySelectorAll<HTMLInputElement>(
+    'input[type="checkbox"][name], input[type="radio"][name]'
+  )) {
+    syncNativeCheckedReset(input, selected.has(input.value));
+  }
 }

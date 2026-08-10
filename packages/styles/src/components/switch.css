@@ -21,10 +21,7 @@
       var(--switch-width) - var(--switch-thumb-width) - var(--switch-padding) * 2
     );
 
-    transition:
-      opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
-      scale 100ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
-
+    transition: opacity 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
 
     &[data-disabled] {
@@ -53,18 +50,12 @@
 
     &[data-invalid] {
       & .switch__control {
-        @apply status-invalid-field ring-1;
+        @apply status-invalid-field;
       }
 
       &[data-checked] {
         --switch-bg: var(--color-danger);
         --switch-bg-hover: var(--color-danger-hover);
-      }
-    }
-
-    &[data-pressed] {
-      & .switch__thumb {
-        @apply scale-98;
       }
     }
 
@@ -88,15 +79,13 @@
 
   .switch__control {
     @apply relative flex shrink-0 items-center rounded-full;
-    box-sizing: border-box;
     height: var(--switch-height);
     width: var(--switch-width);
     background-color: var(--switch-bg);
 
     transition:
       background-color 250ms var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1)),
-      box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
-      scale 100ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+      box-shadow 150ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     @apply motion-reduce:transition-none;
 
     &:hover:not([data-disabled]):not([data-readonly]) {
@@ -129,7 +118,7 @@
   }
 
   .switch__thumb-content {
-    @apply flex h-full w-full items-center justify-center;
+    @apply flex h-full w-full shrink-0 items-center justify-center;
   }
 
   .switch__content {

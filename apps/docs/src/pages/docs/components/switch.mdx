@@ -15,6 +15,7 @@ import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.ast
 
 import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.svelte?raw";
 
+import SwitchThumb from "@examples/svelte/switch/SwitchThumb.svelte";
 import SwitchSizes from "@examples/svelte/switch/SwitchSizes.svelte";
 import SwitchBindChecked from "@examples/svelte/switch/SwitchBindChecked.svelte";
 import SwitchFullyControlled from "@examples/svelte/switch/SwitchFullyControlled.svelte";
@@ -34,6 +35,12 @@ import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?r
 <CodeBlock code={SwitchAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
 
 ## Examples
+
+### Thumb Content
+
+<ComponentExample src="svelte/switch/SwitchThumb.svelte">
+  <SwitchThumb client:load />
+</ComponentExample>
 
 ### Sizes
 
@@ -95,7 +102,7 @@ To customize the Switch component classes, you can use the `@layer components` d
 
 ### CSS Classes
 
-#### Switch Classes
+#### Base & Size Classes
 
 <BulletList
   items={[
@@ -184,4 +191,40 @@ To customize the Switch component classes, you can use the `@layer components` d
     { name: "children", type: "Snippet", default: "undefined" }
 
 ]}
+/>
+
+#### Content Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
+/>
+
+#### Control Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
+/>
+
+#### Thumb Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
 />
