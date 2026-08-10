@@ -19,6 +19,19 @@ const OVERRIDE_DEFINITIONS: {
   { property: "variant", getRaw: (ctx) => ctx.rawVariant }
 ];
 
+export function setupTextFieldWarnings(options: {
+  context: TextFieldContextResult;
+  hasChildren: () => boolean;
+}): void {
+  warnIf(
+    () => !options.hasChildren(),
+    "TextField",
+    "No children provided. Add a <Label /> and either <Input /> or <InputGroup />."
+  );
+
+  warnIfTextFieldHasNoAccessibleName(options.context);
+}
+
 export function warnIfTextFieldPropsOverride(options: {
   component: string;
   context: TextFieldContextResult;

@@ -5,7 +5,6 @@ export type {
   ToggleGroupOrientation,
   ToggleGroupSelectionMode
 } from "./_internal/index.js";
-export type { ToggleGroupContextResult } from "./_internal/index.js";
 
 export const ToggleGroup = Root;
 

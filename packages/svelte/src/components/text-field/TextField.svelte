@@ -1,16 +1,16 @@
 <script lang="ts">
   import { textFieldStyles } from "@shizen-ui/styles";
 
-  import { syncFormReset, warnIf } from "../../lib/runes/index.js";
+  import { syncFormReset } from "../../lib/runes/index.js";
   import type { SubmissionInvalidState } from "../../lib/runes/index.js";
-  import { cn, createId, presence } from "../../lib/utils";
+  import { createId, mergeProps, presence } from "../../lib/utils/index.js";
   import type { TextFieldProps } from "./_internal/index.js";
   import {
     TextFieldState,
     setupTextFieldContexts,
     setupTextFieldSubmissionInvalid,
-    useTextFieldContext,
-    warnIfTextFieldHasNoAccessibleName
+    setupTextFieldWarnings,
+    useTextFieldContext
   } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -29,12 +29,6 @@
     children,
     ...rest
   }: TextFieldProps = $props();
-
-  warnIf(
-    () => !children,
-    "TextField",
-    "No children provided. Add a <Label /> and either <Input /> or <InputGroup />."
-  );
 
   let submissionInvalid: SubmissionInvalidState;
 
@@ -59,7 +53,21 @@
   const ctx = useTextFieldContext();
   const styles = textFieldStyles();
 
-  warnIfTextFieldHasNoAccessibleName(ctx);
+  setupTextFieldWarnings({ context: ctx, hasChildren: () => !!children });
+
+  const fieldProps = $derived(
+    mergeProps(
+      {
+        class: styles,
+        "data-disabled": presence(state.finalDisabled),
+        "data-readonly": presence(state.finalReadonly),
+        "data-invalid": presence(state.finalInvalid),
+        "data-required": presence(state.finalRequired),
+        "data-slot": "field"
+      },
+      { ...rest, class: className }
+    )
+  );
 
   syncFormReset({
     getRef: () => ctx.control,
@@ -67,15 +75,6 @@
   });
 </script>
 
-<div
-  bind:this={ref}
-  data-disabled={presence(state.finalDisabled)}
-  data-readonly={presence(state.finalReadonly)}
-  data-invalid={presence(state.finalInvalid)}
-  data-required={presence(state.finalRequired)}
-  class={cn(styles, className)}
-  {...rest}
-  data-slot="field"
->
+<div bind:this={ref} {...fieldProps}>
   {@render children?.()}
 </div>

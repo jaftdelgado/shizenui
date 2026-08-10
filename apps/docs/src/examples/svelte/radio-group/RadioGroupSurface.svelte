@@ -22,23 +22,21 @@
   ];
 </script>
 
-<div class="grid w-full max-w-80">
-  <Surface>
-    <RadioGroup bind:value={selectedInstallments} aria-label="Installment plan">
-      <Label>Payment plan</Label>
-      <Description>Choose how many months to split your payment.</Description>
+<Surface class="w-full max-w-80">
+  <RadioGroup bind:value={selectedInstallments} aria-label="Installment plan">
+    <Label>Payment plan</Label>
+    <Description>Choose how many months to split your payment.</Description>
 
-      <RadioGroup.Items>
-        {#each options as option}
-          <Radio value={option.value}>
-            <Radio.Control />
-            <Radio.Content>
-              <Label>{option.label}</Label>
-              <Description>{option.description}</Description>
-            </Radio.Content>
-          </Radio>
-        {/each}
-      </RadioGroup.Items>
-    </RadioGroup>
-  </Surface>
-</div>
+    <RadioGroup.Items>
+      {#each options as option}
+        <Radio value={option.value}>
+          <Radio.Control />
+          <Radio.Content>
+            <Label>{option.label}</Label>
+            <Description>{option.description}</Description>
+          </Radio.Content>
+        </Radio>
+      {/each}
+    </RadioGroup.Items>
+  </RadioGroup>
+</Surface>

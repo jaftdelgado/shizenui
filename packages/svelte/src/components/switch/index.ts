@@ -8,6 +8,7 @@ export type {
   SwitchControlProps,
   SwitchThumbProps,
   SwitchContentProps,
+  SwitchClickEvent,
   SwitchRenderState
 } from "./_internal/index.js";
 

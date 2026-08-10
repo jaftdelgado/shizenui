@@ -40,7 +40,7 @@
 
       &[data-checked] {
         & .radio__control {
-          @apply status-invalid-field ring-1;
+          @apply status-invalid-field;
           background-color: var(--color-danger);
         }
       }
@@ -128,5 +128,9 @@
 
   .radio__content {
     @apply flex flex-col items-start;
+  }
+
+  .radio__input {
+    @apply sr-only;
   }
 }

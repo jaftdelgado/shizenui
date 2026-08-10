@@ -22,21 +22,18 @@
   ];
 </script>
 
-<div class="flex max-w-xs flex-col">
-  <RadioGroup disabled bind:value={selected} name="subscription-plan">
-    <Label>Subscription Plan</Label>
-    <Description>Locked during billing process.</Description>
-
-    <RadioGroup.Items>
-      {#each plans as plan}
-        <Radio value={plan.value}>
-          <Radio.Control />
-          <Radio.Content>
-            <Label>{plan.label}</Label>
-            <Description>{plan.description}</Description>
-          </Radio.Content>
-        </Radio>
-      {/each}
-    </RadioGroup.Items>
-  </RadioGroup>
-</div>
+<RadioGroup disabled bind:value={selected}>
+  <Label>Subscription Plan</Label>
+  <Description>Locked during billing process.</Description>
+  <RadioGroup.Items>
+    {#each plans as plan}
+      <Radio value={plan.value}>
+        <Radio.Control />
+        <Radio.Content>
+          <Label>{plan.label}</Label>
+          <Description>{plan.description}</Description>
+        </Radio.Content>
+      </Radio>
+    {/each}
+  </RadioGroup.Items>
+</RadioGroup>

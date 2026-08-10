@@ -1,16 +1,8 @@
 <script lang="ts">
-  import { untrack } from "svelte";
   import { descriptionStyles } from "@shizen-ui/styles";
-  import { cn, createId, presence } from "../../lib/utils/index.js";
+  import { createId, mergeProps, presence } from "../../lib/utils/index.js";
   import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
-  import type { HTMLAttributes } from "svelte/elements";
-  import type { Snippet } from "svelte";
-
-  interface DescriptionProps extends HTMLAttributes<HTMLSpanElement> {
-    children?: Snippet;
-    disabled?: boolean;
-    id?: string;
-  }
+  import type { DescriptionProps } from "./_internal/index.js";
 
   const uid = $props.id();
 
@@ -19,6 +11,7 @@
     class: className,
     disabled = false,
     id: propId,
+    ref = $bindable(null),
     ...rest
   }: DescriptionProps = $props();
 
@@ -29,8 +22,7 @@
   const finalDisabled = $derived(fieldContext.exists ? fieldContext.disabled : disabled);
 
   const registrationId = fieldContext.descriptionId ?? createId("description", uid);
-  const resolvedPropId = untrack(() => propId);
-  const finalId = slotCtx.exists ? registrationId : (resolvedPropId ?? registrationId);
+  const finalId = $derived(slotCtx.exists ? registrationId : (propId ?? registrationId));
 
   const shouldShow = $derived(
     !finalInvalid || (fieldContext.exists && fieldContext.keepDescription)
@@ -47,17 +39,23 @@
       slotCtx.unregisterDescription(registrationId);
     };
   });
+
+  const descriptionProps = $derived(
+    mergeProps(
+      {
+        id: finalId,
+        class: descriptionStyles(),
+        "data-slot": "description",
+        "data-disabled": presence(finalDisabled),
+        "data-invalid": presence(finalInvalid)
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
 {#if shouldShow}
-  <span
-    id={finalId}
-    class={cn(descriptionStyles(), className)}
-    data-slot="description"
-    data-disabled={presence(finalDisabled)}
-    data-invalid={presence(finalInvalid)}
-    {...rest}
-  >
+  <span bind:this={ref} {...descriptionProps}>
     {@render children?.()}
   </span>
 {/if}

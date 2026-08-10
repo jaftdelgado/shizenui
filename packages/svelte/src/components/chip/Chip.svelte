@@ -1,6 +1,6 @@
 <script lang="ts">
   import { chipStyles } from "@shizen-ui/styles";
-  import { cn } from "../../lib/utils/index.js";
+  import { mergeProps } from "../../lib/utils/index.js";
   import type { ChipIconContent, ChipProps } from "./_internal/index.js";
 
   let {
@@ -16,6 +16,10 @@
   }: ChipProps = $props();
 
   const styles = $derived(chipStyles({ color, size, variant }));
+
+  const chipProps = $derived(
+    mergeProps({ class: styles.base() }, { ...rest, class: className })
+  );
 </script>
 
 {#snippet renderIcon(content: ChipIconContent | undefined, position: "start" | "end")}
@@ -26,13 +30,11 @@
   {/if}
 {/snippet}
 
-<span bind:this={ref} class={cn(styles.base(), className)} {...rest}>
+<span bind:this={ref} {...chipProps}>
   <span class={styles.content()}>
     {@render renderIcon(startContent, "start")}
     {#if children}
-      <span class={styles.label()}>
-        {@render children()}
-      </span>
+      {@render children()}
     {/if}
     {@render renderIcon(endContent, "end")}
   </span>

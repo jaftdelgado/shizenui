@@ -48,6 +48,17 @@
       --switch-thumb-bg: var(--color-accent-foreground);
     }
 
+    &[data-invalid] {
+      & .switch__control {
+        @apply status-invalid-field;
+      }
+
+      &[data-checked] {
+        --switch-bg: var(--color-danger);
+        --switch-bg-hover: var(--color-danger-hover);
+      }
+    }
+
     &.switch--sm {
       --switch-height: 1rem;
       --switch-width: 2rem;
@@ -68,7 +79,6 @@
 
   .switch__control {
     @apply relative flex shrink-0 items-center rounded-full;
-    box-sizing: border-box;
     height: var(--switch-height);
     width: var(--switch-width);
     background-color: var(--switch-bg);
@@ -83,12 +93,8 @@
     }
 
     .switch[data-focus-visible] & {
-      @apply status-focused ring-offset-0;
+      @apply status-focused;
     }
-  }
-
-  .switch__input {
-    @apply sr-only;
   }
 
   .switch__thumb {
@@ -112,10 +118,14 @@
   }
 
   .switch__thumb-content {
-    @apply flex h-full w-full items-center justify-center;
+    @apply flex h-full w-full shrink-0 items-center justify-center;
   }
 
   .switch__content {
     @apply flex flex-col;
+  }
+
+  .switch__input {
+    @apply sr-only;
   }
 }

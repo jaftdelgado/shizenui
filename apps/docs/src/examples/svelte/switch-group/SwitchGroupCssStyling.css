@@ -1,0 +1,17 @@
+@layer components {
+  .switch-group {
+    @apply gap-2 rounded-lg border border-gray-200 p-4;
+  }
+
+  .switch-group__items {
+    @apply mt-2 gap-4;
+  }
+
+  .switch-group__items--vertical {
+    @apply gap-4;
+  }
+
+  .switch-group__items--horizontal {
+    @apply gap-8;
+  }
+}

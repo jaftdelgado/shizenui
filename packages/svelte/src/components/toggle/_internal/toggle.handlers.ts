@@ -13,22 +13,27 @@ export function createToggleHandlers(options: {
   }
 
   function handleClick(event: ToggleClickEvent): void {
-    if (event.detail === 0) return;
     toggle();
     getOnClick?.()?.(event);
   }
 
-  function handleKey(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
+  function handleKeydown(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
     if (e.key !== " " && e.key !== "Enter") return;
-    if (e.type === "keydown") {
-      e.preventDefault();
-      if (e.repeat) return;
-      e.currentTarget.setAttribute("data-pressed", "true");
-    } else if (e.type === "keyup") {
-      if (!e.currentTarget.hasAttribute("data-pressed")) return;
-      e.currentTarget.removeAttribute("data-pressed");
-      toggle();
-    }
+
+    e.preventDefault();
+    if (e.repeat) return;
+
+    e.currentTarget.setAttribute("data-pressed", "true");
+  }
+
+  function handleKeyup(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
+    if (e.key !== " " && e.key !== "Enter") return;
+    if (!e.currentTarget.hasAttribute("data-pressed")) return;
+
+    e.currentTarget.removeAttribute("data-pressed");
+    if (state.finalDisabled) return;
+
+    e.currentTarget.click();
   }
 
   function handleBlur(e: FocusEvent & { currentTarget: HTMLButtonElement }): void {
@@ -37,7 +42,7 @@ export function createToggleHandlers(options: {
     }
   }
 
-  return { handleClick, handleKey, handleBlur };
+  return { handleClick, handleKeydown, handleKeyup, handleBlur };
 }
 
 export type ToggleHandlers = ReturnType<typeof createToggleHandlers>;

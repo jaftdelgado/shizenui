@@ -1,6 +1,14 @@
 /* === Focus Ring === */
 @utility focus-ring {
-  @apply ring-focus/30 ring-offset-focus ring-3 ring-offset-1 outline-none;
+  @apply ring-focus ring-offset-background ring-2 ring-offset-0 outline-none;
+  --tw-ring-offset-width: var(--ring-offset-width);
+
+  &[data-invalid],
+  &[aria-invalid="true"],
+  &[data-state="invalid"],
+  &:invalid {
+    @apply ring-danger ring-offset-background;
+  }
 }
 
 @utility focus-field-ring {
@@ -12,7 +20,7 @@
 }
 
 @utility focus-invalid-field-ring {
-  @apply ring-danger ring-2 outline-none;
+  @apply ring-danger ring-2 ring-offset-0 ring-offset-transparent outline-none;
 }
 
 /* Statuses utilities */

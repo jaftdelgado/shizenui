@@ -1,18 +1,13 @@
 <script lang="ts">
   import { switchStyles } from "@shizen-ui/styles";
 
-  import { cn } from "../../../lib/utils";
+  import { mergeProps } from "../../../lib/utils";
   import { assertContext } from "../../../lib/runes/index.js";
 
   import type { SwitchContentProps } from "../_internal/index.js";
   import { useSwitchContext } from "../_internal/index.js";
 
-  let {
-    children,
-    class: className,
-    ref = $bindable(null),
-    ...rest
-  }: SwitchContentProps = $props();
+  let { children, class: className, ref = $bindable(null), ...rest }: SwitchContentProps = $props();
 
   const ctx = useSwitchContext();
   const styles = switchStyles();
@@ -22,10 +17,14 @@
     "Switch.Content",
     "Must be used inside a <Switch> component."
   );
+
+  const contentProps = $derived(
+    mergeProps({ class: styles.content() }, { ...rest, class: className })
+  );
 </script>
 
 {#if shouldRender}
-  <div bind:this={ref} class={cn(styles.content(), className)} {...rest}>
+  <span bind:this={ref} {...contentProps}>
     {@render children()}
-  </div>
+  </span>
 {/if}

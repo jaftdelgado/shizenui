@@ -1,39 +1,43 @@
 import type { HTMLButtonAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
-import type { ToggleVariants } from "@shizen-ui/styles";
 
-export type { ToggleVariants };
+export type ToggleSize = "sm" | "md" | "lg";
+export type ToggleVariant = "default" | "outline" | "ghost";
 
-export type ToggleSize = NonNullable<ToggleVariants["size"]>;
-export type ToggleVariant = NonNullable<ToggleVariants["variant"]>;
-
-export type IconContent = Snippet<[]> | string;
+export type ToggleIconContent = Snippet<[]>;
 
 export type ToggleClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
 
-type ToggleBaseProps = Omit<HTMLButtonAttributes, "children" | "disabled" | "type">;
+type ToggleBaseProps = Omit<
+  HTMLButtonAttributes,
+  "children" | "disabled" | "type" | "onclick" | "onkeydown" | "onkeyup" | "onblur" | "onfocus"
+>;
 
-interface NormalToggleProps extends ToggleBaseProps {
+interface ToggleNormalProps extends ToggleBaseProps {
   iconOnly?: false;
   variant?: ToggleVariant;
   size?: ToggleSize;
+  id?: string;
   disabled?: boolean;
   value?: string;
   pressed?: boolean;
+  onclick?: (event: ToggleClickEvent) => void;
   onPressedChange?: (pressed: boolean) => void;
   ref?: HTMLButtonElement | null;
   children?: Snippet;
-  startContent?: IconContent;
-  endContent?: IconContent;
+  startContent?: ToggleIconContent;
+  endContent?: ToggleIconContent;
 }
 
-interface IconOnlyToggleProps extends ToggleBaseProps {
+interface ToggleIconOnlyProps extends ToggleBaseProps {
   iconOnly: true;
   variant?: ToggleVariant;
   size?: ToggleSize;
+  id?: string;
   disabled?: boolean;
   value?: string;
   pressed?: boolean;
+  onclick?: (event: ToggleClickEvent) => void;
   onPressedChange?: (pressed: boolean) => void;
   ref?: HTMLButtonElement | null;
   children: Snippet;
@@ -41,4 +45,4 @@ interface IconOnlyToggleProps extends ToggleBaseProps {
   endContent?: never;
 }
 
-export type ToggleProps = NormalToggleProps | IconOnlyToggleProps;
+export type ToggleProps = ToggleNormalProps | ToggleIconOnlyProps;

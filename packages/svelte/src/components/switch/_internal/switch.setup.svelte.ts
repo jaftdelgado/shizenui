@@ -1,6 +1,6 @@
+import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
 import { setSwitchContext } from "./switch.context.js";
 import type { SwitchContextValue } from "./switch.context.js";
-import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
 import { SwitchState } from "./switch.state.svelte.js";
 
 export function setupSwitchContexts(
@@ -9,16 +9,23 @@ export function setupSwitchContexts(
 ): void {
   let labelIds = $state(new Set<string>());
   let descriptionIds = $state(new Set<string>());
+  let errorIds = $state(new Set<string>());
 
   setSwitchContext({
     get checked() {
-      return props.checked();
+      return state.finalChecked;
     },
     get disabled() {
       return state.finalDisabled;
     },
     get readonly() {
       return state.finalReadonly;
+    },
+    get invalid() {
+      return state.finalInvalid;
+    },
+    get required() {
+      return state.finalRequired;
     },
     get id() {
       return props.id();
@@ -31,12 +38,15 @@ export function setupSwitchContexts(
     },
     get hasDescription() {
       return descriptionIds.size > 0;
+    },
+    get hasError() {
+      return errorIds.size > 0;
     }
   } satisfies SwitchContextValue);
 
   setFieldStateContext({
     get invalid() {
-      return false;
+      return state.finalInvalid;
     },
     get disabled() {
       return state.finalDisabled;
@@ -45,7 +55,7 @@ export function setupSwitchContexts(
       return state.finalReadonly;
     },
     get required() {
-      return false;
+      return state.finalRequired;
     },
     get id() {
       return props.id();
@@ -60,7 +70,7 @@ export function setupSwitchContexts(
       return `${props.id()}-description`;
     },
     get errorId() {
-      return undefined;
+      return errorIds.size > 0 ? `${props.id()}-error` : undefined;
     },
     get keepDescription() {
       return true;
@@ -92,7 +102,17 @@ export function setupSwitchContexts(
       next.delete(id);
       descriptionIds = next;
     },
-    registerError(_id: string) {},
-    unregisterError(_id: string) {}
+    registerError(id: string) {
+      if (errorIds.has(id)) return;
+      const next = new Set(errorIds);
+      next.add(id);
+      errorIds = next;
+    },
+    unregisterError(id: string) {
+      if (!errorIds.has(id)) return;
+      const next = new Set(errorIds);
+      next.delete(id);
+      errorIds = next;
+    }
   });
 }

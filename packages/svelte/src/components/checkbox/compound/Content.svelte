@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cn } from "../../../lib/utils";
+  import { mergeProps } from "../../../lib/utils";
   import { checkboxStyles } from "@shizen-ui/styles";
   import { assertContext, warnIf } from "../../../lib/runes/index.js";
   import { useCheckboxContext } from "../_internal/index.js";
@@ -26,10 +26,14 @@
     "Checkbox.Content",
     "No children provided. Add content such as <Label> or <Description>."
   );
+
+  const contentProps = $derived(
+    mergeProps({ class: styles.content() }, { ...rest, class: className })
+  );
 </script>
 
 {#if shouldRender}
-  <span bind:this={ref} class={cn(styles.content(), className)} {...rest}>
+  <span bind:this={ref} {...contentProps}>
     {#if children}
       {@render children()}
     {/if}

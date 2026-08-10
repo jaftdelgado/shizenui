@@ -25,25 +25,22 @@
   ];
 </script>
 
-<div class="flex-center justify-center p-4">
-  <RadioGroup bind:value={selectedMethod} name="payment-method">
-    <Label>Payment Method</Label>
-    <Description>Select how you want to pay for your order.</Description>
-
-    <RadioGroup.Items>
-      {#each paymentMethods as method}
-        <Radio value={method.value}>
-          <Radio.Control>
-            <Radio.Indicator>
-              <Icon icon={Tick02Icon} class="text-accent-foreground size-2" strokeWidth={5} />
-            </Radio.Indicator>
-          </Radio.Control>
-          <Radio.Content>
-            <Label>{method.label}</Label>
-            <Description>{method.description}</Description>
-          </Radio.Content>
-        </Radio>
-      {/each}
-    </RadioGroup.Items>
-  </RadioGroup>
-</div>
+<RadioGroup bind:value={selectedMethod}>
+  <Label>Payment Method</Label>
+  <Description>Select how you want to pay for your order.</Description>
+  <RadioGroup.Items>
+    {#each paymentMethods as method}
+      <Radio value={method.value}>
+        <Radio.Control>
+          <Radio.Indicator>
+            <Icon icon={Tick02Icon} class="text-accent-foreground size-2" strokeWidth={5} />
+          </Radio.Indicator>
+        </Radio.Control>
+        <Radio.Content>
+          <Label>{method.label}</Label>
+          <Description>{method.description}</Description>
+        </Radio.Content>
+      </Radio>
+    {/each}
+  </RadioGroup.Items>
+</RadioGroup>

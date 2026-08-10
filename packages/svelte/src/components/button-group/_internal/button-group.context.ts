@@ -1,35 +1,41 @@
-import { getContext, setContext } from "svelte";
-import type { ButtonVariants } from "@shizen-ui/styles";
+import { createContext } from "svelte";
+import type { ButtonSize, ButtonVariant } from "../../button/_internal/button.types.js";
 
 export interface ButtonGroupContextValue {
-  readonly variant: NonNullable<ButtonVariants["variant"]>;
-  readonly size: NonNullable<ButtonVariants["size"]>;
+  readonly variant: ButtonVariant;
+  readonly size: ButtonSize;
   readonly disabled: boolean;
 }
 
 export interface ButtonGroupContextResult {
-  readonly variant: NonNullable<ButtonVariants["variant"]>;
-  readonly size: NonNullable<ButtonVariants["size"]>;
+  readonly variant: ButtonVariant;
+  readonly size: ButtonSize;
   readonly disabled: boolean;
   readonly exists: boolean;
 }
 
-const BUTTON_GROUP_CONTEXT_KEY = Symbol("shizen:button-group");
+const [getButtonGroupContext, setButtonGroupContext] = createContext<ButtonGroupContextValue>();
 
-export function setButtonGroupContext(value: ButtonGroupContextValue): void {
-  setContext(BUTTON_GROUP_CONTEXT_KEY, value);
+function tryGetButtonGroupContext(): ButtonGroupContextValue | undefined {
+  try {
+    return getButtonGroupContext();
+  } catch {
+    return undefined;
+  }
 }
 
+export { setButtonGroupContext };
+
 export function useButtonGroupContext(): ButtonGroupContextResult {
-  const context = getContext<ButtonGroupContextValue | undefined>(BUTTON_GROUP_CONTEXT_KEY);
+  const context = tryGetButtonGroupContext();
 
   if (!context) {
     return {
       get variant() {
-        return "primary" as NonNullable<ButtonVariants["variant"]>;
+        return "primary" as ButtonVariant;
       },
       get size() {
-        return "md" as NonNullable<ButtonVariants["size"]>;
+        return "md" as ButtonSize;
       },
       get disabled() {
         return false;

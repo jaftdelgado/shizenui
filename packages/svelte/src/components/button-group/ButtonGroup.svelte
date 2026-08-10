@@ -1,7 +1,7 @@
 <script lang="ts">
   import { buttonGroupStyles } from "@shizen-ui/styles";
   import { warnIf } from "../../lib/runes/index.js";
-  import { cn, presence } from "../../lib/utils";
+  import { mergeProps, presence } from "../../lib/utils/index.js";
   import type { ButtonGroupProps } from "./_internal/index.js";
   import { ButtonGroupState, setButtonGroupContext } from "./_internal/index.js";
 
@@ -13,6 +13,7 @@
     orientation = "horizontal",
     hideSeparator = false,
     disabled = undefined,
+    ref = $bindable(null),
     ...rest
   }: ButtonGroupProps = $props();
 
@@ -49,14 +50,20 @@
       hideSeparator: buttonGroupState.finalHideSeparator
     })
   );
+
+  const groupProps = $derived(
+    mergeProps(
+      {
+        class: styles,
+        "data-disabled": presence(buttonGroupState.finalDisabled),
+        "data-orientation": buttonGroupState.finalOrientation
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
-<div
-  role="group"
-  class={cn(styles, className)}
-  data-disabled={presence(buttonGroupState.finalDisabled)}
-  data-orientation={buttonGroupState.finalOrientation}
-  {...rest}
->
+<!-- ButtonGroup is intentionally designed for direct Button children from @shizen-ui/svelte. -->
+<div bind:this={ref} {...groupProps}>
   {@render children?.()}
 </div>

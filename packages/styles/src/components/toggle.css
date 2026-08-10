@@ -81,10 +81,6 @@
     margin-inline-end: var(--toggle-icon-inset);
   }
 
-  .toggle__label {
-    @apply flex items-center;
-  }
-
   .toggle--default {
     --toggle-bg: var(--color-control);
     --toggle-fg: var(--color-control-text);

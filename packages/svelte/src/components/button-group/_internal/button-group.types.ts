@@ -1,15 +1,16 @@
 import type { Snippet } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
-import type { ButtonVariants } from "@shizen-ui/styles";
+import type { ButtonSize, ButtonVariant } from "../../button/_internal/button.types.js";
 
-type ButtonGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "role">;
+type ButtonGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children">;
 
 export type ButtonGroupOrientation = "horizontal" | "vertical";
 
 export interface ButtonGroupProps extends ButtonGroupBaseProps {
   children?: Snippet;
-  variant?: ButtonVariants["variant"];
-  size?: ButtonVariants["size"];
+  ref?: HTMLDivElement | null;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   orientation?: ButtonGroupOrientation;
   hideSeparator?: boolean;
   disabled?: boolean;

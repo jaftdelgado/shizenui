@@ -1,3 +1,3 @@
 export { default as Surface } from "./Surface.svelte";
 
-export type { SurfaceProps } from "./_internal/index.js";
+export type { SurfaceProps, SurfaceVariant } from "./_internal/index.js";

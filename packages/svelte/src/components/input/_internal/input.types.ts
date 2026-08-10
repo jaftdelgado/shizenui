@@ -9,7 +9,7 @@ export type InputVariant = "default" | "secondary" | "outline";
 
 type InputBaseProps = Omit<
   HTMLInputAttributes,
-  "size" | "type" | "value" | "oninput" | "oninvalid"
+  "size" | "type" | "value" | "disabled" | "readonly" | "required" | "id" | "oninput" | "oninvalid"
 >;
 
 export type InputInputEvent = InputEvent & { currentTarget: HTMLInputElement };

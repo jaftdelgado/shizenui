@@ -5,8 +5,7 @@ export const chipStyles = tv({
     base: "chip",
     content: "chip__content",
     iconStart: "chip__icon chip__icon--start",
-    iconEnd: "chip__icon chip__icon--end",
-    label: "chip__label"
+    iconEnd: "chip__icon chip__icon--end"
   },
   variants: {
     color: {

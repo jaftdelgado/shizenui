@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cn } from "../../../lib/utils";
+  import { mergeProps } from "../../../lib/utils";
   import { radioGroupStyles } from "@shizen-ui/styles";
   import { assertContext, warnIf } from "../../../lib/runes/index.js";
   import { useRadioGroupContext, createRadioGroupItemsHandlers } from "../_internal/index.js";
@@ -35,6 +35,17 @@
     groupCtx
   });
 
+  const itemsProps = $derived(
+    mergeProps(
+      {
+        class: styles.items(),
+        onfocusin: handlers.handleFocusIn,
+        onkeydown: handlers.handleKeydown
+      },
+      { ...rest, class: className }
+    )
+  );
+
   $effect(() => {
     if (!shouldRender) return;
 
@@ -47,13 +58,7 @@
 </script>
 
 {#if shouldRender}
-  <div
-    bind:this={ref}
-    class={cn(styles.items(), className)}
-    onfocusin={handlers.handleFocusIn}
-    onkeydown={handlers.handleKeydown}
-    {...rest}
-  >
+  <div bind:this={ref} {...itemsProps}>
     {#if children}
       {@render children()}
     {/if}

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { inputGroupStyles } from "@shizen-ui/styles";
-  import { cn, presence } from "../../../lib/utils";
+  import { mergeProps, presence } from "../../../lib/utils/index.js";
   import { assertContext } from "../../../lib/runes/index.js";
   import { useInputGroupContext } from "../_internal/index.js";
   import type { InputGroupPrefixProps } from "../_internal/index.js";
@@ -20,18 +20,23 @@
     "InputGroup.Prefix",
     "Must be used inside an <InputGroup> component."
   );
+
+  const prefixProps = $derived(
+    mergeProps(
+      {
+        class: styles.prefix(),
+        inert: ctx.disabled,
+        "data-disabled": presence(ctx.disabled),
+        "data-readonly": presence(ctx.readonly),
+        "data-invalid": presence(ctx.invalid)
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
 {#if shouldRender}
-  <div
-    bind:this={ref}
-    class={cn(styles.prefix(), className)}
-    inert={ctx.disabled}
-    data-disabled={presence(ctx.disabled)}
-    data-readonly={presence(ctx.readonly)}
-    data-invalid={presence(ctx.invalid)}
-    {...rest}
-  >
+  <div bind:this={ref} {...prefixProps}>
     {#if children}
       {@render children()}
     {/if}

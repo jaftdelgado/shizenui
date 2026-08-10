@@ -2,7 +2,7 @@ import type { Snippet } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 import type { ToggleVariant, ToggleSize } from "../../toggle/_internal/index.js";
 
-type ToggleGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "role">;
+type ToggleGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onkeydown">;
 
 export type ToggleGroupOrientation = "horizontal" | "vertical";
 export type ToggleGroupSelectionMode = "single" | "multiple";
@@ -14,6 +14,7 @@ interface ToggleGroupSharedProps extends ToggleGroupBaseProps {
   orientation?: ToggleGroupOrientation;
   hideSeparators?: boolean;
   disabled?: boolean;
+  ref?: HTMLDivElement | null;
 }
 
 type ToggleGroupSingleSelectionProps = ToggleGroupSharedProps & {

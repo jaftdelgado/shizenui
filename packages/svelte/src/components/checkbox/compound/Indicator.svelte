@@ -1,7 +1,7 @@
 <script lang="ts">
   import { checkboxStyles } from "@shizen-ui/styles";
 
-  import { cn, presence } from "../../../lib/utils";
+  import { mergeProps, presence } from "../../../lib/utils";
   import { assertContext } from "../../../lib/runes/index.js";
   import { useCheckboxContext } from "../_internal/index.js";
   import type { CheckboxIndicatorProps } from "../_internal/index.js";
@@ -24,19 +24,24 @@
     "Checkbox.Indicator",
     "Must be used inside a <Checkbox> component."
   );
+
+  const indicatorProps = $derived(
+    mergeProps(
+      {
+        class: styles.indicator(),
+        "data-checked": presence(ctx.checked),
+        "data-indeterminate": presence(ctx.indeterminate),
+        "data-disabled": presence(ctx.disabled),
+        "data-invalid": presence(ctx.invalid),
+        "data-custom": presence(isCustom)
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
 {#if shouldRender}
-  <span
-    bind:this={ref}
-    class={cn(styles.indicator(), className)}
-    data-checked={presence(ctx.checked)}
-    data-indeterminate={presence(ctx.indeterminate)}
-    data-disabled={presence(ctx.disabled)}
-    data-invalid={presence(ctx.invalid)}
-    data-custom={presence(isCustom)}
-    {...rest}
-  >
+  <span bind:this={ref} {...indicatorProps}>
     {#if children}
       {@render children()}
     {:else if ctx.indeterminate}

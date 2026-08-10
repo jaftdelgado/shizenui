@@ -22,21 +22,19 @@
   ];
 </script>
 
-<div class="flex w-full flex-col items-center">
-  <RadioGroup orientation="horizontal" bind:value={selected} name="email-frequency">
-    <Label>Email Frequency</Label>
-    <Description>How often should we send you updates?</Description>
+<RadioGroup orientation="horizontal" bind:value={selected}>
+  <Label>Email Frequency</Label>
+  <Description>How often should we send you updates?</Description>
 
-    <RadioGroup.Items>
-      {#each frequencies as freq}
-        <Radio value={freq.value}>
-          <Radio.Control />
-          <Radio.Content>
-            <Label>{freq.label}</Label>
-            <Description>{freq.description}</Description>
-          </Radio.Content>
-        </Radio>
-      {/each}
-    </RadioGroup.Items>
-  </RadioGroup>
-</div>
+  <RadioGroup.Items>
+    {#each frequencies as freq}
+      <Radio value={freq.value}>
+        <Radio.Control />
+        <Radio.Content>
+          <Label>{freq.label}</Label>
+          <Description>{freq.description}</Description>
+        </Radio.Content>
+      </Radio>
+    {/each}
+  </RadioGroup.Items>
+</RadioGroup>

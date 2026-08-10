@@ -1,7 +1,6 @@
 import Root from "./ButtonGroup.svelte";
 
 export type { ButtonGroupProps, ButtonGroupOrientation } from "./_internal/index.js";
-export type { ButtonGroupContextResult } from "./_internal/index.js";
 
 export const ButtonGroup = Root;
 

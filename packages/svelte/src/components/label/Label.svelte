@@ -1,23 +1,16 @@
 <script lang="ts">
   import { labelStyles } from "@shizen-ui/styles";
-  import { cn, createId, presence } from "../../lib/utils";
+  import { createId, mergeProps, presence } from "../../lib/utils/index.js";
   import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
-  import type { HTMLAttributes } from "svelte/elements";
-  import type { Snippet } from "svelte";
-
-  interface LabelProps extends HTMLAttributes<HTMLElement> {
-    children?: Snippet;
-    required?: boolean;
-    invalid?: boolean;
-    disabled?: boolean;
-    for?: string;
-  }
+  import type { LabelProps } from "./_internal/index.js";
 
   const uid = $props.id();
 
   let {
     children,
     class: className,
+    id: propId,
+    ref = $bindable(null),
     required = false,
     invalid = false,
     disabled = false,
@@ -34,9 +27,7 @@
   const finalFor = $derived(htmlFor ?? (fieldContext.exists ? fieldContext.inputId : undefined));
 
   const registrationId = fieldContext.labelId ?? createId("label", uid);
-  const labelId = $derived(
-    fieldContext.exists ? (fieldContext.labelId ?? registrationId) : undefined
-  );
+  const labelId = $derived(fieldContext.exists ? (fieldContext.labelId ?? registrationId) : propId);
 
   const { base, requiredIndicator } = labelStyles();
 
@@ -49,19 +40,25 @@
       if (slotCtx.exists) slotCtx.unregisterLabel(registrationId);
     };
   });
+
+  const commonProps = $derived({
+    id: labelId,
+    class: base({ invalid: finalInvalid }),
+    "data-invalid": presence(finalInvalid),
+    "data-disabled": presence(finalDisabled),
+    "data-required": presence(finalRequired),
+    "data-slot": "label"
+  });
+
+  const labelProps = $derived(
+    mergeProps({ ...commonProps, for: finalFor }, { ...rest, class: className })
+  );
+
+  const spanProps = $derived(mergeProps(commonProps, { ...rest, class: className }));
 </script>
 
 {#if finalFor}
-  <label
-    for={finalFor}
-    id={labelId}
-    class={cn(base({ invalid: finalInvalid }), className)}
-    data-invalid={presence(finalInvalid)}
-    data-disabled={presence(finalDisabled)}
-    data-required={presence(finalRequired)}
-    {...rest}
-    data-slot="label"
-  >
+  <label bind:this={ref} {...labelProps}>
     {@render children?.()}
 
     {#if finalRequired}
@@ -69,14 +66,7 @@
     {/if}
   </label>
 {:else}
-  <span
-    id={labelId}
-    class={cn(base({ invalid: finalInvalid }), className)}
-    data-invalid={presence(finalInvalid)}
-    data-disabled={presence(finalDisabled)}
-    data-required={presence(finalRequired)}
-    {...rest}
-  >
+  <span bind:this={ref} {...spanProps}>
     {@render children?.()}
 
     {#if finalRequired}

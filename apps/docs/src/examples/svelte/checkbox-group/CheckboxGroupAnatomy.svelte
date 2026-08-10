@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Checkbox, CheckboxGroup, Label, Description } from "@shizen-ui/svelte";
+  import { Checkbox, CheckboxGroup, Label, Description, FieldError } from "@shizen-ui/svelte";
 </script>
 
 <CheckboxGroup>

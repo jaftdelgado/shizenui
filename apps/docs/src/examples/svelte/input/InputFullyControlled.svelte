@@ -22,8 +22,9 @@
     id="rate-limit"
     bind:value={() => requestsPerMinute, (v) => (requestsPerMinute = sanitize(v))}
     placeholder="60"
+    aria-describedby="rate-limit-description"
   />
-  <Description>
+  <Description id="rate-limit-description">
     Throttled above
     <span class="text-foreground font-medium">
       {requestsPerMinute || MIN}/min

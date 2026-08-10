@@ -1,0 +1,168 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Switch Group
+description: Groups multiple switches that share state, validation, and field context.
+preview: SwitchGroupPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+
+import SwitchGroupAnatomyCode from "@examples/svelte/switch-group/SwitchGroupAnatomy.svelte?raw";
+
+import SwitchGroupOrientation from "@examples/svelte/switch-group/SwitchGroupOrientation.svelte";
+import SwitchGroupBindValue from "@examples/svelte/switch-group/SwitchGroupBindValue.svelte";
+import SwitchGroupFullyControlled from "@examples/svelte/switch-group/SwitchGroupFullyControlled.svelte";
+import SwitchGroupInvalid from "@examples/svelte/switch-group/SwitchGroupInvalid.svelte";
+import SwitchGroupDisabled from "@examples/svelte/switch-group/SwitchGroupDisabled.svelte";
+import SwitchGroupForm from "@examples/svelte/switch-group/SwitchGroupForm.svelte";
+
+import SwitchGroupTwStyling from "@examples/svelte/switch-group/SwitchGroupTwStyling.svelte";
+import SwitchGroupCssStylingCode from "@examples/svelte/switch-group/SwitchGroupCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { SwitchGroup, Switch } from "@shizen-ui/svelte";`} />
+
+## Anatomy
+
+<CodeBlock
+  code={SwitchGroupAnatomyCode}
+  lang="svelte"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+## Examples
+
+### Orientation
+
+<ComponentExample src="svelte/switch/SwitchGroupOrientation.svelte">
+  <SwitchGroupOrientation client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/switch/SwitchGroupBindValue.svelte">
+  <SwitchGroupBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the group's reads and writes.
+
+<ComponentExample src="svelte/switch/SwitchGroupFullyControlled.svelte">
+  <SwitchGroupFullyControlled client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/switch/SwitchGroupDisabled.svelte">
+  <SwitchGroupDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/switch/SwitchGroupInvalid.svelte">
+  <SwitchGroupInvalid client:load />
+</ComponentExample>
+
+### Form Integration
+
+<ComponentExample src="svelte/switch/SwitchGroupForm.svelte">
+  <SwitchGroupForm client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to the SwitchGroup.
+
+<ComponentExample src="svelte/switch-group/SwitchGroupTwStyling.svelte">
+  <SwitchGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the SwitchGroup component classes, you can use the `@layer components` directive.
+
+<CodeBlock
+  code={SwitchGroupCssStylingCode}
+  lang="css"
+  showLineNumbers={false}
+  collapsible={false}
+/>
+
+### CSS Classes
+
+#### Base & Orientation Classes
+
+<BulletList
+  items={[
+    {
+      title: "switch-group",
+      description: "Root field for a related set of switches.",
+      code: true
+    },
+    {
+      title: "switch-group__items",
+      description: "Groups the switch controls under the field heading.",
+      code: true
+    },
+    {
+      title: "switch-group__items--vertical",
+      description: "Use when switches should scan top to bottom.",
+      code: true
+    },
+    {
+      title: "switch-group__items--horizontal",
+      description: "Use when related switches should scan side by side.",
+      code: true
+    }
+  ]}
+/>
+
+## API Reference
+
+### SwitchGroup Props
+
+Groups multiple switches, propagating `disabled`, `readonly`, `invalid`, and `size` through context. Each `Switch` can override these locally and must provide a `value`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string[]", default: "undefined" },
+    { name: "onValueChange", type: "(value: string[]) => void", default: "undefined" },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+  ]}
+/>
+
+#### Items Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>

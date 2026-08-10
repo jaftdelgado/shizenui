@@ -13,6 +13,9 @@ type RadioBaseProps = Omit<
   | "onclick"
   | "onkeydown"
   | "onkeyup"
+  | "onmousedown"
+  | "onmouseup"
+  | "onmouseleave"
   | "onfocus"
   | "onblur"
   | "children"
@@ -30,14 +33,14 @@ export interface RadioProps extends RadioBaseProps {
   children?: Snippet;
 }
 
-export interface RadioControlProps extends HTMLAttributes<HTMLDivElement> {
+export interface RadioControlProps extends HTMLAttributes<HTMLSpanElement> {
   children?: Snippet;
-  ref?: HTMLDivElement | null;
+  ref?: HTMLSpanElement | null;
 }
 
-export interface RadioContentProps extends HTMLAttributes<HTMLDivElement> {
+export interface RadioContentProps extends HTMLAttributes<HTMLSpanElement> {
   children?: Snippet;
-  ref?: HTMLDivElement | null;
+  ref?: HTMLSpanElement | null;
 }
 
 export interface RadioIndicatorProps extends HTMLAttributes<HTMLSpanElement> {

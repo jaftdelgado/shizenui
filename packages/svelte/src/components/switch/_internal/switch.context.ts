@@ -5,20 +5,26 @@ export interface SwitchContextValue {
   readonly checked: boolean;
   readonly disabled: boolean;
   readonly readonly: boolean;
+  readonly invalid: boolean;
+  readonly required: boolean;
   readonly id: string | undefined;
   readonly size: SwitchSize;
   readonly hasLabel: boolean;
   readonly hasDescription: boolean;
+  readonly hasError: boolean;
 }
 
 export interface SwitchContextResult {
   readonly checked: boolean;
   readonly disabled: boolean;
   readonly readonly: boolean;
+  readonly invalid: boolean;
+  readonly required: boolean;
   readonly id: string | undefined;
   readonly size: SwitchSize;
   readonly hasLabel: boolean;
   readonly hasDescription: boolean;
+  readonly hasError: boolean;
   readonly exists: boolean;
 }
 
@@ -48,6 +54,12 @@ export function useSwitchContext(): SwitchContextResult {
       get readonly() {
         return false;
       },
+      get invalid() {
+        return false;
+      },
+      get required() {
+        return false;
+      },
       get id() {
         return undefined;
       },
@@ -58,6 +70,9 @@ export function useSwitchContext(): SwitchContextResult {
         return false;
       },
       get hasDescription() {
+        return false;
+      },
+      get hasError() {
         return false;
       },
       get exists() {
@@ -76,6 +91,12 @@ export function useSwitchContext(): SwitchContextResult {
     get readonly() {
       return context.readonly;
     },
+    get invalid() {
+      return context.invalid;
+    },
+    get required() {
+      return context.required;
+    },
     get id() {
       return context.id;
     },
@@ -87,6 +108,9 @@ export function useSwitchContext(): SwitchContextResult {
     },
     get hasDescription() {
       return context.hasDescription;
+    },
+    get hasError() {
+      return context.hasError;
     },
     get exists() {
       return true;

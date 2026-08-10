@@ -33,6 +33,7 @@
 
   function handleSubmit() {
     isSubmitted = true;
+    if (isInvalid) return;
     alert(`Selected alert channels: ${selectedAlerts.join(", ")}`);
   }
 
@@ -42,7 +43,7 @@
   }
 </script>
 
-<div class="flex max-w-md flex-col gap-6 p-4">
+<div class="flex w-full max-w-80 flex-col gap-6 p-4">
   <CheckboxGroup required invalid={isInvalid} bind:value={selectedAlerts}>
     <Label>Admin Alerts</Label>
     <Description>Select at least one alert channel.</Description>

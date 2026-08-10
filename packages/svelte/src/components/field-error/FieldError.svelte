@@ -1,15 +1,8 @@
 <script lang="ts">
-  import { cn, createId } from "../../lib/utils";
+  import { createId, mergeProps } from "../../lib/utils/index.js";
   import { fieldErrorStyles } from "@shizen-ui/styles";
   import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
-  import type { HTMLAttributes } from "svelte/elements";
-  import type { Snippet } from "svelte";
-
-  interface FieldErrorProps extends HTMLAttributes<HTMLSpanElement> {
-    children?: Snippet;
-    invalid?: boolean;
-    id?: string;
-  }
+  import type { FieldErrorProps } from "./_internal/index.js";
 
   const uid = $props.id();
 
@@ -18,6 +11,7 @@
     class: className,
     invalid = true,
     id: propId,
+    ref = $bindable(null),
     ...rest
   }: FieldErrorProps = $props();
 
@@ -42,16 +36,22 @@
       slotCtx.unregisterError(registrationId);
     };
   });
+
+  const fieldErrorProps = $derived(
+    mergeProps(
+      {
+        id: finalId,
+        class: fieldErrorStyles(),
+        "data-slot": "error-message",
+        role: "alert"
+      },
+      { ...rest, class: className }
+    )
+  );
 </script>
 
 {#if finalInvalid}
-  <span
-    id={finalId}
-    class={cn(fieldErrorStyles(), className)}
-    data-slot="error-message"
-    role="alert"
-    {...rest}
-  >
+  <span bind:this={ref} {...fieldErrorProps}>
     {@render children?.()}
   </span>
 {/if}

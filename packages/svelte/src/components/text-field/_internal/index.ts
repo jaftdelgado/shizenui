@@ -32,10 +32,11 @@ export type {
 } from "./text-field.validity.svelte.js";
 
 export {
+  setupTextFieldWarnings,
   warnIfTextFieldHasNoAccessibleName,
   warnIfTextFieldPropsOverride,
   warnIfUnsupportedTextFieldControlType
-} from "./text-field.warnings.svelte.js";
+} from "./text-field.warnings.js";
 
 export { setTextFieldContext, useTextFieldContext } from "./text-field.context.js";
 export type {

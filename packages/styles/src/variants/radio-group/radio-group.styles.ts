@@ -3,7 +3,8 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const radioGroupStyles = tv({
   slots: {
     base: "radio-group",
-    items: "radio-group__items"
+    items: "radio-group__items",
+    input: "radio-group__input"
   },
   variants: {
     orientation: {

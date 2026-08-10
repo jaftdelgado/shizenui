@@ -94,7 +94,7 @@ To customize the Toggle component classes, you can use the `@layer components` d
     },
     {
       title: "toggle__content",
-      description: "Keeps the icon and label grouped as one control.",
+      description: "Container that aligns the toggle's internal content.",
       code: true
     },
     {
@@ -104,17 +104,12 @@ To customize the Toggle component classes, you can use the `@layer components` d
     },
     {
       title: "toggle__icon--start",
-      description: "Identifies an icon placed before the label.",
+      description: "Aligns an icon placed before the toggle content.",
       code: true
     },
     {
       title: "toggle__icon--end",
-      description: "Identifies an icon placed after the label.",
-      code: true
-    },
-    {
-      title: "toggle__label",
-      description: "Marks the readable text inside the toggle.",
+      description: "Aligns an icon placed after the toggle content.",
       code: true
     },
     {
@@ -134,7 +129,7 @@ To customize the Toggle component classes, you can use the `@layer components` d
     },
     {
       title: "toggle--icon-only",
-      description: "Square toggle with just an icon, no label.",
+      description: "Square toggle with icon content and no visible text.",
       code: true
     },
     {
@@ -199,13 +194,15 @@ To customize the Toggle component classes, you can use the `@layer components` d
   props={[
     { name: "variant", type: '"default" | "outline" | "ghost"', default: '"default"' },
     { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "id", type: "string", default: "generated" },
     { name: "disabled", type: "boolean", default: "undefined" },
     { name: "value", type: "string", default: "undefined" },
     { name: "iconOnly", type: "boolean", default: "false" },
     { name: "pressed", type: "boolean", default: "false" },
+    { name: "onclick", type: "MouseEventHandler<HTMLButtonElement>", default: "undefined" },
     { name: "onPressedChange", type: "(pressed: boolean) => void", default: "undefined" },
-    { name: "startContent", type: "Snippet<[]> | string", default: "undefined" },
-    { name: "endContent", type: "Snippet<[]> | string", default: "undefined" },
+    { name: "startContent", type: "Snippet<[]>", default: "undefined" },
+    { name: "endContent", type: "Snippet<[]>", default: "undefined" },
     { name: "children", type: "Snippet", default: "undefined" },
     { name: "ref", type: "HTMLButtonElement | null", default: "null" }
   ]}

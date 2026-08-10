@@ -1,7 +1,7 @@
 <script lang="ts">
   import { checkboxGroupStyles } from "@shizen-ui/styles";
 
-  import { cn } from "../../../lib/utils";
+  import { mergeProps } from "../../../lib/utils";
   import { assertContext } from "../../../lib/runes/index.js";
   import { useCheckboxGroupContext } from "../_internal/index.js";
   import type { CheckboxGroupItemsProps } from "../_internal/index.js";
@@ -22,10 +22,14 @@
     "CheckboxGroup.Items",
     "Must be used inside a <CheckboxGroup> component."
   );
+
+  const itemsProps = $derived(
+    mergeProps({ class: styles.items() }, { ...rest, class: className })
+  );
 </script>
 
 {#if shouldRender}
-  <div bind:this={ref} class={cn(styles.items(), className)} {...rest}>
+  <div bind:this={ref} {...itemsProps}>
     {#if children}
       {@render children()}
     {/if}

@@ -3,9 +3,10 @@ import type { RadioClickEvent } from "./radio.types.js";
 
 export function createRadioHandlers(options: {
   state: RadioStateInstance;
+  focus: { onKeyDown: () => void; onMouseDown: () => void };
   getOnClick?: () => ((e: RadioClickEvent) => void) | undefined;
 }) {
-  const { state, getOnClick } = options;
+  const { state, focus, getOnClick } = options;
 
   function activate(): void {
     if (state.finalDisabled || state.finalReadonly) return;
@@ -18,6 +19,7 @@ export function createRadioHandlers(options: {
   }
 
   function handleMouseDown(e: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+    focus.onMouseDown();
     if (state.finalDisabled || state.finalReadonly) return;
     e.currentTarget.setAttribute("data-pressed", "true");
   }
@@ -31,6 +33,8 @@ export function createRadioHandlers(options: {
   }
 
   function handleKeydown(e: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
+    if (e.type === "keydown") focus.onKeyDown();
+
     if (e.key !== "Enter" && e.key !== " ") return;
 
     if (e.type === "keydown") {

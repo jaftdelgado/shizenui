@@ -14,6 +14,8 @@ export { setupCheckboxContexts } from "./checkbox.setup.svelte.js";
 
 export { setupCheckboxFormWarnings } from "./checkbox.form.js";
 
+export { setupCheckboxWarnings } from "./checkbox.warnings.js";
+
 export { createCheckboxHandlers } from "./checkbox.handlers.js";
 export type { CheckboxHandlers } from "./checkbox.handlers.js";
 

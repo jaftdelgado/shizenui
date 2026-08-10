@@ -1,15 +1,21 @@
 <script lang="ts">
   import { checkboxGroupStyles } from "@shizen-ui/styles";
 
-  import { cn, createId, presence } from "../../lib/utils";
+  import { createId, mergeProps, presence } from "../../lib/utils";
   import type { CheckboxGroupProps } from "./_internal/index.js";
   import {
     CheckboxGroupState,
     resolveCheckboxGroupDescribedBy,
     setupCheckboxGroupContexts,
+    setupCheckboxGroupWarnings,
     useCheckboxGroupContext
   } from "./_internal/index.js";
-  import { SubmissionInvalidState, syncFormReset, warnIf } from "../../lib/runes/index.js";
+  import {
+    SubmissionInvalidState,
+    syncFormReset,
+    syncNativeCheckedReset,
+    syncNativeGroupSelectionReset
+  } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -32,6 +38,7 @@
 
   let isInternalWrite = false;
   let baselineValue = $state<string[]>([...(value ?? [])]);
+  let nativeInputRef = $state<HTMLInputElement | null>(null);
   let submissionInvalid: SubmissionInvalidState;
 
   $effect(() => {
@@ -44,12 +51,6 @@
 
     baselineValue = [...(v ?? [])];
   });
-
-  warnIf(
-    () => !children,
-    "CheckboxGroup",
-    "No children provided. Add at least one <Checkbox> as a child."
-  );
 
   const checkboxGroupState = new CheckboxGroupState({
     value: () => value,
@@ -75,11 +76,11 @@
 
   const ctx = useCheckboxGroupContext();
 
-  warnIf(
-    () => !ctx.hasLabel && !rest["aria-label"] && !rest["aria-labelledby"],
-    "CheckboxGroup",
-    "No Label found. Add a <Label> as a child, or pass aria-label/aria-labelledby directly."
-  );
+  setupCheckboxGroupWarnings({
+    context: ctx,
+    hasChildren: () => Boolean(children),
+    hasAccessibleName: () => Boolean(rest["aria-label"] || rest["aria-labelledby"])
+  });
 
   const styles = $derived(
     checkboxGroupStyles({ orientation: checkboxGroupState.finalOrientation })
@@ -87,42 +88,57 @@
 
   const describedBy = $derived(resolveCheckboxGroupDescribedBy(ctx));
 
+  const groupProps = $derived(
+    mergeProps(
+      {
+        id,
+        role: "group",
+        class: styles.base(),
+        "aria-labelledby": ctx.hasLabel ? ctx.labelId : undefined,
+        "aria-describedby": describedBy,
+        "aria-disabled": checkboxGroupState.finalDisabled ? true : undefined,
+        "aria-required": checkboxGroupState.finalRequired ? true : undefined,
+        "aria-invalid": checkboxGroupState.finalInvalid ? true : undefined,
+        "aria-readonly": checkboxGroupState.finalReadonly ? true : undefined,
+        "data-checkbox-group": "",
+        "data-invalid": presence(checkboxGroupState.finalInvalid),
+        "data-disabled": presence(checkboxGroupState.finalDisabled),
+        "data-readonly": presence(checkboxGroupState.finalReadonly),
+        "data-orientation": checkboxGroupState.finalOrientation
+      },
+      { ...rest, class: className }
+    )
+  );
+
   syncFormReset({
     getRef: () => ref,
     onReset: () => {
       submissionInvalid.clear();
+      const resetValue = [...baselineValue];
+
+      syncNativeCheckedReset(nativeInputRef, resetValue.length > 0);
+      syncNativeGroupSelectionReset(ref, resetValue);
+
       isInternalWrite = true;
-      value = [...baselineValue];
+      value = resetValue;
       onValueChange?.(value);
+    },
+    onResetComplete: () => {
+      syncNativeCheckedReset(nativeInputRef, baselineValue.length > 0);
+      syncNativeGroupSelectionReset(ref, baselineValue);
     }
   });
 </script>
 
 <!-- svelte-ignore a11y_role_supports_aria_props -->
-<div
-  bind:this={ref}
-  {id}
-  role="group"
-  class={cn(styles.base(), className)}
-  aria-labelledby={ctx.hasLabel ? ctx.labelId : undefined}
-  aria-describedby={describedBy}
-  aria-disabled={checkboxGroupState.finalDisabled ? true : undefined}
-  aria-required={checkboxGroupState.finalRequired ? true : undefined}
-  aria-invalid={checkboxGroupState.finalInvalid ? true : undefined}
-  aria-readonly={checkboxGroupState.finalReadonly ? true : undefined}
-  data-checkbox-group=""
-  data-invalid={presence(checkboxGroupState.finalInvalid)}
-  data-disabled={presence(checkboxGroupState.finalDisabled)}
-  data-readonly={presence(checkboxGroupState.finalReadonly)}
-  data-orientation={checkboxGroupState.finalOrientation}
-  {...rest}
->
+<div bind:this={ref} {...groupProps}>
   {#if children}
     {@render children()}
   {/if}
 
   {#if checkboxGroupState.finalRequired}
     <input
+      bind:this={nativeInputRef}
       type="checkbox"
       class={styles.input()}
       tabindex={-1}

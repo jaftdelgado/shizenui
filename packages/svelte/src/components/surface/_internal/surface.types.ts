@@ -1,10 +1,12 @@
 import type { HTMLAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
-import type { SurfaceVariants } from "@shizen-ui/styles";
 
-export type SurfaceProps = Omit<HTMLAttributes<HTMLDivElement>, "class"> &
-  SurfaceVariants & {
-    children?: Snippet;
-    class?: string;
-    ref?: HTMLDivElement | null;
-  };
+export type SurfaceVariant = "default" | "secondary" | "outline";
+
+type SurfaceBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children">;
+
+export interface SurfaceProps extends SurfaceBaseProps {
+  variant?: SurfaceVariant;
+  children?: Snippet;
+  ref?: HTMLDivElement | null;
+}

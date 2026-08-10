@@ -18,23 +18,23 @@ export function setupToggleGroupContext(state: ToggleGroupState): void {
     get selectedValues() {
       return state.finalSelectedValues;
     },
-    get isSelected() {
-      return (value: string) => state.isSelected(value);
+    isSelected(value: string) {
+      return state.isSelected(value);
     },
-    get onToggle() {
-      return (value: string) => state.toggle(value);
+    onToggle(value: string) {
+      state.toggle(value);
     },
-    get register() {
-      return (id: string, entry: ToggleGroupRegistration) => state.register(id, entry);
+    register(id: string, entry: ToggleGroupRegistration) {
+      state.register(id, entry);
     },
-    get unregister() {
-      return (id: string) => state.unregister(id);
+    unregister(id: string) {
+      state.unregister(id);
     },
-    get isActive() {
-      return (id: string) => state.isActive(id);
+    isActive(id: string) {
+      return state.isActive(id);
     },
-    get setActive() {
-      return (id: string) => state.setActive(id);
+    setActiveId(id: string) {
+      state.setActiveId(id);
     }
   });
 }
