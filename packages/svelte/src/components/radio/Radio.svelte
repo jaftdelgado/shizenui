@@ -13,7 +13,11 @@
     setupRadioWarnings,
     useRadioContext
   } from "./_internal/index.js";
-  import { createFocusVisible } from "../../lib/runes/index.js";
+  import {
+    createFocusVisible,
+    syncFormReset,
+    syncNativeCheckedReset
+  } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -29,20 +33,22 @@
     ...rest
   }: RadioProps = $props();
 
-  const state = new RadioState({
+  let nativeInputRef = $state<HTMLInputElement | null>(null);
+
+  const radioState = new RadioState({
     value: () => value,
     disabled: () => disabled,
     variant: () => variant,
     id: () => id
   });
 
-  setupRadioContexts(state);
-  setupRadioGroupRegistration(state);
+  setupRadioContexts(radioState);
+  setupRadioGroupRegistration(radioState);
 
   const ctx = useRadioContext();
 
   setupRadioWarnings({
-    state,
+    state: radioState,
     context: ctx,
     hasChildren: () => Boolean(children),
     getVariant: () => variant,
@@ -52,14 +58,14 @@
   const focus = createFocusVisible();
 
   const handlers = createRadioHandlers({
-    state,
+    state: radioState,
     focus,
     getOnClick: () => onclick
   });
 
-  const styles = $derived(radioStyles({ variant: state.finalVariant }));
+  const styles = $derived(radioStyles({ variant: radioState.finalVariant }));
 
-  const describedBy = $derived(resolveRadioDescribedBy(state, ctx, id));
+  const describedBy = $derived(resolveRadioDescribedBy(radioState, ctx, id));
 
   const buttonProps = $derived(
     mergeProps(
@@ -67,16 +73,16 @@
         type: "button" as const,
         role: "radio",
         id,
-        disabled: state.finalDisabled,
-        "aria-checked": state.isChecked,
-        "aria-disabled": state.finalDisabled ? true : undefined,
+        disabled: radioState.finalDisabled,
+        "aria-checked": radioState.isChecked,
+        "aria-disabled": radioState.finalDisabled ? true : undefined,
         "aria-labelledby": ctx.hasLabel ? `${id}-label` : undefined,
         "aria-describedby": describedBy,
-        tabindex: state.groupCtx.isActive(id) ? 0 : -1,
-        "data-checked": presence(state.isChecked),
-        "data-disabled": presence(state.finalDisabled),
-        "data-readonly": presence(state.finalReadonly),
-        "data-invalid": presence(state.finalInvalid),
+        tabindex: radioState.groupCtx.isActive(id) ? 0 : -1,
+        "data-checked": presence(radioState.isChecked),
+        "data-disabled": presence(radioState.finalDisabled),
+        "data-readonly": presence(radioState.finalReadonly),
+        "data-invalid": presence(radioState.finalInvalid),
         "data-focus-visible": presence(focus.isFocusVisible),
         onclick: handlers.handleClick,
         onkeydown: handlers.handleKeydown,
@@ -91,6 +97,16 @@
       { ...rest, class: className }
     )
   );
+
+  syncFormReset({
+    getRef: () => ref,
+    onReset: () => {
+      syncNativeCheckedReset(nativeInputRef, radioState.isChecked);
+    },
+    onResetComplete: () => {
+      syncNativeCheckedReset(nativeInputRef, radioState.isChecked);
+    }
+  });
 </script>
 
 <button bind:this={ref} {...buttonProps}>
@@ -99,23 +115,24 @@
   {/if}
 </button>
 
-{#if state.groupCtx.name}
+{#if radioState.groupCtx.name}
   <input
+    bind:this={nativeInputRef}
     type="radio"
     class={styles.input()}
     tabindex={-1}
     aria-hidden="true"
-    name={state.groupCtx.name}
-    value={state.value}
-    checked={state.isChecked}
-    disabled={state.finalDisabled}
-    required={state.groupCtx.required}
+    name={radioState.groupCtx.name}
+    value={radioState.value}
+    checked={radioState.isChecked}
+    disabled={radioState.finalDisabled}
+    required={radioState.groupCtx.required}
     oninvalid={(e) => {
       e.preventDefault();
-      state.groupCtx.setSubmissionInvalid(true);
+      radioState.groupCtx.setSubmissionInvalid(true);
       focusFirstRadio({
         container: ref?.closest<HTMLElement>('[role="radiogroup"]') ?? null,
-        setActiveId: state.groupCtx.setActiveId
+        setActiveId: radioState.groupCtx.setActiveId
       });
     }}
   />

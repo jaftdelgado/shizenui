@@ -15,21 +15,19 @@ import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.ast
 
 import SwitchAnatomyCode from "@examples/svelte/switch/SwitchAnatomy.svelte?raw";
 
-import SwitchDisabled from "@examples/svelte/switch/SwitchDisabled.svelte";
-import SwitchControlled from "@examples/svelte/switch/SwitchControlled.svelte";
 import SwitchSizes from "@examples/svelte/switch/SwitchSizes.svelte";
-import SwitchOnlyControl from "@examples/svelte/switch/SwitchOnlyControl.svelte";
-import SwitchContentPosition from "@examples/svelte/switch/SwitchContentPosition.svelte";
-import SwitchGroupUsage from "@examples/svelte/switch/SwitchGroupUsage.svelte";
-import SwitchGroupOrientation from "@examples/svelte/switch/SwitchGroupOrientation.svelte";
-import SwitchGroupDisabled from "@examples/svelte/switch/SwitchGroupDisabled.svelte";
+import SwitchBindChecked from "@examples/svelte/switch/SwitchBindChecked.svelte";
+import SwitchFullyControlled from "@examples/svelte/switch/SwitchFullyControlled.svelte";
+import SwitchDisabled from "@examples/svelte/switch/SwitchDisabled.svelte";
+import SwitchInvalid from "@examples/svelte/switch/SwitchInvalid.svelte";
+import SwitchForm from "@examples/svelte/switch/SwitchForm.svelte";
 
 import SwitchTwStyling from "@examples/svelte/switch/SwitchTwStyling.svelte";
 import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?raw";
 
 ## Import
 
-<CodeImport code={`import { Switch, SwitchGroup } from "@shizen-ui/svelte";`} />
+<CodeImport code={`import { Switch } from "@shizen-ui/svelte";`} />
 
 ## Anatomy
 
@@ -37,69 +35,53 @@ import SwitchCssStylingCode from "@examples/svelte/switch/SwitchCssStyling.css?r
 
 ## Examples
 
-### Disabled State
-
-<ComponentExample src="svelte/switch/SwitchDisabled.svelte">
-  <SwitchDisabled client:load />
-</ComponentExample>
-
-### Controlled
-
-<ComponentExample src="svelte/switch/SwitchControlled.svelte">
-  <SwitchControlled client:load />
-</ComponentExample>
-
 ### Sizes
 
 <ComponentExample src="svelte/switch/SwitchSizes.svelte">
   <SwitchSizes client:load />
 </ComponentExample>
 
-### Only Control
+### Managing Checked State
 
-<ComponentExample src="svelte/switch/SwitchOnlyControl.svelte">
-  <SwitchOnlyControl client:load />
+#### Two-Way Binding
+
+Use `bind:checked` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/switch/SwitchBindChecked.svelte">
+  <SwitchBindChecked client:load />
 </ComponentExample>
 
-### Content Position
+#### Fully Controlled
 
-<ComponentExample src="svelte/switch/SwitchContentPosition.svelte">
-  <SwitchContentPosition client:load />
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/switch/SwitchFullyControlled.svelte">
+  <SwitchFullyControlled client:load />
 </ComponentExample>
 
-### Group
+### Disabled State
 
-<ComponentExample src="svelte/switch/SwitchGroupUsage.svelte">
-  <SwitchGroupUsage client:load />
+<ComponentExample src="svelte/switch/SwitchDisabled.svelte">
+  <SwitchDisabled client:load />
 </ComponentExample>
 
-### Group Orientation
+### Invalid State
 
-<ComponentExample src="svelte/switch/SwitchGroupOrientation.svelte">
-  <SwitchGroupOrientation client:load />
+<ComponentExample src="svelte/switch/SwitchInvalid.svelte">
+  <SwitchInvalid client:load />
 </ComponentExample>
 
-### Group Disabled
+### Form Integration
 
-<ComponentExample src="svelte/switch/SwitchGroupDisabled.svelte">
-  <SwitchGroupDisabled client:load />
+<ComponentExample src="svelte/switch/SwitchForm.svelte">
+  <SwitchForm client:load />
 </ComponentExample>
-
-### Native Forms
-
-Set `name` on a standalone Switch to include its enabled state in native form submission. A
-`SwitchGroup` uses a string array value; each child must provide a `value` so enabled switches are
-submitted under the group's `name`.
-
-When `required` is set on a standalone Switch, its native mirror must be enabled. When it is set on
-a SwitchGroup, the form requires at least one enabled switch. The group uses a nameless sentinel for
-that relational constraint, so it does not add an extra FormData entry.
 
 ## Styling
 
 ### Tailwind CSS classes
 
-Use the `class` prop to apply Tailwind utility classes directly to the Switch and SwitchGroup.
+Use the `class` prop to apply Tailwind utility classes directly to the Switch.
 
 <ComponentExample src="svelte/switch/SwitchTwStyling.svelte">
   <SwitchTwStyling client:load />
@@ -138,11 +120,6 @@ To customize the Switch component classes, you can use the `@layer components` d
       code: true
     },
     {
-      title: "switch__input",
-      description: "Native input used for accessibility and form behavior.",
-      code: true
-    },
-    {
       title: "switch__content",
       description: "Groups the label and description beside the control.",
       code: true
@@ -155,38 +132,6 @@ To customize the Switch component classes, you can use the `@layer components` d
     {
       title: "switch--lg",
       description: "Larger switch size when the setting needs more presence.",
-      code: true
-    }
-  ]}
-/>
-
-#### SwitchGroup Classes
-
-<BulletList
-  items={[
-    {
-      title: "switch-group",
-      description: "Root field for a related set of switches.",
-      code: true
-    },
-    {
-      title: "switch-group__items",
-      description: "Groups the switch controls under the field heading.",
-      code: true
-    },
-    {
-      title: "switch-group__items--vertical",
-      description: "Use when switches should scan top to bottom.",
-      code: true
-    },
-    {
-      title: "switch-group__items--horizontal",
-      description: "Use when related switches should scan side by side.",
-      code: true
-    },
-    {
-      title: "switch-group__input",
-      description: "Visually hidden native input used for group required validation.",
       code: true
     }
   ]}
@@ -226,36 +171,17 @@ To customize the Switch component classes, you can use the `@layer components` d
   showHeader
   props={[
     { name: "checked", type: "boolean", default: "false" },
-    { name: "disabled", type: "boolean", default: "undefined" },
-    { name: "readonly", type: "boolean", default: "undefined" },
-    { name: "invalid", type: "boolean", default: "undefined" },
-    { name: "required", type: "boolean", default: "undefined" },
-    { name: "name", type: "string", default: "undefined" },
-    { name: "value", type: "string", default: "undefined" },
-    { name: "id", type: "string", default: "auto-generated" },
-    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
     { name: "onCheckedChange", type: "(checked: boolean) => void", default: "undefined" },
-    { name: "children", type: "Snippet", default: "undefined" }
-  ]}
-/>
-
-### SwitchGroup Props
-
-Groups multiple switches, propagating `disabled`, `readonly`, `invalid`, and `size` to all children via context. Individual switches can override `disabled`, `readonly`, `invalid`, and `required` locally. Each child must provide a `value`.
-
-<PropsTable
-  showHeader
-  props={[
-    { name: "children", type: "Snippet", default: "—" },
-    { name: "value", type: "string[]", default: "undefined" },
-    { name: "onValueChange", type: "(value: string[]) => void", default: "undefined" },
-    { name: "name", type: "string", default: "undefined" },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
     { name: "disabled", type: "boolean", default: "undefined" },
-    { name: "readonly", type: "boolean", default: "undefined" },
     { name: "invalid", type: "boolean", default: "undefined" },
     { name: "required", type: "boolean", default: "undefined" },
-    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
-    { name: "orientation", type: '"horizontal" | "vertical"', default: '"vertical"' },
-    { name: "id", type: "string", default: "auto-generated" }
-  ]}
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "value", type: "string", default: "undefined" },
+    { name: "name", type: "string", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLButtonElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+
+]}
 />

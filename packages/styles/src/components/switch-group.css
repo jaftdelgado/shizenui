@@ -8,7 +8,7 @@
   }
 
   .switch-group__items--vertical {
-    @apply flex-col gap-4;
+    @apply flex-col gap-3;
   }
 
   .switch-group__items--horizontal {

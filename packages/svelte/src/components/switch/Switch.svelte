@@ -2,7 +2,11 @@
   import { switchStyles } from "@shizen-ui/styles";
 
   import { createId, mergeProps, presence } from "../../lib/utils";
-  import { createFocusVisible, syncFormReset } from "../../lib/runes/index.js";
+  import {
+    createFocusVisible,
+    syncFormReset,
+    syncNativeCheckedReset
+  } from "../../lib/runes/index.js";
   import type { SubmissionInvalidState } from "../../lib/runes/index.js";
   import type { SwitchProps } from "./_internal/index.js";
   import {
@@ -37,6 +41,7 @@
 
   let isInternalWrite = false;
   let baselineChecked = $state(checked);
+  let nativeInputRef = $state<HTMLInputElement | null>(null);
   let submissionInvalid: SubmissionInvalidState;
 
   $effect(() => {
@@ -68,7 +73,7 @@
     getRef: () => ref
   });
 
-  setupSwitchContexts(switchState, { id: () => id });
+  setupSwitchContexts(switchState, { checked: () => checked, id: () => id });
 
   const ctx = useSwitchContext();
 
@@ -141,8 +146,14 @@
     getRef: () => ref,
     onReset: () => {
       submissionInvalid.clear();
+
+      syncNativeCheckedReset(nativeInputRef, switchState.finalChecked);
+
       if (switchState.groupCtx.exists) return;
       checked = baselineChecked;
+    },
+    onResetComplete: () => {
+      syncNativeCheckedReset(nativeInputRef, switchState.finalChecked);
     }
   });
 </script>
@@ -160,6 +171,7 @@
 
 {#if switchState.finalName || switchState.finalRequired}
   <input
+    bind:this={nativeInputRef}
     type="checkbox"
     class={styles.input()}
     tabindex={-1}

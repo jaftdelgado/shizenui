@@ -12,7 +12,11 @@
     setupCheckboxWarnings,
     useCheckboxContext
   } from "./_internal/index.js";
-  import { createFocusVisible, syncFormReset } from "../../lib/runes/index.js";
+  import {
+    createFocusVisible,
+    syncFormReset,
+    syncNativeCheckedReset
+  } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -39,6 +43,7 @@
   let isInternalWrite = false;
   let baselineChecked = $state(checked);
   let baselineIndeterminate = $state(indeterminate);
+  let nativeInputRef = $state<HTMLInputElement | null>(null);
 
   $effect(() => {
     const c = checked;
@@ -150,9 +155,15 @@
     getRef: () => ref,
     onReset: () => {
       submissionInvalid.clear();
+
+      syncNativeCheckedReset(nativeInputRef, checkboxState.isChecked, false);
+
       if (checkboxState.groupCtx.exists) return;
       checked = baselineChecked;
       indeterminate = baselineIndeterminate;
+    },
+    onResetComplete: () => {
+      syncNativeCheckedReset(nativeInputRef, checkboxState.isChecked, false);
     }
   });
 </script>
@@ -165,6 +176,7 @@
 
 {#if checkboxState.name || checkboxState.finalRequired}
   <input
+    bind:this={nativeInputRef}
     type="checkbox"
     class={styles.input()}
     tabindex={-1}

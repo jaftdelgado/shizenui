@@ -2,7 +2,7 @@
   import { switchGroupStyles } from "@shizen-ui/styles";
 
   import { createId, mergeProps, presence } from "../../lib/utils";
-  import { syncFormReset } from "../../lib/runes/index.js";
+  import { syncFormReset, syncNativeCheckedReset } from "../../lib/runes/index.js";
   import type { SubmissionInvalidState } from "../../lib/runes/index.js";
   import type { SwitchGroupProps } from "./_internal/index.js";
   import {
@@ -36,6 +36,7 @@
 
   let isInternalWrite = false;
   let baselineValue = $state<string[]>([...(value ?? [])]);
+  let nativeInputRef = $state<HTMLInputElement | null>(null);
   let submissionInvalid: SubmissionInvalidState;
 
   $effect(() => {
@@ -112,9 +113,16 @@
     getRef: () => ref,
     onReset: () => {
       submissionInvalid.clear();
+      const resetValue = [...baselineValue];
+
+      syncNativeCheckedReset(nativeInputRef, resetValue.length > 0);
+
       isInternalWrite = true;
-      value = [...baselineValue];
+      value = resetValue;
       onValueChange?.(value);
+    },
+    onResetComplete: () => {
+      syncNativeCheckedReset(nativeInputRef, baselineValue.length > 0);
     }
   });
 </script>
@@ -131,6 +139,7 @@
 
   {#if switchGroupState.finalRequired}
     <input
+      bind:this={nativeInputRef}
       type="checkbox"
       class={styles.input()}
       tabindex={-1}

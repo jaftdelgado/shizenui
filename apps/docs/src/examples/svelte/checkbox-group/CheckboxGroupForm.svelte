@@ -8,7 +8,7 @@
     Button
   } from "@shizen-ui/svelte";
 
-  let events = $state<string[]>([]);
+  let events = $state<string[]>(["push"]);
 
   const eventOptions = [
     { value: "push", label: "Push" },

@@ -12,7 +12,11 @@
     setupRadioGroupWarnings,
     useRadioGroupContext
   } from "./_internal/index.js";
-  import { SubmissionInvalidState, syncFormReset } from "../../lib/runes/index.js";
+  import {
+    SubmissionInvalidState,
+    syncFormReset,
+    syncNativeCheckedReset
+  } from "../../lib/runes/index.js";
 
   const uid = $props.id();
 
@@ -35,6 +39,7 @@
 
   let isInternalWrite = false;
   let baselineValue = $state(value);
+  let nativeInputRef = $state<HTMLInputElement | null>(null);
   let submissionInvalid: SubmissionInvalidState;
 
   $effect(() => {
@@ -84,9 +89,7 @@
     hasAccessibleName: () => Boolean(rest["aria-label"] || rest["aria-labelledby"])
   });
 
-  const styles = $derived(
-    radioGroupStyles({ orientation: radioGroupState.finalOrientation })
-  );
+  const styles = $derived(radioGroupStyles({ orientation: radioGroupState.finalOrientation }));
 
   const describedBy = $derived(resolveRadioGroupDescribedBy(ctx));
 
@@ -115,9 +118,16 @@
     getRef: () => ref,
     onReset: () => {
       submissionInvalid.clear();
+      const resetValue = baselineValue;
+
+      syncNativeCheckedReset(nativeInputRef, resetValue !== undefined);
+
       isInternalWrite = true;
-      value = baselineValue;
-      onValueChange?.(baselineValue);
+      value = resetValue;
+      onValueChange?.(resetValue);
+    },
+    onResetComplete: () => {
+      syncNativeCheckedReset(nativeInputRef, baselineValue !== undefined);
     }
   });
 </script>
@@ -125,6 +135,7 @@
 <div bind:this={ref} {...groupProps}>
   {#if radioGroupState.finalRequired && !radioGroupState.finalName}
     <input
+      bind:this={nativeInputRef}
       type="radio"
       class="radio-group__input"
       tabindex={-1}
