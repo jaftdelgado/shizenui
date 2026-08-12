@@ -31,7 +31,7 @@ export function setupTextFieldContexts(state: TextFieldStateInstance): void {
   warnIf(
     () => hasMultipleControls,
     "TextField",
-    "Multiple native controls were registered. Only one <Input> or <InputGroup> control should be used inside a <TextField>."
+    "Multiple native controls were registered. Only one <Input>, <TextArea>, or <InputGroup> control should be used inside a <TextField>."
   );
 
   setTextFieldContext({

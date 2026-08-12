@@ -26,7 +26,7 @@ export function setupTextFieldWarnings(options: {
   warnIf(
     () => !options.hasChildren(),
     "TextField",
-    "No children provided. Add a <Label /> and either <Input /> or <InputGroup />."
+    "No children provided. Add a <Label /> and either <Input />, <TextArea />, or <InputGroup />."
   );
 
   warnIfTextFieldHasNoAccessibleName(options.context);
