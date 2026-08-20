@@ -14,6 +14,7 @@ export * from "./radio-group";
 export * from "./surface";
 export * from "./switch";
 export * from "./switch-group";
+export * from "./text-area";
 export * from "./text-field";
 export * from "./toggle";
 export * from "./toggle-group";

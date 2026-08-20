@@ -1,0 +1,63 @@
+@layer components {
+  .textarea {
+    @apply rounded-field min-h-field-md px-field-md relative block w-full min-w-0 resize-y py-2 text-sm;
+    @apply placeholder:text-field-placeholder shadow-xs outline-none;
+
+    transition:
+      background-color 200ms ease,
+      box-shadow 200ms var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    @apply motion-reduce:transition-none;
+
+    --text-area-bg: var(--color-field);
+    --text-area-bg-hover: var(--color-field-hover);
+    --text-area-bg-focus: var(--color-field-hover);
+    --text-area-fg: var(--color-field-foreground);
+
+    background-color: var(--text-area-bg);
+    color: var(--text-area-fg);
+
+    &:hover:not(:disabled) {
+      background-color: var(--text-area-bg-hover);
+    }
+
+    &:focus {
+      @apply status-focused-field;
+      background-color: var(--text-area-bg-focus);
+
+      &[data-invalid] {
+        @apply status-focused-invalid-field;
+      }
+    }
+
+    &[data-invalid] {
+      @apply status-invalid-field;
+    }
+
+    &:disabled {
+      @apply status-disabled;
+    }
+  }
+
+  .textarea--default {
+    --text-area-bg: var(--color-field);
+    --text-area-bg-hover: var(--color-field-hover);
+    --text-area-bg-focus: var(--color-field-hover);
+    --text-area-fg: var(--color-field-foreground);
+  }
+
+  .textarea--secondary {
+    @apply shadow-none;
+    --text-area-bg: var(--color-field-secondary);
+    --text-area-bg-hover: var(--color-field-secondary-hover);
+    --text-area-bg-focus: var(--color-field-secondary-hover);
+    --text-area-fg: var(--color-field-foreground);
+  }
+
+  .textarea--outline {
+    @apply shadow-border;
+    --text-area-bg: transparent;
+    --text-area-bg-hover: var(--color-field-outline-hover);
+    --text-area-bg-focus: var(--color-field-outline-hover);
+    --text-area-fg: var(--color-field-foreground);
+  }
+}

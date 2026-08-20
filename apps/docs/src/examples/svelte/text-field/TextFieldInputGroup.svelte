@@ -6,7 +6,7 @@
   let bedrooms = $state("2");
 </script>
 
-<div class="flex w-full max-w-64 flex-col gap-2">
+<div class="grid w-full max-w-64">
   <TextField required bind:value={bedrooms}>
     <Label>Bedrooms</Label>
     <InputGroup>

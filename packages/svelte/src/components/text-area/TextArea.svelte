@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { inputStyles } from "@shizen-ui/styles";
+  import { textAreaStyles } from "@shizen-ui/styles";
 
   import { useFieldStateContext } from "../../lib/index.js";
   import { syncFormReset } from "../../lib/runes/index.js";
@@ -8,27 +8,22 @@
   import { useTextFieldContext } from "../text-field/_internal/index.js";
   import {
     createTextFieldControlHandlers,
-    normalizeTextFieldControlValue,
     resolveTextFieldControlDescribedBy,
-    resolveTextFieldControlType,
-    warnIfTextFieldPropsOverride,
-    warnIfUnsupportedTextFieldControlType
+    warnIfTextFieldPropsOverride
   } from "../text-field/_internal/index.js";
-  import { InputState, setupInputForm } from "./_internal/index.js";
-  import type { InputProps } from "./_internal/index.js";
+  import { TextAreaState, setupTextAreaForm } from "./_internal/index.js";
+  import type { TextAreaProps } from "./_internal/index.js";
 
   const uid = $props.id();
 
   let {
     class: className,
-    size = undefined,
     variant = undefined,
-    type = "text",
     disabled = undefined,
     readonly = undefined,
     required = undefined,
     invalid = undefined,
-    id = createId("input", uid),
+    id = createId("text-area", uid),
     ref = $bindable(null),
     value = $bindable(""),
     oninput,
@@ -37,34 +32,32 @@
     "aria-errormessage": externalErrorMessageId,
     "aria-invalid": externalAriaInvalid,
     ...rest
-  }: InputProps = $props();
+  }: TextAreaProps = $props();
 
   const fieldContext = useFieldStateContext();
   const textFieldCtx = useTextFieldContext();
-  const resolvedType = $derived(resolveTextFieldControlType(type));
   let submissionInvalid: SubmissionInvalidState;
+  let isInternalWrite = false;
+  let baselineValue = $state("");
 
-  const inputState = new InputState({
+  const textAreaState = new TextAreaState({
     disabled: () => disabled,
     readonly: () => readonly,
     required: () => required,
     invalid: () => invalid,
     variant: () => variant,
-    size: () => size,
     id: () => id,
     submissionInvalid: () => submissionInvalid.value,
     fieldContext,
     textFieldContext: textFieldCtx
   });
 
-  const styles = $derived(
-    inputStyles({ size: inputState.finalSize, variant: inputState.finalVariant })
-  );
+  const styles = $derived(textAreaStyles({ variant: textAreaState.finalVariant }));
 
   const describedByResult = $derived(
     resolveTextFieldControlDescribedBy(
-      inputState.fieldCtx,
-      inputState.finalInvalid,
+      textAreaState.fieldCtx,
+      textAreaState.finalInvalid,
       textFieldCtx.exists ? textFieldCtx : undefined,
       externalDescribedBy,
       externalErrorMessageId,
@@ -73,54 +66,59 @@
   );
 
   warnIfTextFieldPropsOverride({
-    component: "Input",
+    component: "TextArea",
     context: textFieldCtx,
     props: {
       disabled: () => disabled,
       invalid: () => invalid,
       readonly: () => readonly,
       required: () => required,
-      size: () => size,
       variant: () => variant
     }
   });
-  warnIfUnsupportedTextFieldControlType(() => type, "Input");
 
   function getValue(): string {
-    return textFieldCtx.exists ? textFieldCtx.value : normalizeTextFieldControlValue(value);
+    return textFieldCtx.exists ? textFieldCtx.value : value;
   }
 
-  function setValue(next: string | number | null | undefined): void {
-    const normalized = normalizeTextFieldControlValue(next);
+  function setValue(next: string): void {
+    isInternalWrite = true;
+
     if (textFieldCtx.exists) {
-      textFieldCtx.setValue(normalized);
+      textFieldCtx.setValue(next);
       return;
     }
 
-    value = normalized;
+    value = next;
   }
 
-  submissionInvalid = setupInputForm({
-    inputState,
+  $effect(() => {
+    const currentValue = getValue();
+
+    if (isInternalWrite) {
+      isInternalWrite = false;
+      return;
+    }
+
+    baselineValue = currentValue;
+  });
+
+  submissionInvalid = setupTextAreaForm({
+    textAreaState,
     textFieldContext: textFieldCtx,
     getRef: () => ref,
     getValue,
     getConstraints: () => ({
-      required: inputState.finalRequired,
-      disabled: inputState.finalDisabled,
-      readonly: inputState.finalReadonly,
-      type: resolvedType,
-      pattern: rest.pattern ?? undefined,
-      min: rest.min ?? undefined,
-      max: rest.max ?? undefined,
-      step: rest.step ?? undefined,
+      required: textAreaState.finalRequired,
+      disabled: textAreaState.finalDisabled,
+      readonly: textAreaState.finalReadonly,
       minLength: rest.minlength ?? undefined,
       maxLength: rest.maxlength ?? undefined
     })
   });
 
-  const handlers = createTextFieldControlHandlers<HTMLInputElement>({
-    reporters: [inputState, textFieldCtx],
+  const handlers = createTextFieldControlHandlers<HTMLTextAreaElement>({
+    reporters: [textAreaState, textFieldCtx],
     submissionInvalid,
     getOnInput: () => oninput,
     getOnInvalid: () => oninvalid
@@ -139,21 +137,23 @@
   syncFormReset({
     getRef: () => ref,
     onReset: () => {
-      inputState.resetValidation();
+      textAreaState.resetValidation();
       submissionInvalid.clear();
+    },
+    onResetComplete: () => {
+      setValue(baselineValue);
     }
   });
 
-  const inputProps = $derived(
+  const textAreaProps = $derived(
     mergeProps(
       {
-        id: inputState.finalId,
-        type: resolvedType,
-        disabled: inputState.finalDisabled,
-        readonly: inputState.finalReadonly,
-        required: inputState.finalRequired,
-        ...(inputState.finalInvalid || inputState.fieldCtx.exists || invalid !== undefined
-          ? { "aria-invalid": inputState.finalInvalid ? true : undefined }
+        id: textAreaState.finalId,
+        disabled: textAreaState.finalDisabled,
+        readonly: textAreaState.finalReadonly,
+        required: textAreaState.finalRequired,
+        ...(textAreaState.finalInvalid || textAreaState.fieldCtx.exists || invalid !== undefined
+          ? { "aria-invalid": textAreaState.finalInvalid ? true : undefined }
           : { "aria-invalid": externalAriaInvalid }),
         ...(describedByResult.describedBy
           ? { "aria-describedby": describedByResult.describedBy }
@@ -161,10 +161,8 @@
         ...(describedByResult.errorMessageId
           ? { "aria-errormessage": describedByResult.errorMessageId }
           : {}),
-        "data-slot": "input",
-        "data-invalid": presence(inputState.finalInvalid),
-        "data-disabled": presence(inputState.finalDisabled),
-        "data-readonly": presence(inputState.finalReadonly),
+        "data-slot": "text-area",
+        "data-invalid": presence(textAreaState.finalInvalid),
         class: styles
       },
       { ...rest, class: className }
@@ -172,10 +170,10 @@
   );
 </script>
 
-<input
+<textarea
   bind:this={ref}
   bind:value={getValue, setValue}
-  {...inputProps}
+  {...textAreaProps}
   oninput={handlers.handleInput}
   oninvalid={handlers.handleInvalid}
-/>
+></textarea>

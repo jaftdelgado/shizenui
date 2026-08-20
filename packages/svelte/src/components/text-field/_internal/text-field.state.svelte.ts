@@ -131,7 +131,8 @@ export function resolveTextFieldControlDescribedBy(
   finalInvalid: boolean,
   slots?: { hasDescription: boolean; hasError: boolean },
   externalDescribedBy?: string | null,
-  externalErrorMessageId?: string | null
+  externalErrorMessageId?: string | null,
+  externalAriaInvalid?: unknown
 ): { describedBy: string | undefined; errorMessageId: string | undefined } {
   const describedBy = joinAriaIds(
     externalDescribedBy,
@@ -142,9 +143,15 @@ export function resolveTextFieldControlDescribedBy(
     ? finalInvalid && (!slots || slots.hasError)
       ? ctx.errorId
       : undefined
-    : externalErrorMessageId?.trim() || undefined;
+    : finalInvalid || isAriaInvalid(externalAriaInvalid)
+      ? externalErrorMessageId?.trim() || undefined
+      : undefined;
 
   return { describedBy, errorMessageId };
+}
+
+function isAriaInvalid(value: unknown): boolean {
+  return value === true || value === "true" || value === "grammar" || value === "spelling";
 }
 
 function joinAriaIds(...values: (string | null | undefined)[]): string | undefined {

@@ -4,7 +4,7 @@
   let city = $state("");
 </script>
 
-<div class="flex w-full max-w-64 flex-col gap-2">
+<div class="grid w-full max-w-64">
   <TextField bind:value={city}>
     <Label>City</Label>
     <Input placeholder="San Francisco" />
