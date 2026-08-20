@@ -1,0 +1,21 @@
+@layer components {
+  .textarea {
+    @apply rounded-t-md rounded-b-none border-b-2 border-neutral-400 shadow-none;
+
+    --text-area-bg: var(--color-control);
+    --text-area-bg-hover: var(--color-control);
+    --text-area-bg-focus: var(--color-control);
+
+    transition: border-color 200ms ease;
+    @apply motion-reduce:transition-none;
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-neutral-600);
+    }
+
+    &:focus {
+      @apply shadow-none;
+      border-color: var(--color-indigo-600);
+    }
+  }
+}

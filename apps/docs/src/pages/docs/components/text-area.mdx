@@ -1,0 +1,167 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Text Area
+description: Multiline text field for collecting longer user-entered values.
+preview: TextAreaPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
+
+import TextAreaVariants from "@examples/svelte/text-area/TextAreaVariants.svelte";
+import TextAreaBindValue from "@examples/svelte/text-area/TextAreaBindValue.svelte";
+import TextAreaFullyControlled from "@examples/svelte/text-area/TextAreaFullyControlled.svelte";
+import TextAreaDisabled from "@examples/svelte/text-area/TextAreaDisabled.svelte";
+import TextAreaInvalid from "@examples/svelte/text-area/TextAreaInvalid.svelte";
+import TextAreaSurface from "@examples/svelte/text-area/TextAreaSurface.svelte";
+
+import TextAreaTwStyling from "@examples/svelte/text-area/TextAreaTwStyling.svelte";
+import TextAreaCssStylingCode from "@examples/svelte/text-area/TextAreaCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { TextArea } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/text-area/TextAreaVariants.svelte">
+  <TextAreaVariants client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/text-area/TextAreaBindValue.svelte">
+  <TextAreaBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/text-area/TextAreaFullyControlled.svelte">
+  <TextAreaFullyControlled client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/text-area/TextAreaDisabled.svelte">
+  <TextAreaDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/text-area/TextAreaInvalid.svelte">
+  <TextAreaInvalid client:load />
+</ComponentExample>
+
+### In Surface
+
+When used inside a `Surface`, `TextArea` applies the `secondary` variant for a quieter field style on the surface background.
+
+<ComponentExample src="svelte/text-area/TextAreaSurface.svelte">
+  <TextAreaSurface client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to TextArea.
+
+<ComponentExample src="svelte/text-area/TextAreaTwStyling.svelte">
+  <TextAreaTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Input component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={TextAreaCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Base & Variant Classes
+
+<BulletList
+  items={[
+    {
+      title: "text-area",
+      description: "Root multiline field for longer text entry.",
+      code: true
+    },
+    {
+      title: "text-area--default",
+      description: "Standard field style for most forms.",
+      code: true
+    },
+    {
+      title: "text-area--secondary",
+      description: "Quieter field style for secondary form areas and surfaces.",
+      code: true
+    },
+    {
+      title: "text-area--outline",
+      description: "Bordered field style for low-emphasis layouts.",
+      code: true
+    }
+  ]}
+/>
+
+### Interactive States
+
+<InteractiveStatesTable
+  props={[
+    {
+      name: "hover",
+      description: "Applies a hover background color when the pointer is over the control."
+    },
+    {
+      name: "focus",
+      description: "Applies a focus ring when navigating with keyboard."
+    },
+    {
+      name: "invalid",
+      description:
+        "Signals a validation error. Combines with focus for a distinct focused-invalid ring."
+    },
+    {
+      name: "disabled",
+      description: "Disables interaction and reduces opacity."
+    },
+    {
+      name: "readonly",
+      description: "Prevents editing without a disabled visual treatment."
+    }
+  ]}
+/>
+
+## API Reference
+
+### TextArea Props
+
+Accepts all standard HTML `<textarea>` attributes, in addition to the following:
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "variant", type: '"default" | "secondary" | "outline"', default: '"default"' },
+    { name: "value", type: "string", default: '""' },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "readonly", type: "boolean", default: "undefined" },
+    { name: "required", type: "boolean", default: "undefined" },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLTextAreaElement | null", default: "null" }
+  ]}
+/>

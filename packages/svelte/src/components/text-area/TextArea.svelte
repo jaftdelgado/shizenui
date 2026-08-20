@@ -133,7 +133,6 @@
         disabled: textAreaState.finalDisabled,
         readonly: textAreaState.finalReadonly,
         required: textAreaState.finalRequired,
-        variant: textAreaState.finalVariant,
         ...(textAreaState.finalInvalid || textAreaState.fieldCtx.exists || invalid !== undefined
           ? { "aria-invalid": textAreaState.finalInvalid ? true : undefined }
           : { "aria-invalid": externalAriaInvalid }),
@@ -145,7 +144,7 @@
           : {}),
         "data-slot": "text-area",
         "data-invalid": presence(textAreaState.finalInvalid),
-        class: styles.base()
+        class: styles
       },
       { ...rest, class: className }
     )

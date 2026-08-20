@@ -1,5 +1,5 @@
 @layer components {
-  .text-area {
+  .textarea {
     @apply rounded-field min-h-field-md px-field-md relative block w-full min-w-0 resize-y py-2 text-sm;
     @apply placeholder:text-field-placeholder shadow-xs outline-none;
 
@@ -38,14 +38,14 @@
     }
   }
 
-  .text-area--default {
+  .textarea--default {
     --text-area-bg: var(--color-field);
     --text-area-bg-hover: var(--color-field-hover);
     --text-area-bg-focus: var(--color-field-hover);
     --text-area-fg: var(--color-field-foreground);
   }
 
-  .text-area--secondary {
+  .textarea--secondary {
     @apply shadow-none;
     --text-area-bg: var(--color-field-secondary);
     --text-area-bg-hover: var(--color-field-secondary-hover);
@@ -53,7 +53,7 @@
     --text-area-fg: var(--color-field-foreground);
   }
 
-  .text-area--outline {
+  .textarea--outline {
     @apply shadow-border;
     --text-area-bg: transparent;
     --text-area-bg-hover: var(--color-field-outline-hover);
