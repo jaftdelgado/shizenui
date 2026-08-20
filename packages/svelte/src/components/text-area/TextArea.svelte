@@ -37,6 +37,8 @@
   const fieldContext = useFieldStateContext();
   const textFieldCtx = useTextFieldContext();
   let submissionInvalid: SubmissionInvalidState;
+  let isInternalWrite = false;
+  let baselineValue = $state("");
 
   const textAreaState = new TextAreaState({
     disabled: () => disabled,
@@ -58,7 +60,8 @@
       textAreaState.finalInvalid,
       textFieldCtx.exists ? textFieldCtx : undefined,
       externalDescribedBy,
-      externalErrorMessageId
+      externalErrorMessageId,
+      externalAriaInvalid
     )
   );
 
@@ -79,6 +82,8 @@
   }
 
   function setValue(next: string): void {
+    isInternalWrite = true;
+
     if (textFieldCtx.exists) {
       textFieldCtx.setValue(next);
       return;
@@ -86,6 +91,17 @@
 
     value = next;
   }
+
+  $effect(() => {
+    const currentValue = getValue();
+
+    if (isInternalWrite) {
+      isInternalWrite = false;
+      return;
+    }
+
+    baselineValue = currentValue;
+  });
 
   submissionInvalid = setupTextAreaForm({
     textAreaState,
@@ -123,6 +139,9 @@
     onReset: () => {
       textAreaState.resetValidation();
       submissionInvalid.clear();
+    },
+    onResetComplete: () => {
+      setValue(baselineValue);
     }
   });
 

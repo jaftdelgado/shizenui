@@ -67,7 +67,8 @@
       inputState.finalInvalid,
       textFieldCtx.exists ? textFieldCtx : undefined,
       externalDescribedBy,
-      externalErrorMessageId
+      externalErrorMessageId,
+      externalAriaInvalid
     )
   );
 
