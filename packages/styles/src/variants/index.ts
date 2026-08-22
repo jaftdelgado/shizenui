@@ -1,4 +1,5 @@
 // Component variants exports
+export * from "./alert";
 export * from "./button";
 export * from "./button-group";
 export * from "./checkbox";

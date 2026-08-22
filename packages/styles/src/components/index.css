@@ -1,4 +1,5 @@
 /* Components styles */
+@import "./alert.css";
 @import "./button-group.css";
 @import "./button.css";
 @import "./checkbox-group.css";

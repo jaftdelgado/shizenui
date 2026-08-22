@@ -1,3 +1,4 @@
+export * from "./components/alert/index.ts";
 export * from "./components/button-group/index.ts";
 export * from "./components/button/index.js";
 export * from "./components/checkbox-group/index.ts";

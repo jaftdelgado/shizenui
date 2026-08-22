@@ -1,0 +1,65 @@
+.alert {
+  @apply relative grid grid-cols-[auto_1fr_auto] items-start gap-3 rounded-lg border p-4;
+  color: var(--alert-fg);
+  background-color: var(--alert-bg);
+  border-color: var(--alert-border);
+}
+
+.alert__indicator {
+  @apply flex size-5 shrink-0 items-center justify-center;
+}
+.alert__indicator svg {
+  @apply size-full;
+}
+.alert__content {
+  @apply min-w-0;
+}
+.alert__title {
+  @apply m-0 font-semibold;
+}
+.alert__description {
+  @apply m-0 m-1 text-sm opacity-85;
+}
+.alert__actions {
+  @apply flex shrink-0 items-center gap-2;
+}
+
+.alert--sm {
+  @apply p-3 text-sm;
+}
+.alert--md {
+  @apply p-4 text-sm;
+}
+.alert--lg {
+  @apply p-5 text-base;
+}
+
+.alert--default,
+.alert--accent,
+.alert--info {
+  --alert-bg: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  --alert-fg: var(--color-accent);
+  --alert-border: color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+.alert--success {
+  --alert-bg: color-mix(in srgb, var(--color-success) 10%, transparent);
+  --alert-fg: var(--color-success);
+  --alert-border: color-mix(in srgb, var(--color-success) 30%, transparent);
+}
+.alert--warning {
+  --alert-bg: color-mix(in srgb, var(--color-warning) 12%, transparent);
+  --alert-fg: var(--color-warning);
+  --alert-border: color-mix(in srgb, var(--color-warning) 35%, transparent);
+}
+.alert--danger,
+.alert--error {
+  --alert-bg: color-mix(in srgb, var(--color-danger) 10%, transparent);
+  --alert-fg: var(--color-danger);
+  --alert-border: color-mix(in srgb, var(--color-danger) 30%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alert {
+    transition: none;
+  }
+}
