@@ -2,7 +2,7 @@ import { createContext } from "svelte";
 
 export interface AlertContextValue {
   readonly id: string | undefined;
-  readonly color: string;
+  readonly status: string;
   readonly registerTitle: (id: string) => void;
   readonly unregisterTitle: (id: string) => void;
   readonly registerDescription: (id: string) => void;
@@ -14,7 +14,7 @@ export interface AlertContextValue {
 export interface AlertContextResult {
   readonly exists: boolean;
   readonly id: string | undefined;
-  readonly color: string;
+  readonly status: string;
   readonly titleIds: string;
   readonly descriptionIds: string;
   readonly registerTitle: (id: string) => void;
@@ -46,7 +46,7 @@ export function useAlertContext(): AlertContextResult {
       get id() {
         return undefined;
       },
-      get color() {
+      get status() {
         return "default";
       },
       get titleIds() {
@@ -69,8 +69,8 @@ export function useAlertContext(): AlertContextResult {
     get id() {
       return context.id;
     },
-    get color() {
-      return context.color;
+    get status() {
+      return context.status;
     },
     get titleIds() {
       return context.titleIds;

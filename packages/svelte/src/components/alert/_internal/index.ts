@@ -1,12 +1,12 @@
 export type {
   AlertActionsProps,
-  AlertColor,
+  AlertStatus,
   AlertContentProps,
   AlertDescriptionProps,
   AlertIndicatorProps,
   AlertProps,
-  AlertSize,
-  AlertTitleProps
+  AlertTitleProps,
+  AlertVariant
 } from "./alert.types.js";
 export { setupAlertContext } from "./alert.setup.svelte.js";
 export { useAlertContext } from "./alert.context.js";

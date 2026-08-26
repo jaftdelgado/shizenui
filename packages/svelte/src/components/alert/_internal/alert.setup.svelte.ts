@@ -3,7 +3,7 @@ import { setAlertContext } from "./alert.context.js";
 
 export function setupAlertContext(options: {
   id: () => string | undefined;
-  color: () => string;
+  status: () => string;
 }): void {
   let titleIds = $state(new Set<string>());
   let descriptionIds = $state(new Set<string>());
@@ -14,8 +14,8 @@ export function setupAlertContext(options: {
     get id() {
       return options.id();
     },
-    get color() {
-      return options.color();
+    get status() {
+      return options.status();
     },
     get titleIds() {
       return joinIds(titleIds);

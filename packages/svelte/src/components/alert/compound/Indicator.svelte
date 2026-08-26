@@ -5,6 +5,8 @@
   import type { AlertIndicatorProps } from "../_internal/index.js";
   import { useAlertContext } from "../_internal/index.js";
 
+  import { CircleCheckIcon, CircleXIcon, WarningIcon, InfoIcon } from "../../../lib/icons";
+
   let {
     children,
     class: className,
@@ -31,48 +33,14 @@
   <span bind:this={ref} {...indicatorProps}>
     {#if children}
       {@render children()}
-    {:else if ctx.color === "warning"}
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"
-        ><path
-          d="M12 3 2.8 20h18.4L12 3Z"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linejoin="round"
-        /><path
-          d="M12 9v5m0 3h.01"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        /></svg
-      >
-    {:else if ctx.color === "danger" || ctx.color === "error"}
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"
-        ><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" /><path
-          d="m9 9 6 6m0-6-6 6"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        /></svg
-      >
-    {:else if ctx.color === "success"}
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"
-        ><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" /><path
-          d="m8 12 2.5 2.5L16 9"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        /></svg
-      >
+    {:else if ctx.status === "warning"}
+      <WarningIcon />
+    {:else if ctx.status === "danger"}
+      <CircleXIcon />
+    {:else if ctx.status === "success"}
+      <CircleCheckIcon />
     {:else}
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"
-        ><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" /><path
-          d="M12 10v5m0-8h.01"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        /></svg
-      >
+      <InfoIcon />
     {/if}
   </span>
 {/if}

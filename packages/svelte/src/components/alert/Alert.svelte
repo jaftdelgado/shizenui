@@ -9,19 +9,19 @@
   let {
     children,
     class: className,
-    color = "default",
-    size = "md",
+    status = "default",
+    variant = "default",
     id = createId("alert", uid),
     ref = $bindable(null),
     role: _role,
     ...rest
   }: AlertProps = $props();
 
-  setupAlertContext({ id: () => id, color: () => color });
+  setupAlertContext({ id: () => id, status: () => status });
   const alertContext = useAlertContext();
 
-  const styles = $derived(alertStyles({ color, size }));
-  const liveRole = $derived(color === "danger" || color === "error" ? "alert" : "status");
+  const styles = $derived(alertStyles({ variant, status }));
+  const liveRole = $derived(status === "danger" ? "alert" : "status");
 
   const alertProps = $derived(
     mergeProps(
@@ -31,8 +31,7 @@
         class: styles.base(),
         "aria-labelledby": alertContext.titleIds || undefined,
         "aria-describedby": alertContext.descriptionIds || undefined,
-        "data-color": color,
-        "data-size": size,
+        "data-variant": variant,
         "data-live": liveRole,
         "data-has-title": presence(Boolean(alertContext.titleIds)),
         "data-has-description": presence(Boolean(alertContext.descriptionIds))

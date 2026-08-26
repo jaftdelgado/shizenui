@@ -7,13 +7,13 @@ import Title from "./compound/Title.svelte";
 
 export type {
   AlertActionsProps,
-  AlertColor,
+  AlertStatus,
   AlertContentProps,
   AlertDescriptionProps,
   AlertIndicatorProps,
   AlertProps,
-  AlertSize,
-  AlertTitleProps
+  AlertTitleProps,
+  AlertVariant
 } from "./_internal/index.js";
 
 export const Alert = Object.assign(Root, { Actions, Content, Description, Indicator, Title });

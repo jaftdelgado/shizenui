@@ -10,24 +10,22 @@ export const alertStyles = tv({
     actions: "alert__actions"
   },
   variants: {
-    color: {
+    variant: {
       default: { base: "alert--default" },
-      accent: { base: "alert--accent" },
-      info: { base: "alert--info" },
-      success: { base: "alert--success" },
-      warning: { base: "alert--warning" },
-      danger: { base: "alert--danger" },
-      error: { base: "alert--error" }
+      secondary: { base: "alert--secondary" },
+      outline: { base: "alert--outline" }
     },
-    size: {
-      sm: { base: "alert--sm" },
-      md: { base: "alert--md" },
-      lg: { base: "alert--lg" }
+    status: {
+      default: { base: "alert--status-default" },
+      accent: { base: "alert--status-accent" },
+      success: { base: "alert--status-success" },
+      warning: { base: "alert--status-warning" },
+      danger: { base: "alert--status-danger" }
     }
   },
   defaultVariants: {
-    color: "default",
-    size: "md"
+    variant: "default",
+    status: "default"
   }
 });
 

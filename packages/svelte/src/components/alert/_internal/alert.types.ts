@@ -1,17 +1,17 @@
 import type { Snippet } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
 
-export type AlertColor = "default" | "accent" | "info" | "success" | "warning" | "danger" | "error";
-export type AlertSize = "sm" | "md" | "lg";
+export type AlertStatus = "default" | "accent" | "success" | "warning" | "danger";
+export type AlertVariant = "default" | "secondary" | "outline";
 
 type AlertBaseProps = Omit<
   HTMLAttributes<HTMLDivElement>,
-  "children" | "class" | "ref" | "role" | "aria-labelledby" | "aria-describedby"
+  "children" | "ref" | "role" | "aria-labelledby" | "aria-describedby"
 >;
 
 export interface AlertProps extends AlertBaseProps {
-  color?: AlertColor;
-  size?: AlertSize;
+  status?: AlertStatus;
+  variant?: AlertVariant;
   id?: string;
   ref?: HTMLDivElement | null;
   children?: Snippet;
@@ -19,7 +19,7 @@ export interface AlertProps extends AlertBaseProps {
 
 type AlertCompoundBaseProps<E extends HTMLElement> = Omit<
   HTMLAttributes<E>,
-  "children" | "class" | "ref"
+  "children" | "ref"
 >;
 
 export interface AlertIndicatorProps extends AlertCompoundBaseProps<HTMLSpanElement> {
