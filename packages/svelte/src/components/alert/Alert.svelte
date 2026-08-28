@@ -2,6 +2,7 @@
   import { alertStyles } from "@shizen-ui/styles";
   import { createId, mergeProps, presence } from "../../lib/utils/index.js";
   import { setupAlertContext, useAlertContext } from "./_internal/index.js";
+  import { setupSurfaceContext } from "../surface/_internal/index.js";
   import type { AlertProps } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -18,6 +19,7 @@
   }: AlertProps = $props();
 
   setupAlertContext({ id: () => id, status: () => status });
+  setupSurfaceContext();
   const alertContext = useAlertContext();
 
   const styles = $derived(alertStyles({ variant, status }));

@@ -2,7 +2,7 @@
   import { Alert } from "@shizen-ui/svelte";
 </script>
 
-<div class="grid w-full max-w-80">
+<div class="grid w-full max-w-xs">
   <Alert status="danger">
     <Alert.Content>
       <Alert.Title>Message not delivered</Alert.Title>

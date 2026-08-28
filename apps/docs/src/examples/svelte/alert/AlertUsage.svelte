@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { Alert } from "@shizen-ui/svelte";
-  import Icon from "@components/svelte/Icon.svelte";
-  import { InformationCircleIcon } from "@hugeicons/core-free-icons";
+  import { Alert, Button } from "@shizen-ui/svelte";
 </script>
 
-<Alert status="accent" class="w-full max-w-xl">
-  <Alert.Indicator>
-    {#snippet children()}
-      <Icon icon={InformationCircleIcon} />
-    {/snippet}
-  </Alert.Indicator>
-  <Alert.Content>
-    <Alert.Title>Figma file is ready to review</Alert.Title>
-    <Alert.Description>
-      Your team can now review the latest onboarding flow and leave comments in Figma.
-    </Alert.Description>
-  </Alert.Content>
-</Alert>
+<div class="grid w-full max-w-xs">
+  <Alert status="accent">
+    <Alert.Indicator />
+    <Alert.Content>
+      <Alert.Title>A new update is available</Alert.Title>
+      <Alert.Description>
+        Version 2.4 includes performance improvements and bug fixes.
+      </Alert.Description>
+    </Alert.Content>
+    <Alert.Actions class="mt-2 flex flex-row justify-end gap-2">
+      <Button variant="outline" size="sm">Later</Button>
+      <Button size="sm">Update now</Button>
+    </Alert.Actions>
+  </Alert>
+</div>

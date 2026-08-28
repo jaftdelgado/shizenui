@@ -1,6 +1,7 @@
 @layer components {
   .alert {
-    @apply bg-surface rounded-surface flex w-full flex-row items-start justify-start gap-3 px-4 py-3;
+    @apply bg-surface rounded-surface grid w-full items-start gap-x-3 gap-y-2 px-4 py-3;
+    grid-template-columns: auto minmax(0, 1fr);
     background-color: var(--alert-bg);
 
     --alert-bg: var(--color-surface);
@@ -49,7 +50,11 @@
   }
 
   .alert__content {
-    @apply flex h-full grow flex-col items-start;
+    @apply col-start-2 row-start-1 flex h-full min-w-0 flex-col items-start;
+  }
+
+  .alert:not(:has(.alert__indicator)) .alert__content {
+    @apply col-span-full;
   }
 
   .alert__title {
@@ -62,11 +67,11 @@
   }
 
   .alert__indicator {
-    @apply mt-0.5 flex size-5 shrink-0 items-center justify-center;
+    @apply col-start-1 row-start-1 mt-0.5 flex size-5 shrink-0 items-center justify-center;
     color: var(--alert-indicator-color);
   }
 
   .alert__actions {
-    @apply flex shrink-0 items-center gap-2;
+    @apply col-span-full row-start-2 flex w-full shrink-0 items-center gap-2;
   }
 }

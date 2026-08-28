@@ -4,12 +4,10 @@
   import { CloudUploadIcon } from "@hugeicons/core-free-icons";
 </script>
 
-<div class="grid max-w-xs">
+<div class="grid w-full max-w-xs">
   <Alert status="success">
     <Alert.Indicator>
-      {#snippet children()}
-        <Icon icon={CloudUploadIcon} />
-      {/snippet}
+      <Icon icon={CloudUploadIcon} class="size-5" />
     </Alert.Indicator>
     <Alert.Content>
       <Alert.Title>Backup complete</Alert.Title>
