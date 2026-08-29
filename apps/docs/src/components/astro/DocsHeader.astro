@@ -1,0 +1,28 @@
+---
+import DocsHeaderActions from "@components/svelte/DocsHeaderActions.svelte";
+import SourceLinks from "@components/svelte/SourceLinks.svelte";
+
+interface Props {
+  title: string;
+  description?: string;
+  sourceUrl: string;
+  stylesUrl: string;
+}
+
+const { title, description, sourceUrl, stylesUrl } = Astro.props;
+---
+
+<div class="docs-header">
+  <div class="docs-titlebar">
+    <h1>{title}</h1>
+    <div class="titlebar-actions">
+      <DocsHeaderActions title={title} description={description} client:load />
+    </div>
+  </div>
+
+  {description && <p class="docs-description">{description}</p>}
+
+  <div class="docs-source-links">
+    <SourceLinks sourceUrl={sourceUrl} stylesUrl={stylesUrl} client:load />
+  </div>
+</div>
