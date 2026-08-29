@@ -5,8 +5,8 @@
     background-color: var(--alert-bg);
 
     --alert-bg: var(--color-surface);
-    --alert-indicator-color: var(--color-primary-text);
-    --alert-title-fg: var(--color-primary-text);
+    --alert-indicator-color: var(--color-alert-default-text);
+    --alert-title-fg: var(--color-alert-default-text);
   }
 
   /* Variants */
@@ -17,36 +17,34 @@
 
   .alert--secondary {
     --alert-bg: var(--color-surface-secondary);
-    --alert-border: var(--color-surface-secondary);
     box-shadow: none;
   }
 
   .alert--outline {
     --alert-bg: transparent;
-    --alert-border: var(--color-control);
     box-shadow: var(--shadow-border);
   }
 
   /* Statuses */
   .alert--status-accent {
-    --alert-indicator-color: var(--color-accent);
-    --alert-title-fg: var(--color-accent);
+    --alert-indicator-color: var(--color-alert-accent-text);
+    --alert-title-fg: var(--color-alert-accent-text);
   }
   .alert--status-success {
-    --alert-indicator-color: var(--color-success);
-    --alert-title-fg: var(--color-success);
+    --alert-indicator-color: var(--color-alert-success-text);
+    --alert-title-fg: var(--color-alert-success-text);
   }
   .alert--status-warning {
-    --alert-indicator-color: var(--color-warning);
-    --alert-title-fg: var(--color-warning);
+    --alert-indicator-color: var(--color-alert-warning-text);
+    --alert-title-fg: var(--color-alert-warning-text);
   }
   .alert--status-danger {
-    --alert-indicator-color: var(--color-danger);
-    --alert-title-fg: var(--color-danger);
+    --alert-indicator-color: var(--color-alert-danger-text);
+    --alert-title-fg: var(--color-alert-danger-text);
   }
   .alert--status-default {
-    --alert-indicator-color: var(--color-primary-text);
-    --alert-title-fg: var(--color-primary-text);
+    --alert-indicator-color: var(--color-alert-default-text);
+    --alert-title-fg: var(--color-alert-default-text);
   }
 
   .alert__content {

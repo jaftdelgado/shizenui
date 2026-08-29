@@ -10,3 +10,5 @@ export type {
 } from "./alert.types.js";
 export { setupAlertContext } from "./alert.setup.svelte.js";
 export { useAlertContext } from "./alert.context.js";
+export { setupAlertWarnings } from "./alert.warnings.ts";
+export { resolveAlertDescribedBy, resolveAlertLabelledBy } from "./alert.aria.ts";

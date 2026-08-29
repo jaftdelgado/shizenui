@@ -7,7 +7,7 @@
 <div class="grid w-full max-w-xs">
   <Alert
     status="accent"
-    class="rounded-2xl border border-purple-200 bg-linear-to-br from-purple-50 to-purple-100 [--alert-indicator-color:var(--color-purple-500)] [--alert-title-fg:var(--color-purple-600)]"
+    class="rounded-2xl border border-purple-200 bg-linear-to-br from-purple-50 to-purple-100 [--alert-indicator-color:var(--color-purple-800)] [--alert-title-fg:var(--color-purple-800)]"
   >
     <Alert.Indicator>
       <Icon icon={CheckmarkBadge02Icon} class="size-5" />

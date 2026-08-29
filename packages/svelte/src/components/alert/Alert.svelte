@@ -1,7 +1,13 @@
 <script lang="ts">
   import { alertStyles } from "@shizen-ui/styles";
   import { createId, mergeProps, presence } from "../../lib/utils/index.js";
-  import { setupAlertContext, useAlertContext } from "./_internal/index.js";
+  import {
+    resolveAlertDescribedBy,
+    resolveAlertLabelledBy,
+    setupAlertContext,
+    setupAlertWarnings,
+    useAlertContext
+  } from "./_internal/index.js";
   import { setupSurfaceContext } from "../surface/_internal/index.js";
   import type { AlertProps } from "./_internal/index.js";
 
@@ -14,27 +20,31 @@
     variant = "default",
     id = createId("alert", uid),
     ref = $bindable(null),
-    role: _role,
+    "aria-labelledby": externalLabelledBy,
+    "aria-describedby": externalDescribedBy,
     ...rest
   }: AlertProps = $props();
 
-  setupAlertContext({ id: () => id, status: () => status });
+  setupAlertContext({ status: () => status });
   setupSurfaceContext();
   const alertContext = useAlertContext();
 
+  setupAlertWarnings({ hasChildren: () => Boolean(children) });
+
   const styles = $derived(alertStyles({ variant, status }));
-  const liveRole = $derived(status === "danger" ? "alert" : "status");
 
   const alertProps = $derived(
     mergeProps(
       {
         id,
-        role: liveRole,
+        role: "alert",
         class: styles.base(),
-        "aria-labelledby": alertContext.titleIds || undefined,
-        "aria-describedby": alertContext.descriptionIds || undefined,
+        "aria-labelledby": resolveAlertLabelledBy(alertContext.titleIds, externalLabelledBy),
+        "aria-describedby": resolveAlertDescribedBy(
+          alertContext.descriptionIds,
+          externalDescribedBy
+        ),
         "data-variant": variant,
-        "data-live": liveRole,
         "data-has-title": presence(Boolean(alertContext.titleIds)),
         "data-has-description": presence(Boolean(alertContext.descriptionIds))
       },

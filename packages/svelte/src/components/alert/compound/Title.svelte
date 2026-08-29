@@ -33,5 +33,5 @@
 </script>
 
 {#if shouldRender}
-  <h2 bind:this={ref} {...titleProps}>{@render children?.()}</h2>
+  <p bind:this={ref} {...titleProps}>{@render children?.()}</p>
 {/if}

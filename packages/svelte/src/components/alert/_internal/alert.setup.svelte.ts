@@ -1,19 +1,14 @@
 import type { AlertContextValue } from "./alert.context.js";
 import { setAlertContext } from "./alert.context.js";
+import type { AlertStatus } from "./alert.types.js";
 
-export function setupAlertContext(options: {
-  id: () => string | undefined;
-  status: () => string;
-}): void {
+export function setupAlertContext(options: { status: () => AlertStatus }): void {
   let titleIds = $state(new Set<string>());
   let descriptionIds = $state(new Set<string>());
 
   const joinIds = (ids: Set<string>): string => [...ids].join(" ");
 
   setAlertContext({
-    get id() {
-      return options.id();
-    },
     get status() {
       return options.status();
     },

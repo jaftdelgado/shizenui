@@ -29,8 +29,6 @@ import AlertCssStylingCode from "@examples/svelte/alert/AlertCssStyling.css?raw"
 
 ### Variants
 
-Use the `status` prop to communicate the tone of an alert. The available statuses use the semantic color tokens from the theme.
-
 <ComponentExample src="svelte/alert/AlertVariants.svelte">
   <AlertVariants client:load />
 </ComponentExample>
@@ -54,6 +52,8 @@ Use the `status` prop to communicate the tone of an alert. The available statuse
 </ComponentExample>
 
 ### Actions
+
+Alert sets the [Surface](/docs/components/surface) context, letting supported controls consume it and resolve their variant automatically.
 
 <ComponentExample src="svelte/alert/AlertActions.svelte">
   <AlertActions client:load />
@@ -180,14 +180,14 @@ Extends `HTMLAttributes<HTMLDivElement>`.
 
 #### Title Props
 
-Extends `HTMLAttributes<HTMLHeadingElement>`.
+Extends `HTMLAttributes<HTMLParagraphElement>`.
 
 <PropsTable
   showHeader
   props={[
     { name: "id", type: "string", default: "auto-generated" },
     { name: "children", type: "Snippet", default: "undefined" },
-    { name: "ref", type: "HTMLHeadingElement | null", default: "null" }
+    { name: "ref", type: "HTMLParagraphElement | null", default: "null" }
   ]}
 />
 
