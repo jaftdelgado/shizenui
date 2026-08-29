@@ -53,6 +53,12 @@
     --danger: #ff383c;
     --danger-foreground: var(--snow);
 
+    --alert-default-text: var(--primary-text);
+    --alert-accent-text: #005fcc;
+    --alert-success-text: #056b3a;
+    --alert-warning-text: #8a4b00;
+    --alert-danger-text: #b42318;
+
     /* Control Colors */
     --control: #e6e6ed;
     --control-foreground: var(--control-text);
@@ -81,6 +87,12 @@
     --inverted-text: var(--eclipse);
 
     --accent: #155dce;
+
+    --alert-default-text: var(--primary-text);
+    --alert-accent-text: #75b7ff;
+    --alert-success-text: #5ee98b;
+    --alert-warning-text: #ffd166;
+    --alert-danger-text: #ff7a70;
 
     --control: #242424;
   }

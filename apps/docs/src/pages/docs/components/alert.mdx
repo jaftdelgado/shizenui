@@ -1,0 +1,217 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Alert
+description: Announces important information, status changes, and actions without interrupting the current workflow.
+preview: AlertPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+
+import AlertActions from "@examples/svelte/alert/AlertActions.svelte";
+import AlertCustomIndicator from "@examples/svelte/alert/AlertCustomIndicator.svelte";
+import AlertStatuses from "@examples/svelte/alert/AlertStatuses.svelte";
+import AlertVariants from "@examples/svelte/alert/AlertVariants.svelte";
+import AlertWithoutIndicator from "@examples/svelte/alert/AlertWithoutIndicator.svelte";
+
+import AlertTwStyling from "@examples/svelte/alert/AlertTwStyling.svelte";
+import AlertCssStylingCode from "@examples/svelte/alert/AlertCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { Alert } from "@shizen-ui/svelte";`} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/alert/AlertVariants.svelte">
+  <AlertVariants client:load />
+</ComponentExample>
+
+### Statuses
+
+<ComponentExample src="svelte/alert/AlertStatuses.svelte">
+  <AlertStatuses client:load />
+</ComponentExample>
+
+### Custom Indicator
+
+<ComponentExample src="svelte/alert/AlertCustomIndicator.svelte">
+  <AlertCustomIndicator client:load />
+</ComponentExample>
+
+### Without Indicator
+
+<ComponentExample src="svelte/alert/AlertWithoutIndicator.svelte">
+  <AlertWithoutIndicator client:load />
+</ComponentExample>
+
+### Actions
+
+Alert sets the [Surface](/docs/components/surface) context, letting supported controls consume it and resolve their variant automatically.
+
+<ComponentExample src="svelte/alert/AlertActions.svelte">
+  <AlertActions client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to Alert.
+
+<ComponentExample src="svelte/alert/AlertTwStyling.svelte">
+  <AlertTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Alert component classes, you can use the `@layer components` directive.
+
+<CodeBlock code={AlertCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Base & Variant Classes
+
+<BulletList
+  items={[
+    {
+      title: "alert",
+      description:
+        "Root container for the alert, arranging indicator, content, and actions in a grid.",
+      code: true
+    },
+    {
+      title: "alert--default",
+      description:
+        "Default alert variant using the standard surface background and elevation shadow.",
+      code: true
+    },
+    {
+      title: "alert--secondary",
+      description: "Secondary alert variant using a muted background with no shadow.",
+      code: true
+    },
+    {
+      title: "alert--outline",
+      description: "Outline alert variant using a transparent background with a bordered shadow.",
+      code: true
+    }
+  ]}
+/>
+
+#### Status Classes
+
+<BulletList
+  items={[
+    {
+      title: "alert--status-default",
+      description: "Default status using the primary text color for the title and indicator.",
+      code: true
+    },
+    {
+      title: "alert--status-accent",
+      description: "Accent status using the accent color for the title and indicator.",
+      code: true
+    },
+    {
+      title: "alert--status-success",
+      description: "Success status using the success color for the title and indicator.",
+      code: true
+    },
+    {
+      title: "alert--status-warning",
+      description: "Warning status using the warning color for the title and indicator.",
+      code: true
+    },
+    {
+      title: "alert--status-danger",
+      description: "Danger status using the danger color for the title and indicator.",
+      code: true
+    }
+  ]}
+/>
+
+## API Reference
+
+### Alert Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "status", type: '"default" | "accent" | "success" | "warning" | "danger"', default: '"default"' },
+    { name: "variant", type: '"default" | "secondary" | "outline"', default: '"default"' },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+
+]}
+/>
+
+#### Indicator Props
+
+Extends `HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLSpanElement | null", default: "null" }
+  ]}
+/>
+
+#### Content Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
+
+#### Title Props
+
+Extends `HTMLAttributes<HTMLParagraphElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLParagraphElement | null", default: "null" }
+  ]}
+/>
+
+#### Description Props
+
+Extends `HTMLAttributes<HTMLParagraphElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLParagraphElement | null", default: "null" }
+  ]}
+/>
+
+#### Actions Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>

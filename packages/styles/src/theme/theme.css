@@ -46,6 +46,13 @@
   --color-danger: var(--danger);
   --color-danger-foreground: var(--danger-foreground);
 
+  /* Alert text colors */
+  --color-alert-default-text: var(--alert-default-text);
+  --color-alert-accent-text: var(--alert-accent-text);
+  --color-alert-success-text: var(--alert-success-text);
+  --color-alert-warning-text: var(--alert-warning-text);
+  --color-alert-danger-text: var(--alert-danger-text);
+
   --color-control: var(--control);
   --color-control-foreground: var(--control-foreground);
 

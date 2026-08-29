@@ -1,0 +1,75 @@
+@layer components {
+  .alert {
+    @apply bg-surface rounded-surface grid w-full items-start gap-x-3 gap-y-2 px-4 py-3;
+    grid-template-columns: auto minmax(0, 1fr);
+    background-color: var(--alert-bg);
+
+    --alert-bg: var(--color-surface);
+    --alert-indicator-color: var(--color-alert-default-text);
+    --alert-title-fg: var(--color-alert-default-text);
+  }
+
+  /* Variants */
+  .alert--default {
+    @apply shadow-surface;
+    --alert-bg: var(--color-surface);
+  }
+
+  .alert--secondary {
+    --alert-bg: var(--color-surface-secondary);
+    box-shadow: none;
+  }
+
+  .alert--outline {
+    --alert-bg: transparent;
+    box-shadow: var(--shadow-border);
+  }
+
+  /* Statuses */
+  .alert--status-accent {
+    --alert-indicator-color: var(--color-alert-accent-text);
+    --alert-title-fg: var(--color-alert-accent-text);
+  }
+  .alert--status-success {
+    --alert-indicator-color: var(--color-alert-success-text);
+    --alert-title-fg: var(--color-alert-success-text);
+  }
+  .alert--status-warning {
+    --alert-indicator-color: var(--color-alert-warning-text);
+    --alert-title-fg: var(--color-alert-warning-text);
+  }
+  .alert--status-danger {
+    --alert-indicator-color: var(--color-alert-danger-text);
+    --alert-title-fg: var(--color-alert-danger-text);
+  }
+  .alert--status-default {
+    --alert-indicator-color: var(--color-alert-default-text);
+    --alert-title-fg: var(--color-alert-default-text);
+  }
+
+  .alert__content {
+    @apply col-start-2 row-start-1 flex h-full min-w-0 flex-col items-start;
+  }
+
+  .alert:not(:has(.alert__indicator)) .alert__content {
+    @apply col-span-full;
+  }
+
+  .alert__title {
+    @apply text-sm leading-relaxed font-medium text-wrap wrap-break-word;
+    color: var(--alert-title-fg);
+  }
+
+  .alert__description {
+    @apply text-secondary-text text-sm leading-snug text-wrap wrap-break-word;
+  }
+
+  .alert__indicator {
+    @apply col-start-1 row-start-1 mt-0.5 flex size-5 shrink-0 items-center justify-center;
+    color: var(--alert-indicator-color);
+  }
+
+  .alert__actions {
+    @apply col-span-full row-start-2 flex w-full shrink-0 items-center gap-2;
+  }
+}
