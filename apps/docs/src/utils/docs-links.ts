@@ -1,4 +1,4 @@
-const GITHUB_BASE = "https://github.com/jaftdelgado/shizenui/blob/develop";
+const GITHUB_BASE = "https://github.com/jaftdelgado/shizenui/tree/develop";
 
 export const toKebab = (str: string) => str.toLowerCase().replace(/\s+/g, "-");
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button } from "@shizen-ui/svelte";
+  import { buttonStyles } from "@shizen-ui/styles";
   import Icon from "@components/svelte/Icon.svelte";
   import { GithubIcon, CssFile01Icon } from "@hugeicons/core-free-icons";
 
@@ -10,27 +10,25 @@
 
   let { sourceUrl, stylesUrl }: Props = $props();
 
-  function openSource() {
-    window.open(sourceUrl, "_blank", "noopener,noreferrer");
-  }
-
-  function openStyles() {
-    window.open(stylesUrl, "_blank", "noopener,noreferrer");
-  }
+  const styles = buttonStyles({ variant: "tertiary", size: "md", iconOnly: false });
 </script>
 
 <div>
-  <Button variant="tertiary" onclick={openSource}>
-    {#snippet startContent()}
-      <Icon icon={GithubIcon} />
-    {/snippet}
-    Source
-  </Button>
+  <a href={sourceUrl} target="_blank" rel="noopener noreferrer" class={styles.base()}>
+    <span class={styles.content()}>
+      <span class={styles.iconStart()}>
+        <Icon icon={GithubIcon} />
+      </span>
+      Source
+    </span>
+  </a>
 
-  <Button variant="tertiary" onclick={openStyles}>
-    {#snippet startContent()}
-      <Icon icon={CssFile01Icon} />
-    {/snippet}
-    Styles source
-  </Button>
+  <a href={stylesUrl} target="_blank" rel="noopener noreferrer" class={styles.base()}>
+    <span class={styles.content()}>
+      <span class={styles.iconStart()}>
+        <Icon icon={CssFile01Icon} />
+      </span>
+      Styles source
+    </span>
+  </a>
 </div>

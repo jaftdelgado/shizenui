@@ -1,59 +1,49 @@
 :root {
-  --docs-sidebar-w: 260px;
+  --docs-sidebar-w: 300px;
   --docs-body-w: 640px;
   --docs-toc-w: 210px;
-  --docs-gap: 82px;
+  --docs-gap: 76px;
   --docs-toc-top: 32px;
   --docs-section-gap: 40px;
 }
 
 @layer components {
   .docs-layout {
-    display: grid;
+    @apply bg-control relative grid min-h-screen;
     grid-template-columns: var(--docs-sidebar-w) 1fr;
-    min-height: 100vh;
+  }
+
+  .docs-layout::before {
+    @apply bg-background pointer-events-none fixed inset-y-0 right-0 z-0 rounded-l-3xl;
+    content: "";
+    left: var(--docs-sidebar-w);
+    box-shadow: var(--shadow-border);
   }
 
   .docs-sidebar {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
+    @apply bg-control sticky top-0 h-screen overflow-y-auto;
   }
 
-  /* ─── Main column ─────────────────────────────────────────── */
+  /* Main column */
   .docs-main {
-    @apply mt-8;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    @apply relative flex min-h-screen flex-col items-center;
     gap: var(--docs-section-gap);
-    min-height: 100vh;
   }
 
-  /* ─── Shared width ────────────────────────────────────────── */
+  /* Shared width */
   .docs-header,
   .docs-preview,
   .docs-content-grid {
     width: calc(var(--docs-body-w) + var(--docs-gap) + var(--docs-toc-w));
   }
 
-  /* ─── Header: titlebar + description + source links ──────── */
-
+  /* Header: titlebar + description + source links */
   .docs-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    flex-shrink: 0;
+    @apply mt-10 flex shrink-0 flex-col gap-0;
   }
 
   .docs-titlebar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-
-    min-height: 40px;
+    @apply flex min-h-[40px] items-center justify-between gap-4;
   }
 
   .docs-titlebar h1 {
@@ -61,41 +51,29 @@
   }
 
   .docs-description {
-    @apply text-secondary-text text-base;
-    margin-top: 8px;
+    @apply text-secondary-text mt-2 text-base;
   }
 
   .titlebar-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
+    @apply flex shrink-0 items-center gap-2;
   }
 
-  /* ─── Source links ────────────────────────────────────────── */
-
+  /* Source links */
   .docs-source-links {
-    display: flex;
-    gap: 4px;
+    @apply flex gap-1 select-none;
     padding-top: 24px;
-    user-select: none;
   }
 
-  /* ─── Content grid ────────────────────────────────────────── */
-
+  /* Content grid */
   .docs-content-grid {
-    display: grid;
+    @apply grid items-start;
     grid-template-columns: var(--docs-body-w) var(--docs-toc-w);
     grid-template-rows: auto 1fr auto;
     column-gap: var(--docs-gap);
-    align-items: start;
   }
 
   .docs-body {
-    grid-column: 1;
-    grid-row: 2;
-    min-width: 0;
-    width: 100%;
+    @apply col-start-1 row-start-2 w-full min-w-0;
   }
 
   .docs-footer {
@@ -103,13 +81,10 @@
     grid-row: 3;
   }
 
-  /* ─── Table of contents ───────────────────────────────────── */
+  /* Table of contents */
   .docs-toc {
-    @apply text-secondary-text self-start text-sm;
-    grid-column: 2;
-    grid-row: 2;
+    @apply text-secondary-text sticky col-start-2 row-start-2 self-start text-sm;
     width: var(--docs-toc-w);
-    position: sticky;
     top: var(--docs-toc-top);
   }
 
