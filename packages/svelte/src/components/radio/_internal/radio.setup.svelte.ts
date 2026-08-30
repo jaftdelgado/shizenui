@@ -1,11 +1,12 @@
 import { setRadioContext } from "./radio.context.js";
 import type { RadioContextValue } from "./radio.context.js";
 import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.js";
+import { createIdRegistry } from "../../../lib/runes/index.js";
 import type { RadioState } from "./radio.state.svelte.js";
 
 export function setupRadioContexts(state: RadioState): void {
-  let labelIds = $state(new Set<string>());
-  let descriptionIds = $state(new Set<string>());
+  const labelIds = createIdRegistry();
+  const descriptionIds = createIdRegistry();
 
   setRadioContext({
     get checked() {
@@ -62,30 +63,10 @@ export function setupRadioContexts(state: RadioState): void {
   });
 
   setContentSlotContext({
-    registerLabel(id: string) {
-      if (labelIds.has(id)) return;
-      const next = new Set(labelIds);
-      next.add(id);
-      labelIds = next;
-    },
-    unregisterLabel(id: string) {
-      if (!labelIds.has(id)) return;
-      const next = new Set(labelIds);
-      next.delete(id);
-      labelIds = next;
-    },
-    registerDescription(id: string) {
-      if (descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.add(id);
-      descriptionIds = next;
-    },
-    unregisterDescription(id: string) {
-      if (!descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.delete(id);
-      descriptionIds = next;
-    },
+    registerLabel: labelIds.register,
+    unregisterLabel: labelIds.unregister,
+    registerDescription: descriptionIds.register,
+    unregisterDescription: descriptionIds.unregister,
     registerError(_id: string) {},
     unregisterError(_id: string) {}
   });
