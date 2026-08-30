@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import TableOfContents from "@components/astro/TableOfContents.astro";
 import DocsHeader from "@components/astro/DocsHeader.astro";
+import Sidebar from "@components/astro/Sidebar.astro";
 import { resolveDocLinks } from "@utils/docs-links";
 import type { MarkdownHeading } from "astro";
 
@@ -53,7 +54,9 @@ const PreviewComponent: any = matchedPreviewPath
   <body>
     <div class="docs-layout">
       <aside class="docs-sidebar">
-        <slot name="sidebar" />
+        <slot name="sidebar">
+          <Sidebar />
+        </slot>
       </aside>
 
       <div class="docs-main">

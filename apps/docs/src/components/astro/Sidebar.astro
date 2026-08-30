@@ -1,0 +1,84 @@
+---
+function extractTitle(raw: string): string | undefined {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return undefined;
+  const frontmatterBlock = match[1];
+  const titleMatch = frontmatterBlock.match(/^title:\s*["']?(.+?)["']?\s*$/m);
+  return titleMatch?.[1];
+}
+
+interface SidebarItem {
+  name: string;
+  href: string;
+}
+
+const rawFiles = import.meta.glob("../../pages/docs/components/*.mdx", {
+  eager: true,
+  query: "?raw",
+  import: "default"
+}) as Record<string, string>;
+
+const sidebarItems: SidebarItem[] = Object.entries(rawFiles)
+  .flatMap(([path, raw]) => {
+    const slug = path
+      .split("/")
+      .pop()
+      ?.replace(/\.mdx$/, "");
+    const title = extractTitle(raw);
+    const name = title ?? slug;
+    return name && slug ? [{ name, href: `/docs/components/${slug}` }] : [];
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const { pathname } = Astro.url;
+const isActive = (href: string) => pathname === href || pathname === `${href}/`;
+---
+
+<aside
+  class="fixed top-16 bottom-0 left-[max(0px,calc(50%-45rem))] z-30 hidden w-64 overflow-y-auto py-10 md:block"
+>
+  <nav>
+    <h5 class="text-primary-text mb-4 font-medium">Components</h5>
+    <ul class="ml-1 space-y-0" id="sidebar-nav">
+      {
+        sidebarItems.map((item, index) => {
+          const active = isActive(item.href);
+          return (
+            <>
+              <li>
+                <a
+                  href={item.href}
+                  data-href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  class="sidebar-link group text-secondary-text hover:text-accent aria-[current=page]:text-accent flex items-center text-sm transition-colors"
+                >
+                  <span class="sidebar-line bg-tertiary-text group-hover:bg-accent aria-[current=page]:bg-accent inline-block h-px w-8 shrink-0 transition-all duration-300 ease-out group-hover:w-12 aria-[current=page]:w-12" />
+                  <span class="pl-4">{item.name}</span>
+                </a>
+              </li>
+              {index < sidebarItems.length - 1 && (
+                <li class="pointer-events-none flex flex-col gap-2" aria-hidden="true">
+                  <span class="bg-tertiary-text inline-block h-px w-8" />
+                  <span class="bg-tertiary-text inline-block h-px w-8" />
+                </li>
+              )}
+            </>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</aside>
+
+<script>
+  function updateActiveLink() {
+    const { pathname } = window.location;
+    document.querySelectorAll<HTMLAnchorElement>(".sidebar-link").forEach((link) => {
+      const href = link.dataset.href;
+      const active = href !== undefined && (pathname === href || pathname === `${href}/`);
+      link.setAttribute("aria-current", active ? "page" : "false");
+    });
+  }
+  updateActiveLink();
+  document.addEventListener("astro:after-swap", updateActiveLink);
+</script>
