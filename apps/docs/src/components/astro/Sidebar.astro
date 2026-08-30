@@ -1,0 +1,266 @@
+---
+function extractTitle(raw: string): string | undefined {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return undefined;
+  const frontmatterBlock = match[1];
+  const titleMatch = frontmatterBlock.match(/^title:\s*["']?(.+?)["']?\s*$/m);
+  return titleMatch?.[1];
+}
+
+interface SidebarItem {
+  name: string;
+  href: string;
+}
+
+const rawFiles = import.meta.glob("../../pages/docs/components/*.mdx", {
+  eager: true,
+  query: "?raw",
+  import: "default"
+}) as Record<string, string>;
+
+const sidebarItems: SidebarItem[] = Object.entries(rawFiles)
+  .flatMap(([path, raw]) => {
+    const slug = path
+      .split("/")
+      .pop()
+      ?.replace(/\.mdx$/, "");
+    const title = extractTitle(raw);
+    const name = title ?? slug;
+    return name && slug ? [{ name, href: `/docs/components/${slug}` }] : [];
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const { pathname } = Astro.url;
+const isActive = (href: string) => pathname === href || pathname === `${href}/`;
+---
+
+<aside
+  class="fixed top-16 bottom-0 left-[max(0px,calc(50%-45rem))] z-30 hidden w-64 overflow-y-auto py-10 md:block"
+>
+  <nav aria-label="Components" id="proximity-sidebar">
+    <h5 class="text-primary-text mb-4 font-medium">Components</h5>
+    <ul class="ml-1 space-y-0" id="sidebar-nav">
+      {
+        sidebarItems.map((item, index) => {
+          const active = isActive(item.href);
+          return (
+            <>
+              <li>
+                <a
+                  href={item.href}
+                  data-href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  class="sidebar-link group text-secondary-text hover:text-accent aria-[current=page]:text-accent flex items-center text-sm transition-colors duration-150"
+                >
+                  <span
+                    data-dash="link"
+                    class="sidebar-line bg-tertiary-text group-hover:bg-accent aria-[current=page]:bg-accent inline-block h-px shrink-0"
+                    style="width: 28px;"
+                  />
+                  <span data-dash-label class="pl-4">
+                    {item.name}
+                  </span>
+                </a>
+              </li>
+              {index < sidebarItems.length - 1 && (
+                <li class="pointer-events-none flex flex-col gap-2" aria-hidden="true">
+                  <span
+                    data-dash="decor"
+                    class="bg-tertiary-text inline-block h-px"
+                    style="width: 24px;"
+                  />
+                  <span
+                    data-dash="decor"
+                    class="bg-tertiary-text inline-block h-px"
+                    style="width: 24px;"
+                  />
+                </li>
+              )}
+            </>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</aside>
+
+<script>
+  const RADIUS = 42; // px, how far from the cursor a dash starts responding
+  const SPRING = { stiffness: 380, damping: 30, mass: 0.7 };
+
+  const SIZES: Record<"link" | "decor", { base: number; max: number }> = {
+    link: { base: 32, max: 82 }, // main item dash, big accentuated swing
+    decor: { base: 32, max: 60 } // mini connector lines between items
+  };
+
+  type Dash = {
+    el: HTMLElement;
+    kind: "link" | "decor";
+    link: HTMLAnchorElement | null;
+    base: number;
+    max: number;
+    amt: number; // 0..1(+) normalized position, drives width
+    vel: number;
+    target: number;
+  };
+
+  let dashes: Dash[] = [];
+  let pointerY: number | null = null;
+  let rafId: number | null = null;
+  let lastTime: number | null = null;
+  let idleResetTimer: number | null = null;
+
+  const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function collectDashes() {
+    const nav = document.getElementById("proximity-sidebar");
+    if (!nav) {
+      dashes = [];
+      return;
+    }
+
+    dashes = Array.from(nav.querySelectorAll<HTMLElement>("[data-dash]")).map((el) => {
+      const kind = (el.dataset.dash === "decor" ? "decor" : "link") as "link" | "decor";
+      const { base, max } = SIZES[kind];
+
+      return {
+        el,
+        kind,
+        link: el.closest("a"),
+        base,
+        max,
+        amt: 0,
+        vel: 0,
+        target: 0
+      };
+    });
+  }
+
+  function restingTarget(dash: Dash) {
+    const isActive = dash.link?.getAttribute("aria-current") === "page";
+    return isActive ? 1 : 0;
+  }
+
+  function updateTargets() {
+    const reduced = prefersReducedMotion();
+
+    for (const dash of dashes) {
+      const rest = restingTarget(dash);
+
+      if (reduced || pointerY === null) {
+        dash.target = rest;
+        continue;
+      }
+
+      const rect = dash.el.getBoundingClientRect();
+      const centerY = rect.top + rect.height / 2;
+      const distance = Math.abs(pointerY - centerY);
+
+      if (distance >= RADIUS) {
+        dash.target = rest;
+        continue;
+      }
+
+      const falloff = 1 - distance / RADIUS;
+      dash.target = Math.max(rest, falloff);
+    }
+  }
+
+  function step(dt: number) {
+    let stillMoving = false;
+
+    for (const dash of dashes) {
+      const displacement = dash.amt - dash.target;
+      const springForce = -SPRING.stiffness * displacement;
+      const dampingForce = -SPRING.damping * dash.vel;
+      const accel = (springForce + dampingForce) / SPRING.mass;
+
+      dash.vel += accel * dt;
+      dash.amt += dash.vel * dt;
+
+      const settled = Math.abs(dash.amt - dash.target) < 0.001 && Math.abs(dash.vel) < 0.001;
+
+      if (settled) {
+        dash.amt = dash.target;
+        dash.vel = 0;
+      } else {
+        stillMoving = true;
+      }
+
+      const clampedAmt = Math.max(0, dash.amt);
+      const width = dash.base + (dash.max - dash.base) * clampedAmt;
+      dash.el.style.width = `${width}px`;
+    }
+
+    return stillMoving;
+  }
+
+  function tick(time: number) {
+    if (lastTime === null) lastTime = time;
+    const dt = Math.min((time - lastTime) / 1000, 1 / 30); // clamp big jumps
+    lastTime = time;
+
+    const stillMoving = step(dt);
+    rafId = stillMoving ? requestAnimationFrame(tick) : null;
+    if (!stillMoving) lastTime = null;
+  }
+
+  function ensureLoopRunning() {
+    if (rafId === null) {
+      rafId = requestAnimationFrame(tick);
+    }
+  }
+
+  function clearIdleReset() {
+    if (idleResetTimer !== null) {
+      window.clearTimeout(idleResetTimer);
+      idleResetTimer = null;
+    }
+  }
+
+  function handlePointerMove(event: PointerEvent) {
+    clearIdleReset();
+    pointerY = event.clientY;
+    updateTargets();
+    ensureLoopRunning();
+  }
+
+  function handlePointerLeave() {
+    clearIdleReset();
+    idleResetTimer = window.setTimeout(() => {
+      pointerY = null;
+      updateTargets();
+      ensureLoopRunning();
+    }, 80);
+  }
+
+  function updateActiveLink() {
+    const { pathname } = window.location;
+    document.querySelectorAll<HTMLAnchorElement>(".sidebar-link").forEach((link) => {
+      const href = link.dataset.href;
+      const active = href !== undefined && (pathname === href || pathname === `${href}/`);
+      link.setAttribute("aria-current", active ? "page" : "false");
+    });
+
+    updateTargets();
+    ensureLoopRunning();
+  }
+
+  function init() {
+    collectDashes();
+    updateActiveLink();
+
+    const nav = document.getElementById("proximity-sidebar");
+    if (!nav) return;
+
+    nav.addEventListener("pointermove", handlePointerMove as EventListener);
+    nav.addEventListener("pointerleave", handlePointerLeave);
+  }
+
+  init();
+  document.addEventListener("astro:after-swap", () => {
+    pointerY = null;
+    lastTime = null;
+    init();
+  });
+</script>

@@ -1,4 +1,5 @@
 import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
+import { createIdRegistry } from "../../../lib/runes/index.js";
 import { setSwitchGroupContext } from "./switch-group.context.js";
 import type { SwitchGroupContextValue } from "./switch-group.context.js";
 import type { SwitchGroupState } from "./switch-group.state.svelte.js";
@@ -7,9 +8,9 @@ export function setupSwitchGroupContexts(
   state: SwitchGroupState,
   props: { id: () => string }
 ): void {
-  let labelIds = $state(new Set<string>());
-  let descriptionIds = $state(new Set<string>());
-  let errorIds = $state(new Set<string>());
+  const labelIds = createIdRegistry();
+  const descriptionIds = createIdRegistry();
+  const errorIds = createIdRegistry();
 
   setSwitchGroupContext({
     get value() {
@@ -93,41 +94,11 @@ export function setupSwitchGroupContexts(
   });
 
   setContentSlotContext({
-    registerLabel(id: string) {
-      if (labelIds.has(id)) return;
-      const next = new Set(labelIds);
-      next.add(id);
-      labelIds = next;
-    },
-    unregisterLabel(id: string) {
-      if (!labelIds.has(id)) return;
-      const next = new Set(labelIds);
-      next.delete(id);
-      labelIds = next;
-    },
-    registerDescription(id: string) {
-      if (descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.add(id);
-      descriptionIds = next;
-    },
-    unregisterDescription(id: string) {
-      if (!descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.delete(id);
-      descriptionIds = next;
-    },
-    registerError(id: string) {
-      if (errorIds.has(id)) return;
-      const next = new Set(errorIds);
-      next.add(id);
-      errorIds = next;
-    },
-    unregisterError(id: string) {
-      if (!errorIds.has(id)) return;
-      const next = new Set(errorIds);
-      next.delete(id);
-      errorIds = next;
-    }
+    registerLabel: labelIds.register,
+    unregisterLabel: labelIds.unregister,
+    registerDescription: descriptionIds.register,
+    unregisterDescription: descriptionIds.unregister,
+    registerError: errorIds.register,
+    unregisterError: errorIds.unregister
   });
 }

@@ -1,5 +1,5 @@
 import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
-import { warnIf } from "../../../lib/runes/index.js";
+import { createIdRegistry, warnIf } from "../../../lib/runes/index.js";
 import {
   setTextFieldContext,
   type TextFieldContextValue,
@@ -10,9 +10,9 @@ import type { TextFieldStateInstance } from "./text-field.state.svelte.js";
 
 export function setupTextFieldContexts(state: TextFieldStateInstance): void {
   let control = $state<TextFieldControl | null>(null);
-  let labelIds = $state(new Set<string>());
-  let descriptionIds = $state(new Set<string>());
-  let errorIds = $state(new Set<string>());
+  const labelIds = createIdRegistry();
+  const descriptionIds = createIdRegistry();
+  const errorIds = createIdRegistry();
   let hasAccessibleName = $state(false);
   let hasMultipleControls = $state(false);
 
@@ -128,41 +128,11 @@ export function setupTextFieldContexts(state: TextFieldStateInstance): void {
   });
 
   setContentSlotContext({
-    registerLabel(id: string) {
-      if (labelIds.has(id)) return;
-      const next = new Set(labelIds);
-      next.add(id);
-      labelIds = next;
-    },
-    unregisterLabel(id: string) {
-      if (!labelIds.has(id)) return;
-      const next = new Set(labelIds);
-      next.delete(id);
-      labelIds = next;
-    },
-    registerDescription(id: string) {
-      if (descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.add(id);
-      descriptionIds = next;
-    },
-    unregisterDescription(id: string) {
-      if (!descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.delete(id);
-      descriptionIds = next;
-    },
-    registerError(id: string) {
-      if (errorIds.has(id)) return;
-      const next = new Set(errorIds);
-      next.add(id);
-      errorIds = next;
-    },
-    unregisterError(id: string) {
-      if (!errorIds.has(id)) return;
-      const next = new Set(errorIds);
-      next.delete(id);
-      errorIds = next;
-    }
+    registerLabel: labelIds.register,
+    unregisterLabel: labelIds.unregister,
+    registerDescription: descriptionIds.register,
+    unregisterDescription: descriptionIds.unregister,
+    registerError: errorIds.register,
+    unregisterError: errorIds.unregister
   });
 }

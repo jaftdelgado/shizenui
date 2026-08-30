@@ -1,46 +1,25 @@
 import type { AlertContextValue } from "./alert.context.js";
 import { setAlertContext } from "./alert.context.js";
 import type { AlertStatus } from "./alert.types.js";
+import { createIdRegistry } from "../../../lib/runes/index.js";
 
 export function setupAlertContext(options: { status: () => AlertStatus }): void {
-  let titleIds = $state(new Set<string>());
-  let descriptionIds = $state(new Set<string>());
-
-  const joinIds = (ids: Set<string>): string => [...ids].join(" ");
+  const titleIds = createIdRegistry();
+  const descriptionIds = createIdRegistry();
 
   setAlertContext({
     get status() {
       return options.status();
     },
     get titleIds() {
-      return joinIds(titleIds);
+      return titleIds.ids;
     },
     get descriptionIds() {
-      return joinIds(descriptionIds);
+      return descriptionIds.ids;
     },
-    registerTitle(id: string) {
-      if (titleIds.has(id)) return;
-      const next = new Set(titleIds);
-      next.add(id);
-      titleIds = next;
-    },
-    unregisterTitle(id: string) {
-      if (!titleIds.has(id)) return;
-      const next = new Set(titleIds);
-      next.delete(id);
-      titleIds = next;
-    },
-    registerDescription(id: string) {
-      if (descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.add(id);
-      descriptionIds = next;
-    },
-    unregisterDescription(id: string) {
-      if (!descriptionIds.has(id)) return;
-      const next = new Set(descriptionIds);
-      next.delete(id);
-      descriptionIds = next;
-    }
+    registerTitle: titleIds.register,
+    unregisterTitle: titleIds.unregister,
+    registerDescription: descriptionIds.register,
+    unregisterDescription: descriptionIds.unregister
   } satisfies AlertContextValue);
 }

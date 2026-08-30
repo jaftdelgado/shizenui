@@ -1,8 +1,9 @@
 ---
 import "../styles/global.css";
 import TableOfContents from "@components/astro/TableOfContents.astro";
-import SourceLinks from "@components/svelte/SourceLinks.svelte";
-import DocsHeaderActions from "@components/svelte/DocsHeaderActions.svelte";
+import DocsHeader from "@components/astro/DocsHeader.astro";
+import Sidebar from "@components/astro/Sidebar.astro";
+import { resolveDocLinks } from "@utils/docs-links";
 import type { MarkdownHeading } from "astro";
 
 interface Props {
@@ -23,20 +24,7 @@ const headings: MarkdownHeading[] = rawProps.headings ?? [];
 const sourceFile: string | undefined = frontmatter.sourceFile;
 const styleFile: string | undefined = frontmatter.styleFile;
 
-const toKebab = (str: string) => str.toLowerCase().replace(/\s+/g, "-");
-const toPascal = (str: string) =>
-  str.replace(/(?:^|\s)(\w)/g, (_: string, c: string) => c.toUpperCase()).replace(/\s+/g, "");
-
-const slug = toKebab(title);
-const pascal = toPascal(title);
-
-const GITHUB_BASE = "https://github.com/jaftdelgado/shizenui/blob/develop";
-
-const resolvedSourceFile = sourceFile ?? `${slug}/${pascal}.svelte`;
-const resolvedStyleFile = styleFile ?? `${slug}.css`;
-
-const sourceUrl = `${GITHUB_BASE}/packages/svelte/src/components/${resolvedSourceFile}`;
-const stylesUrl = `${GITHUB_BASE}/packages/styles/src/components/${resolvedStyleFile}`;
+const { sourceUrl, stylesUrl } = resolveDocLinks(title, sourceFile, styleFile);
 
 const previewModules = import.meta.glob("../examples/svelte/**/*.astro", {
   eager: true
@@ -60,30 +48,24 @@ const PreviewComponent: any = matchedPreviewPath
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} — Docs</title>
+    <title>{title} — Shizen UI Docs</title>
     <slot name="head" />
   </head>
   <body>
     <div class="docs-layout">
       <aside class="docs-sidebar">
-        <slot name="sidebar" />
+        <slot name="sidebar">
+          <Sidebar />
+        </slot>
       </aside>
 
       <div class="docs-main">
-        <div class="docs-header">
-          <div class="docs-titlebar">
-            <h1>{title}</h1>
-            <div class="titlebar-actions">
-              <DocsHeaderActions title={title} description={description} client:load />
-            </div>
-          </div>
-
-          {description && <p class="docs-description">{description}</p>}
-
-          <div class="docs-source-links">
-            <SourceLinks sourceUrl={sourceUrl} stylesUrl={stylesUrl} client:load />
-          </div>
-        </div>
+        <DocsHeader
+          title={title}
+          description={description}
+          sourceUrl={sourceUrl}
+          stylesUrl={stylesUrl}
+        />
 
         {
           PreviewComponent && (
