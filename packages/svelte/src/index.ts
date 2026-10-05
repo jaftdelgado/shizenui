@@ -14,6 +14,7 @@ export * from "./components/radio/index.ts";
 export * from "./components/surface/index.ts";
 export * from "./components/switch-group/index.js";
 export * from "./components/switch/index.js";
+export * from "./components/tag/index.ts";
 export * from "./components/text-area/index.ts";
 export * from "./components/text-field/index.ts";
 export * from "./components/toggle-group/index.ts";

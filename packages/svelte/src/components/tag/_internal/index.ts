@@ -14,3 +14,6 @@ export { setupTagWarnings } from "./tag.warnings.js";
 
 export { setTagContext, useTagContext } from "./tag.context.js";
 export type { TagContextValue, TagContextResult } from "./tag.context.js";
+
+export { createTagHandlers } from "./tag.handlers.js";
+export type { TagHandlers } from "./tag.handlers.js";
