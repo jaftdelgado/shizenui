@@ -1,0 +1,130 @@
+@layer components {
+  .tag {
+    @apply inline-flex items-center rounded-full leading-none font-medium whitespace-nowrap outline-none select-none;
+    --tag-gap: 0.325rem;
+
+    /* Base tokens */
+    --tag-bg: var(--color-field);
+    --tag-bg-hover: var(--tag-bg);
+    --tag-bg-pressed: var(--tag-bg);
+    --tag-fg: var(--color-control-text);
+    --tag-bg-selected: var(--color-accent-soft);
+    --tag-bg-selected-hover: var(--color-accent-soft-hover);
+    --tag-bg-selected-pressed: var(--color-accent-soft-pressed);
+    --tag-fg-selected: var(--color-accent);
+
+    background-color: var(--tag-bg);
+    color: var(--tag-fg);
+
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    @apply motion-reduce:transition-none;
+
+    &[data-selectable] {
+      cursor: var(--cursor-interactive);
+
+      &:hover:not([data-disabled]) {
+        background-color: var(--tag-bg-hover);
+      }
+    }
+
+    &[data-pressed]:not([data-disabled]) {
+      background-color: var(--tag-bg-pressed);
+      transform: scale(0.96);
+      transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        transform 100ms cubic-bezier(0.4, 0, 1, 1);
+      @apply motion-reduce:transition-none;
+    }
+
+    &[data-selected] {
+      background-color: var(--tag-bg-selected);
+      color: var(--tag-fg-selected);
+
+      &[data-selectable]:hover:not([data-disabled]) {
+        background-color: var(--tag-bg-selected-hover);
+      }
+
+      &[data-pressed]:not([data-disabled]) {
+        background-color: var(--tag-bg-selected-pressed);
+      }
+    }
+
+    &[data-focus-visible] {
+      @apply status-focused;
+    }
+
+    &[data-disabled] {
+      @apply status-disabled;
+      cursor: var(--cursor-disabled);
+    }
+
+    &:has(.tag__remove-button) {
+      padding-inline-end: 0.25rem;
+    }
+  }
+
+  .tag__content {
+    @apply flex items-center gap-(--tag-gap);
+  }
+
+  .tag__remove-button {
+    @apply inline-flex size-4 items-center justify-center rounded-full opacity-70;
+    margin-inline-end: -0.125rem;
+    cursor: var(--cursor-interactive);
+
+    transition:
+      opacity 150ms ease,
+      background-color 150ms ease;
+    @apply motion-reduce:transition-none;
+
+    &:hover:not(:disabled) {
+      @apply opacity-100;
+      background-color: color-mix(in oklab, currentColor 12%, transparent);
+    }
+
+    &:disabled {
+      cursor: var(--cursor-disabled);
+    }
+
+    & .x-icon {
+      @apply size-3;
+    }
+  }
+
+  /* Variants reuse the same field tokens as Radio and Input. */
+  .tag--default {
+    --tag-bg: var(--color-field);
+    --tag-bg-hover: var(--color-field-hover);
+    --tag-bg-pressed: color-mix(in oklab, var(--color-field) 94%, var(--color-field-foreground) 6%);
+  }
+
+  .tag--secondary {
+    --tag-bg: var(--color-field-secondary);
+    --tag-bg-hover: var(--color-field-secondary-hover);
+    --tag-bg-pressed: color-mix(
+      in oklab,
+      var(--color-field-secondary) 94%,
+      var(--color-field-foreground) 6%
+    );
+  }
+
+  /* Sizes */
+  .tag--sm {
+    @apply h-5 px-2 text-xs;
+    --tag-gap: 0.25rem;
+  }
+
+  .tag--md {
+    @apply h-6 px-3 text-xs;
+    --tag-gap: 0.325rem;
+  }
+
+  .tag--lg {
+    @apply h-7 px-3 text-sm;
+    --tag-gap: 0.375rem;
+  }
+}
