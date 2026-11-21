@@ -6,7 +6,13 @@ import type { TagClickEvent } from "./tag.types.js";
 
 type TagHandlersState = Pick<
   TagState,
-  "disabled" | "canRemove" | "toggle" | "activate" | "requestRemoval"
+  | "disabled"
+  | "canRemove"
+  | "isRangeSelectable"
+  | "toggle"
+  | "extendSelection"
+  | "activate"
+  | "requestRemoval"
 >;
 
 /**
@@ -27,7 +33,9 @@ export function createTagHandlers(options: {
     // child: it does not change the selection, and the consumer's `onclick` does not run.
     if (isFromFocusableChild(e.target, e.currentTarget)) return;
     if (state.disabled) return;
-    state.toggle();
+    // Shift+click selects the range from the anchor, as Shift+arrows do.
+    if (e.shiftKey && state.isRangeSelectable) state.extendSelection(e.currentTarget);
+    else state.toggle();
     getOnClick?.()?.(e);
   }
 
@@ -46,12 +54,14 @@ export function createTagHandlers(options: {
     if (!state.canRemove) return;
 
     e.preventDefault();
-    requestRemove();
+    // On a selected tag, the key removes every selected tag.
+    requestRemove({ withSelection: true });
   }
 
-  function requestRemove(): void {
+  /** The remove button calls it without options: it only removes its own tag. */
+  function requestRemove(options: { withSelection?: boolean } = {}): void {
     if (!state.canRemove) return;
-    state.requestRemoval(getRef());
+    state.requestRemoval(getRef(), options);
   }
 
   return {

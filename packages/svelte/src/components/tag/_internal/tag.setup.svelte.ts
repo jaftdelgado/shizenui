@@ -6,6 +6,7 @@ import { DEV } from "esm-env";
 import { setTagContext } from "./tag.context.js";
 import type { TagContext } from "./tag.context.js";
 import type { TagState } from "./tag.state.svelte.js";
+import type { TagGroupRegistration } from "../../tag-group/_internal/index.js";
 
 /** The remove button declared inside a Tag, which the Tag renders after its text. */
 export interface TagRemoveButtonSlot {
@@ -84,8 +85,11 @@ export function setupTagContexts(
 }
 
 export function setupTagGroupRegistration(state: TagState): void {
-  const entry = {
-    getDisabled: () => state.disabled
+  const entry: TagGroupRegistration = {
+    getDisabled: () => state.disabled,
+    getValue: () => state.value,
+    canRemove: () => state.canRemove,
+    runOwnOnRemove: () => state.runOwnOnRemove()
   };
 
   // The id can change, so this is an effect: it re-registers and the cleanup removes the id it

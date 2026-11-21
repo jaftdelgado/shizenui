@@ -16,14 +16,14 @@ export interface RovingFocusItem {
  * follows it to the new id. The object of the last active item is kept even if the item is
  * removed, until another one is activated.
  */
-export class RovingFocusState {
+export class RovingFocusState<T extends RovingFocusItem = RovingFocusItem> {
   // Mutated in place on purpose: copying the collection on every register/unregister is O(N²)
   // for large lists. SvelteMap keeps reads reactive without the copy, including when a
   // remounted item replaces the entry of the same id.
-  #items = new SvelteMap<string, RovingFocusItem>();
+  #items = new SvelteMap<string, T>();
   #activeId: string | undefined = $state(undefined);
   // Plain, not reactive: it is only read by `register`, and `#activeId` is what drives the UI.
-  #activeEntry: RovingFocusItem | undefined;
+  #activeEntry: T | undefined;
   /** The last focused item, or undefined if there is none or it is gone or disabled. */
   #focusedId = $derived.by(() => {
     const id = this.#activeId;
@@ -38,7 +38,13 @@ export class RovingFocusState {
 
   readonly isRegistered = (id: string): boolean => this.#items.has(id);
 
-  readonly register = (id: string, entry: RovingFocusItem): void => {
+  /** The registration of an item, if it is registered. */
+  readonly getItem = (id: string): T | undefined => this.#items.get(id);
+
+  /** The registrations of every item, in the order they registered. */
+  readonly getItems = (): T[] => [...this.#items.values()];
+
+  readonly register = (id: string, entry: T): void => {
     untrack(() => {
       this.#items.set(id, entry);
       if (entry === this.#activeEntry) {
@@ -51,7 +57,7 @@ export class RovingFocusState {
     });
   };
 
-  readonly unregister = (id: string, entry: RovingFocusItem): void => {
+  readonly unregister = (id: string, entry: T): void => {
     untrack(() => {
       // A remounted item may already have registered the same id with a new entry.
       if (this.#items.get(id) === entry) this.#items.delete(id);

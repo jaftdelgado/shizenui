@@ -19,6 +19,7 @@ import TagGroupSelectionModes from "@examples/svelte/tag-group/TagGroupSelection
 import TagGroupBindValue from "@examples/svelte/tag-group/TagGroupBindValue.svelte";
 import TagGroupFullyControlled from "@examples/svelte/tag-group/TagGroupFullyControlled.svelte";
 import TagGroupRemovable from "@examples/svelte/tag-group/TagGroupRemovable.svelte";
+import TagGroupRemovableSelection from "@examples/svelte/tag-group/TagGroupRemovableSelection.svelte";
 import TagGroupContent from "@examples/svelte/tag-group/TagGroupContent.svelte";
 import TagGroupDisabled from "@examples/svelte/tag-group/TagGroupDisabled.svelte";
 import TagGroupInvalid from "@examples/svelte/tag-group/TagGroupInvalid.svelte";
@@ -81,6 +82,16 @@ Removing a Tag does not remove it from `value`, so you must update the selection
 
 <ComponentExample src="svelte/tag-group/TagGroupRemovable.svelte">
   <TagGroupRemovable client:load />
+</ComponentExample>
+
+#### Removing the Selection
+
+With `selectionMode="multiple"`, `Shift` with the arrow keys, `Home` or `End`, or `Shift`+click,
+selects a range of tags. Pressing `Delete` or `Backspace` on a selected tag removes every selected
+tag: `onRemove` receives all their values at once. The remove button only removes its own tag.
+
+<ComponentExample src="svelte/tag-group/TagGroupRemovableSelection.svelte">
+  <TagGroupRemovableSelection client:load />
 </ComponentExample>
 
 ### With Content

@@ -1,5 +1,6 @@
 import type { TagGroupContext } from "./tag-group.context.js";
 import { TAG_SELECTOR } from "./tag-group.constants.js";
+import { getListTagIds } from "./tag-group.dom.js";
 import { createRovingContainer, createRovingKeydown } from "../../../lib/utils/index.js";
 
 const NAVIGATION_OPTIONS = {
@@ -22,15 +23,30 @@ export function createTagGroupListHandlers(options: {
     selector: TAG_SELECTOR,
     resolveTarget: (candidates) =>
       candidates.find((candidate) => candidate.id === groupCtx.focusedId) ?? candidates[0],
-    onEnter: (target) => groupCtx.setActiveId(target.id)
+    onEnter: (target) => {
+      groupCtx.setActiveId(target.id);
+      groupCtx.setSelectionAnchor(target.id);
+    }
   });
 
+  // With `Shift`, the arrows, `Home` and `End` extend the selection to the tag they move to
+  // (multiple mode), from the tag the extension started on; without it, that tag becomes the
+  // anchor of a Shift+click. A range never wraps from one end of the list to the other.
   const handleKeyDown = createRovingKeydown({
     getContainer,
     selector: TAG_SELECTOR,
     options: NAVIGATION_OPTIONS,
-    wrapAround: true,
-    onMove: (target) => groupCtx.setActiveId(target.id)
+    wrapAround: (e) => !e.shiftKey,
+    onMove: (target, e) => {
+      groupCtx.setActiveId(target.id);
+      if (!e.shiftKey) {
+        groupCtx.setSelectionAnchor(target.id);
+        return;
+      }
+      // The key was pressed on the tag focus just left (or on something inside it).
+      const origin = e.target instanceof Element ? e.target.closest(TAG_SELECTOR) : null;
+      groupCtx.extendSelectionTo(target.id, getListTagIds(target), origin?.id);
+    }
   });
 
   return {

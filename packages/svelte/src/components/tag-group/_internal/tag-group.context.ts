@@ -5,7 +5,14 @@ import type { TagGroupSelectionMode } from "./tag-group.types.js";
 import type { TagRemovalRequest } from "./tag-group.removal.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
-export type TagGroupRegistration = RovingFocusItem;
+/** What a tag tells its group about itself when it registers. */
+export interface TagGroupRegistration extends RovingFocusItem {
+  getValue: () => string;
+  /** Whether it can be removed right now (removable and enabled). */
+  canRemove: () => boolean;
+  /** Runs the tag's own `onRemove`, if any. The group's `onRemove` is the group's job. */
+  runOwnOnRemove: () => void;
+}
 
 export interface TagGroupContext {
   readonly exists: boolean;
@@ -23,7 +30,24 @@ export interface TagGroupContext {
   readonly field: ContentSlotsField;
   readonly isSelected: (value: string) => boolean;
   readonly toggleValue: (value: string) => void;
+  /** Makes the tag with this id the start of the next range selection. */
+  readonly setSelectionAnchor: (id: string) => void;
+  /**
+   * Selects the range from the anchor to the tag with `targetId` (multiple mode only).
+   * `orderedIds` is every enabled tag of the list, in DOM order. `originId` is the tag a
+   * keyboard extension comes from; a pointer one has none (see `SelectionState.extendTo`).
+   */
+  readonly extendSelectionTo: (
+    targetId: string,
+    orderedIds: readonly string[],
+    originId?: string
+  ) => void;
   readonly remove: (value: string) => void;
+  /**
+   * Removes every selected tag that can be removed: each one's own `onRemove` runs, then the
+   * group's `onRemove` once, with all their values.
+   */
+  readonly removeSelected: () => void;
   readonly register: (id: string, entry: TagGroupRegistration) => void;
   readonly unregister: (id: string, entry: TagGroupRegistration) => void;
   readonly focusedId: string | undefined;
@@ -52,7 +76,10 @@ const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
   field: EMPTY_CONTENT_SLOTS,
   isSelected: () => false,
   toggleValue: () => {},
+  setSelectionAnchor: () => {},
+  extendSelectionTo: () => {},
   remove: () => {},
+  removeSelected: () => {},
   register: () => {},
   unregister: () => {},
   focusedId: undefined,

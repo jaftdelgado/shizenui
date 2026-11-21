@@ -1,4 +1,8 @@
-import { useTagGroupContext, useTagGroupListContext } from "../../tag-group/_internal/index.js";
+import {
+  getListTagIds,
+  useTagGroupContext,
+  useTagGroupListContext
+} from "../../tag-group/_internal/index.js";
 import type {
   TagGroupContext,
   TagGroupListContext,
@@ -111,12 +115,24 @@ export class TagState {
     this.#groupCtx.unregister(id, entry);
   }
 
+  /** Whether a range of tags can be selected from this one (an enabled tag, multiple mode). */
+  get isRangeSelectable(): boolean {
+    return this.#groupCtx.selectionMode === "multiple" && !this.disabled;
+  }
+
   /**
-   * Removes the tag and, if it held focus, moves focus to a neighbour. Outside a group the
-   * no-op context has no tags and no list, so only `remove` has an effect.
+   * Removes the tag and, if it held focus, moves focus to a neighbour. With `withSelection`, a
+   * selected tag removes every selected tag instead (`Delete` on the tag; its remove button only
+   * removes itself). Outside a group the no-op context has no tags and no list, so only `remove`
+   * has an effect.
    */
-  requestRemoval(row: HTMLElement | null): void {
-    this.#groupCtx.requestRemoval({ id: this.id, row, remove: () => this.remove() });
+  requestRemoval(row: HTMLElement | null, options: { withSelection?: boolean } = {}): void {
+    const removesSelection = options.withSelection === true && this.isSelected;
+    this.#groupCtx.requestRemoval({
+      id: this.id,
+      row,
+      remove: () => (removesSelection ? this.#groupCtx.removeSelected() : this.remove())
+    });
   }
 
   toggle(): void {
@@ -124,9 +140,20 @@ export class TagState {
     this.#groupCtx.toggleValue(this.#props.value());
   }
 
+  /** Selects the range from the anchor to this tag, among the enabled tags of `row`'s list. */
+  extendSelection(row: HTMLElement): void {
+    if (!this.isRangeSelectable) return;
+    this.#groupCtx.extendSelectionTo(this.id, getListTagIds(row));
+  }
+
   remove(): void {
     if (!this.canRemove) return;
-    this.#props.onRemove()?.();
+    this.runOwnOnRemove();
     this.#groupCtx.remove(this.#props.value());
+  }
+
+  /** Runs the tag's own `onRemove`, without the group's. */
+  runOwnOnRemove(): void {
+    this.#props.onRemove()?.();
   }
 }

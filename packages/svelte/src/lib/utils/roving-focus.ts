@@ -273,9 +273,13 @@ export interface RovingKeydownOptions {
   selector: string;
   /** Navigation keys. Pass a function when they depend on reactive state (e.g. orientation). */
   options: RovingFocusKeyOptions | (() => RovingFocusKeyOptions);
-  wrapAround?: boolean;
-  /** Called after focus has moved to the next item. */
-  onMove: (target: HTMLElement) => void;
+  /**
+   * Whether moving past the last item goes back to the first, and the other way around. Pass a
+   * function to decide it per key press (e.g. not while extending a selection with `Shift`).
+   */
+  wrapAround?: boolean | ((e: KeyboardEvent) => boolean);
+  /** Called after focus has moved to the next item, with the key press that moved it. */
+  onMove: (target: HTMLElement, e: KeyboardEvent) => void;
 }
 
 function swapHorizontalKey(key: string): string {
@@ -314,7 +318,10 @@ export function createRovingKeydown(config: RovingKeydownOptions) {
       currentIndex,
       itemCount: candidates.length,
       ...options,
-      wrapAround: config.wrapAround ?? false
+      wrapAround:
+        typeof config.wrapAround === "function"
+          ? config.wrapAround(e)
+          : (config.wrapAround ?? false)
     });
     if (targetIndex === undefined) return;
 
@@ -322,6 +329,6 @@ export function createRovingKeydown(config: RovingKeydownOptions) {
     if (!nextCandidate) return;
 
     nextCandidate.focus();
-    config.onMove(nextCandidate);
+    config.onMove(nextCandidate, e);
   };
 }

@@ -54,7 +54,7 @@ export class TagGroupState implements TagGroupContext {
     onChange: (values) => this.#emitValueChange(values)
   });
   readonly field: ContentSlotsState;
-  readonly #roving = new RovingFocusState();
+  readonly #roving = new RovingFocusState<TagGroupRegistration>();
   readonly #removal = new TagRemoval({
     isRegistered: (id) => this.#roving.isRegistered(id),
     setActiveId: (id) => this.#roving.setActiveId(id)
@@ -142,8 +142,41 @@ export class TagGroupState implements TagGroupContext {
 
   readonly toggleValue = this.#selection.toggle;
 
+  readonly setSelectionAnchor = (id: string): void => {
+    const value = this.#roving.getItem(id)?.getValue();
+    if (value !== undefined) this.#selection.setAnchor(value);
+  };
+
+  readonly extendSelectionTo = (
+    targetId: string,
+    orderedIds: readonly string[],
+    originId?: string
+  ): void => {
+    if (this.selectionMode !== "multiple") return;
+
+    const valueOf = (id: string) => this.#roving.getItem(id)?.getValue();
+    const target = valueOf(targetId);
+    if (target === undefined) return;
+
+    const ordered = orderedIds.flatMap((id) => valueOf(id) ?? []);
+    const origin = originId === undefined ? undefined : valueOf(originId);
+    this.#selection.extendTo(ordered, target, origin);
+  };
+
   readonly remove = (value: string): void => {
     this.#props.onRemove()?.([value]);
+  };
+
+  readonly removeSelected = (): void => {
+    // Collected first: a consumer that flushes the DOM in its `onRemove` unregisters tags while
+    // this runs.
+    const entries = this.#roving
+      .getItems()
+      .filter((entry) => entry.canRemove() && this.isSelected(entry.getValue()));
+    if (entries.length === 0) return;
+
+    for (const entry of entries) entry.runOwnOnRemove();
+    this.#props.onRemove()?.(entries.map((entry) => entry.getValue()));
   };
 
   readonly register = this.#roving.register;
