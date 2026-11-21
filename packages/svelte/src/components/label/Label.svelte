@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from "svelte";
   import { labelStyles } from "@shizen-ui/styles";
   import { createId, mergeProps, presence } from "../../lib/utils/index.js";
   import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
@@ -31,14 +32,13 @@
 
   const { base, requiredIndicator } = labelStyles();
 
+  // The id is constant: register while initializing so it also exists on the server.
   if (slotCtx.exists) {
     slotCtx.registerLabel(registrationId);
   }
 
-  $effect(() => {
-    return () => {
-      if (slotCtx.exists) slotCtx.unregisterLabel(registrationId);
-    };
+  onDestroy(() => {
+    if (slotCtx.exists) slotCtx.unregisterLabel(registrationId);
   });
 
   const commonProps = $derived({

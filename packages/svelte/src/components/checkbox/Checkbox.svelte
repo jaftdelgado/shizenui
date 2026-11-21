@@ -14,6 +14,7 @@
   } from "./_internal/index.js";
   import {
     createFocusVisible,
+    PressState,
     syncFormReset,
     syncNativeCheckedReset
   } from "../../lib/runes/index.js";
@@ -103,12 +104,18 @@
   }
 
   const focus = createFocusVisible();
+  // The ARIA checkbox pattern activates with Space only: Enter is cancelled and does nothing.
+  const press = new PressState({
+    isDisabled: () => checkboxState.finalDisabled || checkboxState.finalReadonly,
+    keys: [" "]
+  });
+  // `blur` has a handler in each: mergeProps composes them, PressState's first.
+  const pressProps = mergeProps(press.props, { onblur: focus.onBlur });
 
   const handlers = createCheckboxHandlers({
     state: checkboxState,
     setChecked,
     setIndeterminate,
-    focus,
     getOnClick: () => onclick
   });
 
@@ -137,14 +144,10 @@
         "data-readonly": presence(checkboxState.finalReadonly),
         "data-invalid": presence(checkboxState.finalInvalid),
         "data-focus-visible": presence(focus.isFocusVisible),
+        "data-pressed": presence(press.isPressed),
+        ...pressProps,
         onclick: handlers.handleClick,
-        onkeydown: handlers.handleKeydown,
-        onkeyup: handlers.handleKeydown,
-        onmousedown: handlers.handleMouseDown,
-        onmouseup: handlers.handleMouseUp,
-        onmouseleave: handlers.handleMouseLeave,
         onfocus: focus.onFocus,
-        onblur: focus.onBlur,
         class: styles.base()
       },
       { ...rest, class: className }

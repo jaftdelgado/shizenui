@@ -19,7 +19,7 @@
 
   const isCustom = $derived(!!children);
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "Checkbox.Indicator",
     "Must be used inside a <Checkbox> component."

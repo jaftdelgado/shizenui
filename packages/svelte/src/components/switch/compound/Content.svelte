@@ -12,7 +12,7 @@
   const ctx = useSwitchContext();
   const styles = switchStyles();
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "Switch.Content",
     "Must be used inside a <Switch> component."

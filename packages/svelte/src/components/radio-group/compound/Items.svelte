@@ -1,7 +1,7 @@
 <script lang="ts">
   import { mergeProps } from "../../../lib/utils";
   import { radioGroupStyles } from "@shizen-ui/styles";
-  import { assertContext, warnIf } from "../../../lib/runes/index.js";
+  import { assertContext, createInteractionModality, warnIf } from "../../../lib/runes/index.js";
   import { useRadioGroupContext, createRadioGroupItemsHandlers } from "../_internal/index.js";
   import type { RadioGroupItemsProps } from "../_internal/index.js";
 
@@ -18,7 +18,7 @@
   const orientation = $derived(groupCtx.orientation);
   const styles = $derived(radioGroupStyles({ orientation }));
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !groupCtx.exists,
     "RadioGroup.Items",
     "Must be used inside a <RadioGroup> component."
@@ -30,8 +30,11 @@
     "No children provided. Add at least one <Radio> as a child."
   );
 
+  const modality = createInteractionModality();
+
   const handlers = createRadioGroupItemsHandlers({
     getContainer: () => ref,
+    isPointerInteraction: () => modality.isPointer,
     groupCtx
   });
 

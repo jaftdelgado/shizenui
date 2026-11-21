@@ -26,7 +26,7 @@
     )
   );
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "Radio.Control",
     "Must be used inside a <Radio> component."

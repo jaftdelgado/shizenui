@@ -13,7 +13,7 @@
   }: SwitchGroupItemsProps = $props();
 
   const groupCtx = useSwitchGroupContext();
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !groupCtx.exists,
     "SwitchGroup.Items",
     "Must be used inside a <SwitchGroup> component."

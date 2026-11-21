@@ -72,7 +72,7 @@
     value = next;
   }
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "InputGroup.TextArea",
     "Must be used inside an <InputGroup> component."

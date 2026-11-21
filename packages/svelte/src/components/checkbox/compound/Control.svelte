@@ -18,7 +18,7 @@
   const ctx = useCheckboxContext();
   const styles = $derived(checkboxStyles());
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "Checkbox.Control",
     "Must be used inside a <Checkbox> component."

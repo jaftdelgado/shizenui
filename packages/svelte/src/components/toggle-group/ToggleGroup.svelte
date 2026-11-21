@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toggleGroupStyles } from "@shizen-ui/styles";
-  import { warnIf } from "../../lib/runes/index.js";
+  import { createInteractionModality, warnIf } from "../../lib/runes/index.js";
   import { mergeProps, presence } from "../../lib/utils/index.js";
   import type { ToggleGroupProps } from "./_internal/index.js";
   import {
@@ -49,8 +49,11 @@
 
   const groupCtx = useToggleGroupContext();
 
+  const modality = createInteractionModality();
+
   const handlers = createToggleGroupHandlers({
     getContainer: () => ref,
+    isPointerInteraction: () => modality.isPointer,
     groupCtx,
     getOrientation: () => toggleGroupState.finalOrientation
   });
@@ -69,6 +72,7 @@
         class: styles,
         "data-disabled": presence(toggleGroupState.finalDisabled),
         "data-orientation": toggleGroupState.finalOrientation,
+        onfocusin: handlers.handleFocusIn,
         onkeydown: handlers.handleKeydown
       },
       { ...rest, class: className }

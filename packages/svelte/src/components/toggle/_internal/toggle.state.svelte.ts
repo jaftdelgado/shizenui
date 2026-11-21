@@ -13,6 +13,15 @@ export class ToggleState {
   #onPressedChange?: (value: boolean) => void;
   #groupCtx: ToggleGroupContextResult;
 
+  #finalPressed = $derived.by(() => {
+    if (this.#groupCtx.exists) {
+      const value = this.#value();
+      return value ? this.#groupCtx.isSelected(value) : false;
+    }
+
+    return this.#pressed();
+  });
+
   get finalVariant(): ToggleVariant {
     return this.#groupCtx.exists ? this.#groupCtx.variant : (this.#variant() ?? "default");
   }
@@ -36,12 +45,7 @@ export class ToggleState {
   }
 
   get finalPressed(): boolean {
-    if (this.#groupCtx.exists) {
-      const value = this.#value();
-      return value ? this.#groupCtx.isSelected(value) : false;
-    }
-
-    return this.#pressed();
+    return this.#finalPressed;
   }
 
   toggle(value?: string): void {

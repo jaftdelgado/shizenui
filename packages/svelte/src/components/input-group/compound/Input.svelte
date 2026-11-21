@@ -85,7 +85,7 @@
     value = normalized;
   }
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "InputGroup.Input",
     "Must be used inside an <InputGroup> component."

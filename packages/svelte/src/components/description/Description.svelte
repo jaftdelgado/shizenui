@@ -2,6 +2,7 @@
   import { descriptionStyles } from "@shizen-ui/styles";
   import { createId, mergeProps, presence } from "../../lib/utils/index.js";
   import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
+  import { registerWhile } from "../../lib/runes/index.js";
   import type { DescriptionProps } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -28,17 +29,12 @@
     !finalInvalid || (fieldContext.exists && fieldContext.keepDescription)
   );
 
-  $effect(() => {
-    if (!slotCtx.exists) return;
-
-    if (shouldShow) {
-      slotCtx.registerDescription(registrationId);
-    }
-
-    return () => {
-      slotCtx.unregisterDescription(registrationId);
-    };
-  });
+  // Registered only while shown, which is reactive: see registerWhile.
+  registerWhile(
+    () => slotCtx.exists && shouldShow,
+    () => slotCtx.registerDescription(registrationId),
+    () => slotCtx.unregisterDescription(registrationId)
+  );
 
   const descriptionProps = $derived(
     mergeProps(

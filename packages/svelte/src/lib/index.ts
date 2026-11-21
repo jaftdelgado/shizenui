@@ -1,3 +1,6 @@
+//Optional Context
+export { createOptionalContext } from "./contexts/optional.context.js";
+
 //FieldState Context
 export {
   setFieldStateContext,

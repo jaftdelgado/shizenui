@@ -2,6 +2,7 @@
   import { createId, mergeProps } from "../../lib/utils/index.js";
   import { fieldErrorStyles } from "@shizen-ui/styles";
   import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
+  import { registerWhile } from "../../lib/runes/index.js";
   import type { FieldErrorProps } from "./_internal/index.js";
 
   const uid = $props.id();
@@ -25,17 +26,12 @@
     propId ?? (fieldContext.exists ? (fieldContext.errorId ?? registrationId) : registrationId)
   );
 
-  $effect(() => {
-    if (!slotCtx.exists) return;
-
-    if (finalInvalid) {
-      slotCtx.registerError(registrationId);
-    }
-
-    return () => {
-      slotCtx.unregisterError(registrationId);
-    };
-  });
+  // Registered only while invalid, which is reactive: see registerWhile.
+  registerWhile(
+    () => slotCtx.exists && finalInvalid,
+    () => slotCtx.registerError(registrationId),
+    () => slotCtx.unregisterError(registrationId)
+  );
 
   const fieldErrorProps = $derived(
     mergeProps(

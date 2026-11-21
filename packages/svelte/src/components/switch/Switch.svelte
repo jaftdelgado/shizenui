@@ -4,6 +4,7 @@
   import { createId, mergeProps, presence } from "../../lib/utils";
   import {
     createFocusVisible,
+    PressState,
     syncFormReset,
     syncNativeCheckedReset
   } from "../../lib/runes/index.js";
@@ -92,11 +93,15 @@
   }
 
   const focus = createFocusVisible();
+  const press = new PressState({
+    isDisabled: () => switchState.finalDisabled || switchState.finalReadonly
+  });
+  // `blur` has a handler in each: mergeProps composes them, PressState's first.
+  const pressProps = mergeProps(press.props, { onblur: focus.onBlur });
 
   const handlers = createSwitchHandlers({
     state: switchState,
     setChecked,
-    focus,
     getValue: () => value,
     getOnClick: () => onclick
   });
@@ -128,14 +133,10 @@
         "data-readonly": presence(switchState.finalReadonly),
         "data-invalid": presence(switchState.finalInvalid),
         "data-focus-visible": presence(focus.isFocusVisible),
+        "data-pressed": presence(press.isPressed),
+        ...pressProps,
         onclick: handlers.handleClick,
-        onkeydown: handlers.handleKeydown,
-        onkeyup: handlers.handleKeyup,
-        onmousedown: handlers.handleMouseDown,
-        onmouseup: handlers.handleMouseUp,
-        onmouseleave: handlers.handleMouseLeave,
         onfocus: focus.onFocus,
-        onblur: handlers.handleBlur,
         class: styles.base()
       },
       { ...rest, class: className }

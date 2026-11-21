@@ -19,6 +19,8 @@ export class RadioState {
   readonly parentFieldCtx: FieldStateContextResult;
   readonly surfaceCtx: SurfaceContextResult;
 
+  #isChecked = $derived.by(() => this.groupCtx.value === this.#value());
+
   get finalVariant(): RadioVariant {
     if (this.groupCtx.exists) return this.groupCtx.variant;
     return this.#variant() ?? (this.surfaceCtx.exists ? "secondary" : "default");
@@ -51,7 +53,7 @@ export class RadioState {
   }
 
   get isChecked(): boolean {
-    return this.groupCtx.value === this.#value();
+    return this.#isChecked;
   }
 
   get value(): string {

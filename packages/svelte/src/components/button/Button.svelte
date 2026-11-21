@@ -1,9 +1,10 @@
 <script lang="ts">
   import { buttonStyles } from "@shizen-ui/styles";
-  import { mergeProps } from "../../lib/utils/index.js";
+  import { mergeProps, presence } from "../../lib/utils/index.js";
+  import { PressState } from "../../lib/runes/index.js";
 
   import type { ButtonProps, ButtonIconContent } from "./_internal/index.js";
-  import { ButtonState, createButtonHandlers, setupButtonWarnings } from "./_internal/index.js";
+  import { ButtonState, setupButtonWarnings } from "./_internal/index.js";
 
   let {
     children,
@@ -33,9 +34,8 @@
     hasAccessibleName: () => Boolean(rest["aria-label"] || rest["aria-labelledby"])
   });
 
-  const handlers = createButtonHandlers({
-    getDisabled: () => buttonState.finalDisabled
-  });
+  // Button does not use focus-visible.
+  const press = new PressState({ isDisabled: () => buttonState.finalDisabled });
 
   const styles = $derived(
     buttonStyles({
@@ -53,12 +53,8 @@
         disabled: buttonState.finalDisabled,
         "aria-busy": loading || undefined,
         "data-slot": "button",
-        onkeydown: handlers.handleKeydown,
-        onkeyup: handlers.handleKeyup,
-        onmousedown: handlers.handleMouseDown,
-        onmouseup: handlers.handleMouseUp,
-        onmouseleave: handlers.handleMouseLeave,
-        onblur: handlers.handleBlur,
+        ...press.props,
+        "data-pressed": presence(press.isPressed),
         class: styles.base()
       },
       { ...rest, class: className }

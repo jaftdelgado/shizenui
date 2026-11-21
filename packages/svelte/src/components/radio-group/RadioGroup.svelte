@@ -130,10 +130,7 @@
     },
     onResetComplete: () => {
       syncNativeCheckedReset(nativeInputRef, baselineValue !== undefined);
-      syncNativeGroupSelectionReset(
-        ref,
-        baselineValue !== undefined ? [baselineValue] : []
-      );
+      syncNativeGroupSelectionReset(ref, baselineValue !== undefined ? [baselineValue] : []);
     }
   });
 </script>
