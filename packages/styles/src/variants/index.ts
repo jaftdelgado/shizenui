@@ -16,6 +16,7 @@ export * from "./surface";
 export * from "./switch";
 export * from "./switch-group";
 export * from "./tag";
+export * from "./tag-group";
 export * from "./text-area";
 export * from "./text-field";
 export * from "./toggle";

@@ -1,89 +1,132 @@
-import { useTagGroupContext } from "../../tag-group/_internal/tag-group.context.js";
-import type { TagGroupContextResult } from "../../tag-group/_internal/tag-group.context.js";
+import { useTagGroupContext, useTagGroupListContext } from "../../tag-group/_internal/index.js";
+import type {
+  TagGroupContext,
+  TagGroupListContext,
+  TagGroupRegistration
+} from "../../tag-group/_internal/index.js";
 import type { TagSize, TagVariant } from "./tag.types.js";
 
+export interface TagStateProps {
+  value: () => string;
+  disabled: () => boolean | undefined;
+  id: () => string;
+  onRemove: () => (() => void) | undefined;
+  groupContext?: TagGroupContext;
+  listContext?: TagGroupListContext;
+}
+
 export class TagState {
-  #value: () => string;
-  #disabled: () => boolean | undefined;
-  #id: () => string;
-  #textValue: () => string | undefined;
-  #onRemove: () => (() => void) | undefined;
+  readonly #props: TagStateProps;
 
-  readonly groupCtx: TagGroupContextResult;
+  readonly #groupCtx: TagGroupContext;
+  readonly #listCtx: TagGroupListContext;
 
-  get finalDisabled(): boolean {
-    const local = this.#disabled();
-    if (local !== undefined) return local;
-    return this.groupCtx.exists ? this.groupCtx.disabled : false;
+  #isActive = $derived.by(() => this.#groupCtx.isActive(this.#props.id()));
+  #isSelected = $derived.by(
+    () => this.isSelectable && this.#groupCtx.isSelected(this.#props.value())
+  );
+
+  constructor(props: TagStateProps) {
+    this.#props = props;
+    this.#groupCtx = props.groupContext ?? useTagGroupContext();
+    this.#listCtx = props.listContext ?? useTagGroupListContext();
   }
 
-  get finalVariant(): TagVariant {
-    return this.groupCtx.variant;
+  /** Whether the tag sits inside a <TagGroup>. Fixed for the life of the tag. */
+  get inGroup(): boolean {
+    return this.#groupCtx.exists;
   }
 
-  get finalSize(): TagSize {
-    return this.groupCtx.size;
+  /** Whether the tag sits inside the <TagGroup.List> of its group. Fixed for the life of the tag. */
+  get inList(): boolean {
+    return this.#listCtx.exists;
+  }
+
+  /** Variant and size given by the group; `undefined` when it gives none, or outside one. */
+  get variant(): TagVariant | undefined {
+    return this.#groupCtx.variant;
+  }
+
+  get size(): TagSize | undefined {
+    return this.#groupCtx.size;
+  }
+
+  get isActive(): boolean {
+    return this.#isActive;
+  }
+
+  get disabled(): boolean {
+    // A disabled group always wins: disabled={false} on a tag cannot re-enable it.
+    return this.#groupCtx.disabled || (this.#props.disabled() ?? false);
   }
 
   get isSelectable(): boolean {
-    return this.groupCtx.exists && this.groupCtx.selectionMode !== "none";
+    return this.#groupCtx.selectionMode !== "none";
   }
 
   get isInteractive(): boolean {
-    return this.isSelectable && !this.finalDisabled;
+    return this.isSelectable && !this.disabled;
   }
 
   get isSelected(): boolean {
-    return this.isSelectable && this.groupCtx.isSelected(this.#value());
+    return this.#isSelected;
   }
 
   get isRemovable(): boolean {
-    return Boolean(this.#onRemove()) || this.groupCtx.isRemovable;
+    return Boolean(this.#props.onRemove()) || this.#groupCtx.isRemovable;
   }
 
   get canRemove(): boolean {
-    return this.isRemovable && !this.finalDisabled;
+    return this.isRemovable && !this.disabled;
   }
 
   get value(): string {
-    return this.#value();
+    return this.#props.value();
   }
 
   get id(): string {
-    return this.#id();
+    return this.#props.id();
   }
 
-  get textValue(): string | undefined {
-    return this.#textValue();
+  /** The element that wraps the tag's text: it names the row and the remove button. */
+  get labelId(): string {
+    return `${this.id}-label`;
   }
 
-  constructor(props: {
-    value: () => string;
-    disabled: () => boolean | undefined;
-    id: () => string;
-    textValue: () => string | undefined;
-    onRemove: () => (() => void) | undefined;
-    groupContext?: TagGroupContextResult;
-  }) {
-    this.#value = props.value;
-    this.#disabled = props.disabled;
-    this.#id = props.id;
-    this.#textValue = props.textValue;
-    this.#onRemove = props.onRemove;
+  get removeButtonId(): string {
+    return `${this.id}-remove`;
+  }
 
-    this.groupCtx = props.groupContext ?? useTagGroupContext();
+  /** Makes this the roving tab stop of its group. A disabled tag never becomes one. */
+  activate(): void {
+    if (this.disabled) return;
+    this.#groupCtx.setActiveId(this.id);
+  }
+
+  registerInGroup(id: string, entry: TagGroupRegistration): void {
+    this.#groupCtx.register(id, entry);
+  }
+
+  unregisterFromGroup(id: string, entry: TagGroupRegistration): void {
+    this.#groupCtx.unregister(id, entry);
+  }
+
+  /**
+   * Removes the tag and, if it held focus, moves focus to a neighbour. Outside a group the
+   * no-op context has no tags and no list, so only `remove` has an effect.
+   */
+  requestRemoval(row: HTMLElement | null): void {
+    this.#groupCtx.requestRemoval({ id: this.id, row, remove: () => this.remove() });
   }
 
   toggle(): void {
     if (!this.isInteractive) return;
-    this.groupCtx.toggleValue(this.#value());
+    this.#groupCtx.toggleValue(this.#props.value());
   }
 
   remove(): void {
     if (!this.canRemove) return;
-    this.#onRemove()?.();
-    this.groupCtx.remove(this.#value());
+    this.#props.onRemove()?.();
+    this.#groupCtx.remove(this.#props.value());
   }
 }
-
-export type TagStateInstance = InstanceType<typeof TagState>;

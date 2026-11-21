@@ -1,185 +1,80 @@
-import { createContext } from "svelte";
+import { createOptionalContext } from "../../../lib/index.js";
+import { EMPTY_CONTENT_SLOTS } from "../../../lib/runes/index.js";
+import type { ContentSlotsField, RovingFocusItem } from "../../../lib/runes/index.js";
 import type { TagGroupSelectionMode } from "./tag-group.types.js";
-import type { TagSize, TagVariant } from "../../tag/_internal/tag.types.js";
+import type { TagRemovalRequest } from "./tag-group.removal.js";
+import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
-export interface TagGroupRegistration {
-  getDisabled: () => boolean;
-  getValue: () => string;
-}
+export type TagGroupRegistration = RovingFocusItem;
 
-export interface TagGroupContextValue {
+export interface TagGroupContext {
+  readonly exists: boolean;
   readonly selectionMode: TagGroupSelectionMode;
   readonly disabled: boolean;
   readonly invalid: boolean;
-  readonly variant: TagVariant;
-  readonly size: TagSize;
   readonly isRemovable: boolean;
-  readonly labelId: string | undefined;
-  readonly descriptionId: string | undefined;
-  readonly errorId: string | undefined;
-  readonly hasLabel: boolean;
-  readonly hasDescription: boolean;
-  readonly hasError: boolean;
-  readonly hasList: boolean;
+  /** The variant and size the group gives its tags; `undefined` leaves them to the styles. */
+  readonly variant: TagVariant | undefined;
+  readonly size: TagSize | undefined;
+  /** aria-label / aria-labelledby passed to the TagGroup root, applied to the grid instead. */
+  readonly ariaLabel: string | undefined;
+  readonly ariaLabelledby: string | undefined;
+  /** The group Label, Description and FieldError: their ids and the describedby rule. */
+  readonly field: ContentSlotsField;
   readonly isSelected: (value: string) => boolean;
   readonly toggleValue: (value: string) => void;
   readonly remove: (value: string) => void;
   readonly register: (id: string, entry: TagGroupRegistration) => void;
-  readonly unregister: (id: string) => void;
+  readonly unregister: (id: string, entry: TagGroupRegistration) => void;
+  readonly focusedId: string | undefined;
   readonly isActive: (id: string) => boolean;
   readonly setActiveId: (id: string | undefined) => void;
+  /**
+   * Removes a tag and, if it held focus, moves focus to a neighbour once it is gone. Outside a
+   * group it is just `remove`: there are no neighbours to move focus to.
+   */
+  readonly requestRemoval: (request: TagRemovalRequest) => void;
   readonly registerList: (id: string) => void;
   readonly unregisterList: (id: string) => void;
 }
 
-export interface TagGroupContextResult extends TagGroupContextValue {
+const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
+  selectionMode: "none",
+  disabled: false,
+  invalid: false,
+  isRemovable: false,
+  // No value: the defaults come from the styles package (`defaultVariants` of tagStyles), which
+  // applies them to whatever arrives as `undefined`.
+  variant: undefined,
+  size: undefined,
+  ariaLabel: undefined,
+  ariaLabelledby: undefined,
+  field: EMPTY_CONTENT_SLOTS,
+  isSelected: () => false,
+  toggleValue: () => {},
+  remove: () => {},
+  register: () => {},
+  unregister: () => {},
+  focusedId: undefined,
+  isActive: () => false,
+  setActiveId: () => {},
+  // The only NOOP member that does something: outside a group, removing a tag is only `remove()`.
+  requestRemoval: ({ remove }: TagRemovalRequest) => remove(),
+  registerList: () => {},
+  unregisterList: () => {},
+  exists: false
+});
+
+export const [useTagGroupContext, setTagGroupContext] =
+  createOptionalContext<TagGroupContext>(NOOP_TAG_GROUP_CONTEXT);
+
+/** Whether a component sits inside the TagGroup.List of its group. */
+export interface TagGroupListContext {
   readonly exists: boolean;
 }
 
-const [getTagGroupContext, setTagGroupContext] = createContext<TagGroupContextValue>();
+/** Also set by the TagGroup root, so a group nested in another group's list starts outside one. */
+export const NO_TAG_GROUP_LIST: TagGroupListContext = Object.freeze({ exists: false });
 
-function tryGetTagGroupContext(): TagGroupContextValue | undefined {
-  try {
-    return getTagGroupContext();
-  } catch {
-    return undefined;
-  }
-}
-
-export { setTagGroupContext };
-
-export function useTagGroupContext(): TagGroupContextResult {
-  const context = tryGetTagGroupContext();
-
-  if (!context) {
-    return {
-      get selectionMode() {
-        return "none" as TagGroupSelectionMode;
-      },
-      get disabled() {
-        return false;
-      },
-      get invalid() {
-        return false;
-      },
-      get variant() {
-        return "default" as TagVariant;
-      },
-      get size() {
-        return "md" as TagSize;
-      },
-      get isRemovable() {
-        return false;
-      },
-      get labelId() {
-        return undefined;
-      },
-      get descriptionId() {
-        return undefined;
-      },
-      get errorId() {
-        return undefined;
-      },
-      get hasLabel() {
-        return false;
-      },
-      get hasDescription() {
-        return false;
-      },
-      get hasError() {
-        return false;
-      },
-      get hasList() {
-        return false;
-      },
-      isSelected(_value: string) {
-        return false;
-      },
-      toggleValue(_value: string) {},
-      remove(_value: string) {},
-      register(_id: string, _entry: TagGroupRegistration) {},
-      unregister(_id: string) {},
-      isActive(_id: string) {
-        return false;
-      },
-      setActiveId(_id: string | undefined) {},
-      registerList(_id: string) {},
-      unregisterList(_id: string) {},
-      get exists() {
-        return false;
-      }
-    } satisfies TagGroupContextResult;
-  }
-
-  return {
-    get selectionMode() {
-      return context.selectionMode;
-    },
-    get disabled() {
-      return context.disabled;
-    },
-    get invalid() {
-      return context.invalid;
-    },
-    get variant() {
-      return context.variant;
-    },
-    get size() {
-      return context.size;
-    },
-    get isRemovable() {
-      return context.isRemovable;
-    },
-    get labelId() {
-      return context.labelId;
-    },
-    get descriptionId() {
-      return context.descriptionId;
-    },
-    get errorId() {
-      return context.errorId;
-    },
-    get hasLabel() {
-      return context.hasLabel;
-    },
-    get hasDescription() {
-      return context.hasDescription;
-    },
-    get hasError() {
-      return context.hasError;
-    },
-    get hasList() {
-      return context.hasList;
-    },
-    isSelected(value: string) {
-      return context.isSelected(value);
-    },
-    toggleValue(value: string) {
-      return context.toggleValue(value);
-    },
-    remove(value: string) {
-      return context.remove(value);
-    },
-    register(id: string, entry: TagGroupRegistration) {
-      return context.register(id, entry);
-    },
-    unregister(id: string) {
-      return context.unregister(id);
-    },
-    isActive(id: string) {
-      return context.isActive(id);
-    },
-    setActiveId(id: string | undefined) {
-      return context.setActiveId(id);
-    },
-    registerList(id: string) {
-      return context.registerList(id);
-    },
-    unregisterList(id: string) {
-      return context.unregisterList(id);
-    },
-    get exists() {
-      return true;
-    }
-  } satisfies TagGroupContextResult;
-}
+export const [useTagGroupListContext, setTagGroupListContext] =
+  createOptionalContext<TagGroupListContext>(NO_TAG_GROUP_LIST);
