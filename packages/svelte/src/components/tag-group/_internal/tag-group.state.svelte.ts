@@ -142,25 +142,17 @@ export class TagGroupState implements TagGroupContext {
 
   readonly toggleValue = this.#selection.toggle;
 
-  readonly setSelectionAnchor = (id: string): void => {
-    const value = this.#roving.getItem(id)?.getValue();
-    if (value !== undefined) this.#selection.setAnchor(value);
-  };
-
-  readonly extendSelectionTo = (
-    targetId: string,
-    orderedIds: readonly string[],
-    originId?: string
-  ): void => {
+  readonly extendSelectionTo = (targetId: string, orderedIds: readonly string[]): void => {
     if (this.selectionMode !== "multiple") return;
 
     const valueOf = (id: string) => this.#roving.getItem(id)?.getValue();
     const target = valueOf(targetId);
     if (target === undefined) return;
 
-    const ordered = orderedIds.flatMap((id) => valueOf(id) ?? []);
-    const origin = originId === undefined ? undefined : valueOf(originId);
-    this.#selection.extendTo(ordered, target, origin);
+    this.#selection.extendTo(
+      orderedIds.flatMap((id) => valueOf(id) ?? []),
+      target
+    );
   };
 
   readonly remove = (value: string): void => {

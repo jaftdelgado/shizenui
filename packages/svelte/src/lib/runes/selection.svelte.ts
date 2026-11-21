@@ -27,12 +27,10 @@ export class SelectionState {
   #selectedValues = $derived.by(() => new Set(this.#props.values()));
 
   // Plain, not reactive: they only decide what the next range covers, nothing renders them.
-  /** Where the range of an extension starts: the last value toggled, or set with `setAnchor`. */
+  /** Where a range starts: the last value selected, or the first target of a range. */
   #anchor: string | undefined;
-  /** The values the extension in progress selected, which the next step of it replaces. */
-  #extended: readonly string[] = [];
-  /** Where the extension in progress last ended. */
-  #extendedTo: string | undefined;
+  /** Where the last range ended, so the next one can replace it. */
+  #current: string | undefined;
 
   constructor(props: SelectionStateProps) {
     this.#props = props;
@@ -55,48 +53,46 @@ export class SelectionState {
       next = isSelected ? before.filter((v) => v !== value) : [...before, value];
     }
 
-    this.setAnchor(value);
+    if (!isSelected) {
+      // A selected value starts the next range.
+      this.#anchor = value;
+      this.#current = value;
+    } else if (value === this.#anchor) {
+      // Deselecting the anchor leaves no anchor: the next range starts at its target.
+      this.#anchor = undefined;
+      this.#current = undefined;
+    }
+
     this.#commit(before, next);
   };
 
-  /** Makes `value` the start of the next range and ends the extension in progress, if any. */
-  readonly setAnchor = (value: string): void => {
-    this.#anchor = value;
-    this.#extended = [];
-    this.#extendedTo = undefined;
-  };
-
   /**
-   * Selects the range from the anchor to `target` (multiple mode only). `ordered` is every value
-   * that can be selected, in the order the user sees them. The values that were selected outside
-   * the extension in progress stay selected; the previous step of the extension is replaced, so
-   * going back toward the anchor shrinks the range.
+   * Selects the range from the anchor to `target` (multiple mode only), as React Aria does. `ordered`
+   * is every value that can be selected, in the order the user sees them.
    *
-   * `origin` is where a keyboard extension comes from (the item focus left). The extension in
-   * progress continues only from where it last ended; from anywhere else a new one starts, with
-   * `origin` as its anchor. A pointer extension has no origin and starts at the anchor. Without
-   * an anchor, or with one that is no longer in `ordered`, the range starts at `target`.
+   * The anchor is the last value selected (moving focus does not change it), so the item that has
+   * focus is not selected unless the range covers it. Without an anchor, or with one that is no
+   * longer in `ordered`, the range starts at `target` and `target` becomes the anchor. The
+   * previous range (anchor to where it ended) is replaced, so going back toward the anchor
+   * shrinks it; the values selected outside it stay selected.
    */
-  readonly extendTo = (ordered: readonly string[], target: string, origin?: string): void => {
+  readonly extendTo = (ordered: readonly string[], target: string): void => {
     if (this.#props.mode() !== "multiple") return;
+    if (!ordered.includes(target)) return;
 
-    const targetIndex = ordered.indexOf(target);
-    if (targetIndex === -1) return;
+    const anchor =
+      this.#anchor !== undefined && ordered.includes(this.#anchor) ? this.#anchor : target;
+    const current =
+      this.#current !== undefined && ordered.includes(this.#current) ? this.#current : target;
 
-    if (origin !== undefined && origin !== this.#extendedTo) this.setAnchor(origin);
-
-    const anchorIndex = this.#anchor === undefined ? -1 : ordered.indexOf(this.#anchor);
-    if (anchorIndex === -1) this.#anchor = target;
-
-    const from = anchorIndex === -1 ? targetIndex : Math.min(anchorIndex, targetIndex);
-    const to = anchorIndex === -1 ? targetIndex : Math.max(anchorIndex, targetIndex);
-    const range = ordered.slice(from, to + 1);
+    const previous = rangeOf(ordered, anchor, current);
+    const range = rangeOf(ordered, anchor, target);
 
     const before = [...this.#props.values()];
-    const kept = before.filter((v) => !this.#extended.includes(v));
-    this.#extended = range;
-    this.#extendedTo = target;
+    const kept = before.filter((v) => !previous.includes(v));
 
+    this.#anchor = anchor;
+    this.#current = target;
     this.#commit(before, [...kept, ...range.filter((v) => !kept.includes(v))]);
   };
 
@@ -112,6 +108,13 @@ export class SelectionState {
 
     this.#props.onChange?.([...after]);
   }
+}
+
+/** The values of `ordered` from `a` to `b`, both included, in either direction. */
+function rangeOf(ordered: readonly string[], a: string, b: string): string[] {
+  const indexA = ordered.indexOf(a);
+  const indexB = ordered.indexOf(b);
+  return ordered.slice(Math.min(indexA, indexB), Math.max(indexA, indexB) + 1);
 }
 
 /** Whether both hold the same values, in any order. */

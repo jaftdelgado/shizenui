@@ -30,18 +30,11 @@ export interface TagGroupContext {
   readonly field: ContentSlotsField;
   readonly isSelected: (value: string) => boolean;
   readonly toggleValue: (value: string) => void;
-  /** Makes the tag with this id the start of the next range selection. */
-  readonly setSelectionAnchor: (id: string) => void;
   /**
-   * Selects the range from the anchor to the tag with `targetId` (multiple mode only).
-   * `orderedIds` is every enabled tag of the list, in DOM order. `originId` is the tag a
-   * keyboard extension comes from; a pointer one has none (see `SelectionState.extendTo`).
+   * Selects the range from the anchor (the last tag selected) to the tag with `targetId`
+   * (multiple mode only). `orderedIds` is every enabled tag of the list, in DOM order.
    */
-  readonly extendSelectionTo: (
-    targetId: string,
-    orderedIds: readonly string[],
-    originId?: string
-  ) => void;
+  readonly extendSelectionTo: (targetId: string, orderedIds: readonly string[]) => void;
   readonly remove: (value: string) => void;
   /**
    * Removes every selected tag that can be removed: each one's own `onRemove` runs, then the
@@ -76,7 +69,6 @@ const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
   field: EMPTY_CONTENT_SLOTS,
   isSelected: () => false,
   toggleValue: () => {},
-  setSelectionAnchor: () => {},
   extendSelectionTo: () => {},
   remove: () => {},
   removeSelected: () => {},
