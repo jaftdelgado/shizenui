@@ -1,0 +1,325 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: Tag Group
+description: Displays a set of tags that can be navigated with the keyboard, selected and removed.
+preview: TagGroupPreview
+---
+
+import CodeImport from "@components/astro/CodeImport.astro";
+
+import CodeBlock from "@components/astro/CodeBlock.astro";
+import ComponentExample from "@components/astro/ComponentExample.astro";
+import PropsTable from "@components/astro/PropsTable.astro";
+import BulletList from "@components/astro/BulletList.astro";
+import InteractiveStatesTable from "@components/astro/InteractiveStatesTable.astro";
+
+import TagGroupAnatomyCode from "@examples/svelte/tag-group/TagGroupAnatomy.svelte?raw";
+
+import TagGroupSelectionModes from "@examples/svelte/tag-group/TagGroupSelectionModes.svelte";
+import TagGroupBindValue from "@examples/svelte/tag-group/TagGroupBindValue.svelte";
+import TagGroupFullyControlled from "@examples/svelte/tag-group/TagGroupFullyControlled.svelte";
+import TagGroupRemovable from "@examples/svelte/tag-group/TagGroupRemovable.svelte";
+import TagGroupContent from "@examples/svelte/tag-group/TagGroupContent.svelte";
+import TagGroupDisabled from "@examples/svelte/tag-group/TagGroupDisabled.svelte";
+import TagGroupInvalid from "@examples/svelte/tag-group/TagGroupInvalid.svelte";
+import TagGroupSizes from "@examples/svelte/tag-group/TagGroupSizes.svelte";
+import TagGroupVariants from "@examples/svelte/tag-group/TagGroupVariants.svelte";
+import TagGroupSurface from "@examples/svelte/tag-group/TagGroupSurface.svelte";
+
+import TagGroupTwStyling from "@examples/svelte/tag-group/TagGroupTwStyling.svelte";
+import TagGroupCssStylingCode from "@examples/svelte/tag-group/TagGroupCssStyling.css?raw";
+
+## Import
+
+<CodeImport code={`import { Tag, TagGroup } from "@shizen-ui/svelte";`} />
+
+## Anatomy
+
+<CodeBlock code={TagGroupAnatomyCode} lang="svelte" showLineNumbers={false} collapsible={false} />
+
+## Examples
+
+### Variants
+
+<ComponentExample src="svelte/tag-group/TagGroupVariants.svelte">
+  <TagGroupVariants client:load />
+</ComponentExample>
+
+### Sizes
+
+<ComponentExample src="svelte/tag-group/TagGroupSizes.svelte">
+  <TagGroupSizes client:load />
+</ComponentExample>
+
+### Selection Modes
+
+<ComponentExample src="svelte/tag-group/TagGroupSelectionModes.svelte">
+  <TagGroupSelectionModes client:load />
+</ComponentExample>
+
+### Managing Value State
+
+#### Two-Way Binding
+
+Use `bind:value` for simple, automatic state synchronization:
+
+<ComponentExample src="svelte/tag-group/TagGroupBindValue.svelte">
+  <TagGroupBindValue client:load />
+</ComponentExample>
+
+#### Fully Controlled
+
+Use a Function Binding for complete control over the state's reads and writes.
+
+<ComponentExample src="svelte/tag-group/TagGroupFullyControlled.svelte">
+  <TagGroupFullyControlled client:load />
+</ComponentExample>
+
+### Removable Tags
+
+Removing a Tag does not remove it from `value`, so you must update the selection in your `onRemove` handler.
+
+<ComponentExample src="svelte/tag-group/TagGroupRemovable.svelte">
+  <TagGroupRemovable client:load />
+</ComponentExample>
+
+### With Content
+
+Use the `startContent` and `endContent` snippets to render icons before or after the tag label.
+
+<ComponentExample src="svelte/tag-group/TagGroupContent.svelte">
+  <TagGroupContent client:load />
+</ComponentExample>
+
+### Disabled State
+
+<ComponentExample src="svelte/tag-group/TagGroupDisabled.svelte">
+  <TagGroupDisabled client:load />
+</ComponentExample>
+
+### Invalid State
+
+<ComponentExample src="svelte/tag-group/TagGroupInvalid.svelte">
+  <TagGroupInvalid client:load />
+</ComponentExample>
+
+### In Surface
+
+Inside a `Surface`, the group resolves to the `secondary` variant automatically unless you set
+`variant` explicitly.
+
+<ComponentExample src="svelte/tag-group/TagGroupSurface.svelte">
+  <TagGroupSurface client:load />
+</ComponentExample>
+
+## Styling
+
+### Tailwind CSS classes
+
+Use the `class` prop to apply Tailwind utility classes directly to the Tag and TagGroup.
+
+<ComponentExample src="svelte/tag-group/TagGroupTwStyling.svelte">
+  <TagGroupTwStyling client:load />
+</ComponentExample>
+
+### Custom CSS
+
+To customize the Tag and TagGroup component classes, you can use the `@layer components`
+directive.
+
+<CodeBlock code={TagGroupCssStylingCode} lang="css" showLineNumbers={false} collapsible={false} />
+
+### CSS Classes
+
+#### Tag Classes
+
+<BulletList
+  items={[
+    {
+      title: "tag",
+      description: "Root element for a single tag inside a tag group.",
+      code: true
+    },
+    {
+      title: "tag__content",
+      description: "Flex container that lays out the tag's icons and label.",
+      code: true
+    },
+    {
+      title: "tag__label",
+      description: "Wrapper for the tag text. It adds no layout of its own.",
+      code: true
+    },
+    {
+      title: "tag__icon",
+      description: "Wrapper for the start and end content of the tag.",
+      code: true
+    },
+    {
+      title: "tag__icon--start",
+      description: "Start content wrapper, optically aligned to the start edge.",
+      code: true
+    },
+    {
+      title: "tag__icon--end",
+      description: "End content wrapper, optically aligned to the end edge.",
+      code: true
+    },
+    {
+      title: "tag__remove-button",
+      description: "Button that removes the tag.",
+      code: true
+    }
+  ]}
+/>
+
+#### Size & Variants classes
+
+<BulletList
+  items={[
+    {
+      title: "tag--default",
+      description: "Default tag variant using the standard field tokens.",
+      code: true
+    },
+    {
+      title: "tag--secondary",
+      description: "Secondary tag variant using the secondary field tokens.",
+      code: true
+    },
+    {
+      title: "tag--sm",
+      description: "Small tag size.",
+      code: true
+    },
+    {
+      title: "tag--md",
+      description: "Medium tag size.",
+      code: true
+    },
+    {
+      title: "tag--lg",
+      description: "Large tag size.",
+      code: true
+    }
+  ]}
+/>
+
+#### TagGroup Classes
+
+<BulletList
+  items={[
+    {
+      title: "tag-group",
+      description: "Root field that holds the label, the list, the description and the error.",
+      code: true
+    },
+    {
+      title: "tag-group__list",
+      description:
+        "Flex container that wraps the tags and shows the focus ring when the list itself holds focus.",
+      code: true
+    }
+  ]}
+/>
+
+### Interactive States
+
+<InteractiveStatesTable
+  props={[
+    {
+      name: "selected",
+      description: "Applied when the tag is selected. Uses the soft accent colors."
+    },
+    {
+      name: "pressed",
+      description:
+        "Shrinks the tag slightly while it's being pressed. The remove button has its own pressed state, which does not press the tag."
+    },
+    { name: "disabled", description: "Disables interaction and applies reduced opacity." },
+    {
+      name: "invalid",
+      description: "Set on the group and on the list when the group is marked as invalid."
+    },
+    {
+      name: "hover",
+      description:
+        "Applies a hover background color to selectable tags when the pointer is over them."
+    },
+    {
+      name: "focus",
+      description: "Applies a focus ring to the tag when navigating with keyboard."
+    }
+  ]}
+/>
+
+## API Reference
+
+### TagGroup Props
+
+<PropsTable
+  showHeader
+  props={[
+    {
+      name: "value",
+      type: "string | string[]",
+      default: "undefined"
+    },
+    {
+      name: "onValueChange",
+      type: "(value: string | undefined) => void | (value: string[]) => void",
+      default: "undefined"
+    },
+    { name: "onRemove", type: "(values: string[]) => void", default: "undefined" },
+    { name: "selectionMode", type: '"none" | "single" | "multiple"', default: '"none"' },
+    { name: "variant", type: '"default" | "secondary"', default: '"default"' },
+    { name: "size", type: '"sm" | "md" | "lg"', default: '"md"' },
+    { name: "invalid", type: "boolean", default: "undefined" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+
+]}
+/>
+
+#### TagGroup.List Props
+
+Extends `HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "undefined" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" }
+  ]}
+/>
+
+### Tag Props
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "value", type: "string" },
+    { name: "disabled", type: "boolean", default: "undefined" },
+    { name: "onRemove", type: "() => void", default: "undefined" },
+    { name: "onclick", type: "(e: TagClickEvent) => void", default: "undefined" },
+    { name: "startContent", type: "Snippet<[]>", default: "undefined" },
+    { name: "endContent", type: "Snippet<[]>", default: "undefined" },
+    { name: "id", type: "string", default: "auto-generated" },
+    { name: "ref", type: "HTMLDivElement | null", default: "null" },
+    { name: "children", type: "Snippet", default: "undefined" }
+  ]}
+/>
+
+#### Tag.RemoveButton Props
+
+Extends `HTMLButtonAttributes`. Only rendered when the tag or its group has an `onRemove` handler. Declare it as a child; it always renders last, after the text.
+
+<PropsTable
+  showHeader
+  props={[
+    { name: "children", type: "Snippet", default: "XIcon" },
+    { name: "ref", type: "HTMLButtonElement | null", default: "null" }
+  ]}
+/>

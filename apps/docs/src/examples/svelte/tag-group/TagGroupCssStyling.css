@@ -1,0 +1,25 @@
+@layer components {
+  .tag-group {
+    @apply gap-0;
+  }
+
+  .tag-group__list {
+    @apply mt-4;
+  }
+
+  .tag,
+  .tag--default {
+    --tag-bg: transparent;
+    --tag-bg-hover: var(--color-neutral-200);
+    --tag-bg-pressed: var(--color-neutral-200);
+
+    --tag-bg-selected: var(--color-neutral-900);
+    --tag-bg-selected-hover: var(--color-neutral-800);
+    --tag-bg-selected-pressed: var(--color-neutral-700);
+    --tag-fg-selected: var(--color-white);
+  }
+
+  .tag {
+    @apply rounded-lg px-4;
+  }
+}
