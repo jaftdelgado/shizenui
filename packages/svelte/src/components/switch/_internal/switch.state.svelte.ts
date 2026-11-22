@@ -1,5 +1,5 @@
-import { useFieldStateContext } from "../../../lib/index.js";
-import type { FieldStateContextResult } from "../../../lib/index.js";
+import { useFieldStateContext } from "../../../lib/contexts/index.js";
+import type { FieldStateContextResult } from "../../../lib/contexts/index.js";
 import { useSwitchGroupContext } from "../../switch-group/_internal/switch-group.context.js";
 import type { SwitchGroupContextResult } from "../../switch-group/_internal/switch-group.context.js";
 import type { SwitchSize } from "./switch.types.js";

@@ -1,5 +1,5 @@
 import type { Snippet } from "svelte";
-import { createOptionalContext } from "../../../lib/index.js";
+import { createOptionalContext } from "../../../lib/contexts/index.js";
 
 export interface TagContext {
   readonly exists: boolean;

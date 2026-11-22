@@ -1,5 +1,5 @@
 //Optional Context
-export { createOptionalContext } from "./contexts/optional.context.js";
+export { createOptionalContext } from "./optional.context.js";
 
 //FieldState Context
 export {
@@ -7,7 +7,7 @@ export {
   useFieldStateContext,
   type FieldStateContextValue,
   type FieldStateContextResult
-} from "./contexts/field-state.context.js";
+} from "./field-state.context.js";
 
 //ContentSlot Context
 export {
@@ -15,7 +15,7 @@ export {
   useContentSlotContext,
   type ContentSlotContextValue,
   type ContentSlotContextResult
-} from "./contexts/content-slot.context.js";
+} from "./content-slot.context.js";
 
 //Surface Context
 export {
@@ -24,4 +24,4 @@ export {
   resolveSurfaceVariant,
   type SurfaceContextValue,
   type SurfaceContextResult
-} from "./contexts/surface.context.js";
+} from "./surface.context.js";

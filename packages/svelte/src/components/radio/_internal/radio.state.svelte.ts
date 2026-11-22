@@ -5,7 +5,7 @@ import {
   useFieldStateContext,
   useSurfaceContext,
   type FieldStateContextResult
-} from "../../../lib/index.js";
+} from "../../../lib/contexts/index.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
 import type { RadioProps, RadioVariant } from "./radio.types.js";
 

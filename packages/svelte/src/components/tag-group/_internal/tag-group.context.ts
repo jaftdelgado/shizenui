@@ -1,4 +1,4 @@
-import { createOptionalContext } from "../../../lib/index.js";
+import { createOptionalContext } from "../../../lib/contexts/index.js";
 import { EMPTY_CONTENT_SLOTS } from "../../../lib/runes/index.js";
 import type { ContentSlotsField, RovingFocusItem } from "../../../lib/runes/index.js";
 import type { TagGroupSelectionMode } from "./tag-group.types.js";

@@ -2,7 +2,7 @@
   import { onDestroy } from "svelte";
   import { labelStyles } from "@shizen-ui/styles";
   import { createId, mergeProps, presence } from "../../lib/utils/index.js";
-  import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
+  import { useFieldStateContext, useContentSlotContext } from "../../lib/contexts/index.js";
   import type { LabelProps } from "./_internal/index.js";
 
   const uid = $props.id();

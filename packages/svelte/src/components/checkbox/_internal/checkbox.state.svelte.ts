@@ -1,7 +1,7 @@
 import { useCheckboxGroupContext } from "../../checkbox-group/_internal/checkbox-group.context.js";
 import type { CheckboxGroupContextResult } from "../../checkbox-group/_internal/checkbox-group.context.js";
-import { useFieldStateContext, useSurfaceContext } from "../../../lib/index.js";
-import type { FieldStateContextResult } from "../../../lib/index.js";
+import { useFieldStateContext, useSurfaceContext } from "../../../lib/contexts/index.js";
+import type { FieldStateContextResult } from "../../../lib/contexts/index.js";
 import type { CheckboxContextResult } from "./checkbox.context.js";
 import type { CheckboxVariant, CheckboxProps } from "./checkbox.types.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";

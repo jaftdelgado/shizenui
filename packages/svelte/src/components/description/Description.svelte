@@ -1,7 +1,7 @@
 <script lang="ts">
   import { descriptionStyles } from "@shizen-ui/styles";
   import { createId, mergeProps, presence } from "../../lib/utils/index.js";
-  import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
+  import { useFieldStateContext, useContentSlotContext } from "../../lib/contexts/index.js";
   import { registerWhile } from "../../lib/runes/index.js";
   import type { DescriptionProps } from "./_internal/index.js";
 

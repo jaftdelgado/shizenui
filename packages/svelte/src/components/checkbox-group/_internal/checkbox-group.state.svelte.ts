@@ -1,6 +1,6 @@
 import type { CheckboxGroupOrientation, CheckboxGroupProps } from "./checkbox-group.types.js";
 import type { CheckboxGroupContextResult } from "./checkbox-group.context.js";
-import { useSurfaceContext } from "../../../lib/index.js";
+import { useSurfaceContext } from "../../../lib/contexts/index.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
 
 export class CheckboxGroupState {

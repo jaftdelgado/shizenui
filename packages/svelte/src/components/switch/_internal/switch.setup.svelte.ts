@@ -1,4 +1,4 @@
-import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
+import { setContentSlotContext, setFieldStateContext } from "../../../lib/contexts/index.js";
 import { createIdRegistry } from "../../../lib/runes/index.js";
 import { setSwitchContext } from "./switch.context.js";
 import type { SwitchContextValue } from "./switch.context.js";

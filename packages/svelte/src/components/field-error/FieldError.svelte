@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createId, mergeProps } from "../../lib/utils/index.js";
   import { fieldErrorStyles } from "@shizen-ui/styles";
-  import { useFieldStateContext, useContentSlotContext } from "../../lib/index.js";
+  import { useFieldStateContext, useContentSlotContext } from "../../lib/contexts/index.js";
   import { registerWhile } from "../../lib/runes/index.js";
   import type { FieldErrorProps } from "./_internal/index.js";
 

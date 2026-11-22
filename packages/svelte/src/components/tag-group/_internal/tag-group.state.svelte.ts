@@ -5,8 +5,8 @@ import type {
 } from "./tag-group.context.js";
 import { FocusRestoration } from "./tag-group.focus-restoration.js";
 import type { TagGroupSelectionMode } from "./tag-group.types.js";
-import { resolveSurfaceVariant, useSurfaceContext } from "../../../lib/index.js";
-import type { SurfaceContextResult } from "../../../lib/index.js";
+import { resolveSurfaceVariant, useSurfaceContext } from "../../../lib/contexts/index.js";
+import type { SurfaceContextResult } from "../../../lib/contexts/index.js";
 import {
   ContentSlotsState,
   createMounted,

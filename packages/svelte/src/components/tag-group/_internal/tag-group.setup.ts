@@ -1,5 +1,5 @@
 import { setTagGroupContext } from "./tag-group.context.js";
-import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.js";
+import { setFieldStateContext, setContentSlotContext } from "../../../lib/contexts/index.js";
 import type { TagGroupState } from "./tag-group.state.svelte.js";
 
 export function setupTagGroupContexts(state: TagGroupState): void {

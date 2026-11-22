@@ -1,4 +1,4 @@
-import { setContentSlotContext, setFieldStateContext } from "../../../lib/index.js";
+import { setContentSlotContext, setFieldStateContext } from "../../../lib/contexts/index.js";
 import { createIdRegistry, warnIf } from "../../../lib/runes/index.js";
 import {
   setTextFieldContext,

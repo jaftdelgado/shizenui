@@ -2,7 +2,7 @@ import { untrack } from "svelte";
 import { SvelteSet } from "svelte/reactivity";
 import type { RadioGroupContextResult, RadioGroupRegistration } from "./radio-group.context.js";
 import type { RadioGroupOrientation, RadioGroupProps } from "./radio-group.types.js";
-import { useSurfaceContext } from "../../../lib/index.js";
+import { useSurfaceContext } from "../../../lib/contexts/index.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
 import type { RadioVariant } from "../../radio/_internal/radio.types.js";
 

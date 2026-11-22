@@ -1,6 +1,6 @@
 import { setRadioGroupContext } from "./radio-group.context.js";
 import type { RadioGroupContextValue, RadioGroupRegistration } from "./radio-group.context.js";
-import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.js";
+import { setFieldStateContext, setContentSlotContext } from "../../../lib/contexts/index.js";
 import { createIdRegistry } from "../../../lib/runes/index.js";
 import type { RadioGroupState } from "./radio-group.state.svelte.js";
 
