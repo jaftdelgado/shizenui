@@ -3,9 +3,9 @@ import { TAG_SELECTOR } from "./tag-group.constants.js";
 import {
   createRovingContainer,
   createRovingKeydown,
-  extendsSelection,
-  isCollectionShortcut
+  getSelectionIntent
 } from "../../../lib/utils/index.js";
+import type { SelectionIntentResolver } from "../../../lib/utils/index.js";
 
 const NAVIGATION_OPTIONS = {
   orientation: "horizontal",
@@ -17,8 +17,10 @@ const NAVIGATION_OPTIONS = {
 export function createTagGroupListHandlers(options: {
   getContainer: () => HTMLDivElement | null;
   groupCtx: Pick<TagGroupListApi, "tabStopId" | "setActiveId" | "extendSelectionTo">;
+  /** What each key does to the selection. Not a prop of the component: the default is the one. */
+  resolveSelectionIntent?: SelectionIntentResolver;
 }) {
-  const { getContainer, groupCtx } = options;
+  const { getContainer, groupCtx, resolveSelectionIntent = getSelectionIntent } = options;
 
   // The list is focusable itself so that Tab can reach it, and it hands focus to the active tag,
   // or to the first enabled one. A pointer never focuses it, but a click on its empty space makes
@@ -31,18 +33,20 @@ export function createTagGroupListHandlers(options: {
     onEnter: (target) => groupCtx.setActiveId(target.id)
   });
 
-  // `Home`/`PageUp` and `End`/`PageDown` move to the first and the last tag. The moves that extend
-  // the selection (see `extendsSelection`) select from the anchor (the last tag selected) to the
-  // tag they move to, in multiple mode. A range never wraps from one end of the list to the other.
+  // `Home`/`PageUp` and `End`/`PageDown` move to the first and the last tag. What a key does to the
+  // selection is decided in one place (see `getSelectionIntent`): the keys that extend it select
+  // from the anchor (the last tag selected) to the tag they move to, in multiple mode, and the
+  // ones the collection leaves to the browser are not handled.
   const handleKeyDown = createRovingKeydown({
     getContainer,
     selector: TAG_SELECTOR,
     options: NAVIGATION_OPTIONS,
-    wrapAround: (e) => !e.shiftKey,
-    acceptsModifiedKey: isCollectionShortcut,
+    // A range never wraps from one end of the list to the other.
+    wrapAround: (e) => resolveSelectionIntent(e) !== "extend",
+    acceptsModifiedKey: (e) => resolveSelectionIntent(e) !== "none",
     onMove: (target, e, candidates) => {
       groupCtx.setActiveId(target.id);
-      if (extendsSelection(e)) groupCtx.extendSelectionTo(target.id, candidates);
+      if (resolveSelectionIntent(e) === "extend") groupCtx.extendSelectionTo(target.id, candidates);
     }
   });
 

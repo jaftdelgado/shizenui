@@ -37,3 +37,27 @@ export function isCollectionShortcut(e: KeyboardEvent): boolean {
 export function extendsSelection(e: KeyboardEvent): boolean {
   return e.shiftKey && (!isHomeOrEnd(e) || isSelectToEdgeKey(e));
 }
+
+/**
+ * What a key press does to the selection of a collection, besides moving focus:
+ * - `"move"`: it only moves focus;
+ * - `"extend"`: it moves focus and extends the selection from the anchor to the item it reaches;
+ * - `"none"`: the collection leaves the key to the browser (e.g. `Alt+ArrowLeft` goes back).
+ */
+export type SelectionIntent = "move" | "extend" | "none";
+
+/**
+ * Decides the selection intent of a key press. Another selection behavior (e.g. one where moving
+ * also selects) is another resolver, not a change to the handlers that use it.
+ */
+export type SelectionIntentResolver = (e: KeyboardEvent) => SelectionIntent;
+
+/**
+ * The selection intent of a key press when moving focus does not change the selection: keys with
+ * `Ctrl`, `Meta` or `Alt` belong to the browser, except the collection shortcuts; the keys of
+ * `extendsSelection` extend it; the rest only move.
+ */
+export function getSelectionIntent(e: KeyboardEvent): SelectionIntent {
+  if ((e.altKey || e.ctrlKey || e.metaKey) && !isCollectionShortcut(e)) return "none";
+  return extendsSelection(e) ? "extend" : "move";
+}
