@@ -25,3 +25,6 @@ export {
   type SurfaceContextValue,
   type SurfaceContextResult
 } from "./surface.context.js";
+
+//Field contexts
+export { setupFieldContexts, type FieldContextsSource } from "./field-contexts.js";

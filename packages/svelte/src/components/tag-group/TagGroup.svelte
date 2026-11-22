@@ -6,12 +6,13 @@
 </script>
 
 <script lang="ts">
+  import { setupFieldContexts } from "../../lib/contexts/index.js";
   import { cn, createId, mergeProps } from "../../lib/utils/index.js";
   import type { TagGroupProps } from "./_internal/index.js";
   import {
     TagGroupState,
     getTagGroupAttributes,
-    setupTagGroupContexts,
+    setTagGroupContext,
     setupTagGroupWarnings
   } from "./_internal/index.js";
 
@@ -52,7 +53,8 @@
     ariaLabelledby: () => ariaLabelledby ?? undefined
   });
 
-  setupTagGroupContexts(tagGroupState);
+  setTagGroupContext(tagGroupState);
+  setupFieldContexts(tagGroupState.field, tagGroupState);
 
   setupTagGroupWarnings({
     context: tagGroupState,
