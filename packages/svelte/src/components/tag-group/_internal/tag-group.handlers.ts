@@ -1,4 +1,4 @@
-import type { TagGroupContext } from "./tag-group.context.js";
+import type { TagGroupListApi } from "./tag-group.context.js";
 import { TAG_SELECTOR } from "./tag-group.constants.js";
 import { createRovingContainer, createRovingKeydown } from "../../../lib/utils/index.js";
 
@@ -33,7 +33,7 @@ const extendsSelection = (e: KeyboardEvent) =>
 
 export function createTagGroupListHandlers(options: {
   getContainer: () => HTMLDivElement | null;
-  groupCtx: TagGroupContext;
+  groupCtx: Pick<TagGroupListApi, "tabStopId" | "setActiveId" | "extendSelectionTo">;
 }) {
   const { getContainer, groupCtx } = options;
 

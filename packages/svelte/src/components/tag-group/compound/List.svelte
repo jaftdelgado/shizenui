@@ -14,13 +14,13 @@
     setupTagGroupListWarnings,
     useTagGroupContext
   } from "../_internal/index.js";
-  import type { TagGroupListProps } from "../_internal/index.js";
+  import type { TagGroupListApi, TagGroupListProps } from "../_internal/index.js";
 
   const listUid = $props.id();
 
   let { children, class: className, ref = $bindable(null), ...rest }: TagGroupListProps = $props();
 
-  const groupCtx = useTagGroupContext();
+  const groupCtx: TagGroupListApi = useTagGroupContext();
 
   const handlers = createTagGroupListHandlers({
     getContainer: () => ref,

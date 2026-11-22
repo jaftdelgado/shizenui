@@ -1,7 +1,7 @@
 import { ariaBool, hasOwnAccessibleName, presence } from "../../../lib/utils/index.js";
 import type { AccessibleNameProps } from "../../../lib/utils/index.js";
 import { TAG_GROUP_LIST_SLOT, TAG_GROUP_SLOT } from "./tag-group.constants.js";
-import type { TagGroupContext } from "./tag-group.context.js";
+import type { TagGroupContext, TagGroupListApi } from "./tag-group.context.js";
 
 /** Attributes of the TagGroup root element. */
 export function getTagGroupAttributes(
@@ -25,7 +25,7 @@ export interface TagGroupListConsumerAria extends AccessibleNameProps {
  * group's Label, then aria-label/aria-labelledby passed to the TagGroup root.
  */
 function resolveListAccessibleName(
-  ctx: Pick<TagGroupContext, "field" | "ariaLabel" | "ariaLabelledby">,
+  ctx: Pick<TagGroupListApi, "field" | "ariaLabel" | "ariaLabelledby">,
   consumer: TagGroupListConsumerAria
 ): { "aria-label"?: string; "aria-labelledby"?: string } {
   if (hasOwnAccessibleName(consumer)) return {};
@@ -42,7 +42,7 @@ function resolveListAccessibleName(
  */
 export function getTagGroupListAttributes(
   ctx: Pick<
-    TagGroupContext,
+    TagGroupListApi,
     | "selectionMode"
     | "disabled"
     | "invalid"

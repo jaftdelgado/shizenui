@@ -1,6 +1,6 @@
 import { useTagGroupContext } from "../../tag-group/_internal/index.js";
 import type {
-  TagGroupContext,
+  TagGroupItemApi,
   TagGroupRegistration,
   TagGroupRemoveScope
 } from "../../tag-group/_internal/index.js";
@@ -13,13 +13,13 @@ export interface TagStateProps {
   onRemove: () => (() => void) | undefined;
   /** The tag's element, if it is rendered. */
   getRef: () => HTMLElement | null;
-  groupContext?: TagGroupContext;
+  groupContext?: TagGroupItemApi;
 }
 
 export class TagState {
   readonly #props: TagStateProps;
 
-  readonly #groupCtx: TagGroupContext;
+  readonly #groupCtx: TagGroupItemApi;
 
   /**
    * What the tag tells its group about itself. It is the same object for the whole life of the

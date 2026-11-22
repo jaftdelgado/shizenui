@@ -1,5 +1,5 @@
 import { warnIf } from "../../../lib/runes/index.js";
-import type { TagGroupContext } from "./tag-group.context.js";
+import type { TagGroupListApi } from "./tag-group.context.js";
 import type { TagGroupState } from "./tag-group.state.svelte.js";
 
 export function setupTagGroupWarnings(options: {
@@ -26,7 +26,7 @@ export function setupTagGroupWarnings(options: {
 }
 
 export function setupTagGroupListWarnings(options: {
-  groupCtx: Pick<TagGroupContext, "exists">;
+  groupCtx: Pick<TagGroupListApi, "exists">;
   hasChildren: () => boolean;
   /** Whether the rendered list ended up with an accessible name, from whichever source. */
   hasAccessibleName: () => boolean;
