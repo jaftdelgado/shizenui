@@ -1,8 +1,8 @@
 <script lang="ts" module>
   import { tagStyles } from "@shizen-ui/styles";
-  import { memoizeVariants } from "../../lib/utils/index.js";
+  import { memoizeSlotClasses } from "../../lib/utils/index.js";
 
-  const getTagSlots = memoizeVariants(tagStyles);
+  const getTagSlotClasses = memoizeSlotClasses(tagStyles);
 </script>
 
 <script lang="ts">
@@ -48,6 +48,10 @@
 
   setupTagGroupRegistration(tagState);
 
+  // The classes of every slot, resolved once per variant and size and shared by all the tags that
+  // ask for the same. Declared before the contexts: the remove button reads its class from there.
+  const slots = $derived(getTagSlotClasses({ variant: tagState.variant, size: tagState.size }));
+
   const focus = createFocusVisible();
 
   // An enabled tag that does something when activated (it is selectable, or it has an `onclick`)
@@ -69,7 +73,8 @@
 
   setupTagContexts(tagState, {
     requestRemove: handlers.requestRemove,
-    registerRemoveButton: removeButton.register
+    registerRemoveButton: removeButton.register,
+    getRemoveButtonClass: () => slots.removeButton
   });
 
   setupTagWarnings({
@@ -80,9 +85,7 @@
   // The group context never changes after initialization.
   const inGroup = tagState.inGroup;
 
-  const styles = $derived(getTagSlots({ variant: tagState.variant, size: tagState.size }));
-
-  const rootClass = $derived(cn(styles.base(), className));
+  const rootClass = $derived(cn(slots.base, className));
 
   // `keydown` and `blur` have a handler in each: mergeProps composes them, PressState's first.
   const rowHandlers = mergeProps(press.props, handlers.props);
@@ -106,17 +109,17 @@
 
 {#snippet renderIcon(content: TagIconContent | undefined, position: "start" | "end")}
   {#if content}
-    <span class={position === "start" ? styles.iconStart() : styles.iconEnd()}>
+    <span class={position === "start" ? slots.iconStart : slots.iconEnd}>
       {@render content()}
     </span>
   {/if}
 {/snippet}
 
 <div bind:this={ref} {...tagProps}>
-  <div role={inGroup ? "gridcell" : undefined} class={styles.content()}>
+  <div role={inGroup ? "gridcell" : undefined} class={slots.content}>
     {@render renderIcon(startContent, "start")}
     <!-- Names the row and the remove button, so the button is rendered outside it. -->
-    <span id={tagState.labelId} class={styles.label()}>
+    <span id={tagState.labelId} class={slots.label}>
       {#if children}
         {@render children()}
       {/if}

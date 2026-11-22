@@ -1,7 +1,8 @@
 <script lang="ts" module>
   import { tagGroupStyles } from "@shizen-ui/styles";
+  import { resolveSlotClasses } from "../../../lib/utils/index.js";
 
-  const styles = tagGroupStyles();
+  const classes = resolveSlotClasses(tagGroupStyles());
 </script>
 
 <script lang="ts">
@@ -27,7 +28,7 @@
     groupCtx
   });
 
-  const rootClass = $derived(cn(styles.list(), className));
+  const rootClass = $derived(cn(classes.list, className));
 
   const listProps = $derived(
     mergeProps(

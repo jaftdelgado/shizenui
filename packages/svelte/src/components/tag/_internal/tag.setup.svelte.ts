@@ -60,6 +60,7 @@ export function setupTagContexts(
   options: {
     requestRemove: () => void;
     registerRemoveButton: TagContext["registerRemoveButton"];
+    getRemoveButtonClass: () => string;
   }
 ): void {
   setTagContext({
@@ -77,6 +78,9 @@ export function setupTagContexts(
     },
     get tabbable() {
       return !state.inGroup || state.isActive;
+    },
+    get removeButtonClass() {
+      return options.getRemoveButtonClass();
     },
     requestRemove: options.requestRemove,
     registerRemoveButton: options.registerRemoveButton,

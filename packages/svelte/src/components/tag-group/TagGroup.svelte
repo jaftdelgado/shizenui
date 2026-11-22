@@ -1,7 +1,8 @@
 <script lang="ts" module>
   import { tagGroupStyles } from "@shizen-ui/styles";
+  import { resolveSlotClasses } from "../../lib/utils/index.js";
 
-  const styles = tagGroupStyles();
+  const classes = resolveSlotClasses(tagGroupStyles());
 </script>
 
 <script lang="ts">
@@ -58,7 +59,7 @@
     hasChildren: () => Boolean(children)
   });
 
-  const rootClass = $derived(cn(styles.base(), className));
+  const rootClass = $derived(cn(classes.base, className));
 
   const groupProps = $derived(
     mergeProps(

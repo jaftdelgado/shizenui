@@ -3,7 +3,7 @@ export * from "./cn";
 export * from "./create-id";
 export * from "./focus";
 export * from "./keyboard";
-export * from "./memoize-variants";
+export * from "./memoize-slot-classes";
 export * from "./merge-props";
 export * from "./presence";
 export * from "./roving-focus";

@@ -1,9 +1,3 @@
-<script lang="ts" module>
-  import { tagStyles } from "@shizen-ui/styles";
-
-  const styles = tagStyles();
-</script>
-
 <script lang="ts">
   import { onDestroy } from "svelte";
   import { cn, mergeProps } from "../../../lib/utils/index.js";
@@ -46,7 +40,7 @@
           pressed: press.isPressed
         }),
         ...handlers,
-        class: cn(styles.removeButton(), className)
+        class: cn(tagCtx.removeButtonClass, className)
       },
       rest
     )
