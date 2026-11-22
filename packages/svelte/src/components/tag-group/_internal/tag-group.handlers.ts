@@ -1,6 +1,11 @@
 import type { TagGroupListApi } from "./tag-group.context.js";
 import { TAG_SELECTOR } from "./tag-group.constants.js";
-import { createRovingContainer, createRovingKeydown } from "../../../lib/utils/index.js";
+import {
+  createRovingContainer,
+  createRovingKeydown,
+  extendsSelection,
+  isCollectionShortcut
+} from "../../../lib/utils/index.js";
 
 const NAVIGATION_OPTIONS = {
   orientation: "horizontal",
@@ -8,28 +13,6 @@ const NAVIGATION_OPTIONS = {
   includeHomeEnd: true,
   includePageUpDown: true
 } as const;
-
-const isHomeOrEnd = (e: KeyboardEvent) => e.key === "Home" || e.key === "End";
-
-/** `Ctrl+Shift+Home`/`End` (`⌘` on macOS) select up to the first or the last tag. */
-const isSelectingHomeOrEnd = (e: KeyboardEvent) =>
-  isHomeOrEnd(e) && e.shiftKey && !e.altKey && (e.ctrlKey || e.metaKey);
-
-/**
- * `Ctrl` with an arrow (and `Shift`, optionally) moves as the arrow alone, as in React Aria. Only
- * `Ctrl`: `⌘` with an arrow belongs to the browser on macOS (e.g. `⌘+←` goes back).
- */
-const isCtrlArrow = (e: KeyboardEvent) =>
-  e.ctrlKey && !e.metaKey && !e.altKey && e.key.startsWith("Arrow");
-
-const acceptsModifiedKey = (e: KeyboardEvent) => isSelectingHomeOrEnd(e) || isCtrlArrow(e);
-
-/**
- * Whether a move extends the selection, as in React Aria: `Shift` with the arrows (`Ctrl` too, or
- * not), `PageUp` or `PageDown`, and `Ctrl+Shift+Home`/`End`. `Shift+Home`/`End` only move focus.
- */
-const extendsSelection = (e: KeyboardEvent) =>
-  e.shiftKey && (!isHomeOrEnd(e) || isSelectingHomeOrEnd(e));
 
 export function createTagGroupListHandlers(options: {
   getContainer: () => HTMLDivElement | null;
@@ -56,7 +39,7 @@ export function createTagGroupListHandlers(options: {
     selector: TAG_SELECTOR,
     options: NAVIGATION_OPTIONS,
     wrapAround: (e) => !e.shiftKey,
-    acceptsModifiedKey,
+    acceptsModifiedKey: isCollectionShortcut,
     onMove: (target, e, candidates) => {
       groupCtx.setActiveId(target.id);
       if (extendsSelection(e)) groupCtx.extendSelectionTo(target.id, candidates);
