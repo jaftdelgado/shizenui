@@ -2,7 +2,7 @@
 // the slot of its remove button.
 import { untrack } from "svelte";
 import type { Snippet } from "svelte";
-import { DEV } from "esm-env";
+import { devWarn } from "../../../lib/utils/index.js";
 import { setTagContext } from "./tag.context.js";
 import type { TagContext } from "./tag.context.js";
 import type { TagState } from "./tag.state.svelte.js";
@@ -37,11 +37,10 @@ export function createTagRemoveButtonSlot(): TagRemoveButtonSlot {
       // must not become a dependency of the caller.
       return untrack(() => {
         if (current !== undefined) {
-          if (DEV) {
-            console.warn(
-              "[shizen-ui] <Tag.RemoveButton>: Only one remove button per <Tag> is supported. The extra one is not rendered."
-            );
-          }
+          devWarn(
+            "Tag.RemoveButton",
+            "Only one remove button per <Tag> is supported. The extra one is not rendered."
+          );
           return () => {};
         }
 

@@ -1,4 +1,5 @@
 import { DEV } from "esm-env";
+import { devWarn } from "../utils/dev-warn.js";
 
 /**
  * Logs a warning in development mode when a condition is true.
@@ -19,7 +20,7 @@ export function warnIf(condition: () => boolean, component: string, message: str
 
   $effect(() => {
     if (condition() && !hasWarned) {
-      console.warn(`[shizen-ui] <${component}>: ${message}`);
+      devWarn(component, message);
       hasWarned = true;
     }
   });
