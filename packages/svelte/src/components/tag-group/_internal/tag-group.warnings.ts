@@ -1,4 +1,4 @@
-import { assertContext, warnIf } from "../../../lib/runes/index.js";
+import { warnIf } from "../../../lib/runes/index.js";
 import type { TagGroupContext } from "./tag-group.context.js";
 import type { TagGroupState } from "./tag-group.state.svelte.js";
 
@@ -30,8 +30,8 @@ export function setupTagGroupListWarnings(options: {
   hasChildren: () => boolean;
   /** Whether the rendered list ended up with an accessible name, from whichever source. */
   hasAccessibleName: () => boolean;
-}): boolean {
-  const shouldRender = assertContext(
+}): void {
+  warnIf(
     () => !options.groupCtx.exists,
     "TagGroup.List",
     "Must be used inside a <TagGroup> component."
@@ -45,10 +45,8 @@ export function setupTagGroupListWarnings(options: {
 
   // The grid is the element that needs the name, and only the list knows where it came from.
   warnIf(
-    () => shouldRender && !options.hasAccessibleName(),
+    () => options.groupCtx.exists && !options.hasAccessibleName(),
     "TagGroup",
     "No accessible name found for the list. Add a <Label> as a child, or pass aria-label/aria-labelledby to <TagGroup> or <TagGroup.List>."
   );
-
-  return shouldRender;
 }

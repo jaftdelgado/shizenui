@@ -44,11 +44,14 @@
     )
   );
 
-  const shouldRender = setupTagGroupListWarnings({
+  setupTagGroupListWarnings({
     groupCtx,
     hasChildren: () => Boolean(children),
     hasAccessibleName: () => hasOwnAccessibleName(listProps)
   });
+
+  // The context never changes during the life of the list, so this is decided once.
+  const shouldRender = groupCtx.exists;
 
   // The id is constant: register while initializing so the list also exists on the server. Outside
   // a group the context is a no-op.

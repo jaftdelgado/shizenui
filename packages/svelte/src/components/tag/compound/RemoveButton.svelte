@@ -23,7 +23,10 @@
 
   const tagCtx = useTagContext();
 
-  const shouldRender = setupTagRemoveButtonWarnings({ tagCtx });
+  setupTagRemoveButtonWarnings({ tagCtx });
+
+  // The context never changes during the life of the button, so this is decided once.
+  const shouldRender = tagCtx.exists;
 
   const press = new PressState({ isDisabled: () => tagCtx.disabled });
 
