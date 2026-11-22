@@ -1,9 +1,12 @@
+import type { Snippet } from "svelte";
+import { createSnippetSlot } from "../../../lib/runes/index.js";
 import { useTagGroupContext } from "../../tag-group/_internal/index.js";
 import type {
   TagGroupItemApi,
   TagGroupRegistration,
   TagGroupRemoveScope
 } from "../../tag-group/_internal/index.js";
+import type { TagContext } from "./tag.context.js";
 import type { TagSize, TagVariant } from "./tag.types.js";
 
 export interface TagStateProps {
@@ -13,10 +16,21 @@ export interface TagStateProps {
   onRemove: () => (() => void) | undefined;
   /** The tag's element, if it is rendered. */
   getRef: () => HTMLElement | null;
+  /**
+   * The class of the remove button. The Tag resolves the classes of its slots with its variant and
+   * its size; the state only hands this one to the button through the context.
+   */
+  removeButtonClass: () => string;
   groupContext?: TagGroupItemApi;
 }
 
-export class TagState {
+/**
+ * State of a Tag. It is also the tag's context: it is passed as is to `setTagContext`, so the
+ * `<Tag.RemoveButton>` reads it.
+ */
+export class TagState implements TagContext {
+  readonly exists = true;
+
   readonly #props: TagStateProps;
 
   readonly #groupCtx: TagGroupItemApi;
@@ -32,6 +46,17 @@ export class TagState {
     canRemove: () => this.canRemove,
     emitRemove: () => this.#props.onRemove()?.()
   };
+
+  /**
+   * `<Tag.RemoveButton>` is declared among the tag's children, but it is not rendered there: it
+   * fills this slot with its markup, which the Tag renders after the element that wraps its text.
+   * That element names the row and the button (`aria-labelledby`), and a button inside it would
+   * add its own name to both. Only one remove button per tag is supported: the first one wins.
+   */
+  readonly #removeButton = createSnippetSlot({
+    component: "Tag.RemoveButton",
+    message: "Only one remove button per <Tag> is supported. The extra one is not rendered."
+  });
 
   #isActive = $derived.by(() => this.#groupCtx.isActive(this.#props.id()));
   #isSelected = $derived.by(
@@ -86,6 +111,27 @@ export class TagState {
     return this.isRemovable && !this.disabled;
   }
 
+  /** Whether the remove button belongs in the tab sequence (only the active tag of a group). */
+  get tabbable(): boolean {
+    return !this.inGroup || this.isActive;
+  }
+
+  /** The class of the remove button slot, resolved with the variant and the size of the tag. */
+  get removeButtonClass(): string {
+    return this.#props.removeButtonClass();
+  }
+
+  /** The markup of the declared remove button, which the Tag renders after its text. */
+  get removeButton(): Snippet | undefined {
+    return this.#removeButton.current;
+  }
+
+  /**
+   * Hands the markup of a declared remove button to the Tag, which renders it after the tag's
+   * text. Returns the function that withdraws it.
+   */
+  readonly registerRemoveButton = this.#removeButton.register;
+
   get value(): string {
     return this.#props.value();
   }
@@ -139,8 +185,8 @@ export class TagState {
    * button only removes itself). Outside a group the no-op context has no tags and no group
    * `onRemove`, so only the tag's own `onRemove` runs.
    */
-  remove(scope: TagGroupRemoveScope = "self"): void {
+  readonly remove = (scope: TagGroupRemoveScope = "self"): void => {
     if (!this.canRemove) return;
     this.#groupCtx.remove({ entry: this.registration, row: this.#props.getRef(), scope });
-  }
+  };
 }

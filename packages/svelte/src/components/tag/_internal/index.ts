@@ -9,7 +9,6 @@ export type {
 
 export { TagState } from "./tag.state.svelte.js";
 export { getTagAttributes, getTagRemoveButtonAttributes } from "./tag.attributes.js";
-export { setupTagContexts } from "./tag.setup.svelte.js";
 export { setupTagWarnings, setupTagRemoveButtonWarnings } from "./tag.warnings.js";
 
 export { setTagContext, useTagContext } from "./tag.context.js";

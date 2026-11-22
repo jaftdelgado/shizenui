@@ -7,18 +7,13 @@
 
 <script lang="ts">
   import { cn, createId, hasOwnAccessibleName, mergeProps } from "../../lib/utils/index.js";
-  import {
-    createFocusVisible,
-    createSnippetSlot,
-    PressState,
-    registerKeyed
-  } from "../../lib/runes/index.js";
+  import { createFocusVisible, PressState, registerKeyed } from "../../lib/runes/index.js";
   import type { TagIconContent, TagProps } from "./_internal/index.js";
   import {
     TagState,
     getTagAttributes,
     createTagHandlers,
-    setupTagContexts,
+    setTagContext,
     setupTagWarnings
   } from "./_internal/index.js";
 
@@ -47,7 +42,10 @@
     disabled: () => disabled,
     id: () => id,
     onRemove: () => onRemove,
-    getRef: () => ref
+    getRef: () => ref,
+    // Read when the button asks for it, so it does not matter that `slots` comes further down. The
+    // return type is explicit: `slots` depends on `tagState`, and inferring it would be circular.
+    removeButtonClass: (): string => slots.removeButton
   });
 
   // The id can change, so this is an effect: it registers again under the new id, and the cleanup
@@ -55,7 +53,7 @@
   registerKeyed(() => tagState.id, tagState.registerInGroup, tagState.unregisterFromGroup);
 
   // The classes of every slot, resolved once per variant and size and shared by all the tags that
-  // ask for the same. Declared before the contexts: the remove button reads its class from there.
+  // ask for the same. The remove button reads its class from the state.
   const slots = $derived(getTagSlotClasses({ variant: tagState.variant, size: tagState.size }));
 
   const focus = createFocusVisible();
@@ -72,20 +70,7 @@
     getOnClick: () => onclick
   });
 
-  // `<Tag.RemoveButton>` is declared among the tag's children, but it is not rendered there: it
-  // fills this slot with its markup, which the Tag renders below, after the element that wraps its
-  // text. That element names the row and the button (`aria-labelledby`), and a button inside it
-  // would add its own name to both. Only one remove button per tag is supported: the first one
-  // wins.
-  const removeButton = createSnippetSlot({
-    component: "Tag.RemoveButton",
-    message: "Only one remove button per <Tag> is supported. The extra one is not rendered."
-  });
-
-  setupTagContexts(tagState, {
-    registerRemoveButton: removeButton.register,
-    getRemoveButtonClass: () => slots.removeButton
-  });
+  setTagContext(tagState);
 
   setupTagWarnings({
     state: tagState,
@@ -136,8 +121,8 @@
       {/if}
     </span>
     {@render renderIcon(endContent, "end")}
-    {#if removeButton.current && tagState.isRemovable}
-      {@render removeButton.current()}
+    {#if tagState.removeButton && tagState.isRemovable}
+      {@render tagState.removeButton()}
     {/if}
   </div>
 </div>
