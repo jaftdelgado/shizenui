@@ -3,7 +3,7 @@ import type {
   TagGroupRegistration,
   TagGroupRemoveRequest
 } from "./tag-group.context.js";
-import { FocusRestoration } from "./tag-group.focus-restoration.js";
+import { LIST_SELECTOR, TAG_SELECTOR } from "./tag-group.constants.js";
 import type { TagGroupSelectionMode } from "./tag-group.types.js";
 import { resolveSurfaceVariant, useSurfaceContext } from "../../../lib/contexts/index.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/index.js";
@@ -13,6 +13,7 @@ import {
   RovingFocusState,
   SelectionState
 } from "../../../lib/runes/index.js";
+import { FocusRestoration } from "../../../lib/utils/index.js";
 import { getListRows } from "./tag-group.dom.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
@@ -65,6 +66,8 @@ export class TagGroupState implements TagGroupContext {
   readonly field: ContentSlotsState;
   readonly #roving = new RovingFocusState<TagGroupRegistration>();
   readonly #focusRestoration = new FocusRestoration({
+    containerSelector: LIST_SELECTOR,
+    itemSelector: TAG_SELECTOR,
     isRegistered: (id) => this.#roving.isRegistered(id),
     setActiveId: (id) => this.#roving.setActiveId(id)
   });

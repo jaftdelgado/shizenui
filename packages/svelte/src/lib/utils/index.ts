@@ -3,6 +3,7 @@ export * from "./cn.js";
 export * from "./create-id.js";
 export * from "./dev-warn.js";
 export * from "./focus.js";
+export * from "./focus-restoration.js";
 export * from "./keyboard.js";
 export * from "./memoize-slot-classes.js";
 export * from "./merge-props.js";
