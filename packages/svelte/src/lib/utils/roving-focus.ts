@@ -3,14 +3,10 @@ import { isModifierKey } from "./keyboard.js";
 
 export type RovingFocusOrientation = "horizontal" | "vertical";
 
-export interface RovingFocusIndexOptions {
+export interface RovingFocusIndexOptions extends RovingFocusKeyOptions {
   key: string;
   currentIndex: number;
   itemCount: number;
-  orientation: RovingFocusOrientation;
-  allowCrossAxis?: boolean;
-  includeHomeEnd?: boolean;
-  includePageUpDown?: boolean;
   wrapAround?: boolean;
 }
 
@@ -94,14 +90,10 @@ export function resolveRovingFocusIndex(options: RovingFocusIndexOptions): numbe
   if (edgeIndex !== undefined) return edgeIndex;
 
   const offsetMap = getKeyOffsetMap(orientation, allowCrossAxis);
-  if (!Object.hasOwn(offsetMap, key)) {
-    return undefined;
-  }
-
-  const offset = offsetMap[key];
-  if (offset === undefined) {
-    return undefined;
-  }
+  // Own keys only (`toString` is not a key), and `noUncheckedIndexedAccess` makes the lookup
+  // possibly `undefined` anyway.
+  const offset = Object.hasOwn(offsetMap, key) ? offsetMap[key] : undefined;
+  if (offset === undefined) return undefined;
 
   const nextIndex = currentIndex + offset;
 

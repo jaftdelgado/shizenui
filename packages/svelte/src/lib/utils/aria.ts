@@ -11,3 +11,11 @@ export interface AccessibleNameProps {
 export function hasOwnAccessibleName(props: AccessibleNameProps): boolean {
   return Boolean(props["aria-label"] || props["aria-labelledby"]);
 }
+
+/**
+ * `true` when the value is true; otherwise `undefined`, so the attribute is left out instead of
+ * rendering as `"false"`.
+ */
+export function ariaBool(value: boolean): true | undefined {
+  return value ? true : undefined;
+}

@@ -1,4 +1,4 @@
-import { hasOwnAccessibleName, presence } from "../../../lib/utils/index.js";
+import { ariaBool, hasOwnAccessibleName, presence } from "../../../lib/utils/index.js";
 import { TAG_SLOT } from "../../tag-group/_internal/index.js";
 import type { TagContext } from "./tag.context.js";
 import type { TagState } from "./tag.state.svelte.js";
@@ -54,7 +54,7 @@ export function getTagAttributes(
           tabindex: state.disabled ? undefined : state.isActive ? 0 : -1,
           "aria-labelledby": nameFromText ? state.labelId : undefined,
           "aria-selected": state.isSelectable ? state.isSelected : undefined,
-          "aria-disabled": state.disabled ? true : undefined
+          "aria-disabled": ariaBool(state.disabled)
         }
       : {}),
     "data-slot": TAG_SLOT,

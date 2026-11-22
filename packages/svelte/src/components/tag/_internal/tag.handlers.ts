@@ -44,10 +44,6 @@ export function createTagHandlers(options: {
     state.activate();
   }
 
-  function handleBlur(): void {
-    focus.onBlur();
-  }
-
   function handleKeyDown(e: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
     if (e.target !== e.currentTarget) return;
     if (e.key !== "Delete" && e.key !== "Backspace") return;
@@ -70,7 +66,7 @@ export function createTagHandlers(options: {
       onclick: handleClick,
       onkeydown: handleKeyDown,
       onfocus: handleFocus,
-      onblur: handleBlur
+      onblur: focus.onBlur
     },
     requestRemove
   };

@@ -1,4 +1,4 @@
-import { hasOwnAccessibleName, presence } from "../../../lib/utils/index.js";
+import { ariaBool, hasOwnAccessibleName, presence } from "../../../lib/utils/index.js";
 import type { AccessibleNameProps } from "../../../lib/utils/index.js";
 import { TAG_GROUP_LIST_SLOT } from "./tag-group.constants.js";
 import type { TagGroupContext } from "./tag-group.context.js";
@@ -74,9 +74,9 @@ export function getTagGroupListAttributes(
     tabindex,
     ...nameProps,
     "aria-describedby": describedBy,
-    "aria-multiselectable": ctx.selectionMode === "multiple" ? true : undefined,
-    "aria-disabled": ctx.disabled ? true : undefined,
-    "aria-invalid": ctx.invalid ? true : undefined,
+    "aria-multiselectable": ariaBool(ctx.selectionMode === "multiple"),
+    "aria-disabled": ariaBool(ctx.disabled),
+    "aria-invalid": ariaBool(ctx.invalid),
     "data-disabled": presence(ctx.disabled),
     "data-invalid": presence(ctx.invalid)
   };
