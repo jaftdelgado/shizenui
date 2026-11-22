@@ -1,8 +1,4 @@
-import {
-  getListTagIds,
-  useTagGroupContext,
-  useTagGroupListContext
-} from "../../tag-group/_internal/index.js";
+import { useTagGroupContext, useTagGroupListContext } from "../../tag-group/_internal/index.js";
 import type {
   TagGroupContext,
   TagGroupListContext,
@@ -140,10 +136,10 @@ export class TagState {
     this.#groupCtx.toggleValue(this.#props.value());
   }
 
-  /** Selects the range from the anchor to this tag, among the enabled tags of `row`'s list. */
-  extendSelection(row: HTMLElement): void {
+  /** Selects the range from the anchor to this tag. The group knows the order of its tags. */
+  extendSelection(): void {
     if (!this.isRangeSelectable) return;
-    this.#groupCtx.extendSelectionTo(this.id, getListTagIds(row));
+    this.#groupCtx.extendSelectionTo(this.id);
   }
 
   /**

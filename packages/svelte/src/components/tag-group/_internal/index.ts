@@ -22,5 +22,4 @@ export type {
 } from "./tag-group.context.js";
 
 export { createTagGroupListHandlers } from "./tag-group.handlers.js";
-export { getListTagIds } from "./tag-group.dom.js";
 export { TAG_SLOT } from "./tag-group.constants.js";

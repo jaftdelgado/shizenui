@@ -16,7 +16,7 @@ import { SvelteSet } from "svelte/reactivity";
  *
  * - Constant for the component's life (a fixed id, no reactive condition):
  *   register synchronously while initializing and unregister in `onDestroy`.
- *   It also exists on the server. (Label, TagGroup.List)
+ *   It also exists on the server. (Label)
  * - Depends on a condition that appears and disappears: `registerWhile`
  *   registers the initial state synchronously, then an `$effect.pre` follows
  *   the changes and cleans up. (Description, FieldError)

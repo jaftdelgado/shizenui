@@ -41,9 +41,10 @@ export interface TagGroupContext {
   readonly toggleValue: (value: string) => void;
   /**
    * Selects the range from the anchor (the last tag selected) to the tag with `targetId`
-   * (multiple mode only). `orderedIds` is every enabled tag of the list, in DOM order.
+   * (multiple mode only). `rows` are the enabled rows of the list in DOM order, when the caller
+   * already has them; without them the group reads them from its list.
    */
-  readonly extendSelectionTo: (targetId: string, orderedIds: readonly string[]) => void;
+  readonly extendSelectionTo: (targetId: string, rows?: readonly HTMLElement[]) => void;
   /**
    * Removes the tag, or every selected tag that can be removed when the scope is `"selection"` and
    * the tag is selected: each one's own `onRemove` runs, then the group's `onRemove` once, with
@@ -61,7 +62,8 @@ export interface TagGroupContext {
   readonly tabStopId: string | undefined;
   readonly isActive: (id: string) => boolean;
   readonly setActiveId: (id: string | undefined) => void;
-  readonly registerList: (id: string) => void;
+  /** `getElement` reads the list's element when it is needed: it does not exist yet on the server. */
+  readonly registerList: (id: string, getElement: () => HTMLElement | null) => void;
   readonly unregisterList: (id: string) => void;
 }
 

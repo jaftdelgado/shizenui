@@ -33,7 +33,7 @@ export function createTagHandlers(options: {
     if (isFromFocusableChild(e.target, e.currentTarget)) return;
     if (state.disabled) return;
     // Shift+click selects the range from the anchor, as Shift+arrows do.
-    if (e.shiftKey && state.isRangeSelectable) state.extendSelection(e.currentTarget);
+    if (e.shiftKey && state.isRangeSelectable) state.extendSelection();
     else state.toggle();
     getOnClick?.()?.(e);
   }

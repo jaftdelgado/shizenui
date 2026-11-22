@@ -9,11 +9,11 @@ import { resolveSurfaceVariant, useSurfaceContext } from "../../../lib/index.js"
 import type { SurfaceContextResult } from "../../../lib/index.js";
 import {
   ContentSlotsState,
-  createIdRegistry,
   createMounted,
   RovingFocusState,
   SelectionState
 } from "../../../lib/runes/index.js";
+import { getListRows } from "./tag-group.dom.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
 export interface TagGroupStateProps {
@@ -46,7 +46,12 @@ export class TagGroupState implements TagGroupContext {
   readonly #props: TagGroupStateProps;
   readonly #surfaceCtx: SurfaceContextResult;
 
-  readonly #listIds = createIdRegistry();
+  // Plain, not reactive: the lists register while the group initializes, before the only readers
+  // (`hasList` and `hasMultipleLists`, used by the development warnings, which run once the group
+  // has mounted) look at them. Those warnings therefore no longer follow a list that appears or
+  // goes away later, which is fine: they point at a misuse of the markup, not at a state to track.
+  // Only one list per group is supported.
+  readonly #lists = new Map<string, () => HTMLElement | null>();
 
   // The primitives read `#props` only when called, so they can be built in field initializers.
   // The fields that delegate to them must be declared after them.
@@ -68,9 +73,11 @@ export class TagGroupState implements TagGroupContext {
     resolveSurfaceVariant(this.#props.variant(), this.#surfaceCtx, undefined, "secondary")
   );
 
-  readonly registerList = this.#listIds.register;
+  readonly registerList = (id: string, getElement: () => HTMLElement | null): void => {
+    this.#lists.set(id, getElement);
+  };
   readonly unregisterList = (id: string): void => {
-    this.#listIds.unregister(id);
+    this.#lists.delete(id);
     // The list is gone, and so is whatever it was waiting for.
     this.#focusRestoration.cancel();
   };
@@ -130,12 +137,12 @@ export class TagGroupState implements TagGroupContext {
   }
 
   get hasList(): boolean {
-    return this.#listIds.size > 0;
+    return this.#lists.size > 0;
   }
 
   /** Only one list per group is supported; used to warn in development. */
   get hasMultipleLists(): boolean {
-    return this.#listIds.size > 1;
+    return this.#lists.size > 1;
   }
 
   get tabStopId(): string | undefined {
@@ -146,18 +153,30 @@ export class TagGroupState implements TagGroupContext {
 
   readonly toggleValue = this.#selection.toggle;
 
-  readonly extendSelectionTo = (targetId: string, orderedIds: readonly string[]): void => {
+  readonly extendSelectionTo = (targetId: string, rows?: readonly HTMLElement[]): void => {
     if (this.selectionMode !== "multiple") return;
 
     const valueOf = (id: string) => this.#roving.getItem(id)?.getValue();
     const target = valueOf(targetId);
     if (target === undefined) return;
 
-    this.#selection.extendTo(
-      orderedIds.flatMap((id) => valueOf(id) ?? []),
-      target
-    );
+    // Read only now, once the mode and the target allow a range: a caller that has no rows
+    // would otherwise query the DOM for nothing.
+    const ordered = (rows ?? this.#getRows()).flatMap((row) => valueOf(row.id) ?? []);
+    this.#selection.extendTo(ordered, target);
   };
+
+  /**
+   * The enabled rows of the group's list, in DOM order. Only one list per group is supported: the
+   * first one that is rendered is the one read.
+   */
+  #getRows(): HTMLElement[] {
+    for (const getElement of this.#lists.values()) {
+      const list = getElement();
+      if (list) return getListRows(list);
+    }
+    return [];
+  }
 
   readonly remove = ({ entry, row, scope }: TagGroupRemoveRequest): void => {
     const removesSelection =

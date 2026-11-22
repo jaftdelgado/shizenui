@@ -1,6 +1,7 @@
 import { tick } from "svelte";
-import { getRootActiveElement, getRovingCandidates } from "../../../lib/utils/index.js";
+import { getRootActiveElement } from "../../../lib/utils/index.js";
 import { LIST_SELECTOR, TAG_SELECTOR } from "./tag-group.constants.js";
+import { getListRows } from "./tag-group.dom.js";
 
 /** What is needed to finish moving focus after a tag that held it is gone. */
 interface PendingRestoration {
@@ -154,7 +155,7 @@ export class FocusRestoration {
   #restore({ grid, index, successor }: PendingRestoration): void {
     if (!grid.isConnected || !isFocusLost(grid)) return;
 
-    const candidates = getRovingCandidates<HTMLElement>(grid, TAG_SELECTOR);
+    const candidates = getListRows(grid);
     const target =
       successor?.isConnected && successor.matches(TAG_SELECTOR) && this.#isRegistered(successor.id)
         ? successor
@@ -179,7 +180,7 @@ function findFocusSuccessor(
   grid: HTMLElement,
   row: HTMLElement
 ): { index: number; successor: HTMLElement | undefined } | undefined {
-  const rows = getRovingCandidates<HTMLElement>(grid, TAG_SELECTOR);
+  const rows = getListRows(grid);
   const index = rows.indexOf(row);
   if (index === -1) return undefined;
 

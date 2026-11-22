@@ -1,6 +1,5 @@
 import type { TagGroupContext } from "./tag-group.context.js";
 import { TAG_SELECTOR } from "./tag-group.constants.js";
-import { getListTagIds } from "./tag-group.dom.js";
 import { createRovingContainer, createRovingKeydown } from "../../../lib/utils/index.js";
 
 const NAVIGATION_OPTIONS = {
@@ -58,9 +57,9 @@ export function createTagGroupListHandlers(options: {
     options: NAVIGATION_OPTIONS,
     wrapAround: (e) => !e.shiftKey,
     acceptsModifiedKey,
-    onMove: (target, e) => {
+    onMove: (target, e, candidates) => {
       groupCtx.setActiveId(target.id);
-      if (extendsSelection(e)) groupCtx.extendSelectionTo(target.id, getListTagIds(target));
+      if (extendsSelection(e)) groupCtx.extendSelectionTo(target.id, candidates);
     }
   });
 

@@ -53,7 +53,7 @@
 
   // The id is constant: register while initializing so the list also exists on the server. Outside
   // a group the context is a no-op.
-  groupCtx.registerList(listUid);
+  groupCtx.registerList(listUid, () => ref);
 
   // Lets the tags know they are inside the list (only a list of a group counts).
   if (groupCtx.exists) setTagGroupListContext({ exists: true });
