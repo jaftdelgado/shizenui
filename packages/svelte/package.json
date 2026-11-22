@@ -9,10 +9,6 @@
       "types": "./src/index.ts",
       "svelte": "./src/index.ts",
       "import": "./src/index.ts"
-    },
-    "./contexts/*": {
-      "types": "./src/contexts/*.ts",
-      "import": "./src/contexts/*.ts"
     }
   },
   "scripts": {
