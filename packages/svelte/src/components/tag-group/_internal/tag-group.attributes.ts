@@ -36,9 +36,13 @@ function resolveListAccessibleName(
   };
 }
 
+/** The list owns its role and its tab stop: the consumer's `role` and `tabindex` never win. */
+export const TAG_GROUP_LIST_OWNED_KEYS = ["role", "tabindex"] as const;
+
 /**
- * Attributes of the TagGroup.List element (the grid). `tabindex` is always present as a key:
- * mergeProps lets the component win on it even when the value is `undefined`.
+ * Attributes of the TagGroup.List element (the grid). Its `tabindex` is `undefined` while the
+ * group is disabled: the caller passes `TAG_GROUP_LIST_OWNED_KEYS` to mergeProps so that the
+ * consumer's does not take its place.
  */
 export function getTagGroupListAttributes(
   ctx: Pick<

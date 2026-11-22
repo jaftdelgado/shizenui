@@ -5,8 +5,8 @@ type MergeableProps = Record<string, unknown>;
 
 const NON_EVENT_ON_KEYS = new Set(["once"]);
 
-function isOwnedKey(key: string): boolean {
-  return key === "role" || key === "tabindex" || key.startsWith("data-");
+function isDataKey(key: string): boolean {
+  return key.startsWith("data-");
 }
 
 function isDomEventKey(key: string): boolean {
@@ -32,25 +32,39 @@ function composeHandlers<E extends { defaultPrevented?: boolean }>(
   };
 }
 
+export interface MergePropsOptions {
+  /**
+   * Keys the component owns besides its `data-*` keys: its value wins even when it is `undefined`
+   * (the attribute is then not rendered), so the consumer's value never reaches the element. A
+   * defined value always wins anyway: this matters only for keys whose value can be `undefined`
+   * (e.g. the `tabindex` of a disabled item).
+   */
+  readonly owned?: readonly string[];
+}
+
 /**
  * Merges the component's own props over the consumer's.
  *
- * - `role`, `tabindex` and `data-*` keys the component declares always win, even when their value
- *   is `undefined` (the attribute is then not rendered): navigation selectors and styles depend
- *   on them. A component that lets the consumer set one of these must not pass the key at all.
- * - Any other internal key whose value is `undefined` is skipped, so it never wipes out a value
- *   the consumer passed (e.g. `aria-*`).
+ * - A defined internal value always wins over the consumer's.
+ * - The `data-*` keys the component declares always win, even when their value is `undefined` (the
+ *   attribute is then not rendered): they are the state and styling API of every component, and
+ *   selectors depend on them.
+ * - The keys in `options.owned` win in the same way. Any other internal key whose value is
+ *   `undefined` is skipped, so it never wipes out a value the consumer passed (e.g. `aria-*`,
+ *   `role`, `tabindex`).
  * - `class` is joined and DOM event handlers are composed (internal first, skipped by
  *   `preventDefault()`).
  */
 export function mergeProps<A extends MergeableProps, B extends MergeableProps>(
   internalProps: A,
-  rest: B
+  rest: B,
+  options?: MergePropsOptions
 ): A & B {
   const merged: Record<string, unknown> = { ...rest };
+  const owned = options?.owned;
 
   for (const key of Object.keys(internalProps)) {
-    if (internalProps[key] === undefined && !isOwnedKey(key)) continue;
+    if (internalProps[key] === undefined && !isDataKey(key) && !owned?.includes(key)) continue;
 
     merged[key] = internalProps[key];
     if (!(key in rest)) continue;

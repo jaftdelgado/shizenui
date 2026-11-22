@@ -16,11 +16,17 @@ type TagAriaState = Pick<
 >;
 
 /**
+ * The keys the row owns inside a group: its role and its roving `tabindex`, which is `undefined`
+ * while the tag is disabled. Outside a group the consumer's win, so the caller passes these to
+ * mergeProps only when the tag is in a group.
+ */
+export const TAG_ROW_OWNED_KEYS = ["role", "tabindex"] as const;
+
+/**
  * Attributes of the Tag row.
  *
- * Outside a group the `role` and `tabindex` keys must not exist at all (not even as `undefined`):
- * mergeProps lets the component win on those keys, which would drop the consumer's own values.
- * `aria-*` keys with an `undefined` value are ignored by mergeProps, so the consumer's win.
+ * Only inside a group the row owns `role` and `tabindex` (see `TAG_ROW_OWNED_KEYS`). `aria-*` keys
+ * with an `undefined` value are omitted by mergeProps, so the consumer's win.
  *
  * @param idProp - the id the consumer passed, if any. The resolved id (`state.id`) is rendered
  *   only inside a group; outside one only an explicit id is.

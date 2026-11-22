@@ -1,7 +1,11 @@
 export type { TagGroupProps, TagGroupListProps, TagGroupSelectionMode } from "./tag-group.types.js";
 
 export { TagGroupState } from "./tag-group.state.svelte.js";
-export { getTagGroupAttributes, getTagGroupListAttributes } from "./tag-group.attributes.js";
+export {
+  TAG_GROUP_LIST_OWNED_KEYS,
+  getTagGroupAttributes,
+  getTagGroupListAttributes
+} from "./tag-group.attributes.js";
 
 export { setupTagGroupWarnings, setupTagGroupListWarnings } from "./tag-group.warnings.js";
 

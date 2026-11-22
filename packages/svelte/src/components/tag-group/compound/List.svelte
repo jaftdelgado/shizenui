@@ -9,6 +9,7 @@
   import { onDestroy } from "svelte";
   import { cn, hasOwnAccessibleName, mergeProps } from "../../../lib/utils/index.js";
   import {
+    TAG_GROUP_LIST_OWNED_KEYS,
     createTagGroupListHandlers,
     getTagGroupListAttributes,
     setupTagGroupListWarnings,
@@ -40,7 +41,8 @@
         class: rootClass,
         ...handlers.props
       },
-      rest
+      rest,
+      { owned: TAG_GROUP_LIST_OWNED_KEYS }
     )
   );
 

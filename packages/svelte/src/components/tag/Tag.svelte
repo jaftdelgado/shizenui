@@ -12,6 +12,7 @@
   import {
     TagState,
     getTagAttributes,
+    TAG_ROW_OWNED_KEYS,
     createTagHandlers,
     setTagContext,
     setupTagWarnings
@@ -98,7 +99,8 @@
         ...rowHandlers,
         class: rootClass
       },
-      rest
+      rest,
+      { owned: inGroup ? TAG_ROW_OWNED_KEYS : undefined }
     )
   );
 </script>

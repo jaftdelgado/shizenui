@@ -8,7 +8,11 @@ export type {
 } from "./tag.types.js";
 
 export { TagState } from "./tag.state.svelte.js";
-export { getTagAttributes, getTagRemoveButtonAttributes } from "./tag.attributes.js";
+export {
+  TAG_ROW_OWNED_KEYS,
+  getTagAttributes,
+  getTagRemoveButtonAttributes
+} from "./tag.attributes.js";
 export { setupTagWarnings, setupTagRemoveButtonWarnings } from "./tag.warnings.js";
 
 export { setTagContext, useTagContext } from "./tag.context.js";
