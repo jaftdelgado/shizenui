@@ -296,8 +296,12 @@ export interface RovingKeydownOptions {
    * is not: those combinations belong to the browser (e.g. `Alt+ArrowLeft` goes back).
    */
   acceptsModifiedKey?: (e: KeyboardEvent) => boolean;
-  /** Called after focus has moved to the next item, with the key press that moved it. */
-  onMove: (target: HTMLElement, e: KeyboardEvent) => void;
+  /**
+   * Called after focus has moved to the next item, with the key press that moved it. `candidates`
+   * are the enabled items in DOM order, as this key press found them: reuse them instead of
+   * querying the DOM again.
+   */
+  onMove: (target: HTMLElement, e: KeyboardEvent, candidates: readonly HTMLElement[]) => void;
 }
 
 function swapHorizontalKey(key: string): string {
@@ -317,9 +321,13 @@ export function createRovingKeydown(config: RovingKeydownOptions) {
     const container = config.getContainer();
     if (!container) return;
 
-    // In a right-to-left container the horizontal arrows point the other way.
-    const isRtl = getComputedStyle(container).direction === "rtl";
-    const key = isRtl ? swapHorizontalKey(e.key) : e.key;
+    // In a right-to-left container the horizontal arrows point the other way. The direction is read
+    // only for them: reading it forces a style recalculation, and no other key depends on it.
+    const isHorizontalArrow = e.key === "ArrowLeft" || e.key === "ArrowRight";
+    const key =
+      isHorizontalArrow && getComputedStyle(container).direction === "rtl"
+        ? swapHorizontalKey(e.key)
+        : e.key;
 
     const candidates = getRovingCandidates<HTMLElement>(container, config.selector);
     if (candidates.length === 0) return;
@@ -347,6 +355,6 @@ export function createRovingKeydown(config: RovingKeydownOptions) {
     if (!nextCandidate) return;
 
     nextCandidate.focus();
-    config.onMove(nextCandidate, e);
+    config.onMove(nextCandidate, e, candidates);
   };
 }

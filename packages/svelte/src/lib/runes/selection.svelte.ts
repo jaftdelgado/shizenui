@@ -78,22 +78,31 @@ export class SelectionState {
    */
   readonly extendTo = (ordered: readonly string[], target: string): void => {
     if (this.#props.mode() !== "multiple") return;
-    if (!ordered.includes(target)) return;
 
-    const anchor =
-      this.#anchor !== undefined && ordered.includes(this.#anchor) ? this.#anchor : target;
+    // Built once: the lookups below would otherwise scan `ordered` each time, which adds up on a
+    // long list. The first index of a value, as `indexOf` would find it.
+    const indexes = new Map<string, number>();
+    ordered.forEach((v, i) => {
+      if (!indexes.has(v)) indexes.set(v, i);
+    });
+
+    if (!indexes.has(target)) return;
+
+    const anchor = this.#anchor !== undefined && indexes.has(this.#anchor) ? this.#anchor : target;
     const current =
-      this.#current !== undefined && ordered.includes(this.#current) ? this.#current : target;
+      this.#current !== undefined && indexes.has(this.#current) ? this.#current : target;
 
-    const previous = rangeOf(ordered, anchor, current);
-    const range = rangeOf(ordered, anchor, target);
+    const previous = rangeOf(ordered, indexes, anchor, current);
+    const range = rangeOf(ordered, indexes, anchor, target);
 
     const before = [...this.#props.values()];
-    const kept = before.filter((v) => !previous.includes(v));
+    const previousSet = new Set(previous);
+    const kept = before.filter((v) => !previousSet.has(v));
+    const keptSet = new Set(kept);
 
     this.#anchor = anchor;
     this.#current = target;
-    this.#commit(before, [...kept, ...range.filter((v) => !kept.includes(v))]);
+    this.#commit(before, [...kept, ...range.filter((v) => !keptSet.has(v))]);
   };
 
   /** Writes `next` and reports it, unless nothing changes or the owner rejected the change. */
@@ -111,13 +120,26 @@ export class SelectionState {
 }
 
 /** The values of `ordered` from `a` to `b`, both included, in either direction. */
-function rangeOf(ordered: readonly string[], a: string, b: string): string[] {
-  const indexA = ordered.indexOf(a);
-  const indexB = ordered.indexOf(b);
+function rangeOf(
+  ordered: readonly string[],
+  indexes: ReadonlyMap<string, number>,
+  a: string,
+  b: string
+): string[] {
+  const indexA = indexes.get(a);
+  const indexB = indexes.get(b);
+  if (indexA === undefined || indexB === undefined) return [];
   return ordered.slice(Math.min(indexA, indexB), Math.max(indexA, indexB) + 1);
 }
 
-/** Whether both hold the same values, in any order. */
+/**
+ * Whether both hold the same values, in any order. Compared through sets, so it stays linear on a
+ * long selection, and `[x, y]` is not taken for `[x, x]`.
+ */
 function haveSameValues(a: readonly string[], b: readonly string[]): boolean {
-  return a.length === b.length && b.every((v) => a.includes(v));
+  if (a.length !== b.length) return false;
+
+  const setA = new Set(a);
+  const setB = new Set(b);
+  return setA.size === setB.size && b.every((v) => setA.has(v));
 }
