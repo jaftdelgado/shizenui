@@ -20,7 +20,7 @@ import {
   toSelectionValues
 } from "../../../lib/utils/index.js";
 import type { SelectionValue, SelectionValueChange } from "../../../lib/utils/index.js";
-import { getListRows, isInsideOwnList } from "./tag-group.dom.js";
+import { getListRows, isInsideOwnList } from "./tag-group.queries.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
 export interface TagGroupStateProps {
