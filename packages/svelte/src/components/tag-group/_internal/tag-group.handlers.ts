@@ -6,8 +6,22 @@ import { createRovingContainer, createRovingKeydown } from "../../../lib/utils/i
 const NAVIGATION_OPTIONS = {
   orientation: "horizontal",
   allowCrossAxis: true,
-  includeHomeEnd: true
+  includeHomeEnd: true,
+  includePageUpDown: true
 } as const;
+
+const isHomeOrEnd = (e: KeyboardEvent) => e.key === "Home" || e.key === "End";
+
+/** `Ctrl+Shift+Home`/`End` (`⌘` on macOS) select up to the first or the last tag. */
+const isSelectingHomeOrEnd = (e: KeyboardEvent) =>
+  isHomeOrEnd(e) && e.shiftKey && !e.altKey && (e.ctrlKey || e.metaKey);
+
+/**
+ * Whether a move extends the selection, as in React Aria: `Shift` with the arrows, `PageUp` or
+ * `PageDown`, and `Ctrl+Shift+Home`/`End`. `Shift+Home`/`End` only move focus.
+ */
+const extendsSelection = (e: KeyboardEvent) =>
+  e.shiftKey && (!isHomeOrEnd(e) || isSelectingHomeOrEnd(e));
 
 export function createTagGroupListHandlers(options: {
   getContainer: () => HTMLDivElement | null;
@@ -26,17 +40,18 @@ export function createTagGroupListHandlers(options: {
     onEnter: (target) => groupCtx.setActiveId(target.id)
   });
 
-  // With `Shift`, the arrows, `Home` and `End` extend the selection from the anchor (the last tag
-  // selected) to the tag they move to, in multiple mode. Without it they only move focus. A range
-  // never wraps from one end of the list to the other.
+  // `Home`/`PageUp` and `End`/`PageDown` move to the first and the last tag. The moves that extend
+  // the selection (see `extendsSelection`) select from the anchor (the last tag selected) to the
+  // tag they move to, in multiple mode. A range never wraps from one end of the list to the other.
   const handleKeyDown = createRovingKeydown({
     getContainer,
     selector: TAG_SELECTOR,
     options: NAVIGATION_OPTIONS,
     wrapAround: (e) => !e.shiftKey,
+    acceptsModifiedKey: isSelectingHomeOrEnd,
     onMove: (target, e) => {
       groupCtx.setActiveId(target.id);
-      if (e.shiftKey) groupCtx.extendSelectionTo(target.id, getListTagIds(target));
+      if (extendsSelection(e)) groupCtx.extendSelectionTo(target.id, getListTagIds(target));
     }
   });
 

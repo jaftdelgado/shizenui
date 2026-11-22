@@ -10,13 +10,31 @@ export interface RovingFocusIndexOptions {
   orientation: RovingFocusOrientation;
   allowCrossAxis?: boolean;
   includeHomeEnd?: boolean;
+  includePageUpDown?: boolean;
   wrapAround?: boolean;
 }
 
 export interface RovingFocusKeyOptions {
   orientation: RovingFocusOrientation;
   allowCrossAxis?: boolean;
+  /** `Home` and `End` move to the first and the last item. */
   includeHomeEnd?: boolean;
+  /** `PageUp` and `PageDown` move to the first and the last item. */
+  includePageUpDown?: boolean;
+}
+
+/** The index `Home`/`End` (and `PageUp`/`PageDown`, when included) move to, if `key` is one. */
+function resolveEdgeIndex(
+  key: string,
+  itemCount: number,
+  options: Pick<RovingFocusKeyOptions, "includeHomeEnd" | "includePageUpDown">
+): number | undefined {
+  const { includeHomeEnd = false, includePageUpDown = false } = options;
+  if ((includeHomeEnd && key === "Home") || (includePageUpDown && key === "PageUp")) return 0;
+  if ((includeHomeEnd && key === "End") || (includePageUpDown && key === "PageDown")) {
+    return itemCount - 1;
+  }
+  return undefined;
 }
 
 const HORIZONTAL_KEY_OFFSETS = {
@@ -50,11 +68,9 @@ export function getRovingCandidates<T extends HTMLElement>(
 }
 
 export function isRovingFocusKey(key: string, options: RovingFocusKeyOptions): boolean {
-  const { orientation, allowCrossAxis = false, includeHomeEnd = false } = options;
+  const { orientation, allowCrossAxis = false } = options;
 
-  if (includeHomeEnd && (key === "Home" || key === "End")) {
-    return true;
-  }
+  if (resolveEdgeIndex(key, 1, options) !== undefined) return true;
 
   return Object.hasOwn(getKeyOffsetMap(orientation, allowCrossAxis), key);
 }
@@ -66,7 +82,6 @@ export function resolveRovingFocusIndex(options: RovingFocusIndexOptions): numbe
     itemCount,
     orientation,
     allowCrossAxis = false,
-    includeHomeEnd = false,
     wrapAround = false
   } = options;
 
@@ -75,10 +90,8 @@ export function resolveRovingFocusIndex(options: RovingFocusIndexOptions): numbe
     return undefined;
   }
 
-  if (includeHomeEnd) {
-    if (key === "Home") return 0;
-    if (key === "End") return itemCount - 1;
-  }
+  const edgeIndex = resolveEdgeIndex(key, itemCount, options);
+  if (edgeIndex !== undefined) return edgeIndex;
 
   const offsetMap = getKeyOffsetMap(orientation, allowCrossAxis);
   if (!Object.hasOwn(offsetMap, key)) {
@@ -278,6 +291,11 @@ export interface RovingKeydownOptions {
    * function to decide it per key press (e.g. not while extending a selection with `Shift`).
    */
   wrapAround?: boolean | ((e: KeyboardEvent) => boolean);
+  /**
+   * Whether a navigation key pressed with `Ctrl`, `Meta` or `Alt` is still handled. By default it
+   * is not: those combinations belong to the browser (e.g. `Alt+ArrowLeft` goes back).
+   */
+  acceptsModifiedKey?: (e: KeyboardEvent) => boolean;
   /** Called after focus has moved to the next item, with the key press that moved it. */
   onMove: (target: HTMLElement, e: KeyboardEvent) => void;
 }
@@ -290,8 +308,8 @@ function swapHorizontalKey(key: string): string {
 
 export function createRovingKeydown(config: RovingKeydownOptions) {
   return function handleKeydown(e: KeyboardEvent): void {
-    // Modified arrows belong to the browser (e.g. Alt+ArrowLeft goes back).
-    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    // Modified keys belong to the browser (e.g. Alt+ArrowLeft goes back), unless accepted.
+    if ((e.altKey || e.ctrlKey || e.metaKey) && !config.acceptsModifiedKey?.(e)) return;
 
     const options = typeof config.options === "function" ? config.options() : config.options;
     if (!isRovingFocusKey(e.key, options)) return;

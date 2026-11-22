@@ -86,8 +86,8 @@ Removing a Tag does not remove it from `value`, so you must update the selection
 
 #### Removing the Selection
 
-With `selectionMode="multiple"`, `Shift` with the arrow keys, `Home` or `End`, or `Shift`+click,
-selects a range of tags, from the last tag you selected to the one you move to (or click). Pressing `Delete` or `Backspace` on a selected tag removes every selected
+With `selectionMode="multiple"`, `Shift` with the arrow keys, `PageUp` or `PageDown`, `Ctrl`+`Shift`+`Home` or `End`, or `Shift`+click,
+selects a range of tags, from the last tag you selected to the one you move to (or click). `Shift`+`Home` and `End` only move focus. Pressing `Delete` or `Backspace` on a selected tag removes every selected
 tag: `onRemove` receives all their values at once. The remove button only removes its own tag.
 
 <ComponentExample src="svelte/tag-group/TagGroupRemovableSelection.svelte">
