@@ -7,14 +7,18 @@
 
 <script lang="ts">
   import { cn, createId, hasOwnAccessibleName, mergeProps } from "../../lib/utils/index.js";
-  import { createFocusVisible, createSnippetSlot, PressState } from "../../lib/runes/index.js";
+  import {
+    createFocusVisible,
+    createSnippetSlot,
+    PressState,
+    registerKeyed
+  } from "../../lib/runes/index.js";
   import type { TagIconContent, TagProps } from "./_internal/index.js";
   import {
     TagState,
     getTagAttributes,
     createTagHandlers,
     setupTagContexts,
-    setupTagGroupRegistration,
     setupTagWarnings
   } from "./_internal/index.js";
 
@@ -46,7 +50,9 @@
     getRef: () => ref
   });
 
-  setupTagGroupRegistration(tagState);
+  // The id can change, so this is an effect: it registers again under the new id, and the cleanup
+  // removes the id it captured.
+  registerKeyed(() => tagState.id, tagState.registerInGroup, tagState.unregisterFromGroup);
 
   // The classes of every slot, resolved once per variant and size and shared by all the tags that
   // ask for the same. Declared before the contexts: the remove button reads its class from there.

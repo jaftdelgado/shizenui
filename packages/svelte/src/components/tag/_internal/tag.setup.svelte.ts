@@ -1,4 +1,4 @@
-// What the Tag wires up once, while it initializes: its context and its registration in the group.
+// What the Tag wires up once, while it initializes: its context.
 import { setTagContext } from "./tag.context.js";
 import type { TagContext } from "./tag.context.js";
 import type { TagState } from "./tag.state.svelte.js";
@@ -34,17 +34,4 @@ export function setupTagContexts(
     registerRemoveButton: options.registerRemoveButton,
     exists: true
   } satisfies TagContext);
-}
-
-export function setupTagGroupRegistration(state: TagState): void {
-  // The id can change, so this is an effect: it re-registers and the cleanup removes the id it
-  // captured.
-  $effect.pre(() => {
-    const id = state.id;
-    state.registerInGroup(id);
-
-    return () => {
-      state.unregisterFromGroup(id);
-    };
-  });
 }

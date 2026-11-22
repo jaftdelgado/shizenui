@@ -7,6 +7,7 @@ export * from "./form-reset.svelte.js";
 export * from "./id-registry.svelte.js";
 export * from "./content-slots-state.js";
 export * from "./mounted.svelte.js";
+export * from "./register-keyed.svelte.js";
 export * from "./register-while.svelte.js";
 export * from "./snippet-slot.svelte.js";
 export * from "./selection.svelte.js";

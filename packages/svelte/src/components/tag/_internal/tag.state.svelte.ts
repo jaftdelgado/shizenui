@@ -109,13 +109,13 @@ export class TagState {
     this.#groupCtx.setActiveId(this.id);
   }
 
-  registerInGroup(id: string): void {
+  readonly registerInGroup = (id: string): void => {
     this.#groupCtx.register(id, this.registration);
-  }
+  };
 
-  unregisterFromGroup(id: string): void {
+  readonly unregisterFromGroup = (id: string): void => {
     this.#groupCtx.unregister(id, this.registration);
-  }
+  };
 
   /** Whether a range of tags can be selected from this one (an enabled tag, multiple mode). */
   get isRangeSelectable(): boolean {

@@ -20,8 +20,8 @@ import { SvelteSet } from "svelte/reactivity";
  * - Depends on a condition that appears and disappears: `registerWhile`
  *   registers the initial state synchronously, then an `$effect.pre` follows
  *   the changes and cleans up. (Description, FieldError)
- * - The identity itself changes (the id of a Tag): `$effect.pre` that
- *   re-registers, with a cleanup that removes the id it captured.
+ * - The identity itself changes (the id of a Tag): `registerKeyed` re-registers
+ *   under the new id, and its cleanup removes the id it captured.
  *
  * Why (2) is required: these methods are called from the consumer's own
  * effects or while it initializes, e.g.
