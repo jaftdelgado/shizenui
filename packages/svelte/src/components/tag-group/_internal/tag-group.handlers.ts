@@ -17,8 +17,17 @@ const isSelectingHomeOrEnd = (e: KeyboardEvent) =>
   isHomeOrEnd(e) && e.shiftKey && !e.altKey && (e.ctrlKey || e.metaKey);
 
 /**
- * Whether a move extends the selection, as in React Aria: `Shift` with the arrows, `PageUp` or
- * `PageDown`, and `Ctrl+Shift+Home`/`End`. `Shift+Home`/`End` only move focus.
+ * `Ctrl` with an arrow (and `Shift`, optionally) moves as the arrow alone, as in React Aria. Only
+ * `Ctrl`: `⌘` with an arrow belongs to the browser on macOS (e.g. `⌘+←` goes back).
+ */
+const isCtrlArrow = (e: KeyboardEvent) =>
+  e.ctrlKey && !e.metaKey && !e.altKey && e.key.startsWith("Arrow");
+
+const acceptsModifiedKey = (e: KeyboardEvent) => isSelectingHomeOrEnd(e) || isCtrlArrow(e);
+
+/**
+ * Whether a move extends the selection, as in React Aria: `Shift` with the arrows (`Ctrl` too, or
+ * not), `PageUp` or `PageDown`, and `Ctrl+Shift+Home`/`End`. `Shift+Home`/`End` only move focus.
  */
 const extendsSelection = (e: KeyboardEvent) =>
   e.shiftKey && (!isHomeOrEnd(e) || isSelectingHomeOrEnd(e));
@@ -48,7 +57,7 @@ export function createTagGroupListHandlers(options: {
     selector: TAG_SELECTOR,
     options: NAVIGATION_OPTIONS,
     wrapAround: (e) => !e.shiftKey,
-    acceptsModifiedKey: isSelectingHomeOrEnd,
+    acceptsModifiedKey,
     onMove: (target, e) => {
       groupCtx.setActiveId(target.id);
       if (extendsSelection(e)) groupCtx.extendSelectionTo(target.id, getListTagIds(target));
