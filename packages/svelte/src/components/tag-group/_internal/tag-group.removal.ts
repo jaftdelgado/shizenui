@@ -174,7 +174,7 @@ export class TagRemoval {
       return;
     }
 
-    // No tag left: the list becomes the tab stop again (focusedId is undefined).
+    // No tag left: the list becomes the tab stop again (tabStopId is undefined).
     grid.focus();
   }
 }

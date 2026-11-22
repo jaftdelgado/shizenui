@@ -46,7 +46,7 @@ export function getTagGroupListAttributes(
     | "selectionMode"
     | "disabled"
     | "invalid"
-    | "focusedId"
+    | "tabStopId"
     | "field"
     | "ariaLabel"
     | "ariaLabelledby"
@@ -64,7 +64,7 @@ export function getTagGroupListAttributes(
   // tag, or when there is no tag to redirect to. It must not depend on the tag registry: on the
   // server the list renders before its tags register, and the SSR output would have no tab stop
   // at all.
-  const tabindex = ctx.focusedId !== undefined ? -1 : ctx.disabled ? undefined : 0;
+  const tabindex = ctx.tabStopId !== undefined ? -1 : ctx.disabled ? undefined : 0;
 
   // aria-invalid is kept on the grid even though the linter only lists it for some roles:
   // it is the element that owns the tags, and dropping it would hide the invalid state from AT.

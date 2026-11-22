@@ -12,7 +12,7 @@ export interface RovingFocusItem {
  *
  * The active item is remembered by its id and also by the registration object it had when it was
  * activated. The object does not change during the life of an item, so if the item registers
- * again under a different id (its `id` prop changed), it is still the active one and `focusedId`
+ * again under a different id (its `id` prop changed), it is still the active one and `tabStopId`
  * follows it to the new id. The object of the last active item is kept even if the item is
  * removed, until another one is activated.
  */
@@ -24,16 +24,20 @@ export class RovingFocusState<T extends RovingFocusItem = RovingFocusItem> {
   #activeId: string | undefined = $state(undefined);
   // Plain, not reactive: it is only read by `register`, and `#activeId` is what drives the UI.
   #activeEntry: T | undefined;
-  /** The last focused item, or undefined if there is none or it is gone or disabled. */
-  #focusedId = $derived.by(() => {
+  /**
+   * The item that holds the tab stop: the last active one, unless it is no longer registered or
+   * it is disabled. It does not mean the item has DOM focus.
+   */
+  #tabStopId = $derived.by(() => {
     const id = this.#activeId;
     if (id === undefined) return undefined;
     const entry = this.#items.get(id);
     return entry && !entry.getDisabled() ? id : undefined;
   });
 
-  get focusedId(): string | undefined {
-    return this.#focusedId;
+  /** The id of the item that holds the tab stop, if any (see `#tabStopId`). */
+  get tabStopId(): string | undefined {
+    return this.#tabStopId;
   }
 
   readonly isRegistered = (id: string): boolean => this.#items.has(id);
@@ -64,7 +68,7 @@ export class RovingFocusState<T extends RovingFocusItem = RovingFocusItem> {
     });
   };
 
-  readonly isActive = (id: string): boolean => id === this.#focusedId;
+  readonly isActive = (id: string): boolean => id === this.#tabStopId;
 
   readonly setActiveId = (id: string | undefined): void => {
     this.#activeId = id;

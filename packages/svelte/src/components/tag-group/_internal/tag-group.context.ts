@@ -43,7 +43,11 @@ export interface TagGroupContext {
   readonly removeSelected: () => void;
   readonly register: (id: string, entry: TagGroupRegistration) => void;
   readonly unregister: (id: string, entry: TagGroupRegistration) => void;
-  readonly focusedId: string | undefined;
+  /**
+   * The tag that holds the tab stop: the last active one, unless it is gone or disabled. It does
+   * not mean the tag has DOM focus. Without one, the list is the tab stop.
+   */
+  readonly tabStopId: string | undefined;
   readonly isActive: (id: string) => boolean;
   readonly setActiveId: (id: string | undefined) => void;
   /**
@@ -74,7 +78,7 @@ const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
   removeSelected: () => {},
   register: () => {},
   unregister: () => {},
-  focusedId: undefined,
+  tabStopId: undefined,
   isActive: () => false,
   setActiveId: () => {},
   // The only NOOP member that does something: outside a group, removing a tag is only `remove()`.

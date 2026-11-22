@@ -45,7 +45,7 @@ export function createTagGroupListHandlers(options: {
     getContainer,
     selector: TAG_SELECTOR,
     resolveTarget: (candidates) =>
-      candidates.find((candidate) => candidate.id === groupCtx.focusedId) ?? candidates[0],
+      candidates.find((candidate) => candidate.id === groupCtx.tabStopId) ?? candidates[0],
     onEnter: (target) => groupCtx.setActiveId(target.id)
   });
 

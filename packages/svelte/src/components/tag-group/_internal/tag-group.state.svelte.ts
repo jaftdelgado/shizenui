@@ -134,8 +134,8 @@ export class TagGroupState implements TagGroupContext {
     return this.#listIds.size > 1;
   }
 
-  get focusedId(): string | undefined {
-    return this.#roving.focusedId;
+  get tabStopId(): string | undefined {
+    return this.#roving.tabStopId;
   }
 
   readonly isSelected = this.#selection.isSelected;
