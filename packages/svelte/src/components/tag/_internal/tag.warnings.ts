@@ -1,5 +1,4 @@
 import { warnIf } from "../../../lib/runes/index.js";
-import { isInsideOwnList } from "../../tag-group/_internal/index.js";
 import type { TagContext } from "./tag.context.js";
 import type { TagState } from "./tag.state.svelte.js";
 
@@ -18,7 +17,7 @@ export function setupTagWarnings(options: {
   warnIf(
     () => {
       const row = options.getRef();
-      return options.state.inGroup && row !== null && !isInsideOwnList(row);
+      return options.state.inGroup && row !== null && !options.state.isInGroupList(row);
     },
     "Tag",
     "Tag is inside a <TagGroup> but outside its <TagGroup.List>, so it cannot be reached with Tab or the arrow keys. Move it into the <TagGroup.List>."

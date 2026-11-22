@@ -68,6 +68,14 @@ export class TagState implements TagContext {
     this.#groupCtx = props.groupContext ?? useTagGroupContext();
   }
 
+  /**
+   * Whether `element` sits inside a list of the tag's group. The group answers it: the tag does not
+   * know how the group lays out its DOM. Read by the development warnings.
+   */
+  isInGroupList(element: Element): boolean {
+    return this.#groupCtx.isInList(element);
+  }
+
   /** Whether the tag sits inside a <TagGroup>. Fixed for the life of the tag. */
   get inGroup(): boolean {
     return this.#groupCtx.exists;

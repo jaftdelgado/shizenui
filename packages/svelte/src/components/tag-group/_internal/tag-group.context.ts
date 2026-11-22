@@ -47,6 +47,11 @@ export interface TagGroupItemApi extends TagGroupSharedApi {
   readonly isActive: (id: string) => boolean;
   readonly toggleValue: (value: string) => void;
   /**
+   * Whether `element` sits inside a `TagGroup.List` of this group, and not only inside the list of
+   * a group nested in it or around it. The development warnings of the Tag read it.
+   */
+  readonly isInList: (element: Element) => boolean;
+  /**
    * Removes the tag, or every selected tag that can be removed when the scope is `"selection"` and
    * the tag is selected: each one's own `onRemove` runs, then the group's `onRemove` once, with
    * all their values. If the tag held focus, focus moves to a neighbour once it is gone. Outside a
@@ -92,6 +97,7 @@ const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
   field: EMPTY_CONTENT_SLOTS,
   isSelected: () => false,
   toggleValue: () => {},
+  isInList: () => false,
   extendSelectionTo: () => {},
   // The only NOOP member that does something: outside a group the tag's own `onRemove` still runs
   // (there are no neighbours to move focus to, and no group `onRemove`).

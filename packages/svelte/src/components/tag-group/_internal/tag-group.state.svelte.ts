@@ -20,7 +20,7 @@ import {
   toSelectionValues
 } from "../../../lib/utils/index.js";
 import type { SelectionValue, SelectionValueChange } from "../../../lib/utils/index.js";
-import { getListRows } from "./tag-group.dom.js";
+import { getListRows, isInsideOwnList } from "./tag-group.dom.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
 export interface TagGroupStateProps {
@@ -161,6 +161,8 @@ export class TagGroupState implements TagGroupContext {
   readonly isSelected = this.#selection.isSelected;
 
   readonly toggleValue = this.#selection.toggle;
+
+  readonly isInList = (element: Element): boolean => isInsideOwnList(element);
 
   readonly extendSelectionTo = (targetId: string, rows?: readonly HTMLElement[]): void => {
     if (this.selectionMode !== "multiple") return;
