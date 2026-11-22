@@ -1,5 +1,11 @@
 import { untrack } from "svelte";
 import { SvelteSet } from "svelte/reactivity";
+import {
+  emitSelectionValueChange,
+  fromSelectionValues,
+  toSelectionValues
+} from "../../../lib/runes/index.js";
+import type { SelectionValue, SelectionValueChange } from "../../../lib/runes/index.js";
 import type { ToggleVariant, ToggleSize } from "../../toggle/_internal/index.js";
 import type { ToggleGroupRegistration } from "./toggle-group.context.js";
 import type { ToggleGroupOrientation, ToggleGroupSelectionMode } from "./toggle-group.types.js";
@@ -11,11 +17,10 @@ export class ToggleGroupState {
   #orientation: () => ToggleGroupOrientation;
   #hideSeparators: () => boolean;
   #selectionMode: () => ToggleGroupSelectionMode;
-  #value: () => string | string[] | undefined;
-  #setValue: (value: string | string[] | undefined) => void;
+  #value: () => SelectionValue;
+  #setValue: (value: SelectionValue) => void;
   #internalValues: string[] = $state([]);
-  #onValueChange: () =>
-    ((value: string | undefined) => void) | ((value: string[]) => void) | undefined;
+  #onValueChange: () => SelectionValueChange | undefined;
   // Mutated in place on purpose: copying the Set on every register/unregister is O(N²)
   // for large toggle lists. SvelteSet keeps reads reactive without the copy.
   #toggleIds = new SvelteSet<string>();
@@ -91,23 +96,19 @@ export class ToggleGroupState {
 
     const currentValues = this.#currentValues();
 
+    let nextValues: string[];
     if (mode === "single") {
-      const nextValues = currentValues[0] === value ? [] : [value];
-      const nextValue = nextValues[0] ?? undefined;
-
-      this.#internalValues = nextValues;
-      this.#setValue(nextValue);
-      (this.#onValueChange() as ((v: string | undefined) => void) | undefined)?.(nextValue);
+      nextValues = currentValues[0] === value ? [] : [value];
     } else if (mode === "multiple") {
       const exists = currentValues.includes(value);
-      const nextValues = exists
-        ? currentValues.filter((v) => v !== value)
-        : [...currentValues, value];
-
-      this.#internalValues = nextValues;
-      this.#setValue(nextValues);
-      (this.#onValueChange() as ((v: string[]) => void) | undefined)?.(nextValues);
+      nextValues = exists ? currentValues.filter((v) => v !== value) : [...currentValues, value];
+    } else {
+      return;
     }
+
+    this.#internalValues = nextValues;
+    this.#setValue(fromSelectionValues(mode, nextValues));
+    emitSelectionValueChange(mode, this.#onValueChange(), nextValues);
   }
 
   constructor(props: {
@@ -117,10 +118,9 @@ export class ToggleGroupState {
     orientation: () => ToggleGroupOrientation;
     hideSeparators: () => boolean;
     selectionMode: () => ToggleGroupSelectionMode;
-    value: () => string | string[] | undefined;
-    setValue: (value: string | string[] | undefined) => void;
-    onValueChange: () =>
-      ((value: string | undefined) => void) | ((value: string[]) => void) | undefined;
+    value: () => SelectionValue;
+    setValue: (value: SelectionValue) => void;
+    onValueChange: () => SelectionValueChange | undefined;
   }) {
     this.#variant = props.variant;
     this.#size = props.size;
@@ -135,9 +135,7 @@ export class ToggleGroupState {
 
   #currentValues(): string[] {
     const external = this.#value();
-    if (external !== undefined) {
-      return Array.isArray(external) ? external : [external];
-    }
+    if (external !== undefined) return toSelectionValues(external);
     return this.#internalValues;
   }
 

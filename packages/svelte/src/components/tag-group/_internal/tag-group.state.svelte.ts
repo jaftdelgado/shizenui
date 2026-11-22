@@ -10,19 +10,22 @@ import type { SurfaceContextResult } from "../../../lib/contexts/index.js";
 import {
   ContentSlotsState,
   createMounted,
+  emitSelectionValueChange,
+  fromSelectionValues,
   RovingFocusState,
-  SelectionState
+  SelectionState,
+  toSelectionValues
 } from "../../../lib/runes/index.js";
+import type { SelectionValue, SelectionValueChange } from "../../../lib/runes/index.js";
 import { FocusRestoration } from "../../../lib/utils/index.js";
 import { getListRows } from "./tag-group.dom.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
 export interface TagGroupStateProps {
   selectionMode: () => TagGroupSelectionMode;
-  value: () => string | string[] | undefined;
-  setValue: (value: string | string[] | undefined) => void;
-  onValueChange: () =>
-    ((value: string | undefined) => void) | ((value: string[]) => void) | undefined;
+  value: () => SelectionValue;
+  setValue: (value: SelectionValue) => void;
+  onValueChange: () => SelectionValueChange | undefined;
   onRemove: () => ((values: string[]) => void) | undefined;
   disabled: () => boolean | undefined;
   invalid: () => boolean | undefined;
@@ -58,10 +61,11 @@ export class TagGroupState implements TagGroupContext {
   // The fields that delegate to them must be declared after them.
   readonly #selection = new SelectionState({
     mode: () => this.#props.selectionMode(),
-    values: () => toValues(this.#props.value()),
+    values: () => toSelectionValues(this.#props.value()),
     setValues: (values) =>
-      this.#props.setValue(this.#props.selectionMode() === "single" ? values[0] : values),
-    onChange: (values) => this.#emitValueChange(values)
+      this.#props.setValue(fromSelectionValues(this.#props.selectionMode(), values)),
+    onChange: (values) =>
+      emitSelectionValueChange(this.#props.selectionMode(), this.#props.onValueChange(), values)
   });
   readonly field: ContentSlotsState;
   readonly #roving = new RovingFocusState<TagGroupRegistration>();
@@ -213,26 +217,4 @@ export class TagGroupState implements TagGroupContext {
     for (const entry of entries) entry.emitRemove();
     this.#props.onRemove()?.(entries.map((entry) => entry.getValue()));
   }
-
-  /**
-   * The boundary between the array the selection works with and the public `onValueChange`, whose
-   * argument is a string in single mode and an array in multiple mode. `selectionMode` decides
-   * the shape at runtime, which the types of the props cannot express: the only casts live here.
-   */
-  #emitValueChange(values: string[]): void {
-    const onValueChange = this.#props.onValueChange();
-    if (!onValueChange) return;
-
-    if (this.#props.selectionMode() === "single") {
-      (onValueChange as (value: string | undefined) => void)(values[0]);
-    } else {
-      (onValueChange as (value: string[]) => void)(values);
-    }
-  }
-}
-
-/** The selected values as an array, whatever the shape of the public value. */
-function toValues(value: string | string[] | undefined): string[] {
-  if (value === undefined) return [];
-  return Array.isArray(value) ? value : [value];
 }
