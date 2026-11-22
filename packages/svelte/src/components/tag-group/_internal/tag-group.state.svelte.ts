@@ -10,14 +10,16 @@ import type { SurfaceContextResult } from "../../../lib/contexts/index.js";
 import {
   ContentSlotsState,
   createMounted,
-  emitSelectionValueChange,
-  fromSelectionValues,
   RovingFocusState,
-  SelectionState,
-  toSelectionValues
+  SelectionState
 } from "../../../lib/runes/index.js";
-import type { SelectionValue, SelectionValueChange } from "../../../lib/runes/index.js";
-import { FocusRestoration } from "../../../lib/utils/index.js";
+import {
+  emitSelectionValueChange,
+  FocusRestoration,
+  fromSelectionValues,
+  toSelectionValues
+} from "../../../lib/utils/index.js";
+import type { SelectionValue, SelectionValueChange } from "../../../lib/utils/index.js";
 import { getListRows } from "./tag-group.dom.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 

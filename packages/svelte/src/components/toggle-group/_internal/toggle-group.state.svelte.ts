@@ -4,8 +4,8 @@ import {
   emitSelectionValueChange,
   fromSelectionValues,
   toSelectionValues
-} from "../../../lib/runes/index.js";
-import type { SelectionValue, SelectionValueChange } from "../../../lib/runes/index.js";
+} from "../../../lib/utils/index.js";
+import type { SelectionValue, SelectionValueChange } from "../../../lib/utils/index.js";
 import type { ToggleVariant, ToggleSize } from "../../toggle/_internal/index.js";
 import type { ToggleGroupRegistration } from "./toggle-group.context.js";
 import type { ToggleGroupOrientation, ToggleGroupSelectionMode } from "./toggle-group.types.js";

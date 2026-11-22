@@ -11,6 +11,5 @@ export * from "./register-keyed.svelte.js";
 export * from "./register-while.svelte.js";
 export * from "./snippet-slot.svelte.js";
 export * from "./selection.svelte.js";
-export * from "./selection-value.js";
 export * from "./roving-focus-state.svelte.js";
 export * from "./submission-invalid.svelte.js";

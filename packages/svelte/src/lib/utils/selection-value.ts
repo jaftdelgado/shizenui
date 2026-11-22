@@ -1,4 +1,6 @@
-import type { SelectionStateMode } from "./selection.svelte.js";
+// The modes of a selection, as `SelectionState` names them. Declared here: `lib/utils` does not
+// import from `lib/runes`.
+type SelectionMode = "none" | "single" | "multiple";
 
 /** The public value of a selection: a string in single mode, an array in multiple mode. */
 export type SelectionValue = string | string[] | undefined;
@@ -14,7 +16,7 @@ export function toSelectionValues(value: SelectionValue): string[] {
 }
 
 /** The public shape of `values` for `mode`: the first value in single mode, else the array. */
-export function fromSelectionValues(mode: SelectionStateMode, values: string[]): SelectionValue {
+export function fromSelectionValues(mode: SelectionMode, values: string[]): SelectionValue {
   return mode === "single" ? values[0] : values;
 }
 
@@ -23,7 +25,7 @@ export function fromSelectionValues(mode: SelectionStateMode, values: string[]):
  * types of the props cannot express: the only casts live here.
  */
 export function emitSelectionValueChange(
-  mode: SelectionStateMode,
+  mode: SelectionMode,
   onValueChange: SelectionValueChange | undefined,
   values: string[]
 ): void {

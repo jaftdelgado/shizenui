@@ -14,3 +14,4 @@ export * from "./roving-focus-entry.js";
 export * from "./roving-focus-index.js";
 export * from "./roving-focus-keydown.js";
 export * from "./selection-keys.js";
+export * from "./selection-value.js";
