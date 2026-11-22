@@ -6,7 +6,8 @@ import {
 import type {
   TagGroupContext,
   TagGroupListContext,
-  TagGroupRegistration
+  TagGroupRegistration,
+  TagGroupRemoveScope
 } from "../../tag-group/_internal/index.js";
 import type { TagSize, TagVariant } from "./tag.types.js";
 
@@ -15,6 +16,8 @@ export interface TagStateProps {
   disabled: () => boolean | undefined;
   id: () => string;
   onRemove: () => (() => void) | undefined;
+  /** The tag's element, if it is rendered. */
+  getRef: () => HTMLElement | null;
   groupContext?: TagGroupContext;
   listContext?: TagGroupListContext;
 }
@@ -24,6 +27,18 @@ export class TagState {
 
   readonly #groupCtx: TagGroupContext;
   readonly #listCtx: TagGroupListContext;
+
+  /**
+   * What the tag tells its group about itself. It is the same object for the whole life of the
+   * tag: the group recognizes the tag by it when its id changes (it registers again under the new
+   * id) and keeps following it as the active one.
+   */
+  readonly registration: TagGroupRegistration = {
+    getDisabled: () => this.disabled,
+    getValue: () => this.value,
+    canRemove: () => this.canRemove,
+    emitRemove: () => this.#props.onRemove()?.()
+  };
 
   #isActive = $derived.by(() => this.#groupCtx.isActive(this.#props.id()));
   #isSelected = $derived.by(
@@ -107,32 +122,17 @@ export class TagState {
     this.#groupCtx.setActiveId(this.id);
   }
 
-  registerInGroup(id: string, entry: TagGroupRegistration): void {
-    this.#groupCtx.register(id, entry);
+  registerInGroup(id: string): void {
+    this.#groupCtx.register(id, this.registration);
   }
 
-  unregisterFromGroup(id: string, entry: TagGroupRegistration): void {
-    this.#groupCtx.unregister(id, entry);
+  unregisterFromGroup(id: string): void {
+    this.#groupCtx.unregister(id, this.registration);
   }
 
   /** Whether a range of tags can be selected from this one (an enabled tag, multiple mode). */
   get isRangeSelectable(): boolean {
     return this.#groupCtx.selectionMode === "multiple" && !this.disabled;
-  }
-
-  /**
-   * Removes the tag and, if it held focus, moves focus to a neighbour. With `withSelection`, a
-   * selected tag removes every selected tag instead (`Delete` on the tag; its remove button only
-   * removes itself). Outside a group the no-op context has no tags and no list, so only `remove`
-   * has an effect.
-   */
-  requestRemoval(row: HTMLElement | null, options: { withSelection?: boolean } = {}): void {
-    const removesSelection = options.withSelection === true && this.isSelected;
-    this.#groupCtx.requestRemoval({
-      id: this.id,
-      row,
-      remove: () => (removesSelection ? this.#groupCtx.removeSelected() : this.remove())
-    });
   }
 
   toggle(): void {
@@ -146,14 +146,14 @@ export class TagState {
     this.#groupCtx.extendSelectionTo(this.id, getListTagIds(row));
   }
 
-  remove(): void {
+  /**
+   * Removes the tag and, if it held focus, moves focus to a neighbour. With the `"selection"`
+   * scope, a selected tag removes every selected tag instead (`Delete` on the tag; its remove
+   * button only removes itself). Outside a group the no-op context has no tags and no group
+   * `onRemove`, so only the tag's own `onRemove` runs.
+   */
+  remove(scope: TagGroupRemoveScope = "self"): void {
     if (!this.canRemove) return;
-    this.runOwnOnRemove();
-    this.#groupCtx.remove(this.#props.value());
-  }
-
-  /** Runs the tag's own `onRemove`, without the group's. */
-  runOwnOnRemove(): void {
-    this.#props.onRemove()?.();
+    this.#groupCtx.remove({ entry: this.registration, row: this.#props.getRef(), scope });
   }
 }

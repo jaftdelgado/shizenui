@@ -2,35 +2,24 @@ import { tick } from "svelte";
 import { getRootActiveElement, getRovingCandidates } from "../../../lib/utils/index.js";
 import { LIST_SELECTOR, TAG_SELECTOR } from "./tag-group.constants.js";
 
-/** A tag asking its group to remove it, and to move focus off it if it held focus. */
-export interface TagRemovalRequest {
-  id: string;
-  row: HTMLElement | null;
-  /** Hands the removal to the consumer. Whether and when the tag goes away is up to it. */
-  remove: () => void;
-}
-
 /** What is needed to finish moving focus after a tag that held it is gone. */
-interface FocusRestorationRequest {
+interface PendingRestoration {
   /** The removed tag's element. */
-  row: HTMLElement;
+  readonly row: HTMLElement;
   /** The list that contained it. */
-  grid: HTMLElement;
+  readonly grid: HTMLElement;
   /** Its position among the enabled tags when the removal was requested. */
-  index: number;
+  readonly index: number;
   /** The tag that should receive focus, computed when the removal was requested. */
-  successor: HTMLElement | undefined;
-}
-
-interface PendingRestoration extends FocusRestorationRequest {
+  readonly successor: HTMLElement | undefined;
   readonly abort: AbortController;
 }
 
 /**
- * The removal of the tags of a group and the focus that goes with it. One per group. It is plain
- * state, not reactive.
+ * The focus that goes with the removal of the tags of a group. One per group. It is plain state,
+ * not reactive.
  *
- * `request` runs the consumer's `remove`. If the tag held focus, it first keeps a pending
+ * `run` runs the consumer's `remove`. If the tag held focus, it first keeps a pending
  * restoration, whether the consumer removes the tag at once or later (a timeout, an awaited
  * request): where the tag was and which tag should receive focus once it is gone.
  *
@@ -54,7 +43,7 @@ interface PendingRestoration extends FocusRestorationRequest {
  * the row (Chromium blurs it, with no `relatedTarget`) does not matter: only where focus is when
  * the row is gone does.
  */
-export class TagRemoval {
+export class FocusRestoration {
   readonly #isRegistered: (id: string) => boolean;
   readonly #setActiveId: (id: string | undefined) => void;
 
@@ -68,19 +57,15 @@ export class TagRemoval {
     this.#setActiveId = options.setActiveId;
   }
 
-  readonly request = (options: TagRemovalRequest): void => {
-    const { row, remove } = options;
-
-    const hadFocus = row !== null && row.contains(getRootActiveElement(row));
-    const grid = hadFocus ? row.closest<HTMLElement>(LIST_SELECTOR) : null;
-    const position = hadFocus ? findFocusSuccessor(row) : undefined;
-
+  /**
+   * Runs `remove`, which hands the removal to the consumer: whether and when the tag goes away is
+   * up to it. `row` is the element of the tag being removed, if it has one: when it holds focus,
+   * focus is moved off it once it is gone.
+   */
+  readonly run = (row: HTMLElement | null, remove: () => void): void => {
     // Armed before `remove`: a consumer that flushes the DOM inside it unregisters the tag right
     // there, and that has to find the restoration.
-    const pending =
-      row && grid && position
-        ? this.#arm({ row, grid, index: position.index, successor: position.successor })
-        : undefined;
+    const pending = row ? this.#armIfFocused(row) : undefined;
 
     remove();
 
@@ -104,14 +89,31 @@ export class TagRemoval {
     if (pending) void this.#settle(pending);
   };
 
-  /** Keeps the restoration pending until the row is gone. Replaces the one that was pending. */
-  #arm(request: FocusRestorationRequest): PendingRestoration {
+  /**
+   * Keeps the restoration pending until the row is gone, replacing the one that was pending. Only
+   * a row that holds focus (and sits in a list, with a place among its tags) has anything to
+   * restore: for any other row, the restoration pending for another tag is left as it is.
+   */
+  #armIfFocused(row: HTMLElement): PendingRestoration | undefined {
+    if (!row.contains(getRootActiveElement(row))) return undefined;
+
+    const grid = row.closest<HTMLElement>(LIST_SELECTOR);
+    if (!grid) return undefined;
+
+    const position = findFocusSuccessor(grid, row);
+    if (!position) return undefined;
+
     this.cancel();
 
-    const pending: PendingRestoration = { ...request, abort: new AbortController() };
+    const pending: PendingRestoration = {
+      row,
+      grid,
+      index: position.index,
+      successor: position.successor,
+      abort: new AbortController()
+    };
     this.#pending = pending;
 
-    const { row } = request;
     const { signal } = pending.abort;
 
     // Both in the capture phase, so a handler that stops the event does not hide it.
@@ -143,24 +145,14 @@ export class TagRemoval {
     this.#restore(pending);
   }
 
-  /** Only acts if focus is lost: it may have gone elsewhere during the wait. */
-  #restore({ grid, index, successor }: FocusRestorationRequest): void {
-    if (!grid.isConnected || !isFocusLost(grid)) return;
-
-    this.#focusTarget({ grid, index, successor });
-  }
-
   /**
-   * Moves focus to where it should go after a tag that held it is gone: the saved successor if it
-   * is still valid (connected, registered and enabled); else the enabled tag now at the saved
-   * index, or the one before it; else the list.
+   * Moves focus to where it should go after a tag that held it is gone, but only if focus is lost:
+   * it may have gone elsewhere during the wait. The target is the saved successor if it is still
+   * valid (connected, registered and enabled); else the enabled tag now at the saved index, or the
+   * one before it; else the list.
    */
-  #focusTarget(options: {
-    grid: HTMLElement;
-    index: number;
-    successor: HTMLElement | undefined;
-  }): void {
-    const { grid, index, successor } = options;
+  #restore({ grid, index, successor }: PendingRestoration): void {
+    if (!grid.isConnected || !isFocusLost(grid)) return;
 
     const candidates = getRovingCandidates<HTMLElement>(grid, TAG_SELECTOR);
     const target =
@@ -180,15 +172,13 @@ export class TagRemoval {
 }
 
 /**
- * Where `row` sits among the enabled tags of its list, and the tag that should receive focus
- * when it is removed: the next one, else the previous.
+ * Where `row` sits among the enabled tags of `grid`, its list, and the tag that should receive
+ * focus when it is removed: the next one, else the previous.
  */
 function findFocusSuccessor(
+  grid: HTMLElement,
   row: HTMLElement
 ): { index: number; successor: HTMLElement | undefined } | undefined {
-  const grid = row.closest<HTMLElement>(LIST_SELECTOR);
-  if (!grid) return undefined;
-
   const rows = getRovingCandidates<HTMLElement>(grid, TAG_SELECTOR);
   const index = rows.indexOf(row);
   if (index === -1) return undefined;

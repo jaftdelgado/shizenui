@@ -2,7 +2,6 @@ import { createOptionalContext } from "../../../lib/index.js";
 import { EMPTY_CONTENT_SLOTS } from "../../../lib/runes/index.js";
 import type { ContentSlotsField, RovingFocusItem } from "../../../lib/runes/index.js";
 import type { TagGroupSelectionMode } from "./tag-group.types.js";
-import type { TagRemovalRequest } from "./tag-group.removal.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
 /** What a tag tells its group about itself when it registers. */
@@ -11,7 +10,17 @@ export interface TagGroupRegistration extends RovingFocusItem {
   /** Whether it can be removed right now (removable and enabled). */
   canRemove: () => boolean;
   /** Runs the tag's own `onRemove`, if any. The group's `onRemove` is the group's job. */
-  runOwnOnRemove: () => void;
+  emitRemove: () => void;
+}
+
+/** Which tags a removal takes: the tag alone, or every selected tag when the tag is selected. */
+export type TagGroupRemoveScope = "self" | "selection";
+
+export interface TagGroupRemoveRequest {
+  readonly entry: TagGroupRegistration;
+  /** The tag's element, to move focus off it if it held focus. */
+  readonly row: HTMLElement | null;
+  readonly scope: TagGroupRemoveScope;
 }
 
 export interface TagGroupContext {
@@ -35,12 +44,14 @@ export interface TagGroupContext {
    * (multiple mode only). `orderedIds` is every enabled tag of the list, in DOM order.
    */
   readonly extendSelectionTo: (targetId: string, orderedIds: readonly string[]) => void;
-  readonly remove: (value: string) => void;
   /**
-   * Removes every selected tag that can be removed: each one's own `onRemove` runs, then the
-   * group's `onRemove` once, with all their values.
+   * Removes the tag, or every selected tag that can be removed when the scope is `"selection"` and
+   * the tag is selected: each one's own `onRemove` runs, then the group's `onRemove` once, with
+   * all their values. If the tag held focus, focus moves to a neighbour once it is gone. Outside a
+   * group there are no neighbours to move focus to and no group `onRemove`: only the tag's own
+   * `onRemove` runs.
    */
-  readonly removeSelected: () => void;
+  readonly remove: (request: TagGroupRemoveRequest) => void;
   readonly register: (id: string, entry: TagGroupRegistration) => void;
   readonly unregister: (id: string, entry: TagGroupRegistration) => void;
   /**
@@ -50,11 +61,6 @@ export interface TagGroupContext {
   readonly tabStopId: string | undefined;
   readonly isActive: (id: string) => boolean;
   readonly setActiveId: (id: string | undefined) => void;
-  /**
-   * Removes a tag and, if it held focus, moves focus to a neighbour once it is gone. Outside a
-   * group it is just `remove`: there are no neighbours to move focus to.
-   */
-  readonly requestRemoval: (request: TagRemovalRequest) => void;
   readonly registerList: (id: string) => void;
   readonly unregisterList: (id: string) => void;
 }
@@ -74,15 +80,14 @@ const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
   isSelected: () => false,
   toggleValue: () => {},
   extendSelectionTo: () => {},
-  remove: () => {},
-  removeSelected: () => {},
+  // The only NOOP member that does something: outside a group the tag's own `onRemove` still runs
+  // (there are no neighbours to move focus to, and no group `onRemove`).
+  remove: ({ entry }: TagGroupRemoveRequest) => entry.emitRemove(),
   register: () => {},
   unregister: () => {},
   tabStopId: undefined,
   isActive: () => false,
   setActiveId: () => {},
-  // The only NOOP member that does something: outside a group, removing a tag is only `remove()`.
-  requestRemoval: ({ remove }: TagRemovalRequest) => remove(),
   registerList: () => {},
   unregisterList: () => {},
   exists: false

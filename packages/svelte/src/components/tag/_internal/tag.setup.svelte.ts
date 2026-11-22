@@ -6,7 +6,6 @@ import { DEV } from "esm-env";
 import { setTagContext } from "./tag.context.js";
 import type { TagContext } from "./tag.context.js";
 import type { TagState } from "./tag.state.svelte.js";
-import type { TagGroupRegistration } from "../../tag-group/_internal/index.js";
 
 /** The remove button declared inside a Tag, which the Tag renders after its text. */
 export interface TagRemoveButtonSlot {
@@ -58,7 +57,6 @@ export function createTagRemoveButtonSlot(): TagRemoveButtonSlot {
 export function setupTagContexts(
   state: TagState,
   options: {
-    requestRemove: () => void;
     registerRemoveButton: TagContext["registerRemoveButton"];
     getRemoveButtonClass: () => string;
   }
@@ -82,28 +80,22 @@ export function setupTagContexts(
     get removeButtonClass() {
       return options.getRemoveButtonClass();
     },
-    requestRemove: options.requestRemove,
+    // The button removes only its own tag, never the selection.
+    remove: () => state.remove("self"),
     registerRemoveButton: options.registerRemoveButton,
     exists: true
   } satisfies TagContext);
 }
 
 export function setupTagGroupRegistration(state: TagState): void {
-  const entry: TagGroupRegistration = {
-    getDisabled: () => state.disabled,
-    getValue: () => state.value,
-    canRemove: () => state.canRemove,
-    runOwnOnRemove: () => state.runOwnOnRemove()
-  };
-
   // The id can change, so this is an effect: it re-registers and the cleanup removes the id it
   // captured.
   $effect.pre(() => {
     const id = state.id;
-    state.registerInGroup(id, entry);
+    state.registerInGroup(id);
 
     return () => {
-      state.unregisterFromGroup(id, entry);
+      state.unregisterFromGroup(id);
     };
   });
 }

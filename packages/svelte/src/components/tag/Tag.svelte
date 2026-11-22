@@ -43,7 +43,8 @@
     value: () => value,
     disabled: () => disabled,
     id: () => id,
-    onRemove: () => onRemove
+    onRemove: () => onRemove,
+    getRef: () => ref
   });
 
   setupTagGroupRegistration(tagState);
@@ -63,7 +64,6 @@
   const handlers = createTagHandlers({
     state: tagState,
     focus,
-    getRef: () => ref,
     getOnClick: () => onclick
   });
 
@@ -72,7 +72,6 @@
   const removeButton = createTagRemoveButtonSlot();
 
   setupTagContexts(tagState, {
-    requestRemove: handlers.requestRemove,
     registerRemoveButton: removeButton.register,
     getRemoveButtonClass: () => slots.removeButton
   });

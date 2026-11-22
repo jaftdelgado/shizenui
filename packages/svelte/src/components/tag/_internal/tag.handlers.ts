@@ -12,7 +12,7 @@ type TagHandlersState = Pick<
   | "toggle"
   | "extendSelection"
   | "activate"
-  | "requestRemoval"
+  | "remove"
 >;
 
 /**
@@ -23,10 +23,9 @@ type TagHandlersState = Pick<
 export function createTagHandlers(options: {
   state: TagHandlersState;
   focus: Pick<FocusVisible, "onFocus" | "onBlur">;
-  getRef: () => HTMLDivElement | null;
   getOnClick?: () => ((e: TagClickEvent) => void) | undefined;
 }) {
-  const { state, focus, getRef, getOnClick } = options;
+  const { state, focus, getOnClick } = options;
 
   function handleClick(e: TagClickEvent): void {
     // A click on a focusable child (the remove button, other interactive content) belongs to the
@@ -47,17 +46,12 @@ export function createTagHandlers(options: {
   function handleKeyDown(e: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
     if (e.target !== e.currentTarget) return;
     if (e.key !== "Delete" && e.key !== "Backspace") return;
+    // Decides whether the key is the tag's (and the browser's default is cancelled).
     if (!state.canRemove) return;
 
     e.preventDefault();
     // On a selected tag, the key removes every selected tag.
-    requestRemove({ withSelection: true });
-  }
-
-  /** The remove button calls it without options: it only removes its own tag. */
-  function requestRemove(options: { withSelection?: boolean } = {}): void {
-    if (!state.canRemove) return;
-    state.requestRemoval(getRef(), options);
+    state.remove("selection");
   }
 
   return {
@@ -67,8 +61,7 @@ export function createTagHandlers(options: {
       onkeydown: handleKeyDown,
       onfocus: handleFocus,
       onblur: focus.onBlur
-    },
-    requestRemove
+    }
   };
 }
 
@@ -76,10 +69,10 @@ export function createTagHandlers(options: {
  * The event handlers of the remove button, ready to be spread before the consumer's: mergeProps
  * composes them, these first.
  */
-export function createTagRemoveButtonHandlers(ctx: Pick<TagContext, "requestRemove">) {
+export function createTagRemoveButtonHandlers(ctx: Pick<TagContext, "remove">) {
   function handleClick(): void {
     // The click also reaches the tag, which ignores a click that comes from a focusable child.
-    ctx.requestRemove();
+    ctx.remove();
   }
 
   function handleMouseDown(e: MouseEvent): void {

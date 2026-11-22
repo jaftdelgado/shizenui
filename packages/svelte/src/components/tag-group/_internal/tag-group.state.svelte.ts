@@ -1,5 +1,9 @@
-import type { TagGroupContext, TagGroupRegistration } from "./tag-group.context.js";
-import { TagRemoval } from "./tag-group.removal.js";
+import type {
+  TagGroupContext,
+  TagGroupRegistration,
+  TagGroupRemoveRequest
+} from "./tag-group.context.js";
+import { FocusRestoration } from "./tag-group.focus-restoration.js";
 import type { TagGroupSelectionMode } from "./tag-group.types.js";
 import { resolveSurfaceVariant, useSurfaceContext } from "../../../lib/index.js";
 import type { SurfaceContextResult } from "../../../lib/index.js";
@@ -55,7 +59,7 @@ export class TagGroupState implements TagGroupContext {
   });
   readonly field: ContentSlotsState;
   readonly #roving = new RovingFocusState<TagGroupRegistration>();
-  readonly #removal = new TagRemoval({
+  readonly #focusRestoration = new FocusRestoration({
     isRegistered: (id) => this.#roving.isRegistered(id),
     setActiveId: (id) => this.#roving.setActiveId(id)
   });
@@ -68,7 +72,7 @@ export class TagGroupState implements TagGroupContext {
   readonly unregisterList = (id: string): void => {
     this.#listIds.unregister(id);
     // The list is gone, and so is whatever it was waiting for.
-    this.#removal.cancel();
+    this.#focusRestoration.cancel();
   };
 
   constructor(props: TagGroupStateProps) {
@@ -155,34 +159,38 @@ export class TagGroupState implements TagGroupContext {
     );
   };
 
-  readonly remove = (value: string): void => {
-    this.#props.onRemove()?.([value]);
-  };
-
-  readonly removeSelected = (): void => {
+  readonly remove = ({ entry, row, scope }: TagGroupRemoveRequest): void => {
+    const removesSelection =
+      scope === "selection" && this.selectionMode !== "none" && this.isSelected(entry.getValue());
     // Collected first: a consumer that flushes the DOM in its `onRemove` unregisters tags while
-    // this runs.
-    const entries = this.#roving
-      .getItems()
-      .filter((entry) => entry.canRemove() && this.isSelected(entry.getValue()));
-    if (entries.length === 0) return;
+    // the removal runs.
+    const entries = removesSelection
+      ? this.#roving
+          .getItems()
+          .filter((item) => item.canRemove() && this.isSelected(item.getValue()))
+      : [entry];
 
-    for (const entry of entries) entry.runOwnOnRemove();
-    this.#props.onRemove()?.(entries.map((entry) => entry.getValue()));
+    this.#focusRestoration.run(row, () => this.#removeEntries(entries));
   };
 
   readonly register = this.#roving.register;
 
   readonly unregister = (id: string, entry: TagGroupRegistration): void => {
     this.#roving.unregister(id, entry);
-    this.#removal.notifyUnregistered();
+    this.#focusRestoration.notifyUnregistered();
   };
-
-  readonly requestRemoval = this.#removal.request;
 
   readonly isActive = this.#roving.isActive;
 
   readonly setActiveId = this.#roving.setActiveId;
+
+  /** Each tag's own `onRemove` runs, then the group's `onRemove` once with all their values. */
+  #removeEntries(entries: readonly TagGroupRegistration[]): void {
+    if (entries.length === 0) return;
+
+    for (const entry of entries) entry.emitRemove();
+    this.#props.onRemove()?.(entries.map((entry) => entry.getValue()));
+  }
 
   /**
    * The boundary between the array the selection works with and the public `onValueChange`, whose

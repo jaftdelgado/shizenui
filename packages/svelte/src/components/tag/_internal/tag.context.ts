@@ -13,7 +13,8 @@ export interface TagContext {
   readonly tabbable: boolean;
   /** The class of the remove button slot, resolved with the variant and the size of the tag. */
   readonly removeButtonClass: string;
-  readonly requestRemove: () => void;
+  /** Removes this tag only, not the selection: it is what the remove button does. */
+  readonly remove: () => void;
   /**
    * Hands the markup of a declared remove button to the Tag, which renders it after the tag's
    * text, so that the text can name the row and the button without the button's own name getting
@@ -29,7 +30,7 @@ const NOOP_TAG_CONTEXT: TagContext = Object.freeze({
   removeButtonId: undefined,
   tabbable: false,
   removeButtonClass: "",
-  requestRemove: () => {},
+  remove: () => {},
   registerRemoveButton: () => () => {},
   exists: false
 });

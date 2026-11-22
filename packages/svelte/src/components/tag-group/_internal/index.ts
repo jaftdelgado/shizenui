@@ -15,6 +15,8 @@ export {
 } from "./tag-group.context.js";
 export type {
   TagGroupRegistration,
+  TagGroupRemoveRequest,
+  TagGroupRemoveScope,
   TagGroupContext,
   TagGroupListContext
 } from "./tag-group.context.js";
