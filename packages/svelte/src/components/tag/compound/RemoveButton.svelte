@@ -50,7 +50,7 @@
   );
 
   // The button is not rendered here, among the tag's children (inside the element that names the
-  // row): the Tag renders this snippet after its text (see `createTagRemoveButtonSlot`).
+  // row): the Tag renders this snippet after its text (see the `removeButton` slot in Tag.svelte).
   if (shouldRender) onDestroy(tagCtx.registerRemoveButton(button));
 </script>
 

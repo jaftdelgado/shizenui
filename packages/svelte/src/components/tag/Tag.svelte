@@ -7,13 +7,12 @@
 
 <script lang="ts">
   import { cn, createId, hasOwnAccessibleName, mergeProps } from "../../lib/utils/index.js";
-  import { createFocusVisible, PressState } from "../../lib/runes/index.js";
+  import { createFocusVisible, createSnippetSlot, PressState } from "../../lib/runes/index.js";
   import type { TagIconContent, TagProps } from "./_internal/index.js";
   import {
     TagState,
     getTagAttributes,
     createTagHandlers,
-    createTagRemoveButtonSlot,
     setupTagContexts,
     setupTagGroupRegistration,
     setupTagWarnings
@@ -67,9 +66,15 @@
     getOnClick: () => onclick
   });
 
-  // A `<Tag.RemoveButton>` among the children fills this slot with its markup, rendered below,
-  // after the text.
-  const removeButton = createTagRemoveButtonSlot();
+  // `<Tag.RemoveButton>` is declared among the tag's children, but it is not rendered there: it
+  // fills this slot with its markup, which the Tag renders below, after the element that wraps its
+  // text. That element names the row and the button (`aria-labelledby`), and a button inside it
+  // would add its own name to both. Only one remove button per tag is supported: the first one
+  // wins.
+  const removeButton = createSnippetSlot({
+    component: "Tag.RemoveButton",
+    message: "Only one remove button per <Tag> is supported. The extra one is not rendered."
+  });
 
   setupTagContexts(tagState, {
     registerRemoveButton: removeButton.register,

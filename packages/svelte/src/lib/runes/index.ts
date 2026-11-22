@@ -8,6 +8,7 @@ export * from "./id-registry.svelte.js";
 export * from "./content-slots-state.js";
 export * from "./mounted.svelte.js";
 export * from "./register-while.svelte.js";
+export * from "./snippet-slot.svelte.js";
 export * from "./selection.svelte.js";
 export * from "./roving-focus-state.svelte.js";
 export * from "./submission-invalid.svelte.js";
