@@ -1,15 +1,9 @@
-import {
-  NO_TAG_GROUP_LIST,
-  setTagGroupContext,
-  setTagGroupListContext
-} from "./tag-group.context.js";
+import { setTagGroupContext } from "./tag-group.context.js";
 import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.js";
 import type { TagGroupState } from "./tag-group.state.svelte.js";
 
 export function setupTagGroupContexts(state: TagGroupState): void {
   setTagGroupContext(state);
-  // A group nested in another group's list does not inherit that list.
-  setTagGroupListContext(NO_TAG_GROUP_LIST);
   setContentSlotContext(state.field);
 
   setFieldStateContext({

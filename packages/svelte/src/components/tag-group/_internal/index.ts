@@ -6,20 +6,14 @@ export { getTagGroupAttributes, getTagGroupListAttributes } from "./tag-group.at
 export { setupTagGroupContexts } from "./tag-group.setup.js";
 export { setupTagGroupWarnings, setupTagGroupListWarnings } from "./tag-group.warnings.js";
 
-export {
-  setTagGroupContext,
-  useTagGroupContext,
-  setTagGroupListContext,
-  useTagGroupListContext,
-  NO_TAG_GROUP_LIST
-} from "./tag-group.context.js";
+export { setTagGroupContext, useTagGroupContext } from "./tag-group.context.js";
 export type {
   TagGroupRegistration,
   TagGroupRemoveRequest,
   TagGroupRemoveScope,
-  TagGroupContext,
-  TagGroupListContext
+  TagGroupContext
 } from "./tag-group.context.js";
 
 export { createTagGroupListHandlers } from "./tag-group.handlers.js";
+export { isInsideOwnList } from "./tag-group.dom.js";
 export { TAG_SLOT } from "./tag-group.constants.js";

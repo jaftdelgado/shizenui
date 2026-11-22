@@ -1,6 +1,6 @@
 import { ariaBool, hasOwnAccessibleName, presence } from "../../../lib/utils/index.js";
 import type { AccessibleNameProps } from "../../../lib/utils/index.js";
-import { TAG_GROUP_LIST_SLOT } from "./tag-group.constants.js";
+import { TAG_GROUP_LIST_SLOT, TAG_GROUP_SLOT } from "./tag-group.constants.js";
 import type { TagGroupContext } from "./tag-group.context.js";
 
 /** Attributes of the TagGroup root element. */
@@ -8,7 +8,7 @@ export function getTagGroupAttributes(
   ctx: Pick<TagGroupContext, "disabled" | "invalid" | "selectionMode">
 ) {
   return {
-    "data-slot": "tag-group",
+    "data-slot": TAG_GROUP_SLOT,
     "data-disabled": presence(ctx.disabled),
     "data-invalid": presence(ctx.invalid),
     "data-selection-mode": ctx.selectionMode

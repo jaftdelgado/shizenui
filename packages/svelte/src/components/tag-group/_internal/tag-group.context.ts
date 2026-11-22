@@ -97,14 +97,3 @@ const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
 
 export const [useTagGroupContext, setTagGroupContext] =
   createOptionalContext<TagGroupContext>(NOOP_TAG_GROUP_CONTEXT);
-
-/** Whether a component sits inside the TagGroup.List of its group. */
-export interface TagGroupListContext {
-  readonly exists: boolean;
-}
-
-/** Also set by the TagGroup root, so a group nested in another group's list starts outside one. */
-export const NO_TAG_GROUP_LIST: TagGroupListContext = Object.freeze({ exists: false });
-
-export const [useTagGroupListContext, setTagGroupListContext] =
-  createOptionalContext<TagGroupListContext>(NO_TAG_GROUP_LIST);

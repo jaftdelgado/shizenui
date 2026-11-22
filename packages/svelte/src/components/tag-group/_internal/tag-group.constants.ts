@@ -5,6 +5,9 @@
 // - Imports between the two components go one way: tag may import values from tag-group, but
 //   tag-group only imports types from tag. That is why the tag slot name is declared here.
 
+/** The `data-slot` of the TagGroup root. The attributes layer writes it. */
+export const TAG_GROUP_SLOT = "tag-group";
+
 /** The `data-slot` of the Tag row. The tag attributes layer writes it; the selectors below read it. */
 export const TAG_SLOT = "tag";
 
@@ -19,3 +22,6 @@ export const TAG_SELECTOR = `[data-slot="${TAG_SLOT}"]:not([data-disabled])`;
 
 /** The list that contains the tags. */
 export const LIST_SELECTOR = `[data-slot="${TAG_GROUP_LIST_SLOT}"]`;
+
+/** The group that contains the list. */
+export const GROUP_SELECTOR = `[data-slot="${TAG_GROUP_SLOT}"]`;

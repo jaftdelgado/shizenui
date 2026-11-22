@@ -78,7 +78,8 @@
 
   setupTagWarnings({
     state: tagState,
-    hasChildren: () => Boolean(children)
+    hasChildren: () => Boolean(children),
+    getRef: () => ref
   });
 
   // The group context never changes after initialization.
