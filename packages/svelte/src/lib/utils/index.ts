@@ -6,4 +6,7 @@ export * from "./keyboard.js";
 export * from "./memoize-slot-classes.js";
 export * from "./merge-props.js";
 export * from "./presence.js";
-export * from "./roving-focus.js";
+export * from "./roving-focus-container.js";
+export * from "./roving-focus-entry.js";
+export * from "./roving-focus-index.js";
+export * from "./roving-focus-keydown.js";

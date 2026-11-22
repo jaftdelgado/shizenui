@@ -44,3 +44,11 @@ export function isFromFocusableChild(target: EventTarget | null, boundary: Eleme
   const focusable = target.closest(FOCUSABLE_SELECTOR);
   return focusable !== null && focusable !== boundary && boundary.contains(focusable);
 }
+
+/** The elements of `container` that match `selector`, in DOM order. */
+export function getRovingCandidates<T extends HTMLElement>(
+  container: HTMLElement,
+  selector: string
+): T[] {
+  return Array.from(container.querySelectorAll<T>(selector));
+}
