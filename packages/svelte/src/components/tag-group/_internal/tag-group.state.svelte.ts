@@ -199,9 +199,11 @@ export class TagGroupState implements TagGroupContext {
     // Collected first: a consumer that flushes the DOM in its `onRemove` unregisters tags while
     // the removal runs.
     const entries = removesSelection
-      ? this.#roving
-          .getItems()
-          .filter((item) => item.canRemove() && this.isSelected(item.getValue()))
+      ? this.#sortInVisualOrder(
+          this.#roving
+            .getItems()
+            .filter((item) => item.canRemove() && this.isSelected(item.getValue()))
+        )
       : [entry];
 
     this.#focusRestoration.run(entry.getElement(), () => this.#removeEntries(entries));
@@ -218,7 +220,28 @@ export class TagGroupState implements TagGroupContext {
 
   readonly setActiveId = this.#roving.setActiveId;
 
-  /** Each tag's own `onRemove` runs, then the group's `onRemove` once with all their values. */
+  /**
+   * `entries` in the order the user sees their tags, not the order they registered in: a tag
+   * inserted later in the list registers last. A tag that is not in the list (it is outside its
+   * `TagGroup.List`, which already warns) goes after the rest, in the order it registered.
+   */
+  #sortInVisualOrder(entries: TagGroupRegistration[]): TagGroupRegistration[] {
+    const positions = new Map<string, number>();
+    this.#getOrderedIds().forEach((id, index) => {
+      const value = this.#roving.getItem(id)?.getValue();
+      if (value !== undefined && !positions.has(value)) positions.set(value, index);
+    });
+    const positionOf = (item: TagGroupRegistration) =>
+      positions.get(item.getValue()) ?? Number.MAX_SAFE_INTEGER;
+
+    // The sort is stable: the tags that tie keep the order they registered in.
+    return [...entries].sort((a, b) => positionOf(a) - positionOf(b));
+  }
+
+  /**
+   * Each tag's own `onRemove` runs, in the order `entries` has (the order the user sees the tags
+   * in), then the group's `onRemove` once with all their values in that same order.
+   */
   #removeEntries(entries: readonly TagGroupRegistration[]): void {
     if (entries.length === 0) return;
 

@@ -13,6 +13,10 @@ interface TagGroupSharedProps extends TagGroupBaseProps {
   invalid?: boolean;
   variant?: TagVariant;
   size?: TagSize;
+  /**
+   * Called once with the values of the tags that were removed, in the order the user sees them.
+   * When a selected tag is removed, that is every selected tag that can be removed.
+   */
   onRemove?: (values: string[]) => void;
   id?: string;
   ref?: HTMLDivElement | null;
