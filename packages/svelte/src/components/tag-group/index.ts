@@ -6,7 +6,3 @@ export type { TagGroupProps, TagGroupListProps, TagGroupSelectionMode } from "./
 export const TagGroup = Object.assign(Root, {
   List
 });
-
-export default {
-  TagGroup
-};

@@ -99,7 +99,7 @@ export function getTagRemoveButtonAttributes(
     "aria-label": ariaLabel,
     "aria-labelledby": ariaLabelledby
   });
-  const nameFromText = !hasOwnName && id !== undefined && tagCtx.labelId;
+  const nameFromText = !hasOwnName && id !== undefined && tagCtx.labelId !== undefined;
 
   return {
     id,

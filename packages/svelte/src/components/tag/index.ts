@@ -13,7 +13,3 @@ export type {
 export const Tag = Object.assign(Root, {
   RemoveButton
 });
-
-export default {
-  Tag
-};
