@@ -2,7 +2,9 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
 const PKG = "@hugeicons/core-free-icons";
-const IMPORT_RE = /import\s*\{([^}]+)\}\s*from\s*["']@hugeicons\/core-free-icons["'];?/g;
+// Anchored to the start of a line so import snippets inside strings (code shown in the docs) are left alone.
+const IMPORT_RE = /^import\s*\{([^}]+)\}\s*from\s*["']@hugeicons\/core-free-icons["'];?/gm;
+const SKIPPED_ID_RE = /\?raw|\.mdx?$/;
 
 /** Maps every exported name (aliases included) to the file that defines it. */
 function buildExportMap() {
@@ -32,8 +34,10 @@ export function hugeiconsDeepImports() {
   let exportMap;
   return {
     name: "shizen:hugeicons-deep-imports",
+    // Runs on compiled JS, where import statements start at column 0 (not indented in <script>).
+    enforce: "post",
     transform(code, id) {
-      if (id.includes("?raw") || !code.includes(PKG)) return;
+      if (SKIPPED_ID_RE.test(id) || !code.includes(PKG)) return;
       exportMap ??= buildExportMap();
       let changed = false;
       const out = code.replace(IMPORT_RE, (statement, specifiers) => {
