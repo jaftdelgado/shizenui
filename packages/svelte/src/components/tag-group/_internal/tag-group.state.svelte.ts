@@ -57,12 +57,17 @@ export class TagGroupState implements TagGroupContext {
   readonly #props: TagGroupStateProps;
   readonly #surfaceCtx: SurfaceContextResult;
 
-  // Plain, not reactive: the lists register while the group initializes, before the only readers
-  // (`hasList` and `hasMultipleLists`, used by the development warnings, which run once the group
-  // has mounted) look at them. Those warnings therefore no longer follow a list that appears or
-  // goes away later, which is fine: they point at a misuse of the markup, not at a state to track.
-  // Only one list per group is supported.
-  readonly #lists = new Map<string, TagGroupListRegistration>();
+  // Plain, not reactive: the lists register while the group initializes, before the readers look at
+  // them. The readers are `hasList` and `hasMultipleLists` (the development warnings, which run
+  // once the group has mounted) and the ids in order, which a range and a removal ask for when the
+  // user acts. The warnings therefore do not follow a list that appears or goes away later, which
+  // is fine: they point at a misuse of the markup, not at a state to track.
+  //
+  // Only one list per group is supported: the first one registered is the one read, and the rest
+  // are only counted, for the warning. With more than one (which already warns), if the first one
+  // goes away the second does not take its place.
+  #list: { id: string; registration: TagGroupListRegistration } | undefined;
+  #listCount = 0;
 
   // The primitives read `#props` only when called, so they can be built in field initializers.
   // The fields that delegate to them must be declared after them.
@@ -89,11 +94,13 @@ export class TagGroupState implements TagGroupContext {
     resolveSurfaceVariant(this.#props.variant(), this.#surfaceCtx, undefined, "secondary")
   );
 
-  readonly registerList = (id: string, list: TagGroupListRegistration): void => {
-    this.#lists.set(id, list);
+  readonly registerList = (id: string, registration: TagGroupListRegistration): void => {
+    this.#listCount++;
+    this.#list ??= { id, registration };
   };
   readonly unregisterList = (id: string): void => {
-    this.#lists.delete(id);
+    this.#listCount--;
+    if (this.#list?.id === id) this.#list = undefined;
     // The list is gone, and so is whatever it was waiting for.
     this.#focusRestoration.cancel();
   };
@@ -102,8 +109,8 @@ export class TagGroupState implements TagGroupContext {
     this.#props = props;
     this.#surfaceCtx = props.surfaceContext ?? useSurfaceContext();
 
-    // Built here, not in a field initializer: the default signal has to be created once, while
-    // the component initializes.
+    // Not a field initializer: those run before this body assigns `#props`. And the default signal
+    // is created only when no `mounted` arrives, which is known once the props are.
     let mounted = props.mounted;
     if (!mounted) {
       const signal = createMounted();
@@ -153,12 +160,12 @@ export class TagGroupState implements TagGroupContext {
   }
 
   get hasList(): boolean {
-    return this.#lists.size > 0;
+    return this.#listCount > 0;
   }
 
   /** Only one list per group is supported; used to warn in development. */
   get hasMultipleLists(): boolean {
-    return this.#lists.size > 1;
+    return this.#listCount > 1;
   }
 
   get tabStopId(): string | undefined {
@@ -190,12 +197,11 @@ export class TagGroupState implements TagGroupContext {
   };
 
   /**
-   * The ids of the enabled tags, in the order the user sees them. Only one list per group is
-   * supported: the first one registered is the one read.
+   * The ids of the enabled tags, in the order the user sees them. They come from the first list
+   * registered (see `#list`).
    */
   #getOrderedIds(): readonly string[] {
-    const [list] = this.#lists.values();
-    return list?.getOrderedIds() ?? [];
+    return this.#list?.registration.getOrderedIds() ?? [];
   }
 
   readonly remove = ({ entry, scope }: TagGroupRemoveRequest): void => {
