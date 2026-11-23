@@ -35,7 +35,7 @@
     }
 
     &:active:not(:disabled),
-    &[data-pressed="true"]:not(:disabled) {
+    &[data-pressed]:not(:disabled) {
       background-color: var(--btn-bg-pressed);
       transform: scale(0.96);
       transition:

@@ -1,128 +1,54 @@
-import { onDestroy } from "svelte";
+import { createInteractionModality } from "./interaction-modality.svelte.js";
 
-const isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
+/** What `createFocusVisible` returns. */
+export type FocusVisible = ReturnType<typeof createFocusVisible>;
 
-type Subscriber = () => void;
-
-interface GlobalFocusState {
-  isMouseInteraction: boolean;
-  isRecentlyVisible: boolean;
-  subscribers: Set<Subscriber>;
-  cleanup: () => void;
-}
-
-let globalState: GlobalFocusState | null = null;
-let recentlyVisibleTimeout: ReturnType<typeof setTimeout> | null = null;
-
-function getGlobalState(): GlobalFocusState {
-  if (globalState) return globalState;
-
-  const state: GlobalFocusState = {
-    isMouseInteraction: false,
-    isRecentlyVisible: false,
-    subscribers: new Set(),
-    cleanup: () => {}
-  };
-
-  function notifyBlur() {
-    for (const subscriber of state.subscribers) {
-      subscriber();
-    }
-  }
-
-  function markRecentlyVisible() {
-    state.isRecentlyVisible = true;
-
-    if (recentlyVisibleTimeout) {
-      clearTimeout(recentlyVisibleTimeout);
-    }
-
-    recentlyVisibleTimeout = setTimeout(() => {
-      state.isRecentlyVisible = false;
-      recentlyVisibleTimeout = null;
-    }, 500);
-  }
-
-  function onVisibilityChange() {
-    if (document.visibilityState === "visible") {
-      markRecentlyVisible();
-      notifyBlur();
-    } else {
-      notifyBlur();
-    }
-  }
-
-  function onWindowBlur() {
-    notifyBlur();
-  }
-
-  function onWindowFocus() {
-    markRecentlyVisible();
-    notifyBlur();
-  }
-
-  // Delay reset so focus events triggered by mouse interaction
-  // still detect pointer modality correctly.
-  function onMouseUp() {
-    setTimeout(() => (state.isMouseInteraction = false), 0);
-  }
-
-  if (isBrowser) {
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    window.addEventListener("blur", onWindowBlur);
-    window.addEventListener("focus", onWindowFocus);
-    document.addEventListener("mouseup", onMouseUp);
-
-    state.cleanup = () => {
-      if (recentlyVisibleTimeout) {
-        clearTimeout(recentlyVisibleTimeout);
-        recentlyVisibleTimeout = null;
-      }
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-      window.removeEventListener("blur", onWindowBlur);
-      window.removeEventListener("focus", onWindowFocus);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
-  }
-
-  globalState = state;
-  return state;
-}
-
+/**
+ * Whether the focus ring of an element is visible. It follows the interaction modality: the ring
+ * shows when the element gets focus from the keyboard, goes away with any pointer interaction
+ * (even if focus does not move), and comes back with a key while the element still has focus.
+ *
+ * It only listens to the page while the element has focus: the ring is hidden on blur, so the
+ * interactions that happen without focus cannot change it. A page with many of these elements
+ * then runs one listener per interaction, not one per element.
+ */
 export function createFocusVisible() {
   let isFocusVisible = $state(false);
+  /** Ends the subscriptions of the focused element; `undefined` while it has no focus. */
+  let stopListening: (() => void) | undefined;
 
-  const state = getGlobalState();
+  const modality = createInteractionModality();
 
-  const subscriber: Subscriber = () => {
-    isFocusVisible = false;
-  };
+  function listen(): void {
+    if (stopListening) return;
 
-  state.subscribers.add(subscriber);
+    const hide = () => {
+      isFocusVisible = false;
+    };
+    const unsubscribers = [
+      modality.onReset(hide),
+      modality.onPointerDown(hide),
+      modality.onKeyDown(() => {
+        isFocusVisible = true;
+      })
+    ];
 
-  onDestroy(() => {
-    state.subscribers.delete(subscriber);
-
-    if (state.subscribers.size === 0) {
-      if (isBrowser) state.cleanup();
-      globalState = null;
-    }
-  });
+    stopListening = () => {
+      for (const unsubscribe of unsubscribers) unsubscribe();
+      stopListening = undefined;
+    };
+  }
 
   return {
     get isFocusVisible() {
       return isFocusVisible;
     },
-    onMouseDown() {
-      state.isMouseInteraction = true;
-    },
-    onKeyDown() {
-      state.isMouseInteraction = false;
-    },
     onFocus() {
-      if (!state.isRecentlyVisible) isFocusVisible = !state.isMouseInteraction;
+      listen();
+      if (!modality.isRecentlyVisible) isFocusVisible = !modality.isPointer;
     },
     onBlur() {
+      stopListening?.();
       isFocusVisible = false;
     }
   };

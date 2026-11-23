@@ -1,13 +1,14 @@
 @layer components {
   .tag {
-    @apply inline-flex items-center rounded-full leading-none font-medium whitespace-nowrap outline-none select-none;
+    @apply relative inline-flex items-center justify-center overflow-hidden rounded-full leading-none font-medium whitespace-nowrap outline-none select-none;
     --tag-gap: 0.325rem;
+    --tag-icon-inset: -0.25rem;
 
     /* Base tokens */
     --tag-bg: var(--color-field);
     --tag-bg-hover: var(--tag-bg);
     --tag-bg-pressed: var(--tag-bg);
-    --tag-fg: var(--color-control-text);
+    --tag-fg: var(--color-primary-text);
     --tag-bg-selected: var(--color-accent-soft);
     --tag-bg-selected-hover: var(--color-accent-soft-hover);
     --tag-bg-selected-pressed: var(--color-accent-soft-pressed);
@@ -19,8 +20,13 @@
     transition:
       background-color 200ms ease,
       color 200ms ease,
+      box-shadow 200ms ease,
       transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
     @apply motion-reduce:transition-none;
+
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
 
     &[data-selectable] {
       cursor: var(--cursor-interactive);
@@ -36,6 +42,7 @@
       transition:
         background-color 200ms ease,
         color 200ms ease,
+        box-shadow 200ms ease,
         transform 100ms cubic-bezier(0.4, 0, 1, 1);
       @apply motion-reduce:transition-none;
     }
@@ -63,27 +70,61 @@
     }
 
     &:has(.tag__remove-button) {
-      padding-inline-end: 0.25rem;
+      padding-inline-end: 0.375rem;
     }
   }
 
   .tag__content {
-    @apply flex items-center gap-(--tag-gap);
+    @apply relative z-10 flex h-full w-full items-center justify-center gap-(--tag-gap);
+  }
+
+  .tag__label {
+    display: contents;
+  }
+
+  .tag__icon {
+    @apply flex shrink-0 items-center justify-center;
+  }
+
+  .tag__icon--start {
+    margin-inline-start: var(--tag-icon-inset);
+  }
+
+  .tag__icon--end {
+    margin-inline-end: var(--tag-icon-inset);
   }
 
   .tag__remove-button {
-    @apply inline-flex size-4 items-center justify-center rounded-full opacity-70;
+    @apply inline-flex size-4 items-center justify-center rounded-full opacity-80;
     margin-inline-end: -0.125rem;
     cursor: var(--cursor-interactive);
 
     transition:
       opacity 150ms ease,
-      background-color 150ms ease;
+      background-color 150ms ease,
+      box-shadow 200ms ease,
+      transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
     @apply motion-reduce:transition-none;
+
+    &:focus-visible {
+      @apply status-focused opacity-100;
+    }
 
     &:hover:not(:disabled) {
       @apply opacity-100;
       background-color: color-mix(in oklab, currentColor 12%, transparent);
+    }
+
+    &[data-pressed]:not(:disabled) {
+      @apply opacity-100;
+      background-color: color-mix(in oklab, currentColor 20%, transparent);
+      transform: scale(0.9);
+      transition:
+        opacity 150ms ease,
+        background-color 150ms ease,
+        box-shadow 200ms ease,
+        transform 100ms cubic-bezier(0.4, 0, 1, 1);
+      @apply motion-reduce:transition-none;
     }
 
     &:disabled {
@@ -91,11 +132,10 @@
     }
 
     & .x-icon {
-      @apply size-3;
+      @apply size-3 opacity-80;
     }
   }
 
-  /* Variants reuse the same field tokens as Radio and Input. */
   .tag--default {
     --tag-bg: var(--color-field);
     --tag-bg-hover: var(--color-field-hover);

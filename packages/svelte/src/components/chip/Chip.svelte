@@ -17,9 +17,7 @@
 
   const styles = $derived(chipStyles({ color, size, variant }));
 
-  const chipProps = $derived(
-    mergeProps({ class: styles.base() }, { ...rest, class: className })
-  );
+  const chipProps = $derived(mergeProps({ class: styles.base() }, { ...rest, class: className }));
 </script>
 
 {#snippet renderIcon(content: ChipIconContent | undefined, position: "start" | "end")}

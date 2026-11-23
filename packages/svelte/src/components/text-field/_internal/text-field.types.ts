@@ -5,13 +5,7 @@ export type TextFieldSize = "sm" | "md" | "lg";
 export type TextFieldVariant = "default" | "secondary" | "outline";
 
 export type TextFieldControlType =
-  | "text"
-  | "email"
-  | "password"
-  | "search"
-  | "tel"
-  | "url"
-  | "number";
+  "text" | "email" | "password" | "search" | "tel" | "url" | "number";
 
 export type TextFieldControlValue = string | number | null | undefined;
 

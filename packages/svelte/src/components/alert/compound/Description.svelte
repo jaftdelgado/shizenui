@@ -15,7 +15,7 @@
   }: AlertDescriptionProps = $props();
   const ctx = useAlertContext();
   const styles = $derived(alertStyles());
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "Alert.Description",
     "Must be used inside an <Alert> component."

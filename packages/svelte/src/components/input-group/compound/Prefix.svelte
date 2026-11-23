@@ -15,7 +15,7 @@
   const ctx = useInputGroupContext();
   const styles = inputGroupStyles();
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "InputGroup.Prefix",
     "Must be used inside an <InputGroup> component."

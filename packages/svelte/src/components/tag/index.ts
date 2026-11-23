@@ -6,13 +6,10 @@ export type {
   TagClickEvent,
   TagRemoveButtonProps,
   TagVariant,
-  TagSize
+  TagSize,
+  TagIconContent
 } from "./_internal/index.js";
 
 export const Tag = Object.assign(Root, {
   RemoveButton
 });
-
-export default {
-  Tag
-};

@@ -1,14 +1,20 @@
-<script lang="ts">
+<script lang="ts" module>
   import { tagStyles } from "@shizen-ui/styles";
+  import { memoizeSlotClasses } from "../../lib/utils/index.js";
 
-  import { createId, mergeProps, presence } from "../../lib/utils";
-  import { createFocusVisible } from "../../lib/runes/index.js";
-  import type { TagProps } from "./_internal/index.js";
+  const getTagSlotClasses = memoizeSlotClasses(tagStyles);
+</script>
+
+<script lang="ts">
+  import { cn, createId, hasOwnAccessibleName, mergeProps } from "../../lib/utils/index.js";
+  import { createFocusVisible, PressState, registerKeyed } from "../../lib/runes/index.js";
+  import type { TagIconContent, TagProps } from "./_internal/index.js";
   import {
     TagState,
+    getTagAttributes,
+    TAG_ROW_OWNED_KEYS,
     createTagHandlers,
-    setupTagContexts,
-    setupTagGroupRegistration,
+    setTagContext,
     setupTagWarnings
   } from "./_internal/index.js";
 
@@ -17,84 +23,105 @@
   let {
     class: className,
     value,
-    textValue,
-    disabled = undefined,
-    id = createId("tag", uid),
+    disabled,
+    id: idProp,
     ref = $bindable(null),
     onclick,
     onRemove,
     children,
+    startContent,
+    endContent,
     ...rest
   }: TagProps = $props();
+
+  // The resolved id always feeds the state and the registry; only an explicit one is rendered
+  // outside a group.
+  const id = $derived(idProp ?? createId("tag", uid));
 
   const tagState = new TagState({
     value: () => value,
     disabled: () => disabled,
     id: () => id,
-    textValue: () => textValue,
-    onRemove: () => onRemove
+    onRemove: () => onRemove,
+    getElement: () => ref
   });
 
-  setupTagGroupRegistration(tagState);
+  // The id can change, so this is an effect: it registers again under the new id, and the cleanup
+  // removes the id it captured.
+  registerKeyed(() => tagState.id, tagState.registerInGroup, tagState.unregisterFromGroup);
+
+  // The classes of every slot, resolved once per variant and size and shared by all the tags that
+  // ask for the same. The remove button resolves its own, which has no variants.
+  const slots = $derived(getTagSlotClasses({ variant: tagState.variant, size: tagState.size }));
 
   const focus = createFocusVisible();
+
+  // An enabled tag that does something when activated (it is selectable, or it has an `onclick`)
+  // shows the pressed state, and `Enter` and `Space` activate it as a click does.
+  const press = new PressState({
+    isDisabled: () => tagState.disabled || (!tagState.isSelectable && !onclick)
+  });
 
   const handlers = createTagHandlers({
     state: tagState,
     focus,
-    getRef: () => ref,
     getOnClick: () => onclick
   });
 
-  setupTagContexts(tagState, { requestRemove: handlers.requestRemove });
+  setTagContext(tagState);
 
   setupTagWarnings({
     state: tagState,
-    hasChildren: () => Boolean(children)
+    hasChildren: () => Boolean(children),
+    getElement: () => ref
   });
 
-  const groupExists = $derived(tagState.groupCtx.exists);
+  // The group context never changes after initialization.
+  const isInGroup = tagState.isInGroup;
 
-  const styles = $derived(tagStyles({ variant: tagState.finalVariant, size: tagState.finalSize }));
+  const rootClass = $derived(cn(slots.base, className));
+
+  // `keydown` and `blur` have a handler in each: mergeProps composes them, PressState's first.
+  const rowHandlers = mergeProps(press.props, handlers.props);
 
   const tagProps = $derived(
     mergeProps(
       {
-        ...(groupExists
-          ? {
-              id,
-              role: "row",
-              tabindex: tagState.groupCtx.isActive(id) ? 0 : -1,
-              "aria-label": textValue,
-              "aria-selected": tagState.isSelectable ? tagState.isSelected : undefined,
-              "aria-disabled": tagState.finalDisabled ? true : undefined
-            }
-          : {}),
-        "data-slot": "tag",
-        "data-selectable": presence(tagState.isInteractive),
-        "data-selected": presence(tagState.isSelected),
-        "data-disabled": presence(tagState.finalDisabled),
-        "data-removable": presence(tagState.isRemovable),
-        "data-focus-visible": presence(focus.isFocusVisible),
-        onclick: handlers.handleClick,
-        onkeydown: handlers.handleKeydown,
-        onkeyup: handlers.handleKeydown,
-        onmousedown: handlers.handleMouseDown,
-        onmouseup: handlers.handleMouseUp,
-        onmouseleave: handlers.handleMouseLeave,
-        onfocus: handlers.handleFocus,
-        onblur: focus.onBlur,
-        class: styles.base()
+        ...getTagAttributes(tagState, {
+          idProp,
+          focusVisible: focus.isFocusVisible,
+          pressed: press.isPressed,
+          hasOwnName: hasOwnAccessibleName(rest)
+        }),
+        ...rowHandlers,
+        class: rootClass
       },
-      { ...rest, class: className }
+      rest,
+      { owned: isInGroup ? TAG_ROW_OWNED_KEYS : undefined }
     )
   );
 </script>
 
+{#snippet renderIcon(content: TagIconContent | undefined, position: "start" | "end")}
+  {#if content}
+    <span class={position === "start" ? slots.iconStart : slots.iconEnd}>
+      {@render content()}
+    </span>
+  {/if}
+{/snippet}
+
 <div bind:this={ref} {...tagProps}>
-  <div role={groupExists ? "gridcell" : undefined} class={styles.content()}>
-    {#if children}
-      {@render children()}
+  <div role={isInGroup ? "gridcell" : undefined} class={slots.content}>
+    {@render renderIcon(startContent, "start")}
+    <!-- Names the row and the remove button, so the button is rendered outside it. -->
+    <span id={tagState.labelId} class={slots.label}>
+      {#if children}
+        {@render children()}
+      {/if}
+    </span>
+    {@render renderIcon(endContent, "end")}
+    {#if tagState.removeButton && tagState.isRemovable}
+      {@render tagState.removeButton()}
     {/if}
   </div>
 </div>

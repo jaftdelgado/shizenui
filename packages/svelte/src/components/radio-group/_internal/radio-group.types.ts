@@ -21,10 +21,7 @@ export interface RadioGroupProps extends RadioGroupBaseProps {
   ref?: HTMLDivElement | null;
 }
 
-type RadioGroupItemsBaseProps = Omit<
-  HTMLAttributes<HTMLDivElement>,
-  "onfocusin" | "onkeydown"
->;
+type RadioGroupItemsBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "onfocusin" | "onkeydown">;
 
 export interface RadioGroupItemsProps extends RadioGroupItemsBaseProps {
   children?: Snippet;

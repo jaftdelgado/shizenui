@@ -1,19 +1,35 @@
+// Pure arithmetic of keyboard navigation in a roving container: no DOM involved.
+
 export type RovingFocusOrientation = "horizontal" | "vertical";
 
-export interface RovingFocusIndexOptions {
+export interface RovingFocusIndexOptions extends RovingFocusKeyOptions {
   key: string;
   currentIndex: number;
   itemCount: number;
-  orientation: RovingFocusOrientation;
-  allowCrossAxis?: boolean;
-  includeHomeEnd?: boolean;
   wrapAround?: boolean;
 }
 
 export interface RovingFocusKeyOptions {
   orientation: RovingFocusOrientation;
   allowCrossAxis?: boolean;
+  /** `Home` and `End` move to the first and the last item. */
   includeHomeEnd?: boolean;
+  /** `PageUp` and `PageDown` move to the first and the last item. */
+  includePageUpDown?: boolean;
+}
+
+/** The index `Home`/`End` (and `PageUp`/`PageDown`, when included) move to, if `key` is one. */
+function resolveEdgeIndex(
+  key: string,
+  itemCount: number,
+  options: Pick<RovingFocusKeyOptions, "includeHomeEnd" | "includePageUpDown">
+): number | undefined {
+  const { includeHomeEnd = false, includePageUpDown = false } = options;
+  if ((includeHomeEnd && key === "Home") || (includePageUpDown && key === "PageUp")) return 0;
+  if ((includeHomeEnd && key === "End") || (includePageUpDown && key === "PageDown")) {
+    return itemCount - 1;
+  }
+  return undefined;
 }
 
 const HORIZONTAL_KEY_OFFSETS = {
@@ -39,19 +55,10 @@ function getKeyOffsetMap(
   return orientation === "horizontal" ? HORIZONTAL_KEY_OFFSETS : VERTICAL_KEY_OFFSETS;
 }
 
-export function getRovingCandidates<T extends HTMLElement>(
-  container: HTMLElement,
-  selector: string
-): T[] {
-  return Array.from(container.querySelectorAll<T>(selector));
-}
-
 export function isRovingFocusKey(key: string, options: RovingFocusKeyOptions): boolean {
-  const { orientation, allowCrossAxis = false, includeHomeEnd = false } = options;
+  const { orientation, allowCrossAxis = false } = options;
 
-  if (includeHomeEnd && (key === "Home" || key === "End")) {
-    return true;
-  }
+  if (resolveEdgeIndex(key, 1, options) !== undefined) return true;
 
   return Object.hasOwn(getKeyOffsetMap(orientation, allowCrossAxis), key);
 }
@@ -63,7 +70,6 @@ export function resolveRovingFocusIndex(options: RovingFocusIndexOptions): numbe
     itemCount,
     orientation,
     allowCrossAxis = false,
-    includeHomeEnd = false,
     wrapAround = false
   } = options;
 
@@ -72,20 +78,14 @@ export function resolveRovingFocusIndex(options: RovingFocusIndexOptions): numbe
     return undefined;
   }
 
-  if (includeHomeEnd) {
-    if (key === "Home") return 0;
-    if (key === "End") return itemCount - 1;
-  }
+  const edgeIndex = resolveEdgeIndex(key, itemCount, options);
+  if (edgeIndex !== undefined) return edgeIndex;
 
   const offsetMap = getKeyOffsetMap(orientation, allowCrossAxis);
-  if (!Object.hasOwn(offsetMap, key)) {
-    return undefined;
-  }
-
-  const offset = offsetMap[key];
-  if (offset === undefined) {
-    return undefined;
-  }
+  // Own keys only (`toString` is not a key), and `noUncheckedIndexedAccess` makes the lookup
+  // possibly `undefined` anyway.
+  const offset = Object.hasOwn(offsetMap, key) ? offsetMap[key] : undefined;
+  if (offset === undefined) return undefined;
 
   const nextIndex = currentIndex + offset;
 

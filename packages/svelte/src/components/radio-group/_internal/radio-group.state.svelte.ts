@@ -1,9 +1,8 @@
-import type {
-  RadioGroupContextResult,
-  RadioGroupRegistration
-} from "./radio-group.context.js";
+import { untrack } from "svelte";
+import { SvelteSet } from "svelte/reactivity";
+import type { RadioGroupContextResult, RadioGroupRegistration } from "./radio-group.context.js";
 import type { RadioGroupOrientation, RadioGroupProps } from "./radio-group.types.js";
-import { useSurfaceContext } from "../../../lib/index.js";
+import { useSurfaceContext } from "../../../lib/contexts/index.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
 import type { RadioVariant } from "../../radio/_internal/radio.types.js";
 
@@ -22,10 +21,14 @@ export class RadioGroupState {
   #setValue: (value: string) => void;
   #setSubmissionInvalid: (next: boolean) => void;
 
-  #itemIds: Set<string> = $state(new Set());
+  // Mutated in place on purpose: copying the Set on every register/unregister is O(N²)
+  // for large radio lists. SvelteSet keeps reads reactive without the copy.
+  #itemIds = new SvelteSet<string>();
   #itemMap = new Map<string, RadioGroupRegistration>();
   #activeId: string | undefined = $state(undefined);
-  #activeValueSnapshot: string | undefined;
+  #activeValueSnapshot: string | undefined = $state(undefined);
+  #selectedId = $derived.by(() => this.#findIdByValue(this.finalValue));
+  #resolvedActiveId = $derived.by(() => this.#computeResolvedActiveId());
   readonly surfaceCtx: SurfaceContextResult;
 
   get finalValue(): string | undefined {
@@ -33,7 +36,7 @@ export class RadioGroupState {
   }
 
   get hasSelection(): boolean {
-    return this.finalValue !== undefined && this.#findIdByValue(this.finalValue) !== undefined;
+    return this.finalValue !== undefined && this.#selectedId !== undefined;
   }
 
   get finalName(): string | undefined {
@@ -87,29 +90,27 @@ export class RadioGroupState {
   }
 
   register(id: string, entry: RadioGroupRegistration): void {
-    this.#itemMap.set(id, entry);
-    if (this.#itemIds.has(id)) return;
-
-    const next = new Set(this.#itemIds);
-    next.add(id);
-    this.#itemIds = next;
+    untrack(() => {
+      this.#itemMap.set(id, entry);
+      this.#itemIds.add(id);
+    });
   }
 
   unregister(id: string): void {
-    if (!this.#itemIds.has(id)) return;
+    untrack(() => {
+      if (!this.#itemIds.has(id)) return;
 
-    const next = new Set(this.#itemIds);
-    next.delete(id);
-    this.#itemIds = next;
-    this.#itemMap.delete(id);
+      this.#itemIds.delete(id);
+      this.#itemMap.delete(id);
 
-    if (this.#activeId === id) {
-      this.#activeId = undefined;
-    }
+      if (this.#activeId === id) {
+        this.#activeId = undefined;
+      }
+    });
   }
 
   isActive(id: string): boolean {
-    return id === this.#resolvedActiveId();
+    return id === this.#resolvedActiveId;
   }
 
   setActiveId(id: string | undefined): void {
@@ -153,7 +154,7 @@ export class RadioGroupState {
     this.surfaceCtx = props.surfaceContext ?? useSurfaceContext();
   }
 
-  #resolvedActiveId(): string | undefined {
+  #computeResolvedActiveId(): string | undefined {
     const overrideValid =
       this.#activeId !== undefined && this.finalValue === this.#activeValueSnapshot;
 
@@ -165,7 +166,7 @@ export class RadioGroupState {
     }
 
     if (this.hasSelection) {
-      const matchingId = this.#findIdByValue(this.finalValue);
+      const matchingId = this.#selectedId;
       if (matchingId !== undefined) {
         const entry = this.#itemMap.get(matchingId);
         if (this.#itemIds.has(matchingId) && entry && !entry.getDisabled()) {
@@ -200,9 +201,7 @@ export class RadioGroupState {
 
 export type RadioGroupStateInstance = InstanceType<typeof RadioGroupState>;
 
-export function resolveRadioGroupDescribedBy(
-  ctx: RadioGroupContextResult
-): string | undefined {
+export function resolveRadioGroupDescribedBy(ctx: RadioGroupContextResult): string | undefined {
   return (
     [
       ctx.hasError ? ctx.errorId : null,

@@ -1,0 +1,14 @@
+@layer components {
+  .tag-group {
+    @apply flex w-fit flex-col gap-2;
+  }
+
+  .tag-group__list {
+    @apply flex flex-wrap items-center gap-1.5 outline-none;
+
+    /* The list only holds focus itself when no tag can take it, e.g. after the last one is removed. */
+    &:focus-visible {
+      @apply status-focused;
+    }
+  }
+}

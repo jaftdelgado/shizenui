@@ -1,105 +1,80 @@
-import { tick } from "svelte";
-import { getRovingCandidates } from "../../../lib/utils/index.js";
-import type { TagStateInstance } from "./tag.state.svelte.js";
+import type { FocusVisible } from "../../../lib/runes/index.js";
+import { isFromFocusableChild } from "../../../lib/utils/index.js";
+import type { TagContext } from "./tag.context.js";
+import type { TagState } from "./tag.state.svelte.js";
 import type { TagClickEvent } from "./tag.types.js";
 
+type TagHandlersState = Pick<TagState, "disabled" | "canRemove" | "select" | "activate" | "remove">;
+
+/**
+ * The event handlers of the Tag row that are not about being pressed: the pressed state and the
+ * activation from the keyboard are `PressState`'s, which turns `Enter` and `Space` into a `click`.
+ * `handleClick` is the only place that activates.
+ */
 export function createTagHandlers(options: {
-  state: TagStateInstance;
-  focus: { onKeyDown: () => void; onMouseDown: () => void; onFocus: () => void };
-  getRef: () => HTMLDivElement | null;
+  state: TagHandlersState;
+  focus: Pick<FocusVisible, "onFocus" | "onBlur">;
   getOnClick?: () => ((e: TagClickEvent) => void) | undefined;
 }) {
-  const { state, focus, getRef, getOnClick } = options;
+  const { state, focus, getOnClick } = options;
 
   function handleClick(e: TagClickEvent): void {
-    state.toggle();
+    // A click on a focusable child (the remove button, other interactive content) belongs to the
+    // child: it does not change the selection, and the consumer's `onclick` does not run.
+    if (isFromFocusableChild(e.target, e.currentTarget)) return;
+    // Not a guard of `select`, which guards itself: the consumer's `onclick` does not run on a
+    // disabled tag either (see `TagProps`).
+    if (state.disabled) return;
+    // Shift+click extends the selection from the anchor, as Shift+arrows do.
+    state.select({ extend: e.shiftKey });
     getOnClick?.()?.(e);
   }
 
   function handleFocus(): void {
     focus.onFocus();
-    state.groupCtx.setActiveId(state.id);
+    state.activate();
   }
 
-  function handleMouseDown(e: MouseEvent & { currentTarget: HTMLDivElement }): void {
-    focus.onMouseDown();
-    if (!state.isInteractive) return;
-    e.currentTarget.setAttribute("data-pressed", "true");
-  }
-
-  function handleMouseUp(e: MouseEvent & { currentTarget: HTMLDivElement }): void {
-    e.currentTarget.removeAttribute("data-pressed");
-  }
-
-  function handleMouseLeave(e: MouseEvent & { currentTarget: HTMLDivElement }): void {
-    e.currentTarget.removeAttribute("data-pressed");
-  }
-
-  function handleKeydown(e: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
-    if (e.type === "keydown") focus.onKeyDown();
-
+  function handleKeyDown(e: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
     if (e.target !== e.currentTarget) return;
-
-    if (e.type === "keydown" && (e.key === "Delete" || e.key === "Backspace")) {
-      if (!state.canRemove) return;
-      e.preventDefault();
-      requestRemove();
-      return;
-    }
-
-    if (e.key !== "Enter" && e.key !== " ") return;
-    if (!state.isInteractive) return;
-
-    if (e.type === "keydown") {
-      e.preventDefault();
-      if (e.repeat) return;
-      e.currentTarget.setAttribute("data-pressed", "true");
-      return;
-    }
-
-    if (!e.currentTarget.hasAttribute("data-pressed")) return;
-    e.currentTarget.removeAttribute("data-pressed");
-    state.toggle();
-  }
-
-  function resolveFocusSuccessor(): HTMLElement | undefined {
-    const ref = getRef();
-    if (!ref || !ref.contains(document.activeElement)) return undefined;
-
-    const grid = ref.closest<HTMLElement>('[role="grid"]');
-    if (!grid) return undefined;
-
-    const rows = getRovingCandidates<HTMLElement>(grid, '[role="row"]:not([data-disabled])');
-    const index = rows.indexOf(ref);
-    if (index === -1) return undefined;
-
-    return rows[index + 1] ?? rows[index - 1];
-  }
-
-  function requestRemove(): void {
+    if (e.key !== "Delete" && e.key !== "Backspace") return;
+    // Decides whether the key is the tag's, and only then the browser's default is cancelled.
+    // `remove` guards itself anyway.
     if (!state.canRemove) return;
 
-    const successor = resolveFocusSuccessor();
-
-    state.remove();
-
-    if (!successor) return;
-
-    state.groupCtx.setActiveId(successor.id);
-    void tick().then(() => {
-      if (successor.isConnected) successor.focus();
-    });
+    e.preventDefault();
+    // On a selected tag, the key removes every selected tag.
+    state.remove("selection");
   }
 
   return {
-    handleClick,
-    handleFocus,
-    handleMouseDown,
-    handleMouseUp,
-    handleMouseLeave,
-    handleKeydown,
-    requestRemove
+    /** The event props of the Tag row, ready to be spread. */
+    props: {
+      onclick: handleClick,
+      onkeydown: handleKeyDown,
+      onfocus: handleFocus,
+      onblur: focus.onBlur
+    }
   };
 }
 
-export type TagHandlers = ReturnType<typeof createTagHandlers>;
+/**
+ * The event handlers of the remove button, ready to be spread before the consumer's: mergeProps
+ * composes them, these first.
+ */
+export function createTagRemoveButtonHandlers(tagCtx: Pick<TagContext, "remove">) {
+  function handleClick(): void {
+    // The click also reaches the tag, which ignores a click that comes from a focusable child.
+    tagCtx.remove();
+  }
+
+  function handleMouseDown(e: MouseEvent): void {
+    // Exception to "mousedown does nothing": it keeps the browser from moving focus to this button.
+    e.preventDefault();
+  }
+
+  return {
+    onclick: handleClick,
+    onmousedown: handleMouseDown
+  };
+}

@@ -15,6 +15,7 @@
   } from "./_internal/index.js";
   import {
     createFocusVisible,
+    PressState,
     syncFormReset,
     syncNativeCheckedReset
   } from "../../lib/runes/index.js";
@@ -56,12 +57,18 @@
   });
 
   const focus = createFocusVisible();
+  const press = new PressState({
+    isDisabled: () => radioState.finalDisabled || radioState.finalReadonly
+  });
+  // `blur` has a handler in each: mergeProps composes them, PressState's first.
+  const pressProps = mergeProps(press.props, { onblur: focus.onBlur });
 
   const handlers = createRadioHandlers({
     state: radioState,
-    focus,
     getOnClick: () => onclick
   });
+
+  const isActive = $derived(radioState.groupCtx.isActive(id));
 
   const styles = $derived(radioStyles({ variant: radioState.finalVariant }));
 
@@ -78,20 +85,16 @@
         "aria-disabled": radioState.finalDisabled ? true : undefined,
         "aria-labelledby": ctx.hasLabel ? `${id}-label` : undefined,
         "aria-describedby": describedBy,
-        tabindex: radioState.groupCtx.isActive(id) ? 0 : -1,
+        tabindex: isActive ? 0 : -1,
         "data-checked": presence(radioState.isChecked),
         "data-disabled": presence(radioState.finalDisabled),
         "data-readonly": presence(radioState.finalReadonly),
         "data-invalid": presence(radioState.finalInvalid),
         "data-focus-visible": presence(focus.isFocusVisible),
+        "data-pressed": presence(press.isPressed),
+        ...pressProps,
         onclick: handlers.handleClick,
-        onkeydown: handlers.handleKeydown,
-        onkeyup: handlers.handleKeydown,
-        onmousedown: handlers.handleMouseDown,
-        onmouseup: handlers.handleMouseUp,
-        onmouseleave: handlers.handleMouseLeave,
         onfocus: focus.onFocus,
-        onblur: focus.onBlur,
         class: styles.base()
       },
       { ...rest, class: className }

@@ -72,7 +72,7 @@ fs.writeFileSync(
 console.log(`Created Svelte component: ${componentName}`);
 
 // 2. Update Svelte entry point
-updateIndexFile(paths.svelteIndex, `export * from "./components/${componentName}/index.ts";`);
+updateIndexFile(paths.svelteIndex, `export * from "./components/${componentName}/index.js";`);
 
 // 3. Create CSS file
 ensureDir(paths.stylesComponents);

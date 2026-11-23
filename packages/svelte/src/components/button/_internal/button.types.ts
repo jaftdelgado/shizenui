@@ -3,13 +3,7 @@ import type { Snippet } from "svelte";
 
 export type ButtonSize = "sm" | "md" | "lg";
 export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "danger"
-  | "ghost"
-  | "outline"
-  | "soft-danger";
+  "primary" | "secondary" | "tertiary" | "danger" | "ghost" | "outline" | "soft-danger";
 
 export type ButtonIconContent = Snippet<[]>;
 

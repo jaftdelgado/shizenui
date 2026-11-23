@@ -1,6 +1,7 @@
 <script lang="ts">
   import { toggleStyles } from "@shizen-ui/styles";
-  import { createId, mergeProps } from "../../lib/utils/index.js";
+  import { createId, mergeProps, presence } from "../../lib/utils/index.js";
+  import { PressState } from "../../lib/runes/index.js";
   import type { ToggleProps, ToggleIconContent } from "./_internal/index.js";
   import {
     ToggleState,
@@ -44,6 +45,12 @@
   const groupCtx = toggleState.groupCtx;
   setupToggleGroupRegistration(toggleState);
 
+  const isActive = $derived(groupCtx.exists && groupCtx.isActive(id));
+
+  function handleFocus(): void {
+    groupCtx.setActiveId(id);
+  }
+
   setupToggleWarnings({
     isIconOnly: () => iconOnly,
     hasAccessibleName: () => Boolean(rest["aria-label"] || rest["aria-labelledby"]),
@@ -51,6 +58,8 @@
     hasValue: () => Boolean(value),
     hasExplicitPressed: () => pressed !== false
   });
+
+  const press = new PressState({ isDisabled: () => toggleState.finalDisabled });
 
   const handlers = createToggleHandlers({
     state: toggleState,
@@ -73,13 +82,13 @@
         id,
         disabled: toggleState.finalDisabled,
         "aria-pressed": toggleState.finalPressed,
-        tabindex: groupCtx.exists ? (groupCtx.isActive(id) ? 0 : -1) : undefined,
+        // Outside a group the key is left out so the consumer can set tabindex.
+        ...(groupCtx.exists ? { tabindex: isActive ? 0 : -1 } : {}),
         "data-slot": "toggle",
+        "data-pressed": presence(press.isPressed),
+        ...press.props,
         onclick: handlers.handleClick,
-        onkeydown: handlers.handleKeydown,
-        onkeyup: handlers.handleKeyup,
-        onblur: handlers.handleBlur,
-        onfocus: () => groupCtx.setActiveId(id),
+        onfocus: handleFocus,
         class: styles.base()
       },
       { ...rest, class: className }

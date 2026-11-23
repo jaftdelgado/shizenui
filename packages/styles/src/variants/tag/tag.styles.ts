@@ -4,6 +4,9 @@ export const tagStyles = tv({
   slots: {
     base: "tag",
     content: "tag__content",
+    label: "tag__label",
+    iconStart: "tag__icon tag__icon--start",
+    iconEnd: "tag__icon tag__icon--end",
     removeButton: "tag__remove-button"
   },
   variants: {

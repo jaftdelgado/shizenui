@@ -17,15 +17,13 @@
   const orientation = $derived(groupCtx.orientation);
   const styles = $derived(checkboxGroupStyles({ orientation }));
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !groupCtx.exists,
     "CheckboxGroup.Items",
     "Must be used inside a <CheckboxGroup> component."
   );
 
-  const itemsProps = $derived(
-    mergeProps({ class: styles.items() }, { ...rest, class: className })
-  );
+  const itemsProps = $derived(mergeProps({ class: styles.items() }, { ...rest, class: className }));
 </script>
 
 {#if shouldRender}

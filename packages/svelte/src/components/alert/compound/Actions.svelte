@@ -8,7 +8,7 @@
   let { children, class: className, ref = $bindable(null), ...rest }: AlertActionsProps = $props();
   const ctx = useAlertContext();
   const styles = $derived(alertStyles());
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "Alert.Actions",
     "Must be used inside an <Alert> component."

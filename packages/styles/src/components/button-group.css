@@ -68,7 +68,7 @@
     }
 
     &:active:not(:disabled),
-    &[data-pressed="true"]:not(:disabled) {
+    &[data-pressed]:not(:disabled) {
       transform: none;
 
       .button__content {

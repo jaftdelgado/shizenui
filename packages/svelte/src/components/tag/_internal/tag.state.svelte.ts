@@ -1,89 +1,191 @@
-import { useTagGroupContext } from "../../tag-group/_internal/tag-group.context.js";
-import type { TagGroupContextResult } from "../../tag-group/_internal/tag-group.context.js";
+import type { Snippet } from "svelte";
+import { createSnippetSlot } from "../../../lib/runes/index.js";
+import { useTagGroupContext } from "../../tag-group/_internal/index.js";
+import type {
+  TagGroupItemApi,
+  TagGroupRegistration,
+  TagGroupRemoveScope
+} from "../../tag-group/_internal/index.js";
+import type { TagContext } from "./tag.context.js";
 import type { TagSize, TagVariant } from "./tag.types.js";
 
-export class TagState {
-  #value: () => string;
-  #disabled: () => boolean | undefined;
-  #id: () => string;
-  #textValue: () => string | undefined;
-  #onRemove: () => (() => void) | undefined;
+export interface TagStateProps {
+  value: () => string;
+  disabled: () => boolean | undefined;
+  id: () => string;
+  onRemove: () => (() => void) | undefined;
+  /** The tag's element, if it is rendered. */
+  getElement: () => HTMLElement | null;
+  groupCtx?: TagGroupItemApi;
+}
 
-  readonly groupCtx: TagGroupContextResult;
+/**
+ * State of a Tag. It is also the tag's context: it is passed as is to `setTagContext`, so the
+ * `<Tag.RemoveButton>` reads it.
+ */
+export class TagState implements TagContext {
+  readonly exists = true;
 
-  get finalDisabled(): boolean {
-    const local = this.#disabled();
-    if (local !== undefined) return local;
-    return this.groupCtx.exists ? this.groupCtx.disabled : false;
+  readonly #props: TagStateProps;
+
+  readonly #groupCtx: TagGroupItemApi;
+
+  /**
+   * What the tag tells its group about itself. It is the same object for the whole life of the
+   * tag: the group recognizes the tag by it when its id changes (it registers again under the new
+   * id) and keeps following it as the active one.
+   */
+  readonly registration: TagGroupRegistration = {
+    isDisabled: () => this.disabled,
+    getValue: () => this.value,
+    canRemove: () => this.canRemove,
+    getElement: () => this.#props.getElement(),
+    emitRemove: () => this.#props.onRemove()?.()
+  };
+
+  /**
+   * `<Tag.RemoveButton>` is declared among the tag's children, but it is not rendered there: it
+   * fills this slot with its markup, which the Tag renders after the element that wraps its text.
+   * That element names the row and the button (`aria-labelledby`), and a button inside it would
+   * add its own name to both. Only one remove button per tag is supported: the first one wins.
+   */
+  readonly #removeButton = createSnippetSlot({
+    component: "Tag.RemoveButton",
+    message: "Only one remove button per <Tag> is supported. The extra one is not rendered."
+  });
+
+  #isActive = $derived.by(() => this.#groupCtx.isActive(this.#props.id()));
+  #isSelected = $derived.by(
+    () => this.isSelectable && this.#groupCtx.isSelected(this.#props.value())
+  );
+
+  constructor(props: TagStateProps) {
+    this.#props = props;
+    this.#groupCtx = props.groupCtx ?? useTagGroupContext();
   }
 
-  get finalVariant(): TagVariant {
-    return this.groupCtx.variant;
+  /**
+   * Whether `element` sits inside a list of the tag's group. The group answers it: the tag does not
+   * know how the group lays out its DOM. Read by the development warnings.
+   */
+  isInGroupList(element: Element): boolean {
+    return this.#groupCtx.isInList(element);
   }
 
-  get finalSize(): TagSize {
-    return this.groupCtx.size;
+  /** Whether the tag sits inside a <TagGroup>. Fixed for the life of the tag. */
+  get isInGroup(): boolean {
+    return this.#groupCtx.exists;
+  }
+
+  /** Variant and size given by the group; `undefined` when it gives none, or outside one. */
+  get variant(): TagVariant | undefined {
+    return this.#groupCtx.variant;
+  }
+
+  get size(): TagSize | undefined {
+    return this.#groupCtx.size;
+  }
+
+  get isActive(): boolean {
+    return this.#isActive;
+  }
+
+  get disabled(): boolean {
+    // A disabled group always wins: disabled={false} on a tag cannot re-enable it.
+    return this.#groupCtx.disabled || (this.#props.disabled() ?? false);
   }
 
   get isSelectable(): boolean {
-    return this.groupCtx.exists && this.groupCtx.selectionMode !== "none";
+    return this.#groupCtx.selectionMode !== "none";
   }
 
   get isInteractive(): boolean {
-    return this.isSelectable && !this.finalDisabled;
+    return this.isSelectable && !this.disabled;
   }
 
   get isSelected(): boolean {
-    return this.isSelectable && this.groupCtx.isSelected(this.#value());
+    return this.#isSelected;
   }
 
   get isRemovable(): boolean {
-    return Boolean(this.#onRemove()) || this.groupCtx.isRemovable;
+    return Boolean(this.#props.onRemove()) || this.#groupCtx.isRemovable;
   }
 
   get canRemove(): boolean {
-    return this.isRemovable && !this.finalDisabled;
+    return this.isRemovable && !this.disabled;
   }
 
+  /** Whether the remove button belongs in the tab sequence (only the active tag of a group). */
+  get isTabbable(): boolean {
+    return !this.isInGroup || this.isActive;
+  }
+
+  /** The markup of the declared remove button, which the Tag renders after its text. */
+  get removeButton(): Snippet | undefined {
+    return this.#removeButton.current;
+  }
+
+  /**
+   * Hands the markup of a declared remove button to the Tag, which renders it after the tag's
+   * text. Returns the function that withdraws it.
+   */
+  readonly registerRemoveButton = this.#removeButton.register;
+
   get value(): string {
-    return this.#value();
+    return this.#props.value();
   }
 
   get id(): string {
-    return this.#id();
+    return this.#props.id();
   }
 
-  get textValue(): string | undefined {
-    return this.#textValue();
+  /** The element that wraps the tag's text: it names the row and the remove button. */
+  get labelId(): string {
+    return `${this.id}-label`;
   }
 
-  constructor(props: {
-    value: () => string;
-    disabled: () => boolean | undefined;
-    id: () => string;
-    textValue: () => string | undefined;
-    onRemove: () => (() => void) | undefined;
-    groupContext?: TagGroupContextResult;
-  }) {
-    this.#value = props.value;
-    this.#disabled = props.disabled;
-    this.#id = props.id;
-    this.#textValue = props.textValue;
-    this.#onRemove = props.onRemove;
-
-    this.groupCtx = props.groupContext ?? useTagGroupContext();
+  get removeButtonId(): string {
+    return `${this.id}-remove`;
   }
 
-  toggle(): void {
+  /** Makes this the roving tab stop of its group. A disabled tag never becomes one. */
+  activate(): void {
+    if (this.disabled) return;
+    this.#groupCtx.setActiveId(this.id);
+  }
+
+  readonly registerInGroup = (id: string): void => {
+    this.#groupCtx.register(id, this.registration);
+  };
+
+  readonly unregisterFromGroup = (id: string): void => {
+    this.#groupCtx.unregister(id, this.registration);
+  };
+
+  /**
+   * Selects the tag as a click does (see the group's `select`). Does nothing if it cannot be
+   * selected.
+   */
+  select(options: { extend: boolean }): void {
     if (!this.isInteractive) return;
-    this.groupCtx.toggleValue(this.#value());
+    this.#groupCtx.select({ id: this.id, value: this.value, extend: options.extend });
   }
 
-  remove(): void {
+  /**
+   * Removes the tag and, if it held focus, moves focus to a neighbour. With the `"selection"`
+   * scope, a selected tag removes every selected tag instead (`Delete` on the tag; its remove
+   * button only removes itself). Outside a group there are no neighbours to move focus to and no
+   * group `onRemove`, so only the tag's own `onRemove` runs.
+   */
+  readonly remove = (scope: TagGroupRemoveScope = "self"): void => {
     if (!this.canRemove) return;
-    this.#onRemove()?.();
-    this.groupCtx.remove(this.#value());
-  }
-}
 
-export type TagStateInstance = InstanceType<typeof TagState>;
+    // Outside a group there are no neighbours to move focus to and no group `onRemove`.
+    if (!this.isInGroup) {
+      this.registration.emitRemove();
+      return;
+    }
+
+    this.#groupCtx.remove({ entry: this.registration, scope });
+  };
+}

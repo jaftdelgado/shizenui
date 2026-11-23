@@ -1,61 +1,70 @@
-<script lang="ts">
+<script lang="ts" module>
   import { tagStyles } from "@shizen-ui/styles";
+  import { resolveSlotClasses } from "../../../lib/utils/index.js";
 
-  import { mergeProps } from "../../../lib/utils";
+  // The `removeButton` slot has no variants, so every tag gets the same class. If it ever has
+  // them, the tag context exposes `variant` and `size`, and the button would use
+  // `memoizeSlotClasses`.
+  const classes = resolveSlotClasses(tagStyles());
+</script>
+
+<script lang="ts">
+  import { onDestroy } from "svelte";
+  import { cn, mergeProps } from "../../../lib/utils/index.js";
+  import { PressState } from "../../../lib/runes/index.js";
   import { XIcon } from "../../../lib/icons/index.js";
-  import { assertContext, warnIf } from "../../../lib/runes/index.js";
-  import { useTagContext } from "../_internal/index.js";
+  import {
+    createTagRemoveButtonHandlers,
+    getTagRemoveButtonAttributes,
+    setupTagRemoveButtonWarnings,
+    useTagContext
+  } from "../_internal/index.js";
   import type { TagRemoveButtonProps } from "../_internal/index.js";
 
   let {
     children,
-    class: className,
     ref = $bindable(null),
+    class: className,
+    id,
     "aria-label": ariaLabel,
+    "aria-labelledby": ariaLabelledby,
     ...rest
   }: TagRemoveButtonProps = $props();
 
   const tagCtx = useTagContext();
-  const styles = $derived(tagStyles());
 
-  const { shouldRender } = assertContext(
-    () => !tagCtx.exists,
-    "Tag.RemoveButton",
-    "Must be used inside a <Tag> component."
-  );
+  setupTagRemoveButtonWarnings({ tagCtx });
 
-  warnIf(
-    () => tagCtx.exists && !tagCtx.isRemovable,
-    "Tag.RemoveButton",
-    "Neither the Tag nor its TagGroup has an `onRemove` handler, so the button is not rendered. Pass `onRemove` to <Tag> or <TagGroup>."
-  );
+  // The context never changes during the life of the button, so this is decided once.
+  const shouldRender = tagCtx.exists;
 
-  const defaultLabel = $derived(tagCtx.textValue ? `Remove ${tagCtx.textValue}` : "Remove");
+  const press = new PressState({ isDisabled: () => tagCtx.disabled });
+
+  // The press events reach the tag too: its PressState ignores a press on a focusable child.
+  const handlers = mergeProps(press.props, createTagRemoveButtonHandlers(tagCtx));
 
   const buttonProps = $derived(
     mergeProps(
       {
-        type: "button" as const,
-        tabindex: -1,
-        "aria-label": ariaLabel ?? defaultLabel,
-        disabled: tagCtx.disabled,
-        "data-slot": "tag-remove-button",
-        class: styles.removeButton(),
-        onclick: (e: MouseEvent) => {
-          e.stopPropagation();
-          tagCtx.requestRemove();
-        },
-        onmousedown: (e: MouseEvent) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }
+        ...getTagRemoveButtonAttributes(tagCtx, {
+          id: id ?? tagCtx.removeButtonId,
+          ariaLabel,
+          ariaLabelledby,
+          pressed: press.isPressed
+        }),
+        ...handlers,
+        class: cn(classes.removeButton, className)
       },
-      { ...rest, class: className }
+      rest
     )
   );
+
+  // The button is not rendered here, among the tag's children (inside the element that names the
+  // row): the Tag renders this snippet after its text (see `removeButton` in TagState).
+  if (shouldRender) onDestroy(tagCtx.registerRemoveButton(button));
 </script>
 
-{#if shouldRender && tagCtx.isRemovable}
+{#snippet button()}
   <button bind:this={ref} {...buttonProps}>
     {#if children}
       {@render children()}
@@ -63,4 +72,4 @@
       <XIcon />
     {/if}
   </button>
-{/if}
+{/snippet}

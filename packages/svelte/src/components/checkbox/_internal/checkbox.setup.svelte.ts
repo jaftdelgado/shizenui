@@ -1,6 +1,6 @@
 import { setCheckboxContext } from "./checkbox.context.js";
 import type { CheckboxContextValue } from "./checkbox.context.js";
-import { setFieldStateContext, setContentSlotContext } from "../../../lib/index.js";
+import { setFieldStateContext, setContentSlotContext } from "../../../lib/contexts/index.js";
 import { createIdRegistry } from "../../../lib/runes/index.js";
 import type { CheckboxState } from "./checkbox.state.svelte.js";
 

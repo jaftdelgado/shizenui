@@ -1,7 +1,7 @@
 <script lang="ts">
   import { inputStyles } from "@shizen-ui/styles";
 
-  import { useFieldStateContext } from "../../lib/index.js";
+  import { useFieldStateContext } from "../../lib/contexts/index.js";
   import { syncFormReset } from "../../lib/runes/index.js";
   import type { SubmissionInvalidState } from "../../lib/runes/index.js";
   import { createId, mergeProps, presence } from "../../lib/utils/index.js";

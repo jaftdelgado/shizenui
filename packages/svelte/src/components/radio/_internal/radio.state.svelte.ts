@@ -5,7 +5,7 @@ import {
   useFieldStateContext,
   useSurfaceContext,
   type FieldStateContextResult
-} from "../../../lib/index.js";
+} from "../../../lib/contexts/index.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/surface.context.js";
 import type { RadioProps, RadioVariant } from "./radio.types.js";
 
@@ -18,6 +18,8 @@ export class RadioState {
   readonly groupCtx: RadioGroupContextResult;
   readonly parentFieldCtx: FieldStateContextResult;
   readonly surfaceCtx: SurfaceContextResult;
+
+  #isChecked = $derived.by(() => this.groupCtx.value === this.#value());
 
   get finalVariant(): RadioVariant {
     if (this.groupCtx.exists) return this.groupCtx.variant;
@@ -51,7 +53,7 @@ export class RadioState {
   }
 
   get isChecked(): boolean {
-    return this.groupCtx.value === this.#value();
+    return this.#isChecked;
   }
 
   get value(): string {

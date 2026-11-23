@@ -2,7 +2,7 @@
   import { inputGroupStyles } from "@shizen-ui/styles";
   import { mergeProps, createId } from "../../../lib/utils/index.js";
   import { assertContext } from "../../../lib/runes/index.js";
-  import { useFieldStateContext } from "../../../lib/index.js";
+  import { useFieldStateContext } from "../../../lib/contexts/index.js";
   import { useTextFieldContext } from "../../text-field/_internal/index.js";
   import {
     createTextFieldControlHandlers,
@@ -72,7 +72,7 @@
     value = next;
   }
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "InputGroup.TextArea",
     "Must be used inside an <InputGroup> component."

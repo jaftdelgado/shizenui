@@ -14,7 +14,7 @@
     mergeProps({ class: styles.content() }, { ...rest, class: className })
   );
 
-  const { shouldRender } = assertContext(
+  const shouldRender = assertContext(
     () => !ctx.exists,
     "Radio.Content",
     "Must be used inside a <Radio> component."

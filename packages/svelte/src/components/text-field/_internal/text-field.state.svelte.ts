@@ -1,5 +1,5 @@
-import { useSurfaceContext, resolveSurfaceVariant } from "../../../lib/index.js";
-import type { FieldStateContextResult, SurfaceContextResult } from "../../../lib/index.js";
+import { useSurfaceContext, resolveSurfaceVariant } from "../../../lib/contexts/index.js";
+import type { FieldStateContextResult, SurfaceContextResult } from "../../../lib/contexts/index.js";
 import type { TextFieldSize, TextFieldVariant } from "./text-field.types.js";
 
 export class TextFieldState {
