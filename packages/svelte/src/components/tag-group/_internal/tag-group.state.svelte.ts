@@ -1,5 +1,6 @@
 import type {
   TagGroupContext,
+  TagGroupListRegistration,
   TagGroupRegistration,
   TagGroupRemoveRequest
 } from "./tag-group.context.js";
@@ -20,7 +21,6 @@ import {
   toSelectionValues
 } from "../../../lib/utils/index.js";
 import type { SelectionValue, SelectionValueChange } from "../../../lib/utils/index.js";
-import { getListRows, isInsideOwnList } from "./tag-group.queries.js";
 import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
 export interface TagGroupStateProps {
@@ -37,6 +37,11 @@ export interface TagGroupStateProps {
   ariaLabel: () => string | undefined;
   ariaLabelledby: () => string | undefined;
   surfaceContext?: SurfaceContextResult;
+  /**
+   * Whether `element` sits inside a list of this group. It is the group's query to the DOM: the
+   * TagGroup component injects it, so the state does not import it.
+   */
+  isInList: (element: Element) => boolean;
   /** Whether the group has mounted. Defaults to `createMounted()`. */
   mounted?: () => boolean;
 }
@@ -57,7 +62,7 @@ export class TagGroupState implements TagGroupContext {
   // has mounted) look at them. Those warnings therefore no longer follow a list that appears or
   // goes away later, which is fine: they point at a misuse of the markup, not at a state to track.
   // Only one list per group is supported.
-  readonly #lists = new Map<string, () => HTMLElement | null>();
+  readonly #lists = new Map<string, TagGroupListRegistration>();
 
   // The primitives read `#props` only when called, so they can be built in field initializers.
   // The fields that delegate to them must be declared after them.
@@ -71,6 +76,8 @@ export class TagGroupState implements TagGroupContext {
   });
   readonly field: ContentSlotsState;
   readonly #roving = new RovingFocusState<TagGroupRegistration>();
+  // The one place where the state names the DOM: `FocusRestoration` (in `lib`) does the query, and
+  // is configured with the selectors of the list and of its tags.
   readonly #focusRestoration = new FocusRestoration({
     containerSelector: LIST_SELECTOR,
     itemSelector: TAG_SELECTOR,
@@ -82,8 +89,8 @@ export class TagGroupState implements TagGroupContext {
     resolveSurfaceVariant(this.#props.variant(), this.#surfaceCtx, undefined, "secondary")
   );
 
-  readonly registerList = (id: string, getElement: () => HTMLElement | null): void => {
-    this.#lists.set(id, getElement);
+  readonly registerList = (id: string, list: TagGroupListRegistration): void => {
+    this.#lists.set(id, list);
   };
   readonly unregisterList = (id: string): void => {
     this.#lists.delete(id);
@@ -162,34 +169,31 @@ export class TagGroupState implements TagGroupContext {
 
   readonly toggleValue = this.#selection.toggle;
 
-  readonly isInList = (element: Element): boolean => isInsideOwnList(element);
+  readonly isInList = (element: Element): boolean => this.#props.isInList(element);
 
-  readonly extendSelectionTo = (targetId: string, rows?: readonly HTMLElement[]): void => {
+  readonly extendSelectionTo = (targetId: string, orderedIds?: readonly string[]): void => {
     if (this.selectionMode !== "multiple") return;
 
     const valueOf = (id: string) => this.#roving.getItem(id)?.getValue();
     const target = valueOf(targetId);
     if (target === undefined) return;
 
-    // Read only now, once the mode and the target allow a range: a caller that has no rows
-    // would otherwise query the DOM for nothing.
-    const ordered = (rows ?? this.#getRows()).flatMap((row) => valueOf(row.id) ?? []);
+    // Read only now, once the mode and the target allow a range: a caller that has no ids would
+    // otherwise ask the list for nothing.
+    const ordered = (orderedIds ?? this.#getOrderedIds()).flatMap((id) => valueOf(id) ?? []);
     this.#selection.extendTo(ordered, target);
   };
 
   /**
-   * The enabled rows of the group's list, in DOM order. Only one list per group is supported: the
-   * first one that is rendered is the one read.
+   * The ids of the enabled tags, in the order the user sees them. Only one list per group is
+   * supported: the first one registered is the one read.
    */
-  #getRows(): HTMLElement[] {
-    for (const getElement of this.#lists.values()) {
-      const list = getElement();
-      if (list) return getListRows(list);
-    }
-    return [];
+  #getOrderedIds(): readonly string[] {
+    const [list] = this.#lists.values();
+    return list?.getOrderedIds() ?? [];
   }
 
-  readonly remove = ({ entry, row, scope }: TagGroupRemoveRequest): void => {
+  readonly remove = ({ entry, scope }: TagGroupRemoveRequest): void => {
     const removesSelection =
       scope === "selection" && this.selectionMode !== "none" && this.isSelected(entry.getValue());
     // Collected first: a consumer that flushes the DOM in its `onRemove` unregisters tags while
@@ -200,7 +204,7 @@ export class TagGroupState implements TagGroupContext {
           .filter((item) => item.canRemove() && this.isSelected(item.getValue()))
       : [entry];
 
-    this.#focusRestoration.run(row, () => this.#removeEntries(entries));
+    this.#focusRestoration.run(entry.getElement(), () => this.#removeEntries(entries));
   };
 
   readonly register = this.#roving.register;

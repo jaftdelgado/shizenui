@@ -9,6 +9,8 @@ export interface TagGroupRegistration extends RovingFocusItem {
   getValue: () => string;
   /** Whether it can be removed right now (removable and enabled). */
   canRemove: () => boolean;
+  /** The tag's element. The group only uses it to take focus off the tag when it is removed. */
+  getElement: () => HTMLElement | null;
   /** Runs the tag's own `onRemove`, if any. The group's `onRemove` is the group's job. */
   emitRemove: () => void;
 }
@@ -18,9 +20,16 @@ export type TagGroupRemoveScope = "self" | "selection";
 
 export interface TagGroupRemoveRequest {
   readonly entry: TagGroupRegistration;
-  /** The tag's element, to move focus off it if it held focus. */
-  readonly row: HTMLElement | null;
   readonly scope: TagGroupRemoveScope;
+}
+
+/** What a TagGroup.List tells its group when it registers. */
+export interface TagGroupListRegistration {
+  /**
+   * The ids of the enabled tags of the list, in the order the user sees them. Empty while the
+   * list has no element (on the server).
+   */
+  readonly getOrderedIds: () => readonly string[];
 }
 
 /** What every member of the group reads. */
@@ -31,10 +40,10 @@ interface TagGroupSharedApi {
   readonly setActiveId: (id: string | undefined) => void;
   /**
    * Selects the range from the anchor (the last tag selected) to the tag with `targetId`
-   * (multiple mode only). `rows` are the enabled rows of the list in DOM order, when the caller
-   * already has them; without them the group reads them from its list.
+   * (multiple mode only). `orderedIds` are the ids of the enabled tags in the order the user sees
+   * them, when the caller already has them; without them the group asks its list.
    */
-  readonly extendSelectionTo: (targetId: string, rows?: readonly HTMLElement[]) => void;
+  readonly extendSelectionTo: (targetId: string, orderedIds?: readonly string[]) => void;
 }
 
 /** What a Tag uses. */
@@ -76,8 +85,7 @@ export interface TagGroupListApi extends TagGroupSharedApi {
    * not mean the tag has DOM focus. Without one, the list is the tab stop.
    */
   readonly tabStopId: string | undefined;
-  /** `getElement` reads the list's element when it is needed: it does not exist yet on the server. */
-  readonly registerList: (id: string, getElement: () => HTMLElement | null) => void;
+  readonly registerList: (id: string, list: TagGroupListRegistration) => void;
   readonly unregisterList: (id: string) => void;
 }
 

@@ -44,6 +44,7 @@ export class TagState implements TagContext {
     getDisabled: () => this.disabled,
     getValue: () => this.value,
     canRemove: () => this.canRemove,
+    getElement: () => this.#props.getRef(),
     emitRemove: () => this.#props.onRemove()?.()
   };
 
@@ -195,6 +196,6 @@ export class TagState implements TagContext {
    */
   readonly remove = (scope: TagGroupRemoveScope = "self"): void => {
     if (!this.canRemove) return;
-    this.#groupCtx.remove({ entry: this.registration, row: this.#props.getRef(), scope });
+    this.#groupCtx.remove({ entry: this.registration, scope });
   };
 }

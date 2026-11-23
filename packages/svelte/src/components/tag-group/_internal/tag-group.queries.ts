@@ -1,9 +1,11 @@
+// The queries of a TagGroup to the DOM. The `.svelte` files and the handlers call them, never the
+// state: it works with ids and values.
 import { getRovingCandidates } from "../../../lib/utils/index.js";
 import { GROUP_SELECTOR, LIST_SELECTOR, TAG_SELECTOR } from "./tag-group.constants.js";
 
-/** The enabled tags of `list`, in the order the user sees them. */
-export function getListRows(list: HTMLElement): HTMLElement[] {
-  return getRovingCandidates<HTMLElement>(list, TAG_SELECTOR);
+/** The ids of the enabled tags of `list`, in the order the user sees them. */
+export function getListRowIds(list: HTMLElement): string[] {
+  return getRovingCandidates<HTMLElement>(list, TAG_SELECTOR).map((row) => row.id);
 }
 
 /**

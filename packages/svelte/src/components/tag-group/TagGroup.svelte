@@ -12,6 +12,7 @@
   import {
     TagGroupState,
     getTagGroupAttributes,
+    isInsideOwnList,
     setTagGroupContext,
     setupTagGroupWarnings
   } from "./_internal/index.js";
@@ -50,7 +51,8 @@
     size: () => size,
     id: () => id,
     ariaLabel: () => ariaLabel ?? undefined,
-    ariaLabelledby: () => ariaLabelledby ?? undefined
+    ariaLabelledby: () => ariaLabelledby ?? undefined,
+    isInList: isInsideOwnList
   });
 
   setTagGroupContext(tagGroupState);

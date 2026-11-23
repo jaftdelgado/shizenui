@@ -46,7 +46,12 @@ export function createTagGroupListHandlers(options: {
     acceptsModifiedKey: (e) => resolveSelectionIntent(e) !== "none",
     onMove: (target, e, candidates) => {
       groupCtx.setActiveId(target.id);
-      if (resolveSelectionIntent(e) === "extend") groupCtx.extendSelectionTo(target.id, candidates);
+      if (resolveSelectionIntent(e) === "extend") {
+        groupCtx.extendSelectionTo(
+          target.id,
+          candidates.map((candidate) => candidate.id)
+        );
+      }
     }
   });
 

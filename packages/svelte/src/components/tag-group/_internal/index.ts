@@ -9,8 +9,11 @@ export {
 
 export { setupTagGroupWarnings, setupTagGroupListWarnings } from "./tag-group.warnings.js";
 
+export { getListRowIds, isInsideOwnList } from "./tag-group.queries.js";
+
 export { setTagGroupContext, useTagGroupContext } from "./tag-group.context.js";
 export type {
+  TagGroupListRegistration,
   TagGroupRegistration,
   TagGroupRemoveRequest,
   TagGroupRemoveScope,

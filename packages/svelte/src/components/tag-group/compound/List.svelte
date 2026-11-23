@@ -11,6 +11,7 @@
   import {
     TAG_GROUP_LIST_OWNED_KEYS,
     createTagGroupListHandlers,
+    getListRowIds,
     getTagGroupListAttributes,
     setupTagGroupListWarnings,
     useTagGroupContext
@@ -57,7 +58,7 @@
 
   // The id is constant: register while initializing so the list also exists on the server. Outside
   // a group the context is a no-op.
-  groupCtx.registerList(listUid, () => ref);
+  groupCtx.registerList(listUid, { getOrderedIds: () => (ref ? getListRowIds(ref) : []) });
 
   onDestroy(() => {
     groupCtx.unregisterList(listUid);
