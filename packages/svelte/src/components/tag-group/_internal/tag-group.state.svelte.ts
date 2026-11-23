@@ -64,10 +64,9 @@ export class TagGroupState implements TagGroupContext {
   // is fine: they point at a misuse of the markup, not at a state to track.
   //
   // Only one list per group is supported: the first one registered is the one read, and the rest
-  // are only counted, for the warning. With more than one (which already warns), if the first one
-  // goes away the second does not take its place.
-  #list: { id: string; registration: TagGroupListRegistration } | undefined;
-  #listCount = 0;
+  // are kept for the warning. With more than one (which already warns), if the first one goes away
+  // the next one takes its place.
+  readonly #lists = new Map<string, TagGroupListRegistration>();
 
   // The primitives read `#props` only when called, so they can be built in field initializers.
   // The fields that delegate to them must be declared after them.
@@ -95,12 +94,10 @@ export class TagGroupState implements TagGroupContext {
   );
 
   readonly registerList = (id: string, registration: TagGroupListRegistration): void => {
-    this.#listCount++;
-    this.#list ??= { id, registration };
+    this.#lists.set(id, registration);
   };
   readonly unregisterList = (id: string): void => {
-    this.#listCount--;
-    if (this.#list?.id === id) this.#list = undefined;
+    this.#lists.delete(id);
     // The list is gone, and so is whatever it was waiting for.
     this.#focusRestoration.cancel();
   };
@@ -160,12 +157,12 @@ export class TagGroupState implements TagGroupContext {
   }
 
   get hasList(): boolean {
-    return this.#listCount > 0;
+    return this.#lists.size > 0;
   }
 
   /** Only one list per group is supported; used to warn in development. */
   get hasMultipleLists(): boolean {
-    return this.#listCount > 1;
+    return this.#lists.size > 1;
   }
 
   get tabStopId(): string | undefined {
@@ -198,10 +195,11 @@ export class TagGroupState implements TagGroupContext {
 
   /**
    * The ids of the enabled tags, in the order the user sees them. They come from the first list
-   * registered (see `#list`).
+   * still registered (see `#lists`): a `Map` iterates in insertion order.
    */
   #getOrderedIds(): readonly string[] {
-    return this.#list?.registration.getOrderedIds() ?? [];
+    const [list] = this.#lists.values();
+    return list?.getOrderedIds() ?? [];
   }
 
   readonly remove = ({ entry, scope }: TagGroupRemoveRequest): void => {
