@@ -1,4 +1,6 @@
 ---
+import { readdir, readFile } from "node:fs/promises";
+
 function extractTitle(raw: string): string | undefined {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return undefined;
@@ -12,11 +14,16 @@ interface SidebarItem {
   href: string;
 }
 
-const rawFiles = import.meta.glob("../../pages/docs/components/*.mdx", {
-  eager: true,
-  query: "?raw",
-  import: "default"
-}) as Record<string, string>;
+// Read from disk instead of an `import.meta.glob(..., { query: "?raw" })`: in dev, Astro follows
+// every import of a page to collect its CSS, and a glob would compile every docs page on each request.
+// Paths are relative to the docs app root, where `astro dev` and `astro build` run.
+const pagesDir = "./src/pages/docs/components";
+const pageFiles = (await readdir(pagesDir)).filter((file) => file.endsWith(".mdx"));
+const rawFiles: Record<string, string> = Object.fromEntries(
+  await Promise.all(
+    pageFiles.map(async (file) => [file, await readFile(`${pagesDir}/${file}`, "utf8")] as const)
+  )
+);
 
 const sidebarItems: SidebarItem[] = Object.entries(rawFiles)
   .flatMap(([path, raw]) => {

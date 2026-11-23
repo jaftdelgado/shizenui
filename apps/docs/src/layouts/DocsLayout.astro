@@ -18,7 +18,6 @@ const frontmatter = (rawProps as any).frontmatter ?? rawProps;
 
 const title = frontmatter.title;
 const description = frontmatter.description;
-const preview = frontmatter.preview;
 const headings: MarkdownHeading[] = rawProps.headings ?? [];
 
 const sourceFile: string | undefined = frontmatter.sourceFile;
@@ -26,22 +25,8 @@ const styleFile: string | undefined = frontmatter.styleFile;
 
 const { sourceUrl, stylesUrl } = resolveDocLinks(title, sourceFile, styleFile);
 
-const previewModules = import.meta.glob("../examples/svelte/**/*.astro", {
-  eager: true
-}) as Record<string, { default?: unknown }>;
-
-const matchedPreviewPath = preview
-  ? (() => {
-      const previewPath = `../examples/svelte/${preview}.astro`;
-      return previewModules[previewPath]
-        ? previewPath
-        : Object.keys(previewModules).find((path) => path.endsWith(`/${preview}.astro`));
-    })()
-  : undefined;
-
-const PreviewComponent: any = matchedPreviewPath
-  ? previewModules[matchedPreviewPath]?.default
-  : undefined;
+// Attached by the docs-preview plugin (plugins/docs-preview.mjs) from the page's `preview` frontmatter.
+const PreviewComponent: any = frontmatter.previewComponent;
 ---
 
 <html lang="en">

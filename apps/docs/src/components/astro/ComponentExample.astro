@@ -1,4 +1,5 @@
 ---
+import { readFile } from "node:fs/promises";
 import CodeBlock from "./CodeBlock.astro";
 
 interface Props {
@@ -10,23 +11,10 @@ interface Props {
 
 const { src, lang = "svelte", theme, showLineNumbers = true } = Astro.props;
 
-const examples = import.meta.glob<string>("/src/examples/**/*.svelte", {
-  query: "?raw",
-  import: "default",
-  eager: true
-});
-
-let code = "";
-
-if (src) {
-  const fullPath = `/src/examples/${src}`;
-
-  const loadCode = examples[fullPath];
-
-  if (loadCode) {
-    code = loadCode.trim();
-  }
-}
+// Read from disk instead of an `import.meta.glob(..., { query: "?raw" })`: in dev, Astro follows
+// every import of a page to collect its CSS, and a glob would compile all examples on every page.
+// Paths are relative to the docs app root, where `astro dev` and `astro build` run.
+const code = src ? (await readFile(`./src/examples/${src}`, "utf8")).trim() : "";
 ---
 
 <section class="example-container my-8" aria-label="Component Example" data-example-container>
