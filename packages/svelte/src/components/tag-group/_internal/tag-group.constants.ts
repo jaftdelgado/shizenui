@@ -2,8 +2,8 @@
 //
 // - This module imports nothing, so it can never take part in an import cycle.
 // - It holds only what two or more layers share. A constant used by a single file stays in that file.
-// - Imports between the two components go one way: tag may import values from tag-group, but
-//   tag-group only imports types from tag. That is why the tag slot name is declared here.
+// - Imports between the two components go one way: tag may import from tag-group, and tag-group
+//   imports nothing from tag. That is why the tag slot name is declared here.
 
 /** The `data-slot` of the TagGroup root. The attributes layer writes it. */
 export const TAG_GROUP_SLOT = "tag-group";

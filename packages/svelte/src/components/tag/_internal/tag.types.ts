@@ -1,8 +1,9 @@
 import type { HTMLAttributes, HTMLButtonAttributes } from "svelte/elements";
 import type { Snippet } from "svelte";
+import type { TagVariants } from "@shizen-ui/styles";
 
-export type TagVariant = "default" | "secondary";
-export type TagSize = "sm" | "md" | "lg";
+export type TagVariant = NonNullable<TagVariants["variant"]>;
+export type TagSize = NonNullable<TagVariants["size"]>;
 export type TagIconContent = Snippet<[]>;
 
 // Consumer DOM event handlers are accepted and composed after the internal ones (they do not run

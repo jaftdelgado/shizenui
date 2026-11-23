@@ -1,8 +1,7 @@
 import { createOptionalContext } from "../../../lib/contexts/index.js";
 import { EMPTY_CONTENT_SLOTS } from "../../../lib/runes/index.js";
 import type { ContentSlotsField, RovingFocusItem } from "../../../lib/runes/index.js";
-import type { TagGroupSelectionMode } from "./tag-group.types.js";
-import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
+import type { TagGroupSelectionMode, TagGroupSize, TagGroupVariant } from "./tag-group.types.js";
 
 /** What a tag tells its group about itself when it registers. */
 export interface TagGroupRegistration extends RovingFocusItem {
@@ -51,8 +50,8 @@ interface TagGroupSharedApi {
 export interface TagGroupItemApi extends TagGroupSharedApi {
   readonly isRemovable: boolean;
   /** The variant and size the group gives its tags; `undefined` leaves them to the styles. */
-  readonly variant: TagVariant | undefined;
-  readonly size: TagSize | undefined;
+  readonly variant: TagGroupVariant | undefined;
+  readonly size: TagGroupSize | undefined;
   readonly isSelected: (value: string) => boolean;
   readonly isActive: (id: string) => boolean;
   /**

@@ -1,9 +1,15 @@
 import type { Snippet } from "svelte";
 import type { HTMLAttributes } from "svelte/elements";
-import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
+import type { TagVariants } from "@shizen-ui/styles";
 import type { SelectionStateMode } from "../../../lib/runes/index.js";
 
 export type TagGroupSelectionMode = SelectionStateMode;
+
+// The variants a group gives its tags. They come from the same styles as the Tag's own, so
+// `tag-group` does not import from `tag`. They are not part of the public exports: the props name
+// the unions.
+export type TagGroupVariant = NonNullable<TagVariants["variant"]>;
+export type TagGroupSize = NonNullable<TagVariants["size"]>;
 
 type TagGroupBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "children">;
 
@@ -11,8 +17,8 @@ interface TagGroupSharedProps extends TagGroupBaseProps {
   children?: Snippet;
   disabled?: boolean;
   invalid?: boolean;
-  variant?: TagVariant;
-  size?: TagSize;
+  variant?: TagGroupVariant;
+  size?: TagGroupSize;
   /**
    * Called once with the values of the tags that were removed, in the order the user sees them.
    * When a selected tag is removed, that is every selected tag that can be removed.

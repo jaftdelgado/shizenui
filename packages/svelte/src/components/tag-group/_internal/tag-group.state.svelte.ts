@@ -6,7 +6,7 @@ import type {
   TagGroupSelectRequest
 } from "./tag-group.context.js";
 import { LIST_SELECTOR, TAG_SELECTOR } from "./tag-group.constants.js";
-import type { TagGroupSelectionMode } from "./tag-group.types.js";
+import type { TagGroupSelectionMode, TagGroupSize, TagGroupVariant } from "./tag-group.types.js";
 import { resolveSurfaceVariant, useSurfaceContext } from "../../../lib/contexts/index.js";
 import type { SurfaceContextResult } from "../../../lib/contexts/index.js";
 import {
@@ -22,7 +22,6 @@ import {
   toSelectionValues
 } from "../../../lib/utils/index.js";
 import type { SelectionValue, SelectionValueChange } from "../../../lib/utils/index.js";
-import type { TagSize, TagVariant } from "../../tag/_internal/index.js";
 
 export interface TagGroupStateProps {
   selectionMode: () => TagGroupSelectionMode;
@@ -32,8 +31,8 @@ export interface TagGroupStateProps {
   onRemove: () => ((values: string[]) => void) | undefined;
   disabled: () => boolean | undefined;
   invalid: () => boolean | undefined;
-  variant: () => TagVariant | undefined;
-  size: () => TagSize | undefined;
+  variant: () => TagGroupVariant | undefined;
+  size: () => TagGroupSize | undefined;
   id: () => string;
   ariaLabel: () => string | undefined;
   ariaLabelledby: () => string | undefined;
@@ -133,11 +132,11 @@ export class TagGroupState implements TagGroupContext {
     return Boolean(this.#props.onRemove());
   }
 
-  get variant(): TagVariant | undefined {
+  get variant(): TagGroupVariant | undefined {
     return this.#variant;
   }
 
-  get size(): TagSize | undefined {
+  get size(): TagGroupSize | undefined {
     return this.#props.size();
   }
 
