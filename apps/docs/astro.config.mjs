@@ -7,6 +7,7 @@ import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
 import { hugeiconsDeepImports } from "./plugins/hugeicons-deep-imports.mjs";
 import { docsPreview } from "./plugins/docs-preview.mjs";
+import { shizenDeepImports } from "./plugins/shizen-deep-imports.mjs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,7 +23,7 @@ export default defineConfig({
         "@utils": fileURLToPath(new URL("./src/utils", import.meta.url))
       }
     },
-    plugins: [tailwindcss(), hugeiconsDeepImports(), docsPreview()],
+    plugins: [tailwindcss(), hugeiconsDeepImports(), docsPreview(), shizenDeepImports()],
     optimizeDeps: {
       exclude: ["@hugeicons/core-free-icons"]
     },
