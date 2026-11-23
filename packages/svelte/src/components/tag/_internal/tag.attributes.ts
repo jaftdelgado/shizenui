@@ -5,7 +5,7 @@ import type { TagState } from "./tag.state.svelte.js";
 
 type TagAriaState = Pick<
   TagState,
-  | "inGroup"
+  | "isInGroup"
   | "id"
   | "disabled"
   | "isActive"
@@ -52,8 +52,8 @@ export function getTagAttributes(
   const nameFromText = !extras.hasOwnName;
 
   return {
-    id: state.inGroup ? state.id : extras.idProp,
-    ...(state.inGroup
+    id: state.isInGroup ? state.id : extras.idProp,
+    ...(state.isInGroup
       ? {
           role: "row",
           // A disabled tag is not focusable, so it has no tabindex.
@@ -86,7 +86,7 @@ export function getTagAttributes(
  * @param pressed - the pressed flag, which lives in the button's `PressState`.
  */
 export function getTagRemoveButtonAttributes(
-  ctx: Pick<TagContext, "tabbable" | "disabled" | "labelId">,
+  tagCtx: Pick<TagContext, "isTabbable" | "disabled" | "labelId">,
   options: {
     id: string | undefined;
     ariaLabel: string | null | undefined;
@@ -99,15 +99,15 @@ export function getTagRemoveButtonAttributes(
     "aria-label": ariaLabel,
     "aria-labelledby": ariaLabelledby
   });
-  const nameFromText = !hasOwnName && id !== undefined && ctx.labelId;
+  const nameFromText = !hasOwnName && id !== undefined && tagCtx.labelId;
 
   return {
     id,
     type: "button" as const,
-    tabindex: ctx.tabbable ? 0 : -1,
+    tabindex: tagCtx.isTabbable ? 0 : -1,
     "aria-label": ariaLabel || "Remove",
-    "aria-labelledby": ariaLabelledby || (nameFromText ? `${id} ${ctx.labelId}` : undefined),
-    disabled: ctx.disabled,
+    "aria-labelledby": ariaLabelledby || (nameFromText ? `${id} ${tagCtx.labelId}` : undefined),
+    disabled: tagCtx.disabled,
     "data-slot": "tag-remove-button",
     "data-pressed": presence(pressed)
   };

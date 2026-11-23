@@ -43,7 +43,7 @@
     disabled: () => disabled,
     id: () => id,
     onRemove: () => onRemove,
-    getRef: () => ref
+    getElement: () => ref
   });
 
   // The id can change, so this is an effect: it registers again under the new id, and the cleanup
@@ -73,11 +73,11 @@
   setupTagWarnings({
     state: tagState,
     hasChildren: () => Boolean(children),
-    getRef: () => ref
+    getElement: () => ref
   });
 
   // The group context never changes after initialization.
-  const inGroup = tagState.inGroup;
+  const isInGroup = tagState.isInGroup;
 
   const rootClass = $derived(cn(slots.base, className));
 
@@ -97,7 +97,7 @@
         class: rootClass
       },
       rest,
-      { owned: inGroup ? TAG_ROW_OWNED_KEYS : undefined }
+      { owned: isInGroup ? TAG_ROW_OWNED_KEYS : undefined }
     )
   );
 </script>
@@ -111,7 +111,7 @@
 {/snippet}
 
 <div bind:this={ref} {...tagProps}>
-  <div role={inGroup ? "gridcell" : undefined} class={slots.content}>
+  <div role={isInGroup ? "gridcell" : undefined} class={slots.content}>
     {@render renderIcon(startContent, "start")}
     <!-- Names the row and the remove button, so the button is rendered outside it. -->
     <span id={tagState.labelId} class={slots.label}>

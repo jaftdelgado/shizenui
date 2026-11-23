@@ -10,7 +10,7 @@ export interface TagContext {
   /** The default id of the remove button, which names itself together with the label. */
   readonly removeButtonId: string | undefined;
   /** Whether the remove button belongs in the tab sequence (only the active tag of a group). */
-  readonly tabbable: boolean;
+  readonly isTabbable: boolean;
   /** Removes this tag only, not the selection: it is what the remove button does. */
   readonly remove: () => void;
   /**
@@ -26,7 +26,7 @@ const NOOP_TAG_CONTEXT: TagContext = Object.freeze({
   isRemovable: false,
   labelId: undefined,
   removeButtonId: undefined,
-  tabbable: false,
+  isTabbable: false,
   remove: () => {},
   registerRemoveButton: () => () => {},
   exists: false

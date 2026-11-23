@@ -15,18 +15,18 @@ const NAVIGATION_OPTIONS = {
 } as const;
 
 export function createTagGroupListHandlers(options: {
-  getContainer: () => HTMLDivElement | null;
+  getElement: () => HTMLDivElement | null;
   groupCtx: Pick<TagGroupListApi, "tabStopId" | "setActiveId" | "extendSelectionTo">;
   /** What each key does to the selection. Not a prop of the component: the default is the one. */
   resolveSelectionIntent?: SelectionIntentResolver;
 }) {
-  const { getContainer, groupCtx, resolveSelectionIntent = getSelectionIntent } = options;
+  const { getElement, groupCtx, resolveSelectionIntent = getSelectionIntent } = options;
 
   // The list is focusable itself so that Tab can reach it, and it hands focus to the active tag,
   // or to the first enabled one. A pointer never focuses it, but a click on its empty space makes
   // the next Tab enter that same tag.
   const container = createRovingContainer({
-    getContainer,
+    getContainer: getElement,
     selector: TAG_SELECTOR,
     resolveTarget: (candidates) =>
       candidates.find((candidate) => candidate.id === groupCtx.tabStopId) ?? candidates[0],
@@ -38,7 +38,7 @@ export function createTagGroupListHandlers(options: {
   // from the anchor (the last tag selected) to the tag they move to, in multiple mode, and the
   // ones the collection leaves to the browser are not handled.
   const handleKeyDown = createRovingKeydown({
-    getContainer,
+    getContainer: getElement,
     selector: TAG_SELECTOR,
     options: NAVIGATION_OPTIONS,
     // A range never wraps from one end of the list to the other.

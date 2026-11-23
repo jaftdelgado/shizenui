@@ -25,7 +25,7 @@
   const groupCtx: TagGroupListApi = useTagGroupContext();
 
   const handlers = createTagGroupListHandlers({
-    getContainer: () => ref,
+    getElement: () => ref,
     groupCtx
   });
 

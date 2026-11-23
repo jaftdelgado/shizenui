@@ -5,13 +5,13 @@ import type { TagGroupContext, TagGroupListApi } from "./tag-group.context.js";
 
 /** Attributes of the TagGroup root element. */
 export function getTagGroupAttributes(
-  ctx: Pick<TagGroupContext, "disabled" | "invalid" | "selectionMode">
+  state: Pick<TagGroupContext, "disabled" | "invalid" | "selectionMode">
 ) {
   return {
     "data-slot": TAG_GROUP_SLOT,
-    "data-disabled": presence(ctx.disabled),
-    "data-invalid": presence(ctx.invalid),
-    "data-selection-mode": ctx.selectionMode
+    "data-disabled": presence(state.disabled),
+    "data-invalid": presence(state.invalid),
+    "data-selection-mode": state.selectionMode
   };
 }
 
@@ -25,14 +25,14 @@ export interface TagGroupListConsumerAria extends AccessibleNameProps {
  * group's Label, then aria-label/aria-labelledby passed to the TagGroup root.
  */
 function resolveListAccessibleName(
-  ctx: Pick<TagGroupListApi, "field" | "ariaLabel" | "ariaLabelledby">,
+  groupCtx: Pick<TagGroupListApi, "field" | "ariaLabel" | "ariaLabelledby">,
   consumer: TagGroupListConsumerAria
 ): { "aria-label"?: string; "aria-labelledby"?: string } {
   if (hasOwnAccessibleName(consumer)) return {};
-  if (ctx.field.hasLabel) return { "aria-labelledby": ctx.field.labelId };
+  if (groupCtx.field.hasLabel) return { "aria-labelledby": groupCtx.field.labelId };
   return {
-    "aria-labelledby": ctx.ariaLabelledby || undefined,
-    "aria-label": ctx.ariaLabel || undefined
+    "aria-labelledby": groupCtx.ariaLabelledby || undefined,
+    "aria-label": groupCtx.ariaLabel || undefined
   };
 }
 
@@ -45,7 +45,7 @@ export const TAG_GROUP_LIST_OWNED_KEYS = ["role", "tabindex"] as const;
  * consumer's does not take its place.
  */
 export function getTagGroupListAttributes(
-  ctx: Pick<
+  groupCtx: Pick<
     TagGroupListApi,
     | "selectionMode"
     | "disabled"
@@ -57,10 +57,11 @@ export function getTagGroupListAttributes(
   >,
   consumer: TagGroupListConsumerAria
 ) {
-  const nameProps = resolveListAccessibleName(ctx, consumer);
+  const nameProps = resolveListAccessibleName(groupCtx, consumer);
 
   const describedBy =
-    [consumer["aria-describedby"], ctx.field.describedBy].filter(Boolean).join(" ") || undefined;
+    [consumer["aria-describedby"], groupCtx.field.describedBy].filter(Boolean).join(" ") ||
+    undefined;
 
   // The list is the tab stop until a tag has been focused, then that tag takes over. It stays
   // focusable (tabindex -1) after that, so code can still focus it (e.g. when the last tag is
@@ -68,7 +69,7 @@ export function getTagGroupListAttributes(
   // tag, or when there is no tag to redirect to. It must not depend on the tag registry: on the
   // server the list renders before its tags register, and the SSR output would have no tab stop
   // at all.
-  const tabindex = ctx.tabStopId !== undefined ? -1 : ctx.disabled ? undefined : 0;
+  const tabindex = groupCtx.tabStopId !== undefined ? -1 : groupCtx.disabled ? undefined : 0;
 
   // aria-invalid is kept on the grid even though the linter only lists it for some roles:
   // it is the element that owns the tags, and dropping it would hide the invalid state from AT.
@@ -78,10 +79,10 @@ export function getTagGroupListAttributes(
     tabindex,
     ...nameProps,
     "aria-describedby": describedBy,
-    "aria-multiselectable": ariaBool(ctx.selectionMode === "multiple"),
-    "aria-disabled": ariaBool(ctx.disabled),
-    "aria-invalid": ariaBool(ctx.invalid),
-    "data-disabled": presence(ctx.disabled),
-    "data-invalid": presence(ctx.invalid)
+    "aria-multiselectable": ariaBool(groupCtx.selectionMode === "multiple"),
+    "aria-disabled": ariaBool(groupCtx.disabled),
+    "aria-invalid": ariaBool(groupCtx.invalid),
+    "data-disabled": presence(groupCtx.disabled),
+    "data-invalid": presence(groupCtx.invalid)
   };
 }

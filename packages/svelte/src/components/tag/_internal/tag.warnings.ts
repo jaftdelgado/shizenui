@@ -5,10 +5,10 @@ import type { TagState } from "./tag.state.svelte.js";
 export function setupTagWarnings(options: {
   state: TagState;
   hasChildren: () => boolean;
-  getRef: () => HTMLElement | null;
+  getElement: () => HTMLElement | null;
 }): void {
   warnIf(
-    () => !options.state.inGroup,
+    () => !options.state.isInGroup,
     "Tag",
     "Tag must be used inside a <TagGroup.List>. Outside a TagGroup it cannot be selected or reached with the keyboard: only its remove button and a mouse `onclick` work."
   );
@@ -16,8 +16,8 @@ export function setupTagWarnings(options: {
   // The element is read inside the condition, so the check runs again once it is rendered.
   warnIf(
     () => {
-      const row = options.getRef();
-      return options.state.inGroup && row !== null && !options.state.isInGroupList(row);
+      const row = options.getElement();
+      return options.state.isInGroup && row !== null && !options.state.isInGroupList(row);
     },
     "Tag",
     "Tag is inside a <TagGroup> but outside its <TagGroup.List>, so it cannot be reached with Tab or the arrow keys. Move it into the <TagGroup.List>."

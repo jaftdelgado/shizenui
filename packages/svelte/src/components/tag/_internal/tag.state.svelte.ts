@@ -15,8 +15,8 @@ export interface TagStateProps {
   id: () => string;
   onRemove: () => (() => void) | undefined;
   /** The tag's element, if it is rendered. */
-  getRef: () => HTMLElement | null;
-  groupContext?: TagGroupItemApi;
+  getElement: () => HTMLElement | null;
+  groupCtx?: TagGroupItemApi;
 }
 
 /**
@@ -36,10 +36,10 @@ export class TagState implements TagContext {
    * id) and keeps following it as the active one.
    */
   readonly registration: TagGroupRegistration = {
-    getDisabled: () => this.disabled,
+    isDisabled: () => this.disabled,
     getValue: () => this.value,
     canRemove: () => this.canRemove,
-    getElement: () => this.#props.getRef(),
+    getElement: () => this.#props.getElement(),
     emitRemove: () => this.#props.onRemove()?.()
   };
 
@@ -61,7 +61,7 @@ export class TagState implements TagContext {
 
   constructor(props: TagStateProps) {
     this.#props = props;
-    this.#groupCtx = props.groupContext ?? useTagGroupContext();
+    this.#groupCtx = props.groupCtx ?? useTagGroupContext();
   }
 
   /**
@@ -73,7 +73,7 @@ export class TagState implements TagContext {
   }
 
   /** Whether the tag sits inside a <TagGroup>. Fixed for the life of the tag. */
-  get inGroup(): boolean {
+  get isInGroup(): boolean {
     return this.#groupCtx.exists;
   }
 
@@ -116,8 +116,8 @@ export class TagState implements TagContext {
   }
 
   /** Whether the remove button belongs in the tab sequence (only the active tag of a group). */
-  get tabbable(): boolean {
-    return !this.inGroup || this.isActive;
+  get isTabbable(): boolean {
+    return !this.isInGroup || this.isActive;
   }
 
   /** The markup of the declared remove button, which the Tag renders after its text. */
@@ -181,7 +181,7 @@ export class TagState implements TagContext {
     if (!this.canRemove) return;
 
     // Outside a group there are no neighbours to move focus to and no group `onRemove`.
-    if (!this.inGroup) {
+    if (!this.isInGroup) {
       this.registration.emitRemove();
       return;
     }

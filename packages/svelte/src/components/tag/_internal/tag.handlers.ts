@@ -62,10 +62,10 @@ export function createTagHandlers(options: {
  * The event handlers of the remove button, ready to be spread before the consumer's: mergeProps
  * composes them, these first.
  */
-export function createTagRemoveButtonHandlers(ctx: Pick<TagContext, "remove">) {
+export function createTagRemoveButtonHandlers(tagCtx: Pick<TagContext, "remove">) {
   function handleClick(): void {
     // The click also reaches the tag, which ignores a click that comes from a focusable child.
-    ctx.remove();
+    tagCtx.remove();
   }
 
   function handleMouseDown(e: MouseEvent): void {

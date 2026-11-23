@@ -3,7 +3,7 @@ import type { TagGroupListApi } from "./tag-group.context.js";
 import type { TagGroupState } from "./tag-group.state.svelte.js";
 
 export function setupTagGroupWarnings(options: {
-  context: Pick<TagGroupState, "hasList" | "hasMultipleLists">;
+  state: Pick<TagGroupState, "hasList" | "hasMultipleLists">;
   hasChildren: () => boolean;
 }): void {
   warnIf(
@@ -13,13 +13,13 @@ export function setupTagGroupWarnings(options: {
   );
 
   warnIf(
-    () => !options.context.hasList,
+    () => !options.state.hasList,
     "TagGroup",
     "No <TagGroup.List> found. Wrap your <Tag> children in <TagGroup.List> to enable grid semantics and keyboard navigation."
   );
 
   warnIf(
-    () => options.context.hasMultipleLists,
+    () => options.state.hasMultipleLists,
     "TagGroup",
     "Only one <TagGroup.List> is supported per <TagGroup>. Additional lists have no tab stop and are not reachable with Tab."
   );
@@ -46,7 +46,7 @@ export function setupTagGroupListWarnings(options: {
   // The grid is the element that needs the name, and only the list knows where it came from.
   warnIf(
     () => options.groupCtx.exists && !options.hasAccessibleName(),
-    "TagGroup",
+    "TagGroup.List",
     "No accessible name found for the list. Add a <Label> as a child, or pass aria-label/aria-labelledby to <TagGroup> or <TagGroup.List>."
   );
 }

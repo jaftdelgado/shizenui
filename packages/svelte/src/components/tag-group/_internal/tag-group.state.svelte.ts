@@ -36,7 +36,7 @@ export interface TagGroupStateProps {
   id: () => string;
   ariaLabel: () => string | undefined;
   ariaLabelledby: () => string | undefined;
-  surfaceContext?: SurfaceContextResult;
+  surfaceCtx?: SurfaceContextResult;
   /**
    * Whether `element` sits inside a list of this group. It is the group's query to the DOM: the
    * TagGroup component injects it, so the state does not import it.
@@ -107,7 +107,7 @@ export class TagGroupState implements TagGroupContext {
 
   constructor(props: TagGroupStateProps) {
     this.#props = props;
-    this.#surfaceCtx = props.surfaceContext ?? useSurfaceContext();
+    this.#surfaceCtx = props.surfaceCtx ?? useSurfaceContext();
 
     // Not a field initializer: those run before this body assigns `#props`. And the default signal
     // is created only when no `mounted` arrives, which is known once the props are.

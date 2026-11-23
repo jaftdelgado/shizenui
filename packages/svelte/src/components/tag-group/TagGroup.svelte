@@ -59,7 +59,7 @@
   setupFieldContexts(tagGroupState.field, tagGroupState);
 
   setupTagGroupWarnings({
-    context: tagGroupState,
+    state: tagGroupState,
     hasChildren: () => Boolean(children)
   });
 

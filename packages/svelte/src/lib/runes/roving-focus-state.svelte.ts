@@ -3,7 +3,7 @@ import { SvelteMap } from "svelte/reactivity";
 
 /** What the group needs to know about an item to decide whether it can hold the tab stop. */
 export interface RovingFocusItem {
-  getDisabled: () => boolean;
+  isDisabled: () => boolean;
 }
 
 /**
@@ -32,7 +32,7 @@ export class RovingFocusState<T extends RovingFocusItem = RovingFocusItem> {
     const id = this.#activeId;
     if (id === undefined) return undefined;
     const entry = this.#items.get(id);
-    return entry && !entry.getDisabled() ? id : undefined;
+    return entry && !entry.isDisabled() ? id : undefined;
   });
 
   /** The id of the item that holds the tab stop, if any (see `#tabStopId`). */
