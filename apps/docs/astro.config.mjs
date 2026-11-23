@@ -5,9 +5,9 @@ import { fileURLToPath } from "node:url";
 import svelte from "@astrojs/svelte";
 import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
-import { hugeiconsDeepImports } from "./plugins/hugeicons-deep-imports.mjs";
+import { hugeiconsDeepImports } from "./plugins/hugeicons-imports.mjs";
 import { docsPreview } from "./plugins/docs-preview.mjs";
-import { shizenDeepImports } from "./plugins/shizen-deep-imports.mjs";
+import { shizenDeepImports } from "./plugins/shizen-imports.mjs";
 
 // https://astro.build/config
 export default defineConfig({
