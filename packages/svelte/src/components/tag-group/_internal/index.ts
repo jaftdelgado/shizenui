@@ -17,6 +17,7 @@ export type {
   TagGroupRegistration,
   TagGroupRemoveRequest,
   TagGroupRemoveScope,
+  TagGroupSelectRequest,
   TagGroupItemApi,
   TagGroupListApi,
   TagGroupContext

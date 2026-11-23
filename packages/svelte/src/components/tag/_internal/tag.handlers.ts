@@ -4,16 +4,7 @@ import type { TagContext } from "./tag.context.js";
 import type { TagState } from "./tag.state.svelte.js";
 import type { TagClickEvent } from "./tag.types.js";
 
-type TagHandlersState = Pick<
-  TagState,
-  | "disabled"
-  | "canRemove"
-  | "isRangeSelectable"
-  | "toggle"
-  | "extendSelection"
-  | "activate"
-  | "remove"
->;
+type TagHandlersState = Pick<TagState, "disabled" | "canRemove" | "select" | "activate" | "remove">;
 
 /**
  * The event handlers of the Tag row that are not about being pressed: the pressed state and the
@@ -31,10 +22,11 @@ export function createTagHandlers(options: {
     // A click on a focusable child (the remove button, other interactive content) belongs to the
     // child: it does not change the selection, and the consumer's `onclick` does not run.
     if (isFromFocusableChild(e.target, e.currentTarget)) return;
+    // Not a guard of `select`, which guards itself: the consumer's `onclick` does not run on a
+    // disabled tag either (see `TagProps`).
     if (state.disabled) return;
-    // Shift+click selects the range from the anchor, as Shift+arrows do.
-    if (e.shiftKey && state.isRangeSelectable) state.extendSelection();
-    else state.toggle();
+    // Shift+click extends the selection from the anchor, as Shift+arrows do.
+    state.select({ extend: e.shiftKey });
     getOnClick?.()?.(e);
   }
 
@@ -46,7 +38,8 @@ export function createTagHandlers(options: {
   function handleKeyDown(e: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
     if (e.target !== e.currentTarget) return;
     if (e.key !== "Delete" && e.key !== "Backspace") return;
-    // Decides whether the key is the tag's (and the browser's default is cancelled).
+    // Decides whether the key is the tag's, and only then the browser's default is cancelled.
+    // `remove` guards itself anyway.
     if (!state.canRemove) return;
 
     e.preventDefault();

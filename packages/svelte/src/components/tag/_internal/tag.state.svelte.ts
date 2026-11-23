@@ -172,20 +172,13 @@ export class TagState implements TagContext {
     this.#groupCtx.unregister(id, this.registration);
   };
 
-  /** Whether a range of tags can be selected from this one (an enabled tag, multiple mode). */
-  get isRangeSelectable(): boolean {
-    return this.#groupCtx.selectionMode === "multiple" && !this.disabled;
-  }
-
-  toggle(): void {
+  /**
+   * Selects the tag as a click does (see the group's `select`). Does nothing if it cannot be
+   * selected.
+   */
+  select(options: { extend: boolean }): void {
     if (!this.isInteractive) return;
-    this.#groupCtx.toggleValue(this.#props.value());
-  }
-
-  /** Selects the range from the anchor to this tag. The group knows the order of its tags. */
-  extendSelection(): void {
-    if (!this.isRangeSelectable) return;
-    this.#groupCtx.extendSelectionTo(this.id);
+    this.#groupCtx.select({ id: this.id, value: this.value, extend: options.extend });
   }
 
   /**

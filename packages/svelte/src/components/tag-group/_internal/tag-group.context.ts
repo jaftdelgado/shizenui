@@ -32,18 +32,19 @@ export interface TagGroupListRegistration {
   readonly getOrderedIds: () => readonly string[];
 }
 
+export interface TagGroupSelectRequest {
+  readonly id: string;
+  readonly value: string;
+  /** Shift+click: select the range from the anchor instead of toggling the tag. */
+  readonly extend: boolean;
+}
+
 /** What every member of the group reads. */
 interface TagGroupSharedApi {
   readonly exists: boolean;
   readonly selectionMode: TagGroupSelectionMode;
   readonly disabled: boolean;
   readonly setActiveId: (id: string | undefined) => void;
-  /**
-   * Selects the range from the anchor (the last tag selected) to the tag with `targetId`
-   * (multiple mode only). `orderedIds` are the ids of the enabled tags in the order the user sees
-   * them, when the caller already has them; without them the group asks its list.
-   */
-  readonly extendSelectionTo: (targetId: string, orderedIds?: readonly string[]) => void;
 }
 
 /** What a Tag uses. */
@@ -54,7 +55,11 @@ export interface TagGroupItemApi extends TagGroupSharedApi {
   readonly size: TagSize | undefined;
   readonly isSelected: (value: string) => boolean;
   readonly isActive: (id: string) => boolean;
-  readonly toggleValue: (value: string) => void;
+  /**
+   * Selects as a click on a tag does: toggles `value`, or, with `extend` in multiple mode, selects
+   * the range from the anchor to the tag with `id`. In the other modes `extend` is ignored.
+   */
+  readonly select: (request: TagGroupSelectRequest) => void;
   /**
    * Whether `element` sits inside a `TagGroup.List` of this group, and not only inside the list of
    * a group nested in it or around it. The development warnings of the Tag read it.
@@ -83,6 +88,12 @@ export interface TagGroupListApi extends TagGroupSharedApi {
    * not mean the tag has DOM focus. Without one, the list is the tab stop.
    */
   readonly tabStopId: string | undefined;
+  /**
+   * Selects the range from the anchor (the last tag selected) to the tag with `targetId`
+   * (multiple mode only). `orderedIds` are the ids of the enabled tags in the order the user sees
+   * them, when the caller already has them; without them the group asks its list.
+   */
+  readonly extendSelectionTo: (targetId: string, orderedIds?: readonly string[]) => void;
   readonly registerList: (id: string, list: TagGroupListRegistration) => void;
   readonly unregisterList: (id: string) => void;
 }
@@ -102,7 +113,7 @@ const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
   ariaLabelledby: undefined,
   field: EMPTY_CONTENT_SLOTS,
   isSelected: () => false,
-  toggleValue: () => {},
+  select: () => {},
   isInList: () => false,
   extendSelectionTo: () => {},
   remove: () => {},

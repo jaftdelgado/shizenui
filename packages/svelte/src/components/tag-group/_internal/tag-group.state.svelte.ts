@@ -2,7 +2,8 @@ import type {
   TagGroupContext,
   TagGroupListRegistration,
   TagGroupRegistration,
-  TagGroupRemoveRequest
+  TagGroupRemoveRequest,
+  TagGroupSelectRequest
 } from "./tag-group.context.js";
 import { LIST_SELECTOR, TAG_SELECTOR } from "./tag-group.constants.js";
 import type { TagGroupSelectionMode } from "./tag-group.types.js";
@@ -169,17 +170,22 @@ export class TagGroupState implements TagGroupContext {
 
   readonly toggleValue = this.#selection.toggle;
 
+  readonly select = ({ id, value, extend }: TagGroupSelectRequest): void => {
+    if (extend && this.selectionMode === "multiple") this.extendSelectionTo(id);
+    else this.toggleValue(value);
+  };
+
   readonly isInList = (element: Element): boolean => this.#props.isInList(element);
 
+  // `SelectionState.extendTo` acts only in multiple mode, so the mode is not checked again here.
+  // The only caller without ids is `select`, and it asks only in that mode.
   readonly extendSelectionTo = (targetId: string, orderedIds?: readonly string[]): void => {
-    if (this.selectionMode !== "multiple") return;
-
     const valueOf = (id: string) => this.#roving.getItem(id)?.getValue();
     const target = valueOf(targetId);
     if (target === undefined) return;
 
-    // Read only now, once the mode and the target allow a range: a caller that has no ids would
-    // otherwise ask the list for nothing.
+    // Read only now, once the target is known: a caller that has no ids would otherwise ask the
+    // list for nothing.
     const ordered = (orderedIds ?? this.#getOrderedIds()).flatMap((id) => valueOf(id) ?? []);
     this.#selection.extendTo(ordered, target);
   };
