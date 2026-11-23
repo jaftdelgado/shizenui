@@ -63,9 +63,7 @@ export interface TagGroupItemApi extends TagGroupSharedApi {
   /**
    * Removes the tag, or every selected tag that can be removed when the scope is `"selection"` and
    * the tag is selected: each one's own `onRemove` runs, then the group's `onRemove` once, with
-   * all their values. If the tag held focus, focus moves to a neighbour once it is gone. Outside a
-   * group there are no neighbours to move focus to and no group `onRemove`: only the tag's own
-   * `onRemove` runs.
+   * all their values. If the tag held focus, focus moves to a neighbour once it is gone.
    */
   readonly remove: (request: TagGroupRemoveRequest) => void;
   readonly register: (id: string, entry: TagGroupRegistration) => void;
@@ -107,9 +105,7 @@ const NOOP_TAG_GROUP_CONTEXT: TagGroupContext = Object.freeze({
   toggleValue: () => {},
   isInList: () => false,
   extendSelectionTo: () => {},
-  // The only NOOP member that does something: outside a group the tag's own `onRemove` still runs
-  // (there are no neighbours to move focus to, and no group `onRemove`).
-  remove: ({ entry }: TagGroupRemoveRequest) => entry.emitRemove(),
+  remove: () => {},
   register: () => {},
   unregister: () => {},
   tabStopId: undefined,

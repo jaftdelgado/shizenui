@@ -191,11 +191,18 @@ export class TagState implements TagContext {
   /**
    * Removes the tag and, if it held focus, moves focus to a neighbour. With the `"selection"`
    * scope, a selected tag removes every selected tag instead (`Delete` on the tag; its remove
-   * button only removes itself). Outside a group the no-op context has no tags and no group
-   * `onRemove`, so only the tag's own `onRemove` runs.
+   * button only removes itself). Outside a group there are no neighbours to move focus to and no
+   * group `onRemove`, so only the tag's own `onRemove` runs.
    */
   readonly remove = (scope: TagGroupRemoveScope = "self"): void => {
     if (!this.canRemove) return;
+
+    // Outside a group there are no neighbours to move focus to and no group `onRemove`.
+    if (!this.inGroup) {
+      this.registration.emitRemove();
+      return;
+    }
+
     this.#groupCtx.remove({ entry: this.registration, scope });
   };
 }
