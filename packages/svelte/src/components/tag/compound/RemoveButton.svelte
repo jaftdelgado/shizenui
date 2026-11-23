@@ -1,3 +1,13 @@
+<script lang="ts" module>
+  import { tagStyles } from "@shizen-ui/styles";
+  import { resolveSlotClasses } from "../../../lib/utils/index.js";
+
+  // The `removeButton` slot has no variants, so every tag gets the same class. If it ever has
+  // them, the tag context exposes `variant` and `size`, and the button would use
+  // `memoizeSlotClasses`.
+  const classes = resolveSlotClasses(tagStyles());
+</script>
+
 <script lang="ts">
   import { onDestroy } from "svelte";
   import { cn, mergeProps } from "../../../lib/utils/index.js";
@@ -43,7 +53,7 @@
           pressed: press.isPressed
         }),
         ...handlers,
-        class: cn(tagCtx.removeButtonClass, className)
+        class: cn(classes.removeButton, className)
       },
       rest
     )

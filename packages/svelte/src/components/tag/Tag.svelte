@@ -43,10 +43,7 @@
     disabled: () => disabled,
     id: () => id,
     onRemove: () => onRemove,
-    getRef: () => ref,
-    // Read when the button asks for it, so it does not matter that `slots` comes further down. The
-    // return type is explicit: `slots` depends on `tagState`, and inferring it would be circular.
-    removeButtonClass: (): string => slots.removeButton
+    getRef: () => ref
   });
 
   // The id can change, so this is an effect: it registers again under the new id, and the cleanup
@@ -54,7 +51,7 @@
   registerKeyed(() => tagState.id, tagState.registerInGroup, tagState.unregisterFromGroup);
 
   // The classes of every slot, resolved once per variant and size and shared by all the tags that
-  // ask for the same. The remove button reads its class from the state.
+  // ask for the same. The remove button resolves its own, which has no variants.
   const slots = $derived(getTagSlotClasses({ variant: tagState.variant, size: tagState.size }));
 
   const focus = createFocusVisible();

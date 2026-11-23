@@ -16,11 +16,6 @@ export interface TagStateProps {
   onRemove: () => (() => void) | undefined;
   /** The tag's element, if it is rendered. */
   getRef: () => HTMLElement | null;
-  /**
-   * The class of the remove button. The Tag resolves the classes of its slots with its variant and
-   * its size; the state only hands this one to the button through the context.
-   */
-  removeButtonClass: () => string;
   groupContext?: TagGroupItemApi;
 }
 
@@ -123,11 +118,6 @@ export class TagState implements TagContext {
   /** Whether the remove button belongs in the tab sequence (only the active tag of a group). */
   get tabbable(): boolean {
     return !this.inGroup || this.isActive;
-  }
-
-  /** The class of the remove button slot, resolved with the variant and the size of the tag. */
-  get removeButtonClass(): string {
-    return this.#props.removeButtonClass();
   }
 
   /** The markup of the declared remove button, which the Tag renders after its text. */

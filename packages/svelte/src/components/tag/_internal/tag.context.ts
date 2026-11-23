@@ -11,8 +11,6 @@ export interface TagContext {
   readonly removeButtonId: string | undefined;
   /** Whether the remove button belongs in the tab sequence (only the active tag of a group). */
   readonly tabbable: boolean;
-  /** The class of the remove button slot, resolved with the variant and the size of the tag. */
-  readonly removeButtonClass: string;
   /** Removes this tag only, not the selection: it is what the remove button does. */
   readonly remove: () => void;
   /**
@@ -29,7 +27,6 @@ const NOOP_TAG_CONTEXT: TagContext = Object.freeze({
   labelId: undefined,
   removeButtonId: undefined,
   tabbable: false,
-  removeButtonClass: "",
   remove: () => {},
   registerRemoveButton: () => () => {},
   exists: false
