@@ -2,30 +2,72 @@
   --docs-body-w: 640px;
   --docs-toc-w: 210px;
   --docs-gap: 72px;
-  --docs-toc-top: 32px;
   --docs-section-gap: 40px;
   --docs-pad-x: 1.5rem;
 
-  /* Anchored headings land clear of the inset card's top gutter */
-  scroll-padding-top: 1.5rem;
+  /* Top bar: its height, and where it sticks (the inset card's top gutter on
+     desktop, the viewport edge when the sidebar is a drawer) */
+  --docs-topbar-h: 3.5rem;
+  --docs-topbar-top: 0px;
+  --docs-below-topbar: calc(var(--docs-topbar-top) + var(--docs-topbar-h));
+  --docs-toc-top: calc(var(--docs-below-topbar) + 1.5rem);
+
+  /* Anchored headings land below the bar */
+  scroll-padding-top: calc(var(--docs-below-topbar) + 1rem);
+}
+
+/* Same breakpoint and gutter as the sidebar rail (sidebar.css) */
+@media (width >= 80rem) {
+  :root {
+    --docs-topbar-top: 0.5rem;
+  }
 }
 
 @layer components {
-  /* Main column (inside the sidebar inset, which the document scrolls) */
-  /* Its width changes with the sidebar (open, collapsed, resized), so the
-     layout responds to the column through container queries, not the viewport. */
   .docs-main {
     @apply relative flex min-h-screen flex-col items-center;
     container: docs-main / inline-size;
     gap: var(--docs-section-gap);
+    padding-top: var(--docs-topbar-top);
     padding-inline: var(--docs-pad-x);
   }
 
-  /* Sidebar trigger row; pulls the header up so it keeps its old rhythm */
+  /* Fixed top bar holding the sidebar trigger. Sticky (not fixed) so it spans
+     exactly the inset card whatever the sidebar width, and the page keeps its
+     native scroll. Above the content, below the card frame (z-index 30), so
+     the card's rounded corners still clip it. */
   .docs-topbar {
-    @apply flex self-stretch pt-4;
-    margin-inline: calc(1rem - var(--docs-pad-x));
+    @apply sticky z-20 flex items-center self-stretch;
+    top: var(--docs-topbar-top);
+    height: var(--docs-topbar-h);
+    margin-inline: calc(var(--docs-pad-x) * -1);
     margin-bottom: calc(var(--docs-section-gap) * -1);
+    padding-inline: 1rem;
+    background: var(--sidebar-card-bg, var(--color-background));
+  }
+
+  /* Hairline under the bar, only once the page has scrolled under it */
+  .docs-topbar::after {
+    @apply pointer-events-none absolute inset-x-0 bottom-0 h-px;
+    content: "";
+    background: var(--color-separator);
+  }
+
+  @supports (animation-timeline: scroll()) {
+    /* Longhands on purpose: given the `animation` shorthand, the minifier folds
+       the timeline into it, which is invalid and drops the whole rule. */
+    .docs-topbar::after {
+      animation-name: docs-topbar-edge;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0 1rem;
+    }
+  }
+
+  @keyframes docs-topbar-edge {
+    from {
+      opacity: 0;
+    }
   }
 
   /* Shared width: the full 926px layout when it fits, the column otherwise */
