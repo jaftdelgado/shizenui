@@ -3,6 +3,8 @@ import "../styles/global.css";
 import TableOfContents from "@components/astro/TableOfContents.astro";
 import DocsHeader from "@components/astro/DocsHeader.astro";
 import DocsSidebar from "@components/astro/DocsSidebar.astro";
+import RepoLink from "@components/astro/RepoLink.astro";
+import ThemeToggle from "@components/astro/ThemeToggle.astro";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@components/astro/sidebar";
 import { resolveDocLinks } from "@utils/docs-links";
 import type { MarkdownHeading } from "astro";
@@ -47,6 +49,10 @@ const PreviewComponent: any = frontmatter.previewComponent;
         <div class="docs-main">
           <div class="docs-topbar">
             <SidebarTrigger />
+            <div class="docs-topbar-actions">
+              <ThemeToggle />
+              <RepoLink />
+            </div>
           </div>
 
           <DocsHeader

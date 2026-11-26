@@ -5,6 +5,10 @@
   --docs-section-gap: 40px;
   --docs-pad-x: 1.5rem;
 
+  /* Width of the content column: body + gap + TOC, or just the body once the
+     TOC is gone (see the < 940px query below) */
+  --docs-content-max: calc(var(--docs-body-w) + var(--docs-gap) + var(--docs-toc-w));
+
   /* Top bar: its height, and where it sticks (the inset card's top gutter on
      desktop, the viewport edge when the sidebar is a drawer) */
   --docs-topbar-h: 3.5rem;
@@ -23,6 +27,13 @@
   }
 }
 
+/* Same cut as the TOC (see "Narrow column" below) */
+@media (width < 940px) {
+  :root {
+    --docs-content-max: var(--docs-body-w);
+  }
+}
+
 @layer components {
   .docs-main {
     @apply relative flex min-h-screen flex-col items-center;
@@ -32,42 +43,66 @@
     padding-inline: var(--docs-pad-x);
   }
 
-  /* Fixed top bar holding the sidebar trigger. Sticky (not fixed) so it spans
-     exactly the inset card whatever the sidebar width, and the page keeps its
-     native scroll. Above the content, below the card frame (z-index 30), so
-     the card's rounded corners still clip it. */
+  /* Fixed top bar: the sidebar trigger on the left, the repo link on the
+     right. Sticky (not fixed) so it spans exactly the inset card whatever the
+     sidebar width, and the page keeps its native scroll. Above the content,
+     below the card frame (z-index 30), so the card's rounded corners still
+     clip it. */
   .docs-topbar {
-    @apply sticky z-20 flex items-center self-stretch;
+    @apply sticky z-20 flex items-center justify-between self-stretch;
     top: var(--docs-topbar-top);
     height: var(--docs-topbar-h);
     margin-inline: calc(var(--docs-pad-x) * -1);
     margin-bottom: calc(var(--docs-section-gap) * -1);
     padding-inline: 1rem;
+    /* The end side lines up with the content column's right edge (the end of
+       the TOC, or of the body without it): the page gutter plus half the room
+       the centered column leaves free. 100cqw is .docs-main's content box. */
+    padding-inline-end: calc(var(--docs-pad-x) + max(0px, (100cqw - var(--docs-content-max)) / 2));
+  }
+
+  .docs-topbar-actions {
+    @apply flex items-center gap-2;
+  }
+
+  /* Theme toggle: the icon of its data-mode (light by default) */
+  .theme-toggle__moon {
+    display: none;
+  }
+
+  [data-theme-toggle][data-mode="dark"] {
+    & .theme-toggle__sun {
+      display: none;
+    }
+
+    & .theme-toggle__moon {
+      display: block;
+    }
+  }
+
+  /* Its background: the card colour, opaque over the top half (behind the
+     trigger) and fading out 1.5rem past the bar, so content scrolling under
+     it dissolves instead of being cut by a hard edge. A plain masked fill,
+     no backdrop-filter: it costs about what a solid bar does.
+     The fade follows a smootherstep curve, so it has no visible band edges. */
+  .docs-topbar::before {
+    @apply pointer-events-none absolute inset-x-0 top-0;
+    z-index: -1;
+    height: calc(var(--docs-topbar-h) + 1.5rem);
     background: var(--sidebar-card-bg, var(--color-background));
-  }
-
-  /* Hairline under the bar, only once the page has scrolled under it */
-  .docs-topbar::after {
-    @apply pointer-events-none absolute inset-x-0 bottom-0 h-px;
     content: "";
-    background: var(--color-separator);
-  }
-
-  @supports (animation-timeline: scroll()) {
-    /* Longhands on purpose: given the `animation` shorthand, the minifier folds
-       the timeline into it, which is invalid and drops the whole rule. */
-    .docs-topbar::after {
-      animation-name: docs-topbar-edge;
-      animation-fill-mode: both;
-      animation-timeline: scroll(root);
-      animation-range: 0 1rem;
-    }
-  }
-
-  @keyframes docs-topbar-edge {
-    from {
-      opacity: 0;
-    }
+    mask-image: linear-gradient(
+      to bottom,
+      #000 50%,
+      rgb(0 0 0 / 0.984) 56.25%,
+      rgb(0 0 0 / 0.896) 62.5%,
+      rgb(0 0 0 / 0.725) 68.75%,
+      rgb(0 0 0 / 0.5) 75%,
+      rgb(0 0 0 / 0.275) 81.25%,
+      rgb(0 0 0 / 0.104) 87.5%,
+      rgb(0 0 0 / 0.016) 93.75%,
+      transparent 100%
+    );
   }
 
   /* Shared width: the full 926px layout when it fits, the column otherwise */
@@ -75,7 +110,7 @@
   .docs-preview,
   .docs-content-grid {
     width: 100%;
-    max-width: calc(var(--docs-body-w) + var(--docs-gap) + var(--docs-toc-w));
+    max-width: var(--docs-content-max);
   }
 
   /* Header: titlebar + description + source links */
@@ -290,14 +325,9 @@
   /* Below 940px of window: single column, no TOC. A viewport query (not the
      container) so the cut lands on that exact window width; at that size the
      sidebar is already a drawer, so the column is the full window anyway.
-     Header, preview and body keep the body's max width, centered by .docs-main. */
+     Header, preview and body keep the body's max width (--docs-content-max),
+     centered by .docs-main. */
   @media (width < 940px) {
-    .docs-header,
-    .docs-preview,
-    .docs-content-grid {
-      max-width: var(--docs-body-w);
-    }
-
     .docs-content-grid {
       grid-template-columns: minmax(0, 1fr);
     }

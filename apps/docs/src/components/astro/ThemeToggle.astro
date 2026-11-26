@@ -1,0 +1,32 @@
+---
+import { buttonStyles } from "@shizen-ui/styles";
+import Moon02 from "@assets/svg/astro/Moon02.astro";
+import SunMedium from "@assets/svg/astro/SunMedium.astro";
+
+const styles = buttonStyles({ variant: "tertiary", iconOnly: true });
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  data-mode="light"
+  aria-label="Toggle color theme"
+  class={styles.base()}
+>
+  <span class={styles.content()}>
+    <span class={styles.icon()}>
+      <SunMedium class="theme-toggle__sun" />
+      <Moon02 class="theme-toggle__moon" />
+    </span>
+  </span>
+</button>
+
+<script>
+  // Icon only for now: flips data-mode, which picks the icon (docs-layout.css).
+  // Applying the theme itself comes in a later iteration.
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")) {
+    button.addEventListener("click", () => {
+      button.dataset.mode = button.dataset.mode === "dark" ? "light" : "dark";
+    });
+  }
+</script>
