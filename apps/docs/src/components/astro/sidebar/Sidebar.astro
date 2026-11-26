@@ -1,0 +1,65 @@
+---
+/**
+ * The rail on desktop, a modal drawer below 80rem.
+ * Must be a direct child of <SidebarProvider />, placed before <SidebarInset />.
+ */
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"aside"> {
+  /** Which edge the rail lives on. @default "left" */
+  side?: "left" | "right";
+  /** Transparent rail, floating card, or inset pairing where SidebarInset becomes the card. @default "sidebar" */
+  variant?: "sidebar" | "floating" | "inset";
+  /** Offcanvas slides away; none is a static column. @default "offcanvas" */
+  collapsible?: "offcanvas" | "none";
+  /** Drag-resize / click-to-collapse handle on the inner edge. @default true */
+  rail?: boolean;
+  /** Inner-edge border for the `sidebar` variant. @default true */
+  bordered?: boolean;
+  /** Accessible name of the navigation region. @default "Sidebar" */
+  label?: string;
+}
+
+const {
+  side = "left",
+  variant = "sidebar",
+  collapsible = "offcanvas",
+  rail = true,
+  bordered = true,
+  label = "Sidebar",
+  class: className,
+  id = "app-sidebar",
+  ...rest
+} = Astro.props;
+---
+
+<aside
+  id={id}
+  data-slot="sidebar"
+  data-side={side}
+  data-variant={variant}
+  data-collapsible={collapsible}
+  data-bordered={bordered ? "" : undefined}
+  aria-label={label}
+  tabindex="-1"
+  class={className}
+  {...rest}
+>
+  <div data-sidebar="panel">
+    <div data-sidebar="sidebar">
+      <slot />
+    </div>
+    {
+      rail && collapsible === "offcanvas" && (
+        <button
+          type="button"
+          data-sidebar="rail"
+          tabindex="-1"
+          aria-label="Resize or collapse sidebar"
+          title="Drag to resize, click to collapse"
+        />
+      )
+    }
+  </div>
+</aside>
+{collapsible === "offcanvas" && <div data-sidebar="scrim" aria-hidden="true" />}

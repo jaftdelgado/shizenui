@@ -1,45 +1,121 @@
 :root {
-  --docs-sidebar-w: 300px;
   --docs-body-w: 640px;
   --docs-toc-w: 210px;
-  --docs-gap: 76px;
-  --docs-toc-top: 32px;
+  --docs-gap: 72px;
   --docs-section-gap: 40px;
+  --docs-pad-x: 1.5rem;
+
+  /* Width of the content column: body + gap + TOC, or just the body once the
+     TOC is gone (see the < 940px query below) */
+  --docs-content-max: calc(var(--docs-body-w) + var(--docs-gap) + var(--docs-toc-w));
+
+  /* Top bar: its height, and where it sticks (the inset card's top gutter on
+     desktop, the viewport edge when the sidebar is a drawer) */
+  --docs-topbar-h: 3.5rem;
+  --docs-topbar-top: 0px;
+  --docs-below-topbar: calc(var(--docs-topbar-top) + var(--docs-topbar-h));
+  --docs-toc-top: calc(var(--docs-below-topbar) + 1.5rem);
+
+  /* Anchored headings land below the bar */
+  scroll-padding-top: calc(var(--docs-below-topbar) + 1rem);
+}
+
+/* Same breakpoint and gutter as the sidebar rail (sidebar.css) */
+@media (width >= 80rem) {
+  :root {
+    --docs-topbar-top: 0.5rem;
+  }
+}
+
+/* Same cut as the TOC (see "Narrow column" below) */
+@media (width < 940px) {
+  :root {
+    --docs-content-max: var(--docs-body-w);
+  }
 }
 
 @layer components {
-  .docs-layout {
-    @apply bg-control relative grid min-h-screen;
-    grid-template-columns: var(--docs-sidebar-w) 1fr;
-  }
-
-  .docs-layout::before {
-    @apply bg-background pointer-events-none fixed inset-y-0 right-0 z-0 rounded-l-3xl;
-    content: "";
-    left: var(--docs-sidebar-w);
-    box-shadow: var(--shadow-border);
-  }
-
-  .docs-sidebar {
-    @apply bg-control sticky top-0 h-screen overflow-y-auto;
-  }
-
-  /* Main column */
   .docs-main {
     @apply relative flex min-h-screen flex-col items-center;
+    container: docs-main / inline-size;
     gap: var(--docs-section-gap);
+    padding-top: var(--docs-topbar-top);
+    padding-inline: var(--docs-pad-x);
   }
 
-  /* Shared width */
+  /* Fixed top bar: the sidebar trigger on the left, the repo link on the
+     right. Sticky (not fixed) so it spans exactly the inset card whatever the
+     sidebar width, and the page keeps its native scroll. Above the content,
+     below the card frame (z-index 30), so the card's rounded corners still
+     clip it. */
+  .docs-topbar {
+    @apply sticky z-20 flex items-center justify-between self-stretch;
+    top: var(--docs-topbar-top);
+    height: var(--docs-topbar-h);
+    margin-inline: calc(var(--docs-pad-x) * -1);
+    margin-bottom: calc(var(--docs-section-gap) * -1);
+    padding-inline: 1rem;
+    /* The end side lines up with the content column's right edge (the end of
+       the TOC, or of the body without it): the page gutter plus half the room
+       the centered column leaves free. 100cqw is .docs-main's content box. */
+    padding-inline-end: calc(var(--docs-pad-x) + max(0px, (100cqw - var(--docs-content-max)) / 2));
+  }
+
+  .docs-topbar-actions {
+    @apply flex items-center gap-2;
+  }
+
+  /* Theme toggle: the icon of its data-mode (light by default) */
+  .theme-toggle__moon {
+    display: none;
+  }
+
+  [data-theme-toggle][data-mode="dark"] {
+    & .theme-toggle__sun {
+      display: none;
+    }
+
+    & .theme-toggle__moon {
+      display: block;
+    }
+  }
+
+  /* Its background: the card colour, opaque over the top half (behind the
+     trigger) and fading out 1.5rem past the bar, so content scrolling under
+     it dissolves instead of being cut by a hard edge. A plain masked fill,
+     no backdrop-filter: it costs about what a solid bar does.
+     The fade follows a smootherstep curve, so it has no visible band edges. */
+  .docs-topbar::before {
+    @apply pointer-events-none absolute inset-x-0 top-0;
+    z-index: -1;
+    height: calc(var(--docs-topbar-h) + 1.5rem);
+    background: var(--sidebar-card-bg, var(--color-background));
+    content: "";
+    mask-image: linear-gradient(
+      to bottom,
+      #000 50%,
+      rgb(0 0 0 / 0.984) 56.25%,
+      rgb(0 0 0 / 0.896) 62.5%,
+      rgb(0 0 0 / 0.725) 68.75%,
+      rgb(0 0 0 / 0.5) 75%,
+      rgb(0 0 0 / 0.275) 81.25%,
+      rgb(0 0 0 / 0.104) 87.5%,
+      rgb(0 0 0 / 0.016) 93.75%,
+      transparent 100%
+    );
+  }
+
+  /* Shared width: the full 926px layout when it fits, the column otherwise */
   .docs-header,
   .docs-preview,
   .docs-content-grid {
-    width: calc(var(--docs-body-w) + var(--docs-gap) + var(--docs-toc-w));
+    width: 100%;
+    max-width: var(--docs-content-max);
   }
 
   /* Header: titlebar + description + source links */
   .docs-header {
-    @apply mt-10 flex shrink-0 flex-col gap-0;
+    @apply mt-3 flex shrink-0 flex-col gap-0;
   }
 
   .docs-titlebar {
@@ -67,7 +143,7 @@
   /* Content grid */
   .docs-content-grid {
     @apply grid items-start;
-    grid-template-columns: var(--docs-body-w) var(--docs-toc-w);
+    grid-template-columns: minmax(0, var(--docs-body-w)) var(--docs-toc-w);
     grid-template-rows: auto 1fr auto;
     column-gap: var(--docs-gap);
   }
@@ -212,28 +288,48 @@
     @apply overflow-hidden rounded-3xl;
   }
 
-  /* ─── Mobile ──────────────────────────────────────────────── */
-  @media (max-width: 768px) {
-    .docs-layout {
-      grid-template-columns: 1fr;
-    }
+  /* ─── Off-screen rendering skip ───────────────────────────── */
+  /* The heavy blocks of the body (live examples, code, tables) skip rendering
+     while off-screen, so a sidebar toggle, a resize or a relayout only
+     repaints what is in view.
+     Skipped blocks must keep their real height, or anchors, the End key and
+     the scrollbar land in the wrong place. So the page first renders every
+     block once (`contain-intrinsic-size: auto` makes the browser remember
+     each real size), and only then DocsLayout sets data-cv-ready, from which
+     a skipped block keeps that remembered size. The length is just a fallback.
+     Only boxes that already clip their overflow, because paint containment
+     would clip outer rings and overflowing popovers. */
+  .example-container-inner,
+  .docs-body > .bg-component > .shiki-container,
+  .docs-body > .my-8.overflow-x-auto {
+    contain-intrinsic-size: auto 30rem;
+  }
 
-    .docs-sidebar {
-      display: none;
+  :root[data-cv-ready] {
+    & .example-container-inner,
+    & .docs-body > .bg-component > .shiki-container,
+    & .docs-body > .my-8.overflow-x-auto {
+      content-visibility: auto;
     }
+  }
 
-    .docs-main {
-      align-items: stretch;
-    }
-
-    .docs-header,
-    .docs-preview,
+  /* ─── Narrow column ───────────────────────────────────────── */
+  /* Not enough room for 640 + 76 + 210: tighten the gap, let the body shrink */
+  @container docs-main (width < 926px) {
     .docs-content-grid {
-      width: 100%;
+      grid-template-columns: minmax(0, 1fr) var(--docs-toc-w);
+      column-gap: 2.5rem;
     }
+  }
 
+  /* Below 940px of window: single column, no TOC. A viewport query (not the
+     container) so the cut lands on that exact window width; at that size the
+     sidebar is already a drawer, so the column is the full window anyway.
+     Header, preview and body keep the body's max width (--docs-content-max),
+     centered by .docs-main. */
+  @media (width < 940px) {
     .docs-content-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .docs-footer {

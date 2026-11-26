@@ -1,0 +1,62 @@
+---
+import { readdir, readFile } from "node:fs/promises";
+import { Sidebar } from "@components/astro/sidebar";
+
+function extractTitle(raw: string): string | undefined {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return undefined;
+  const frontmatterBlock = match[1];
+  const titleMatch = frontmatterBlock.match(/^title:\s*["']?(.+?)["']?\s*$/m);
+  return titleMatch?.[1];
+}
+
+interface SidebarItem {
+  name: string;
+  href: string;
+}
+
+// Read from disk instead of an `import.meta.glob(..., { query: "?raw" })`: in dev, Astro follows
+// every import of a page to collect its CSS, and a glob would compile every docs page on each request.
+// Paths are relative to the docs app root, where `astro dev` and `astro build` run.
+const pagesDir = "./src/pages/docs/components";
+const pageFiles = (await readdir(pagesDir)).filter((file) => file.endsWith(".mdx"));
+const sidebarItems: SidebarItem[] = (
+  await Promise.all(
+    pageFiles.map(async (file) => {
+      const slug = file.replace(/\.mdx$/, "");
+      const name = extractTitle(await readFile(`${pagesDir}/${file}`, "utf8")) ?? slug;
+      return { name, href: `/docs/components/${slug}` };
+    })
+  )
+).sort((a, b) => a.name.localeCompare(b.name));
+
+const { pathname } = Astro.url;
+const isActive = (href: string) => pathname === href || pathname === `${href}/`;
+---
+
+<Sidebar variant="inset" label="Documentation">
+  <div data-sidebar="content">
+    <div data-sidebar="group">
+      <div data-sidebar="group-label">Components</div>
+      <ul data-sidebar="menu">
+        {
+          sidebarItems.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  data-sidebar="menu-button"
+                  data-active={active ? "" : undefined}
+                  aria-current={active ? "page" : undefined}
+                >
+                  <span>{item.name}</span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </div>
+</Sidebar>

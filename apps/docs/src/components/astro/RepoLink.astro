@@ -1,0 +1,17 @@
+---
+/** Link to the project repository, styled as a secondary Button. Static: no hydration. */
+import { buttonStyles } from "@shizen-ui/styles";
+import GithubLogo from "@assets/svg/astro/GithubLogo.astro";
+import { REPO_URL } from "@utils/docs-links";
+
+const styles = buttonStyles({ variant: "tertiary" });
+---
+
+<a href={REPO_URL} target="_blank" rel="noopener noreferrer" class={styles.base()}>
+  <span class={styles.content()}>
+    <span class={styles.iconStart()}>
+      <GithubLogo />
+    </span>
+    GitHub
+  </span>
+</a>

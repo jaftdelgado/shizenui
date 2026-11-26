@@ -1,0 +1,610 @@
+/*
+ * Sidebar — Astro port of the Fluid Functionalism sidebar
+ * (https://www.fluidfunctionalism.com/docs/sidebar, MIT © mickadesign).
+ *
+ * The page always scrolls natively (window/document scroll). The rail is a
+ * sticky column and the inset "card" is drawn by two sticky decoration layers
+ * inside <main>, so nothing ever becomes an inner scroll container.
+ *
+ * State lives in attributes on the wrapper:
+ *   data-state="expanded|collapsed"  desktop open state (persisted)
+ *   data-mobile-open                 drawer open (below 80rem)
+ *   data-resizing                    rail drag in progress (no transitions)
+ *
+ * Desktop rules live in (width >= 80rem), drawer rules in (width < 80rem),
+ * so the two layouts never fight over specificity.
+ */
+
+@layer components {
+  [data-slot="sidebar-wrapper"] {
+    --sidebar-width: 16rem;
+    --sidebar-width-mobile: 18rem;
+    --sidebar-gutter: 0.5rem;
+    --sidebar-inset-radius: var(--radius-surface, 1.5rem);
+
+    --sidebar-bg: var(--color-control);
+    --sidebar-card-bg: var(--color-background);
+    --sidebar-card-ring: inset 0 0 0 1px rgb(0 0 0 / 0.08);
+    --sidebar-card-halo: var(--shadow-border-halo);
+    --sidebar-drawer-bg: var(--color-background);
+    --sidebar-hover: color-mix(in oklab, var(--color-control-foreground) 5%, transparent);
+    --sidebar-active: color-mix(in oklab, var(--color-control-foreground) 8%, transparent);
+    --sidebar-rail-line: color-mix(in oklab, var(--color-primary-text) 25%, transparent);
+
+    /* Motion's `spring.slow` (240ms, bounce 0.12) and `spring.moderate`
+       (160ms, critically damped), sampled into CSS linear() easings. */
+    --sidebar-ease-slow: linear(
+      0,
+      0.0344,
+      0.1165,
+      0.2222,
+      0.3356,
+      0.4464,
+      0.5487,
+      0.6392,
+      0.7169,
+      0.7819,
+      0.8352,
+      0.8778,
+      0.9114,
+      0.9374,
+      0.9571,
+      0.9717,
+      0.9824,
+      0.99,
+      0.9952,
+      0.9987,
+      1.0008,
+      1.0021,
+      1.0028,
+      1.003,
+      1.0029,
+      1.0027,
+      1.0024,
+      1.002,
+      1.0017,
+      1.0014,
+      1
+    );
+    --sidebar-ease-moderate: linear(
+      0,
+      0.0788,
+      0.2361,
+      0.403,
+      0.5509,
+      0.6711,
+      0.7638,
+      0.8329,
+      0.8832,
+      0.9191,
+      0.9445,
+      0.9621,
+      0.9743,
+      0.9827,
+      0.9884,
+      0.9922,
+      0.9948,
+      0.9965,
+      0.9977,
+      0.9985,
+      1
+    );
+    --sidebar-dur-open: 240ms;
+    --sidebar-dur-close: 160ms;
+
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: 100svh;
+    background: var(--sidebar-bg);
+  }
+
+  .dark [data-slot="sidebar-wrapper"],
+  [data-theme="dark"] [data-slot="sidebar-wrapper"] {
+    --sidebar-card-ring: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+  }
+
+  /* ─── Shared parts ───────────────────────────────────────────────────── */
+
+  /* The panel takes focus itself when the drawer opens; it is a container,
+     not a control, so it shows no ring (rows keep theirs). */
+  [data-slot="sidebar"] {
+    flex-shrink: 0;
+    outline: none;
+  }
+
+  [data-slot="sidebar"][data-side="right"] {
+    order: 1;
+  }
+
+  /* Nothing inside the panel overflows it, so layout and paint can stay
+     inside: a toggle or a page relayout never re-lays or repaints the nav. */
+  [data-sidebar="panel"] {
+    display: flex;
+    flex-direction: column;
+    contain: layout paint;
+  }
+
+  [data-sidebar="sidebar"] {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex-direction: column;
+  }
+
+  /* The nav list is the only thing that may scroll on its own — and only
+     when the list is taller than the viewport. The page never does. */
+  [data-sidebar="content"] {
+    display: flex;
+    min-height: 0;
+    width: 100%;
+    flex: 1;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  [data-sidebar="content"]:hover {
+    scrollbar-color: color-mix(in oklab, var(--color-primary-text) 20%, transparent) transparent;
+  }
+
+  [data-sidebar="group"] {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+
+  [data-sidebar="group-label"] {
+    display: flex;
+    height: 2rem;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.5rem;
+    color: var(--color-tertiary-text);
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  [data-sidebar="menu"] {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Standard hover: the row under the pointer lights, no gliding highlight. */
+  [data-sidebar="menu-button"] {
+    display: flex;
+    width: 100%;
+    height: 2rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.5rem;
+    border: 0;
+    border-radius: 0.625rem;
+    background: transparent;
+    color: var(--color-secondary-text);
+    font-size: 13px;
+    font-variation-settings: "wght" 400;
+    line-height: 20px;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    transition:
+      color 80ms ease-out,
+      background-color 80ms ease-out,
+      font-variation-settings 80ms ease-out;
+  }
+
+  [data-sidebar="menu-button"] > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    [data-sidebar="menu-button"]:hover {
+      background: var(--sidebar-hover);
+      color: var(--color-primary-text);
+    }
+  }
+
+  [data-sidebar="menu-button"][data-active] {
+    background: var(--sidebar-active);
+    color: var(--color-primary-text);
+    font-variation-settings: "wght" 550;
+  }
+
+  [data-sidebar="menu-button"]:focus-visible {
+    box-shadow: inset 0 0 0 1.5px var(--color-focus);
+  }
+
+  [data-slot="sidebar-inset"] {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    /* Content wider than the column never paints over the rail or adds a
+       page-level horizontal scrollbar. `clip` (unlike `hidden`) creates no
+       scroll container, so the document keeps scrolling and sticky still works. */
+    overflow-x: clip;
+    background: var(--sidebar-card-bg);
+  }
+
+  [data-sidebar="inset-backdrop"],
+  [data-sidebar="inset-frame"],
+  [data-sidebar="scrim"] {
+    display: none;
+  }
+
+  /* ─── Desktop ────────────────────────────────────────────────────────── */
+
+  @media (width >= 80rem) {
+    /* An in-flow sticky column animates its width (that is what reflows the
+       inset) while the fixed-width panel inside slides out under clipping. */
+    [data-slot="sidebar"] {
+      position: sticky;
+      top: 0;
+      width: var(--sidebar-width);
+      height: 100svh;
+      overflow: hidden;
+      transition: width var(--sidebar-dur-open) var(--sidebar-ease-slow);
+    }
+
+    [data-sidebar="panel"] {
+      position: absolute;
+      inset-block: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      transition:
+        transform var(--sidebar-dur-open) var(--sidebar-ease-slow),
+        visibility 0s;
+    }
+
+    [data-slot="sidebar"][data-side="right"] [data-sidebar="panel"] {
+      right: 0;
+      left: auto;
+    }
+
+    /* Promoted to its own layer only while it slides (data-animating is set
+       by sidebar-client.ts for the length of the transition), so the slide is
+       composited instead of repainted, without holding GPU memory at rest. */
+    [data-slot="sidebar-wrapper"][data-animating] [data-sidebar="panel"] {
+      will-change: transform;
+    }
+
+    [data-slot="sidebar"][data-variant="inset"] [data-sidebar="panel"] {
+      padding-block: var(--sidebar-gutter);
+    }
+
+    [data-slot="sidebar"][data-variant="floating"] [data-sidebar="panel"] {
+      padding: var(--sidebar-gutter);
+    }
+
+    [data-slot="sidebar"][data-variant="sidebar"][data-bordered] [data-sidebar="sidebar"] {
+      border-inline-end: 1px solid var(--color-separator);
+    }
+
+    [data-slot="sidebar"][data-variant="sidebar"][data-bordered][data-side="right"]
+      [data-sidebar="sidebar"] {
+      border-inline-end: 0;
+      border-inline-start: 1px solid var(--color-separator);
+    }
+
+    [data-slot="sidebar"][data-variant="floating"] [data-sidebar="sidebar"] {
+      border-radius: var(--sidebar-inset-radius);
+      background: var(--sidebar-card-bg);
+      box-shadow: var(--sidebar-card-ring), var(--sidebar-card-halo);
+    }
+
+    /* Collapsed: the column gives its width back, the panel slides out and
+       becomes unfocusable once the slide lands. */
+    [data-slot="sidebar-wrapper"][data-state="collapsed"]
+      > [data-slot="sidebar"][data-collapsible="offcanvas"] {
+      width: 0;
+      transition-duration: var(--sidebar-dur-close);
+      transition-timing-function: ease-out;
+    }
+
+    [data-slot="sidebar-wrapper"][data-state="collapsed"]
+      > [data-slot="sidebar"][data-collapsible="offcanvas"]
+      [data-sidebar="panel"] {
+      visibility: hidden;
+      transform: translateX(-100%);
+      transition:
+        transform var(--sidebar-dur-close) ease-out,
+        visibility 0s linear var(--sidebar-dur-close);
+    }
+
+    [data-slot="sidebar-wrapper"][data-state="collapsed"]
+      > [data-slot="sidebar"][data-collapsible="offcanvas"][data-side="right"]
+      [data-sidebar="panel"] {
+      transform: translateX(100%);
+    }
+
+    /* Rail: drag to resize, click to collapse. */
+    [data-sidebar="rail"] {
+      position: absolute;
+      inset-block: 0;
+      right: 0;
+      z-index: 20;
+      width: 0.5rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: col-resize;
+      touch-action: none;
+      outline: none;
+    }
+
+    [data-slot="sidebar"][data-side="right"] [data-sidebar="rail"] {
+      right: auto;
+      left: 0;
+    }
+
+    [data-sidebar="rail"]::after {
+      position: absolute;
+      inset-block: 0;
+      right: 0;
+      width: 1px;
+      background: transparent;
+      content: "";
+      transition: background-color 80ms ease-out;
+    }
+
+    [data-slot="sidebar"][data-side="right"] [data-sidebar="rail"]::after {
+      right: auto;
+      left: 0;
+    }
+
+    [data-sidebar="rail"]:hover::after,
+    [data-slot="sidebar-wrapper"][data-resizing] [data-sidebar="rail"]::after {
+      background: var(--sidebar-rail-line);
+    }
+
+    /* Card variants: the hairline hugs the card's straight run, fading in
+       past the corner radius instead of running through it. */
+    [data-slot="sidebar"]:not([data-variant="sidebar"]) [data-sidebar="rail"]::after {
+      --rail-fade-start: var(--sidebar-inset-radius);
+      --rail-fade-end: calc(var(--sidebar-inset-radius) + 24px);
+      inset-block: var(--sidebar-gutter);
+      mask-image: linear-gradient(
+        to bottom,
+        transparent var(--rail-fade-start),
+        black var(--rail-fade-end),
+        black calc(100% - var(--rail-fade-end)),
+        transparent calc(100% - var(--rail-fade-start))
+      );
+    }
+
+    [data-slot="sidebar"][data-variant="floating"] [data-sidebar="rail"] {
+      right: 0.25rem;
+    }
+
+    [data-slot="sidebar"][data-variant="floating"] [data-sidebar="rail"]::after {
+      right: 3.5px;
+    }
+
+    /*
+     * Inset variant with native scroll. <main> stays a plain in-flow block as
+     * tall as its content (the document scrolls), and the card is painted by
+     * two viewport-sized sticky layers inside it:
+     *   backdrop (first child, sticky top, behind content): card fill + halo
+     *   frame    (last child, sticky bottom, above content): paints the sidebar
+     *            colour over the gutters and round corners, plus the ring
+     * so the card keeps its margins and radius at every scroll position.
+     */
+    [data-slot="sidebar"][data-variant="inset"] ~ [data-slot="sidebar-inset"] {
+      isolation: isolate;
+      margin-inline: 0 var(--sidebar-gutter);
+      background: transparent;
+      transition: margin var(--sidebar-dur-close) ease-out;
+    }
+
+    [data-slot="sidebar"][data-variant="inset"][data-side="right"] ~ [data-slot="sidebar-inset"] {
+      margin-inline: var(--sidebar-gutter) 0;
+    }
+
+    [data-slot="sidebar-wrapper"][data-state="collapsed"]
+      > [data-slot="sidebar"][data-variant="inset"][data-collapsible="offcanvas"]
+      ~ [data-slot="sidebar-inset"] {
+      margin-inline: var(--sidebar-gutter);
+    }
+
+    [data-slot="sidebar"][data-variant="inset"]
+      ~ [data-slot="sidebar-inset"]
+      > [data-sidebar="inset-backdrop"],
+    [data-slot="sidebar"][data-variant="inset"]
+      ~ [data-slot="sidebar-inset"]
+      > [data-sidebar="inset-frame"] {
+      display: block;
+      flex-shrink: 0;
+      align-self: stretch;
+      height: 100svh;
+      pointer-events: none;
+    }
+
+    [data-slot="sidebar"][data-variant="inset"]
+      ~ [data-slot="sidebar-inset"]
+      > [data-sidebar="inset-backdrop"] {
+      position: sticky;
+      top: 0;
+      z-index: -1;
+      margin-bottom: -100svh;
+    }
+
+    [data-slot="sidebar"][data-variant="inset"]
+      ~ [data-slot="sidebar-inset"]
+      > [data-sidebar="inset-frame"] {
+      position: sticky;
+      bottom: 0;
+      z-index: 30;
+      margin-top: -100svh;
+      overflow: hidden;
+    }
+
+    [data-sidebar="inset-backdrop"]::before,
+    [data-sidebar="inset-frame"]::before {
+      position: absolute;
+      inset: var(--sidebar-gutter) 0;
+      border-radius: var(--sidebar-inset-radius);
+      content: "";
+    }
+
+    [data-sidebar="inset-backdrop"]::before {
+      background: var(--sidebar-card-bg);
+      box-shadow: var(--sidebar-card-halo);
+    }
+
+    [data-sidebar="inset-frame"]::before {
+      box-shadow:
+        var(--sidebar-card-ring),
+        var(--sidebar-card-halo),
+        0 0 0 100vmax var(--sidebar-bg);
+    }
+  }
+
+  /* ─── Mobile drawer ──────────────────────────────────────────────────── */
+
+  @media (width < 80rem) {
+    /* Floating drawer whatever the desktop variant: a rounded card held off
+       the viewport edges by the gutter. Closed, it slides out by its own
+       width plus that gutter so no edge or shadow is left peeking in. */
+    [data-slot="sidebar"][data-collapsible="offcanvas"] {
+      position: fixed;
+      inset-block: var(--sidebar-gutter);
+      left: var(--sidebar-gutter);
+      z-index: 50;
+      width: var(--sidebar-width-mobile);
+      max-width: calc(100vw - 3rem);
+      overflow: hidden;
+      border-radius: var(--sidebar-inset-radius);
+      background: var(--sidebar-drawer-bg);
+      box-shadow:
+        var(--sidebar-card-ring),
+        var(--sidebar-card-halo),
+        0 8px 32px rgb(0 0 0 / 0.16);
+      visibility: hidden;
+      transform: translateX(calc(-100% - var(--sidebar-gutter)));
+      transition:
+        transform var(--sidebar-dur-close) ease-out,
+        visibility 0s linear var(--sidebar-dur-close);
+    }
+
+    [data-slot="sidebar"][data-collapsible="offcanvas"][data-side="right"] {
+      right: var(--sidebar-gutter);
+      left: auto;
+      transform: translateX(calc(100% + var(--sidebar-gutter)));
+    }
+
+    [data-slot="sidebar-wrapper"][data-mobile-open]
+      > [data-slot="sidebar"][data-collapsible="offcanvas"][data-side] {
+      visibility: visible;
+      transform: none;
+      transition:
+        transform var(--sidebar-dur-close) var(--sidebar-ease-moderate),
+        visibility 0s;
+    }
+
+    [data-sidebar="panel"] {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* collapsible="none" has no drawer: it simply stacks above the content. */
+    [data-slot="sidebar-wrapper"]:has(> [data-slot="sidebar"][data-collapsible="none"]) {
+      flex-direction: column;
+    }
+
+    [data-slot="sidebar"][data-collapsible="none"] [data-sidebar="panel"] {
+      position: static;
+    }
+
+    [data-sidebar="rail"] {
+      display: none;
+    }
+
+    [data-sidebar="scrim"] {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: block;
+      background: rgb(0 0 0 / 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity var(--sidebar-dur-close) ease-out,
+        visibility 0s linear var(--sidebar-dur-close);
+    }
+
+    .dark [data-sidebar="scrim"],
+    [data-theme="dark"] [data-sidebar="scrim"] {
+      background: rgb(0 0 0 / 0.8);
+    }
+
+    [data-slot="sidebar-wrapper"][data-mobile-open] > [data-sidebar="scrim"] {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity var(--sidebar-dur-close) ease-out;
+    }
+
+    /* Here the drawer itself slides and the scrim fades: layers only while moving. */
+    [data-slot="sidebar-wrapper"][data-animating] > [data-slot="sidebar"] {
+      will-change: transform;
+    }
+
+    [data-slot="sidebar-wrapper"][data-animating] > [data-sidebar="scrim"] {
+      will-change: opacity;
+    }
+  }
+
+  /* Drawer open: the page behind is modal, so it stops scrolling. */
+  html[data-sidebar-lock] {
+    overflow: hidden;
+  }
+
+  /* Rail drag: the panel tracks the pointer 1:1. */
+  [data-slot="sidebar-wrapper"][data-resizing],
+  [data-slot="sidebar-wrapper"][data-resizing] * {
+    cursor: col-resize;
+    transition: none !important;
+    user-select: none;
+  }
+
+  /* Breakpoint crossing (set by sidebar-client.ts for two frames): the rail
+     and drawer layouts swap without animating from one to the other. */
+  [data-slot="sidebar-wrapper"][data-instant]
+    :is(
+      [data-slot="sidebar"],
+      [data-sidebar="panel"],
+      [data-slot="sidebar-inset"],
+      [data-sidebar="scrim"]
+    ) {
+    transition: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-slot="sidebar-wrapper"] [data-slot="sidebar"],
+    [data-slot="sidebar-wrapper"] [data-sidebar="panel"],
+    [data-slot="sidebar-wrapper"] [data-slot="sidebar-inset"],
+    [data-slot="sidebar-wrapper"] [data-sidebar="scrim"] {
+      transition-duration: 0s !important;
+      transition-delay: 0s !important;
+    }
+  }
+}
