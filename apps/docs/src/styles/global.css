@@ -4,6 +4,7 @@
 @import "./theme.css";
 @import "./typography.css";
 @import "./docs-layout.css";
+@import "./sidebar.css";
 @import "./code-block.css";
 
 @font-face {

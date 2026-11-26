@@ -2,7 +2,8 @@
 import "../styles/global.css";
 import TableOfContents from "@components/astro/TableOfContents.astro";
 import DocsHeader from "@components/astro/DocsHeader.astro";
-import Sidebar from "@components/astro/Sidebar.astro";
+import DocsSidebar from "@components/astro/DocsSidebar.astro";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@components/astro/sidebar";
 import { resolveDocLinks } from "@utils/docs-links";
 import type { MarkdownHeading } from "astro";
 
@@ -37,41 +38,57 @@ const PreviewComponent: any = frontmatter.previewComponent;
     <slot name="head" />
   </head>
   <body>
-    <div class="docs-layout">
-      <aside class="docs-sidebar">
-        <slot name="sidebar">
-          <Sidebar />
-        </slot>
-      </aside>
+    <SidebarProvider class="docs-layout">
+      <slot name="sidebar">
+        <DocsSidebar />
+      </slot>
 
-      <div class="docs-main">
-        <DocsHeader
-          title={title}
-          description={description}
-          sourceUrl={sourceUrl}
-          stylesUrl={stylesUrl}
-        />
+      <SidebarInset>
+        <div class="docs-main">
+          <div class="docs-topbar">
+            <SidebarTrigger />
+          </div>
 
-        {
-          PreviewComponent && (
-            <div class="docs-preview">
-              <PreviewComponent />
+          <DocsHeader
+            title={title}
+            description={description}
+            sourceUrl={sourceUrl}
+            stylesUrl={stylesUrl}
+          />
+
+          {
+            PreviewComponent && (
+              <div class="docs-preview">
+                <PreviewComponent />
+              </div>
+            )
+          }
+
+          <div class="docs-content-grid">
+            <article class="docs-body prose-content">
+              <slot />
+            </article>
+
+            <TableOfContents headings={headings} />
+
+            <div class="docs-footer">
+              <slot name="footer" />
             </div>
-          )
-        }
-
-        <div class="docs-content-grid">
-          <article class="docs-body prose-content">
-            <slot />
-          </article>
-
-          <TableOfContents headings={headings} />
-
-          <div class="docs-footer">
-            <slot name="footer" />
           </div>
         </div>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
+
+    <script>
+      // Off-screen blocks may skip rendering only once each has been rendered
+      // and its real height remembered (see "Off-screen rendering skip" in
+      // docs-layout.css). After load plus two frames, every block has been.
+      const ready = () =>
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => document.documentElement.setAttribute("data-cv-ready", ""))
+        );
+      if (document.readyState === "complete") ready();
+      else addEventListener("load", ready, { once: true });
+    </script>
   </body>
 </html>

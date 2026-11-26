@@ -1,0 +1,65 @@
+---
+/**
+ * Wraps a <Sidebar /> and its <SidebarInset /> and owns the open state.
+ * Astro port of Fluid Functionalism's SidebarProvider (MIT © mickadesign).
+ */
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
+  /** Initial desktop state when nothing is persisted. @default true */
+  defaultOpen?: boolean;
+  /** Persist state and rail width to the `sidebar_state` / `sidebar_width` cookies. @default true */
+  persist?: boolean;
+  /** Bare-key toggle; `null` disables it. @default "[" */
+  shortcut?: string | null;
+  /** Rail width. @default "16rem" */
+  width?: string;
+  /** Drawer width below 80rem. @default "18rem" */
+  widthMobile?: string;
+}
+
+const {
+  defaultOpen = true,
+  persist = true,
+  shortcut = "[",
+  width = "16rem",
+  widthMobile = "18rem",
+  class: className,
+  style,
+  ...rest
+} = Astro.props;
+
+// The inline script below restores the persisted state before the rail is
+// parsed, so a collapsed sidebar never flashes open on a static page.
+const styleVars = `--sidebar-width: ${width}; --sidebar-width-mobile: ${widthMobile};${
+  typeof style === "string" ? ` ${style}` : ""
+}`;
+---
+
+<div
+  data-slot="sidebar-wrapper"
+  data-state={defaultOpen ? "expanded" : "collapsed"}
+  data-persist={String(persist)}
+  data-shortcut={shortcut ?? ""}
+  class={className}
+  style={styleVars}
+  {...rest}
+>
+  <script is:inline>
+    (() => {
+      const wrapper = document.currentScript.parentElement;
+      if (wrapper.dataset.persist !== "true") return;
+      const state = document.cookie.match(/(?:^|; )sidebar_state=(true|false)/);
+      if (state) wrapper.dataset.state = state[1] === "true" ? "expanded" : "collapsed";
+      const width = document.cookie.match(/(?:^|; )sidebar_width=(\d+px)/);
+      if (width) wrapper.style.setProperty("--sidebar-width", width[1]);
+    })();
+  </script>
+  <slot />
+</div>
+
+<script>
+  import { initSidebars } from "./sidebar-client";
+
+  initSidebars();
+</script>

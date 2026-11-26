@@ -1,0 +1,17 @@
+---
+/**
+ * The page column next to the sidebar. With `variant="inset"` it becomes the
+ * card — still scrolled by the document, never by an inner container.
+ */
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"main">;
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<main data-slot="sidebar-inset" class={className} {...rest}>
+  <div data-sidebar="inset-backdrop" aria-hidden="true"></div>
+  <slot />
+  <div data-sidebar="inset-frame" aria-hidden="true"></div>
+</main>
